@@ -25,9 +25,16 @@ RECURSIVE_FIND_FILE(C_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/" "*.c")
 LIST(APPEND C_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/asm/CortexContextSwitch.s")
 LIST(APPEND C_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/stm32/startup_stm32yyxx.S")
 LIST(APPEND C_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/CMSIS/Device/ST/${device.processor}xx/Source/Templates/system_${PROCESSOR_NAME}.c")
+LIST(APPEND C_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}//variants/${device.device}/variant.cpp")
+LIST(APPEND C_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}//variants/${device.device}/PeripheralPins.c")
+
+
 
 RECURSIVE_FIND_FILE(CPP_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/" "*.cpp")
 
+set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -T\"${CMAKE_CURRENT_LIST_DIR}/variants/${device.device}/ldscript.ld\"" PARENT_SCOPE)
+set(CMAKE_EXE_LINKER_FLAGS    "${CMAKE_EXE_LINKER_FLAGS} -T\"${CMAKE_CURRENT_LIST_DIR}/variants/${device.device}/ldscript.ld\"" PARENT_SCOPE)
+set(CMAKE_SYSTEM_PROCESSOR "armv7-m" PARENT_SCOPE)
 
 # add them
 include_directories(${INCLUDE_DIRS})

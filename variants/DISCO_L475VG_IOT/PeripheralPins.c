@@ -28,7 +28,6 @@
  *******************************************************************************
  * Automatically generated from STM32L475V(C-E-G)Tx.xml
  */
-#include "Arduino.h"
 #include "PeripheralPins.h"
 
 /* =====
