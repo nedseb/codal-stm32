@@ -1,26 +1,34 @@
 project(codal-stm32)
 
 include("${CODAL_UTILS_LOCATION}")
-# find sources and headers
-RECURSIVE_FIND_DIR(TOP_LEVEL_INCLUDE_DIRS0 "${CMAKE_CURRENT_SOURCE_DIR}/system/" "*.h")
-RECURSIVE_FIND_DIR(TOP_LEVEL_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/inc" "*.h")
-RECURSIVE_FIND_DIR(INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/${CODAL_OUTPUT_NAME}/inc" "*.h")
 
-RECURSIVE_FIND_FILE(TOP_LEVEL_SOURCE1 "${CMAKE_CURRENT_SOURCE_DIR}/src" "*.c")
-RECURSIVE_FIND_FILE(TOP_LEVEL_SOURCE0 "${CMAKE_CURRENT_SOURCE_DIR}/system/" "*.[cs]")
-RECURSIVE_FIND_FILE(TOP_LEVEL_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/src" "*.cpp")
-LIST(APPEND TOP_LEVEL_SOURCE "${CMAKE_CURRENT_SOURCE_DIR}/asm/CortexContextSwitch.s")
+list(APPEND INCLUDE_DIRS
+    "${CMAKE_CURRENT_SOURCE_DIR}/inc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/stm32"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/stm32/LL"
+    "${CMAKE_CURRENT_SOURCE_DIR}/variants/${device.device}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/system/${device.processor}xx"
+    "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/${device.processor}xx_HAL_Driver/Inc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/CMSIS/Device/ST/${device.processor}xx/Include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/CMSIS/Device/ST/${device.processor}xx/Source/Templates/gcc"
+)
 
-RECURSIVE_FIND_FILE(OBJECT_FILES "${CMAKE_CURRENT_SOURCE_DIR}/${CODAL_OUTPUT_NAME}/lib" "*.o")
-RECURSIVE_FIND_FILE(ARCHIVE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/${CODAL_OUTPUT_NAME}/lib" "*.a")
+string(TOLOWER  "${device.processor}xx" PROCESSOR_NAME)
+
+RECURSIVE_FIND_FILE(SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/stm32" "*.c??")
+LIST(APPEND SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/asm/CortexContextSwitch.s")
+LIST(APPEND SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/stm32/startup_stm32yyxx.S")
+LIST(APPEND SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/CMSIS/Device/ST/${device.processor}xx/Source/Templates/system_${PROCESSOR_NAME}.c")
 
 # add them
-include_directories(${TOP_LEVEL_INCLUDE_DIRS0} ${TOP_LEVEL_INCLUDE_DIRS} ${INCLUDE_DIRS})
+include_directories(${INCLUDE_DIRS})
 
 # create our target
-add_library(codal-stm32 ${TOP_LEVEL_SOURCE1} ${TOP_LEVEL_SOURCE0} ${TOP_LEVEL_SOURCE} )
+add_library(codal-stm32 ${SOURCE_FILES})
 
-target_link_libraries(codal-stm32 codal-core ${OBJECT_FILES} ${ARCHIVE_FILES})
+target_link_libraries(
+    codal-stm32 
+    codal-core)
 
 # expose it to parent cmake.
-target_include_directories(codal-stm32 PUBLIC ${TOP_LEVEL_INCLUDE_DIRS0} ${TOP_LEVEL_INCLUDE_DIRS} ${INCLUDE_DIRS})
+target_include_directories(codal-stm32 PUBLIC ${INCLUDE_DIRS})
