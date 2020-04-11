@@ -4,31 +4,41 @@ include("${CODAL_UTILS_LOCATION}")
 
 list(APPEND INCLUDE_DIRS
     "${CMAKE_CURRENT_SOURCE_DIR}/inc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/stm32"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/stm32/LL"
-    "${CMAKE_CURRENT_SOURCE_DIR}/variants/${device.device}"
-    "${CMAKE_CURRENT_SOURCE_DIR}/system/${device.processor}xx"
-    "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/${device.processor}xx_HAL_Driver/Inc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/stm32/usb"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/stm32/usb/cdc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/stm32/usb/hid"
+    "${CMAKE_CURRENT_SOURCE_DIR}/system/CMSIS/CMSIS/Core/Include"
     "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/CMSIS/Device/ST/${device.processor}xx/Include"
     "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/CMSIS/Device/ST/${device.processor}xx/Source/Templates/gcc"
-)
+    "${CMAKE_CURRENT_SOURCE_DIR}/system/${device.processor}xx"
+    "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/${device.processor}xx_HAL_Driver/Inc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/${device.processor}xx_HAL_Driver/Src"
+    "${CMAKE_CURRENT_SOURCE_DIR}/variants/${device.device}"
+    )
 
 string(TOLOWER  "${device.processor}xx" PROCESSOR_NAME)
 
-RECURSIVE_FIND_FILE(SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/stm32" "*.c??")
-LIST(APPEND SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/asm/CortexContextSwitch.s")
-LIST(APPEND SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/stm32/startup_stm32yyxx.S")
-LIST(APPEND SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/CMSIS/Device/ST/${device.processor}xx/Source/Templates/system_${PROCESSOR_NAME}.c")
+RECURSIVE_FIND_FILE(C_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/" "*.c")
+LIST(APPEND C_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/asm/CortexContextSwitch.s")
+LIST(APPEND C_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/stm32/startup_stm32yyxx.S")
+LIST(APPEND C_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/CMSIS/Device/ST/${device.processor}xx/Source/Templates/system_${PROCESSOR_NAME}.c")
+
+RECURSIVE_FIND_FILE(CPP_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/" "*.cpp")
+
 
 # add them
 include_directories(${INCLUDE_DIRS})
 
 # create our target
-add_library(codal-stm32 ${SOURCE_FILES})
+add_library(codal-stm32 ${C_SOURCE_FILES} ${CPP_SOURCE_FILES})
 
 target_link_libraries(
     codal-stm32 
-    codal-core)
+    codal-core
+)
 
 # expose it to parent cmake.
 target_include_directories(codal-stm32 PUBLIC ${INCLUDE_DIRS})
