@@ -2,6 +2,7 @@
 #include "CodalDmesg.h"
 #include "CodalCompat.h"
 #include "Timer.h"
+#include "board.h"
 
 static int8_t irq_disabled;
 void target_enable_irq()
@@ -89,7 +90,14 @@ void target_panic(int statusCode)
 
 void target_init()
 {
-    HAL_Init();
+    init();
+}
+
+// Force target_init to be called *first*, i.e. before static object allocation.
+// Otherwise, statically allocated objects that need HAL may fail.
+__attribute__((constructor(101))) void premain_target_init()
+{
+  target_init();
 }
 
 /**
