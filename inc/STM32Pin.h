@@ -26,6 +26,7 @@ DEALINGS IN THE SOFTWARE.
 #include "CodalComponent.h"
 #include "CodalConfig.h"
 #include "Pin.h"
+#include "PinNumber.h"
 
 namespace codal {
 
