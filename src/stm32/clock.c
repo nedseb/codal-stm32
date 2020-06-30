@@ -78,6 +78,7 @@ void noOsSystickHandler()
 }
 
 void osSystickHandler() __attribute__((weak, alias("noOsSystickHandler")));
+
 /**
   * @brief  Function called when the tick interruption falls
   * @param  None
