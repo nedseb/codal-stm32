@@ -4,6 +4,10 @@
 #include "Timer.h"
 #include "board.h"
 
+#include "STM32InterruptHandlers.h"
+#include "stm32yyxx_ll_pwr.h"
+#include "stm32yyxx_ll_rcc.h"
+
 static int8_t irq_disabled;
 void target_enable_irq() {
     irq_disabled--;
@@ -72,7 +76,41 @@ __attribute__((weak)) void target_panic(int statusCode) {
     }
 }
 
+void debug_facility() {
+    /**
+     *********************************************************************************************************************
+     * START OF SECTION - DEBUG FACILITY
+     *
+     * This section should be removed in production.
+     * The Firmware used the RTC IP to implement the TimerServer. During development, it is common
+     *to trigger the nreset to restart the application as this would be done on power ON. However,
+     *in that case, the RTC domain is not reseted The following implementation resets the RTC domain
+     *so that the device behaves in a similar way on nreset to power ON.
+     */
+
+    if (LL_RCC_IsActiveFlag_PINRST() != RESET) {
+        LL_PWR_ClearFlag_SB();
+
+        HAL_PWR_EnableBkUpAccess(); /**< Enable access to the RTC registers */
+
+        /**
+         *  Write twice the value to flush the APB-AHB bridge
+         *  This bit shall be written in the register before writing the next one
+         */
+        HAL_PWR_EnableBkUpAccess();
+
+        LL_RCC_ForceBackupDomainReset();
+        __HAL_RCC_CLEAR_RESET_FLAGS();
+        LL_RCC_ReleaseBackupDomainReset();
+    }
+}
+
 void target_init() {
+    init_Handlers();
+    init();
+    debug_facility();
+    __HAL_RCC_SYSCFG_CLK_ENABLE();
+    __HAL_RCC_PWR_CLK_ENABLE();
     /* System interrupt init*/
     /* MemoryManagement_IRQn interrupt configuration */
     HAL_NVIC_SetPriority(MemoryManagement_IRQn, 0, 0);
@@ -88,8 +126,6 @@ void target_init() {
     HAL_NVIC_SetPriority(PendSV_IRQn, 0, 0);
     /* SysTick_IRQn interrupt configuration */
     HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
-
-    init();
 }
 
 // Force target_init to be called *first*, i.e. before static object allocation.
