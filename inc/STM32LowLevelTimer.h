@@ -1,6 +1,5 @@
-#include "LowLevelTimer.h"
 #include "HardwareTimer.h"
-
+#include "LowLevelTimer.h"
 
 #ifndef STM32_LOW_LEVEL_TIMER_H
 #define STM32_LOW_LEVEL_TIMER_H
@@ -11,12 +10,14 @@ namespace codal {
 
 class STM32LowLevelTimer : public LowLevelTimer {
   private:
-    uint8_t irqN;
+    IRQn_Type irqN;
     HardwareTimer hardwareTimer;
     TimerMode mode;
+
   public:
-    STM32LowLevelTimer(TIM_TypeDef* timer, uint8_t irqn);
-    virtual ~STM32LowLevelTimer(){}
+    STM32LowLevelTimer(TIM_TypeDef* timer, IRQn_Type irqn);
+    virtual ~STM32LowLevelTimer();
+
     int setIRQPriority(int) final override;
     int setIRQPriority(uint32_t preemptPriority, uint32_t subPriority);
 
