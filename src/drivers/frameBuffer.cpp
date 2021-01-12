@@ -61,7 +61,7 @@ void FrameBuffer::drawChar( char c, unsigned x, unsigned y, uint16_t color){
         uint8_t currentChar = ASCII_FONT[ c * 5 + i ];
 
         for(int j = 0; j < 8; ++j){
-            if( currentChar & ( 0x01 << j) > 1 ){
+            if( ( currentChar & ( 0x01 << j) ) > 1 ){
                 drawPixel( x + i, y + j, color);
             }
         }
