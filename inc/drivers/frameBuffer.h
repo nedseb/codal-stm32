@@ -28,15 +28,12 @@ namespace codal{
             void drawText(std::string str, unsigned x, unsigned y, uint16_t color);
 
         protected:
-            uint8_t * buffer;
-
-        private:
             unsigned width;
             unsigned height;
             unsigned bufferSize;
             Format format;
-
-            void drawPixel1Bit( unsigned x, unsigned y, uint8_t color );
+            uint8_t pages;
+            uint8_t * buffer;
     };
 }
 
