@@ -11,7 +11,7 @@
  *******************************************************************************
  * Automatically generated from STM32L452R(C-E)Tx.xml and STM32L452RETxP.xml
  */
-#include "Arduino.h"
+
 #include "PeripheralPins.h"
 
 /* =====

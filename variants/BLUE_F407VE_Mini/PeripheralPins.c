@@ -11,7 +11,7 @@
  *******************************************************************************
  * Automatically generated from STM32F407V(E-G)Tx.xml
  */
-#include "Arduino.h"
+
 #include "PeripheralPins.h"
 
 /* =====

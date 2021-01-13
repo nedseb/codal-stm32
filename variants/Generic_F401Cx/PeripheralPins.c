@@ -28,7 +28,7 @@
  *******************************************************************************
  * Automatically generated from STM32F401C(B-C|D-E)Ux.xml
  */
-#include "Arduino.h"
+
 #include "PeripheralPins.h"
 
 /* =====

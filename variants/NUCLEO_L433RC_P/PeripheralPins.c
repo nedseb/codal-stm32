@@ -11,7 +11,7 @@
  *******************************************************************************
  * Automatically generated from STM32L433RCTxP.xml
  */
-#include "Arduino.h"
+
 #include "PeripheralPins.h"
 
 /* =====

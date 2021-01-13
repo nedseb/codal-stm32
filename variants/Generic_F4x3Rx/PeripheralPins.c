@@ -11,7 +11,7 @@
  *******************************************************************************
  * Automatically generated from STM32F413R(G-H)Tx.xml
  */
-#include "Arduino.h"
+
 #include "PeripheralPins.h"
 
 /* =====

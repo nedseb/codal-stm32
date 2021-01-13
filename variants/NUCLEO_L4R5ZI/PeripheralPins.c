@@ -29,7 +29,7 @@
  * Automatically generated from STM32L4R5Z(G-I)Tx.xml
  * Merged with STM32L4R5ZITxP.xml
  */
-#include "Arduino.h"
+
 #include "PeripheralPins.h"
 
 /* =====

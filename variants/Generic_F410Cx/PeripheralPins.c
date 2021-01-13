@@ -11,7 +11,7 @@
  *******************************************************************************
  * Automatically generated from STM32F410C(8-B)Ux.xml
  */
-#include "Arduino.h"
+
 #include "PeripheralPins.h"
 
 /* =====

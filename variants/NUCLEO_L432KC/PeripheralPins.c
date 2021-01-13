@@ -28,7 +28,7 @@
  *******************************************************************************
  * Automatically generated from STM32L432K(B-C)Ux.xml
  */
-#include "Arduino.h"
+
 #include "PeripheralPins.h"
 
 /* =====

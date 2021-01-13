@@ -11,7 +11,7 @@
  *******************************************************************************
  * Automatically generated from STM32MP157AAAx.xml
  */
-#include "Arduino.h"
+
 #include "PeripheralPins.h"
 
 /* =====

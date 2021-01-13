@@ -11,7 +11,7 @@
  *******************************************************************************
  * Automatically generated from STM32F746NGHx.xml
  */
-#include "Arduino.h"
+
 #include "PeripheralPins.h"
 
 /* =====

@@ -30,7 +30,7 @@
  *******************************************************************************
  * Automatically generated from STM32F407Z(E-G)Tx.xml
  */
-#include "Arduino.h"
+
 #include "PeripheralPins.h"
 
 /* =====

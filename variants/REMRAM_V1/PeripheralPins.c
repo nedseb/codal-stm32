@@ -28,7 +28,7 @@
  *******************************************************************************
  * Automatically generated from STM32F765V(G-I)Tx.xml
  */
-#include "Arduino.h"
+
 #include "PeripheralPins.h"
 
 /* =====

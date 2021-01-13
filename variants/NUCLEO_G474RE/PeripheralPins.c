@@ -11,7 +11,7 @@
  *******************************************************************************
  * Automatically generated from STM32G474R(B-C-E)Tx.xml
  */
-#include "Arduino.h"
+
 #include "PeripheralPins.h"
 
 /* =====
