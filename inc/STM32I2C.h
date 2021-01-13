@@ -26,12 +26,11 @@ DEALINGS IN THE SOFTWARE.
 #include "CodalConfig.h"
 #include "ErrorNo.h"
 #include "I2C.h"
-#include "Pin.h"
 #include "twi.h"
 
-namespace codal {
+#include "STM32Pin.h"
 
-using STM32Pin = Pin;
+namespace codal {
 
 class STM32I2C : public codal::I2C {
   private:
@@ -51,13 +50,13 @@ class STM32I2C : public codal::I2C {
      * Issues a START condition on the I2C bus
      * @return DEVICE_OK on success, or an error code
      */
-    int start() final override;
+    int start() final override { return DEVICE_NOT_IMPLEMENTED; }
 
     /**
      * Issues a STOP condition on the I2C bus
      * @return DEVICE_OK on success, or an error code
      */
-    int stop() final override;
+    int stop() final override { return DEVICE_NOT_IMPLEMENTED; }
 
     /**
      * Writes the given byte to the I2C bus.
@@ -67,7 +66,7 @@ class STM32I2C : public codal::I2C {
      * @param data The byte to write.
      * @return DEVICE_OK on success, DEVICE_I2C_ERROR if the the write request failed.
      */
-    int write(uint8_t data) final override;
+    int write(uint8_t data) final override { return DEVICE_NOT_IMPLEMENTED; }
 
     /**
      * Reads a single byte from the I2C bus.
@@ -75,7 +74,7 @@ class STM32I2C : public codal::I2C {
      *
      * @return the byte read from the I2C bus, or DEVICE_I2C_ERROR if the the write request failed.
      */
-    int read(AcknowledgeType ack = ACK) final override;
+    int read(AcknowledgeType ack = ACK) final override { return DEVICE_NOT_IMPLEMENTED; }
 
   public:
     /**
