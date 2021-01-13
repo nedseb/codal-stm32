@@ -28,7 +28,7 @@
  *******************************************************************************
  * Automatically generated from STM32L412KBTx.xml
  */
-#include "Arduino.h"
+
 #include "PeripheralPins.h"
 
 /* =====

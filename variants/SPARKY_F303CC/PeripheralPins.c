@@ -28,7 +28,7 @@
  *******************************************************************************
  * Automatically generated from STM32F303C(B-C)Tx.xml
  */
-#include "Arduino.h"
+
 #include "PeripheralPins.h"
 
 /* =====

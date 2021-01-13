@@ -12,7 +12,7 @@
  *******************************************************************************
  * Automatically generated from STM32F401V(D-E)Tx.xml
  */
-#include "Arduino.h"
+
 #include "PeripheralPins.h"
 
 /* =====

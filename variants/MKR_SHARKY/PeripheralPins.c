@@ -11,7 +11,7 @@
  *******************************************************************************
  * Automatically generated from STM32WB55CEUx.xml
  */
-#include "Arduino.h"
+
 #include "PeripheralPins.h"
 
 /* =====

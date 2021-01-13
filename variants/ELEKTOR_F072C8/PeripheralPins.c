@@ -11,7 +11,7 @@
  *******************************************************************************
  * Automatically generated from STM32F072C(8-B)Tx.xml
  */
-#include "Arduino.h"
+
 #include "PeripheralPins.h"
 
 /* =====

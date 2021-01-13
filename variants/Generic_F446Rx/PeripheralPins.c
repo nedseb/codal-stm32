@@ -28,7 +28,7 @@
  *******************************************************************************
  * Automatically generated from STM32F446R(C-E)Tx.xml
  */
-#include "Arduino.h"
+
 #include "PeripheralPins.h"
 
 /* =====

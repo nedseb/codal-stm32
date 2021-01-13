@@ -28,7 +28,7 @@
  *******************************************************************************
  * Automatically generated from STM32L476R(C-E-G)Tx.xml
  */
-#include "Arduino.h"
+
 #include "PeripheralPins.h"
 
 /* =====

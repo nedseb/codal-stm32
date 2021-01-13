@@ -12,7 +12,7 @@
  * Automatically generated from STM32F756ZGTx.xml
  * The same is generated from STM32F746Z(E-G)Yx.xml
  */
-#include "Arduino.h"
+
 #include "PeripheralPins.h"
 
 /* =====

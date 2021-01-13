@@ -28,7 +28,7 @@
  *******************************************************************************
  * Automatically generated from STM32F429ZITx.xml
  */
-#include "Arduino.h"
+
 #include "PeripheralPins.h"
 
 /* =====

@@ -11,7 +11,7 @@
  *******************************************************************************
  * Automatically generated from STM32L4R9Z(G-I)Jx.xml
  */
-#include "Arduino.h"
+
 #include "PeripheralPins.h"
 
 /* =====

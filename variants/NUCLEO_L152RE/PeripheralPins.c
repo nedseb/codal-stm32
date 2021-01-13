@@ -28,7 +28,7 @@
  *******************************************************************************
  * Automatically generated from STM32L152RETx.xml
  */
-#include "Arduino.h"
+
 #include "PeripheralPins.h"
 
 /* =====

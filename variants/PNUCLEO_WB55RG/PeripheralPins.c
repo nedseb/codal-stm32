@@ -11,7 +11,7 @@
  *******************************************************************************
  * Automatically generated from STM32WB55RGVx.xml
  */
-#include "Arduino.h"
+
 #include "PeripheralPins.h"
 
 /* =====

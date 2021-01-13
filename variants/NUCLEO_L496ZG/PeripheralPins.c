@@ -29,7 +29,7 @@
  * Automatically generated from STM32L496ZGTxP.xml
  * Merged with STM32L496Z(E-G)Tx.xml
  */
-#include "Arduino.h"
+
 #include "PeripheralPins.h"
 
 /* =====

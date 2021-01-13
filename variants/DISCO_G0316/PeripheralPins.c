@@ -11,7 +11,7 @@
  *******************************************************************************
  * Automatically generated from STM32G031J(4-6)Mx.xml
  */
-#include "Arduino.h"
+
 #include "PeripheralPins.h"
 
 /* =====

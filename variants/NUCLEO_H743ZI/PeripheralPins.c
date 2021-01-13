@@ -28,7 +28,7 @@
  *******************************************************************************
  * Automatically generated from STM32H743ZITx.xml
  */
-#include "Arduino.h"
+
 #include "PeripheralPins.h"
 
 /* =====

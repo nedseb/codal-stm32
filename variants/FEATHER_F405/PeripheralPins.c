@@ -11,7 +11,7 @@
  *******************************************************************************
  * Automatically generated from STM32F405RGTx.xml
  */
-#include "Arduino.h"
+
 #include "PeripheralPins.h"
 
 /* =====
