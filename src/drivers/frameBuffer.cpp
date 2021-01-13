@@ -9,7 +9,8 @@ FrameBuffer::FrameBuffer( unsigned widthPixel, unsigned heightPixel, FrameBuffer
 
     switch( this->format ){
         case Format::MONO_VLSB:
-            bufferSize = (height / 8) * width;
+            pages = height / 8;
+            bufferSize = pages * width;
             break;
     }
 
@@ -31,7 +32,6 @@ void FrameBuffer::fill( uint16_t color ){
             }
             break;
     }
-
 }
 
 void FrameBuffer::drawPixel( unsigned x, unsigned y, uint16_t color){
@@ -41,7 +41,7 @@ void FrameBuffer::drawPixel( unsigned x, unsigned y, uint16_t color){
     switch( format ){
         case Format::MONO_VLSB:
             int shift = y % 8;
-            int index = (x * (height / 8)) + (y / 8);
+            int index = (x * pages) + (y / 8);
             uint8_t * data = &buffer[index];
 
             if(color > 0){
