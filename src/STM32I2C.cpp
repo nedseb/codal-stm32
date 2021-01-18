@@ -1,56 +1,39 @@
 #include "STM32I2C.h"
+#include "PeripheralPins.h"
 
 using namespace codal;
 
-STM32I2C::STM32I2C(STM32Pin& sda, STM32Pin& scl) : I2C(sda, scl) {}
+STM32I2C::STM32I2C(STM32Pin& sda, STM32Pin& scl) : I2C(sda, scl) {
+    IC2x_Init_Handler(&i2c);
 
-/** Set the frequency of the I2C interface
- *
- * @param frequency The bus frequency in hertz
- */
+    void * inst = 0;
+    inst = codal_setup_pin((PinName)sda.name, inst, PinMap_I2C_SDA);
+    inst = codal_setup_pin((PinName)scl.name, inst, PinMap_I2C_SCL);
+    i2c.Instance = (I2C_TypeDef *)inst;
+
+    i2c.Init.Timing = 100000;
+
+    I2Cx_Init(&i2c);
+}
+
 int STM32I2C::setFrequency(uint32_t frequency) {
     return DEVICE_OK;
 }
 
-/**
- * Issues a standard, I2C command write to the I2C bus.
- * This consists of:
- *  - Asserting a Start condition on the bus
- *  - Selecting the Slave address (as an 8 bit address)
- *  - Writing a number of raw data bytes provided
- *  - Asserting a Stop condition on the bus
- *
- * The CPU will busy wait until the transmission is complete.
- *
- * @param address The 8bit I2C address of the device to write to
- * @param data pointer to the bytes to write
- * @param len the number of bytes to write
- * @param repeated Suppresses the generation of a STOP condition if set. Default: false;
- *
- * @return DEVICE_OK on success, DEVICE_I2C_ERROR if the the write request failed.
- */
 int STM32I2C::write(uint16_t address, uint8_t* data, int len, bool repeated) {
+
+    if (data == NULL || len <= 0)
+        return DEVICE_INVALID_PARAMETER;
+
     int ret = DEVICE_I2C_ERROR;
+
+    auto res = HAL_I2C_Master_Transmit(&i2c, address, data, len, HAL_MAX_DELAY);
+    if (res == HAL_OK)
+        return DEVICE_OK;
+    
     return ret;
 }
 
-/**
- * Issues a standard, 2 byte I2C command read to the I2C bus.
- * This consists of:
- *  - Asserting a Start condition on the bus
- *  - Selecting the Slave address (as an 8 bit address)
- *  - reading "len" bytes of raw 8 bit data into the buffer provided
- *  - Asserting a Stop condition on the bus
- *
- * The CPU will busy wait until the transmission is complete.
- *
- * @param address The 8bit I2C address of the device to read from
- * @param data pointer to store the the bytes read
- * @param len the number of bytes to read into the buffer
- * @param repeated Suppresses the generation of a STOP condition if set. Default: false;
- *
- * @return DEVICE_OK on success, DEVICE_I2C_ERROR if the the read request failed.
- */
 int STM32I2C::read(uint16_t address, uint8_t* data, int len, bool repeated) {
     if (data == NULL || len <= 0)
         return DEVICE_INVALID_PARAMETER;
@@ -60,52 +43,22 @@ int STM32I2C::read(uint16_t address, uint8_t* data, int len, bool repeated) {
     return ret;
 }
 
-/**
- * Performs a typical register read operation to the I2C slave device provided.
- * This consists of:
- *  - Asserting a Start condition on the bus
- *  - Selecting the Slave address (as an 8 bit address, I2C WRITE)
- *  - Selecting a RAM register address in the slave
- *  - Asserting a Stop condition on the bus
- *  - Asserting a Start condition on the bus
- *  - Selecting the Slave address (as an 8 bit address, I2C READ)
- *  - Performing an 8 bit read operation (of the requested register)
- *  - Asserting a Stop condition on the bus
- *
- * The CPU will busy wait until the transmission is complete..
- *
- * @param address 8bit I2C address of the device to read from
- * @param reg The 8bit register address of the to read.
- * @param data A pointer to a memory location to store the result of the read operation
- * @param length The number of mytes to read
- * @param repeated Use a repeated START/START/STOP transaction if true, or independent START/STOP/START/STOP
- * transactions if fasle. Default: true
- *
- * @return DEVICE_OK or DEVICE_I2C_ERROR if the the read request failed.
- */
 int STM32I2C::readRegister(uint16_t address, uint8_t reg, uint8_t* data, int length, bool repeated) {
     if (data == NULL || length <= 0)
         return DEVICE_INVALID_PARAMETER;
     return 0;
 }
 
-/**
- * Performs a typical register write operation to the I2C slave device provided.
- * This consists of:
- *  - Asserting a Start condition on the bus
- *  - Selecting the Slave address (as an 8 bit address)
- *  - Writing the 8 bit register address provided
- *  - Writing the 8 bit value provided
- *  - Asserting a Stop condition on the bus
- *
- * The CPU will busy wait until the transmission is complete..
- *
- * @param address 8bit address of the device to write to
- * @param reg The 8bit address of the register to write to.
- * @param value The value to write.
- *
- * @return DEVICE_OK on success, DEVICE_I2C_ERROR if the the write request failed.
- */
 int STM32I2C::writeRegister(uint16_t address, uint8_t reg, uint8_t value) {
     return 0;
+}
+
+
+void * STM32I2C::codal_setup_pin(PinName pin, void * prev, const PinMap *map)
+{
+    void * tmp = pinmap_peripheral(pin, map);
+    pin_function(pin, pinmap_function(pin, map));
+    //pin_mode(pin, PullNone);
+    //CODAL_ASSERT(!prev || prev == tmp, 99);
+    return tmp;
 }
