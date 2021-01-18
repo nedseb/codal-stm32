@@ -29,60 +29,35 @@ SSD1306::SSD1306(unsigned width, unsigned height, bool externalVCC)
 SSD1306::~SSD1306(){}
 
 void SSD1306::init(){
-    /*
-        From python driver :
 
-            SET_DISP | 0x00, # off
-            # address setting
-            SET_MEM_ADDR, 0x00, # horizontal
-            # resolution and layout
-            SET_DISP_START_LINE | 0x00,
-            SET_SEG_REMAP | 0x01, # column addr 127 mapped to SEG0
-            SET_MUX_RATIO, self.height - 1,
-            SET_COM_OUT_DIR | 0x08, # scan from COM[N] to COM0
-            SET_DISP_OFFSET, 0x00,
-            SET_COM_PIN_CFG, 0x02 if self.height == 32 else 0x12,
-            # timing and driving scheme
-            SET_DISP_CLK_DIV, 0x80,
-            SET_PRECHARGE, 0x22 if self.external_vcc else 0xf1,
-            SET_VCOM_DESEL, 0x30, # 0.83*Vcc
-            # display
-            SET_CONTRAST, 0xff, # maximum
-            SET_ENTIRE_ON, # output follows RAM contents
-            SET_NORM_INV, # not inverted
-            # charge pump
-            SET_CHARGE_PUMP, 0x10 if self.external_vcc else 0x14,
-            SET_DISP | 0x01
-    */
-
-
-
-    writeCommand(SET_DISP | 0x00); //off
+    writeCommand(SET_DISP | 0x00); //set display OFF
    
     // address setting
     writeCommand(SET_MEM_ADDR); writeCommand(0x00); // horizontal
 
     // Resolution and layout
-    writeCommand(SET_DISP_START_LINE | 0x00);
+    writeCommand(SET_DISP_START_LINE | 0x00); // Start the line on RAM address : 0x00
     writeCommand(SET_SEG_REMAP | 0x01);  // column addr 127 mapped to SEG0
     writeCommand(SET_MUX_RATIO); writeCommand(height - 1);
     writeCommand(SET_COM_OUT_DIR | 0x08); //scan form COM[N] to COM0
-    writeCommand(SET_DISP_OFFSET); writeCommand(0x00);
-    writeCommand(SET_COM_PIN_CFG); writeCommand( height == 32 ? 0x02 : 0x12 );
+    writeCommand(SET_DISP_OFFSET); writeCommand(0x00); // No Display offset
+    writeCommand(SET_COM_PIN_CFG); writeCommand( height == 32 ? 0x02 : 0x12 ); //Select the right COM pin regarding the screen's height
 
     // Timing and driving scheme
-    writeCommand(SET_DISP_CLK_DIV); writeCommand(0x80);
-    writeCommand(SET_PRECHARGE); writeCommand( externalVCC ? 0x22 : 0xF1);
-    writeCommand(SET_VCOM_DESEL); writeCommand(0x30); // 0.83 * Vcc
+    writeCommand(SET_DISP_CLK_DIV); writeCommand(0x80); //Use defaut clock divider and oscillator frequency
+    writeCommand(SET_PRECHARGE); writeCommand( externalVCC ? 0x22 : 0xF1); // Set pre-charge period regarding the usage of external VCC,  
+                                                                           // defaut (0x22) if true
+                                                                           // higher period for phase 2 than period 1 (0xF1) otherwise. 
+    writeCommand(SET_VCOM_DESEL); writeCommand(0x30); // Set the regulator ouput ( 0x320 = 0.83 * Vcc), for deselection level.
 
     // Display
-    writeCommand(SET_CONTRAST); writeCommand(0xFF); // Maximum
+    writeCommand(SET_CONTRAST); writeCommand(0xFF); // Maximum contrast
     writeCommand(SET_ENTIRE_ON); // output follows RAM contents
     writeCommand(SET_NORM_INV); // not inverted
 
     // Charged pump
-    writeCommand(SET_CHARGE_PUMP); writeCommand( externalVCC ? 0x10 : 0x14);
-    writeCommand(SET_DISP | 0x01);
+    writeCommand(SET_CHARGE_PUMP); writeCommand( externalVCC ? 0x10 : 0x14); // enable Charge Pump only when using external VCC.
+    writeCommand(SET_DISP | 0x01); // set display ON
 }
 
 void SSD1306::powerOff(){
