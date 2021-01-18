@@ -8,12 +8,12 @@
 
 namespace codal{
     
-    class SSD1306 : FrameBuffer{
+    class SSD1306 : public FrameBuffer{
         public:
             SSD1306(unsigned width, unsigned height, bool externalVCC = false);
             ~SSD1306();
 
-            void initDisplay();
+            void init();
             void powerOff();
             void powerOn();
             void contrast( uint8_t contrast);
@@ -27,7 +27,7 @@ namespace codal{
             bool externalVCC;
     };
 
-    class SSD1306_I2C : SSD1306 {
+    class SSD1306_I2C : public SSD1306 {
         public:
             SSD1306_I2C( STM32I2C i2c, uint16_t address, unsigned width, unsigned height, bool externalVCC = false );
             ~SSD1306_I2C();

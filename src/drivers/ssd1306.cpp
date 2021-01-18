@@ -28,7 +28,7 @@ SSD1306::SSD1306(unsigned width, unsigned height, bool externalVCC)
 
 SSD1306::~SSD1306(){}
 
-void SSD1306::initDisplay(){
+void SSD1306::init(){
     /*
         From python driver :
 
