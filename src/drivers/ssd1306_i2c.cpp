@@ -16,10 +16,25 @@ int SSD1306_I2C::writeCommand( uint8_t cmd ){
 
 int SSD1306_I2C::writeData( uint8_t* buf, unsigned len )
 {
-    uint8_t tmp[len+1];
-    tmp[0] = 0x40;  // Co = 0, D/C# = 1
-    
-    memcpy( tmp + 1, buf, len );
+    uint8_t tmp[i2c.getBufferSize()];
+    unsigned bytesToSend = 1;
 
-    return i2c.write(address, buf, len+1 );
+    tmp[0] = 0x40;
+
+    for( unsigned i = 0; i < len; ++i ){
+
+        if( bytesToSend >= i2c.getBufferSize() ){
+
+            i2c.write( address, tmp, bytesToSend );
+            bytesToSend = 1;
+        }
+
+        tmp[bytesToSend] = buf[i];
+        ++bytesToSend;
+    }
+
+    i2c.write( address, tmp, bytesToSend );
+
+
+    return len;
 }
