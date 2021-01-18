@@ -36,12 +36,12 @@ void FrameBuffer::fill( uint16_t color ){
 
 void FrameBuffer::drawPixel( unsigned x, unsigned y, uint16_t color){
 
-    if( x >= width || y >= height ){ return; }
+    if( x >= width || y >= height || x < 0 || y < 0 ){ return; }
 
     switch( format ){
         case Format::MONO_VLSB:
             int shift = y % 8;
-            int index = (x * pages) + (y / 8);
+            int index = x + ( ( y / 8 ) * width );
             uint8_t * data = &buffer[index];
 
             if(color > 0){
@@ -61,7 +61,7 @@ void FrameBuffer::drawChar( char c, unsigned x, unsigned y, uint16_t color){
         uint8_t currentChar = ASCII_FONT[ c * 5 + i ];
 
         for(int j = 0; j < 8; ++j){
-            if( ( currentChar & ( 0x01 << j) ) > 1 ){
+            if( ( currentChar & ( 0x01 << j) ) > 0 ){
                 drawPixel( x + i, y + j, color);
             }
         }
