@@ -4,7 +4,10 @@
 using namespace codal;
 
 STM32I2C::STM32I2C(STM32Pin& sda, STM32Pin& scl) : I2C(sda, scl) {
-    IC2x_Init_Handler(&i2c);
+
+    //if( sda.name != PinNumber::I2C2_SDA ){ return; }
+
+    /*IC2x_Init_Handler(&i2c);
 
     void * inst = 0;
     inst = codal_setup_pin((PinName)sda.name, inst, PinMap_I2C_SDA);
@@ -13,7 +16,26 @@ STM32I2C::STM32I2C(STM32Pin& sda, STM32Pin& scl) : I2C(sda, scl) {
 
     i2c.Init.Timing = 100000;
 
-    I2Cx_Init(&i2c);
+    I2Cx_Init(&i2c);*/
+    
+    _i2c.sda = (PinName)sda.name;
+    _i2c.scl = (PinName)scl.name;
+    _i2c.isMaster = 1;
+    _i2c.generalCall = 0;
+
+    //i2c_init(&_i2c);
+
+    /**Configure Analogue filter */
+    // HAL_I2CEx_ConfigAnalogFilter(&_i2c.handle, I2C_ANALOGFILTER_ENABLE);  
+}
+
+void STM32I2C::begin(){
+    i2c_init(&_i2c);
+    //i2c_custom_init(&_i2c, 100000, I2C_ADDRESSINGMODE_7BIT, 0x33);
+}
+
+void STM32I2C::end(){
+    i2c_deinit(&_i2c);
 }
 
 int STM32I2C::setFrequency(uint32_t frequency) {
@@ -22,16 +44,27 @@ int STM32I2C::setFrequency(uint32_t frequency) {
 
 int STM32I2C::write(uint16_t address, uint8_t* data, int len, bool repeated) {
 
-    if (data == NULL || len <= 0)
-        return DEVICE_INVALID_PARAMETER;
+    // int ret = DEVICE_I2C_ERROR;
 
-    int ret = DEVICE_I2C_ERROR;
-
-    auto res = HAL_I2C_Master_Transmit(&i2c, address, data, len, HAL_MAX_DELAY);
-    if (res == HAL_OK)
-        return DEVICE_OK;
+    // auto res = HAL_I2C_Master_Transmit(&(_i2c.handle), address, data, len, HAL_MAX_DELAY);
+    // if (res == HAL_OK)
+    //     return DEVICE_OK;
     
-    return ret;
+    // return ret;
+
+    // uint32_t XferOptions = _i2c.handle.XferOptions;
+    // HAL_I2C_Master_Seq_Transmit_IT(&(_i2c.handle), address, data, len, XferOptions);
+
+    // return len;
+
+    _i2c.handle.XferOptions = I2C_OTHER_AND_LAST_FRAME;
+    auto res = i2c_master_write(&_i2c, address, data, len);
+
+    if( res != I2C_OK ){
+       return DEVICE_I2C_ERROR;
+    }
+
+    return len;
 }
 
 int STM32I2C::read(uint16_t address, uint8_t* data, int len, bool repeated) {
@@ -53,12 +86,9 @@ int STM32I2C::writeRegister(uint16_t address, uint8_t reg, uint8_t value) {
     return 0;
 }
 
-
-void * STM32I2C::codal_setup_pin(PinName pin, void * prev, const PinMap *map)
+void * STM32I2C::setup_pin(PinName pin, const PinMap *map)
 {
     void * tmp = pinmap_peripheral(pin, map);
     pin_function(pin, pinmap_function(pin, map));
-    //pin_mode(pin, PullNone);
-    //CODAL_ASSERT(!prev || prev == tmp, 99);
     return tmp;
 }
