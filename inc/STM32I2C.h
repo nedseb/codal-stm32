@@ -23,22 +23,23 @@ DEALINGS IN THE SOFTWARE.
 #ifndef CODAL_STM32_I2C_H
 #define CODAL_STM32_I2C_H
 
+
 #include "CodalConfig.h"
 #include "ErrorNo.h"
 #include "I2C.h"
-//#include "twi.h"
 
 #include "STM32Pin.h"
-
-#include "i2c.h"
+//#include "i2c.h"
 #include "pinmap.h"
+
+#include "twi.h"
 
 namespace codal {
 
 class STM32I2C : public codal::I2C {
   private:
-    //i2c_t _i2c;
-    I2C_HandleTypeDef i2c;
+    i2c_t _i2c;
+    //I2C_HandleTypeDef i2c;
 
   public:
     STM32I2C(STM32Pin& sda, STM32Pin& scl);
@@ -53,6 +54,10 @@ class STM32I2C : public codal::I2C {
      * 
      */
     unsigned getBufferSize(){ return 1000; } // 1 kByte. p. 83
+
+
+    void begin();
+    void end();
 
   protected:
     /**
@@ -85,7 +90,14 @@ class STM32I2C : public codal::I2C {
      */
     int read(AcknowledgeType ack = ACK) final override { return DEVICE_NOT_IMPLEMENTED; }
 
-    void * codal_setup_pin(PinName pin, void * prev, const PinMap *map);
+    /**
+     * @brief Setup pin
+     * 
+     * @param pin 
+     * @param map 
+     * @return void* 
+     */
+    void * setup_pin(PinName pin, const PinMap *map);
 
   public:
     /**
