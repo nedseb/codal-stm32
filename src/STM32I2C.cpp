@@ -28,28 +28,40 @@ int STM32I2C::write(uint16_t address, uint8_t* data, int len, bool repeated) {
     int ret = DEVICE_I2C_ERROR;
 
     auto res = HAL_I2C_Master_Transmit(&i2c, address, data, len, HAL_MAX_DELAY);
-    if (res == HAL_OK)
-        return DEVICE_OK;
     
-    return ret;
+    return res == HAL_OK ? DEVICE_OK : DEVICE_I2C_ERROR;
 }
 
 int STM32I2C::read(uint16_t address, uint8_t* data, int len, bool repeated) {
     if (data == NULL || len <= 0)
         return DEVICE_INVALID_PARAMETER;
 
-    int ret = DEVICE_I2C_ERROR;
 
-    return ret;
+    auto res = HAL_I2C_Master_Receive( &i2c, address, data, len, HAL_MAX_DELAY );
+
+    return res == HAL_OK ? DEVICE_OK : DEVICE_I2C_ERROR;
 }
 
 int STM32I2C::readRegister(uint16_t address, uint8_t reg, uint8_t* data, int length, bool repeated) {
     if (data == NULL || length <= 0)
         return DEVICE_INVALID_PARAMETER;
-    return 0;
+    
+    auto res = write( address, &reg, 1 );
+
+    if( res != DEVICE_OK )
+        return res;
+
+    res = read( address, data, length );
+
+    return res;
 }
 
 int STM32I2C::writeRegister(uint16_t address, uint8_t reg, uint8_t value) {
+
+    uint8_t data[2] = { reg, value };
+
+    auto res = write( address, data, 2);
+
     return 0;
 }
 
