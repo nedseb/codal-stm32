@@ -36,7 +36,8 @@ void STM32I2C::endTransmission(bool sendStop){
     setXferOptions(sendStop);
 
     unsigned packets = dataToSent.size() / getBufferSize();
-    if( dataToSent.size() - packets * getBufferSize() > 0 ){
+    
+    if( getBufferSize() * packets < dataToSent.size() ){
         packets++;
     }
 
