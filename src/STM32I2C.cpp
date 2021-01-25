@@ -33,14 +33,7 @@ void STM32I2C::endTransmission(bool sendStop){
 
     i2c_init(&i2c);
 
-    #if defined(I2C_OTHER_FRAME)
-        if( sendStop ){
-            i2c.handle.XferOptions = I2C_OTHER_AND_LAST_FRAME;
-        }
-        else{
-            i2c.handle.XferOptions = I2C_OTHER_FRAME;
-        }
-    #endif
+    setXferOptions(sendStop);
 
     unsigned packets = dataToSent.size() / getBufferSize();
     if( dataToSent.size() - packets * getBufferSize() > 0 ){
@@ -83,14 +76,7 @@ void STM32I2C::writeRegister( uint8_t reg, uint8_t value){
 vector<uint8_t> STM32I2C::read( uint8_t address, size_t len, bool sendStop ){
     vector<uint8_t> data(len);
 
-    #if defined(I2C_OTHER_FRAME)
-        if (sendStop) {
-            i2c.handle.XferOptions = I2C_OTHER_AND_LAST_FRAME;
-        } else {
-            i2c.handle.XferOptions = I2C_OTHER_FRAME ;
-        }
-    #endif
-
+    setXferOptions(sendStop);
     i2c_master_read( &i2c, address, data.data(), len );
 
     return data;
@@ -102,4 +88,14 @@ vector<uint8_t> STM32I2C::readRegister( uint8_t address, uint8_t reg, size_t len
     endTransmission(false);
 
     return read(address, len, sendStop);
+}
+
+void STM32I2C::setXferOptions( bool sendStop ){
+    #if defined(I2C_OTHER_FRAME)
+        if (sendStop) {
+            i2c.handle.XferOptions = I2C_OTHER_AND_LAST_FRAME;
+        } else {
+            i2c.handle.XferOptions = I2C_OTHER_FRAME ;
+        }
+    #endif
 }
