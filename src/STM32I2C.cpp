@@ -76,8 +76,12 @@ void STM32I2C::writeRegister( uint8_t reg, uint8_t value){
 vector<uint8_t> STM32I2C::read( uint8_t address, size_t len, bool sendStop ){
     vector<uint8_t> data(len);
 
+    i2c_init(&i2c);
+
     setXferOptions(sendStop);
     i2c_master_read( &i2c, address, data.data(), len );
+
+    i2c_deinit(&i2c);
 
     return data;
 }
