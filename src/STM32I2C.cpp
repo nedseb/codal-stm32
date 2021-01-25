@@ -70,7 +70,7 @@ int STM32I2C::write( uint8_t data ){
 int STM32I2C::write( uint8_t * data, size_t len ){
     if( ! isOnTransmission ){ return 0; }
 
-    dataToSent.insert( dataToSent.begin(), data, data + len );
+    dataToSent.insert( dataToSent.end(), data, data + len );
 
     return DEVICE_OK;
 }
