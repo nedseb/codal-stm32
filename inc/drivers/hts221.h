@@ -172,9 +172,6 @@ namespace codal{
             void readCalibrationValue();
             float interpolateTemperature( uint16_t raw ) { return T0Deg + ( (T1Deg - T0Deg) / (T1Out - T0Out) ) * ( raw - T0Out ); }
             float interpolateHumidity( uint16_t raw )    { return H0Rh  + ( (H1Rh  - H0Rh)  / (H1Out - H0Out) ) * ( raw - H0Out ); }
-
-
-            // yp = y0 + ((y1-y0)/(x1-x0)) * (xp - x0);
     };
 
 }

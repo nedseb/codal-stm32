@@ -66,62 +66,87 @@ void HTS221::init(){
 }
 
 uint8_t HTS221::whoAmI(){
-    uint8_t value;
-    i2c.readRegister( address, WHO_AM_I, &value, 1);
-    return value;
+    return readRegister(WHO_AM_I);
 }
 
 void HTS221::setAverageConfiguration( HTS221_AVCONF_T avg_temp, HTS221_AVCONF_H avg_hum ){
-    i2c.writeRegister( address, AV_CONF, avg_temp | avg_hum );
+    i2c.beginTransmission(address);
+        i2c.writeRegister( AV_CONF, avg_temp | avg_hum );
+    i2c.endTransmission();
 }
 
 void HTS221::powerOn(){
     uint8_t ctrlReg = readRegister(CTRL_REG1);
     ctrlReg |= BIT_PD;
-    i2c.writeRegister(address, CTRL_REG1, ctrlReg);
+
+    i2c.beginTransmission(address);
+        i2c.writeRegister(CTRL_REG1, ctrlReg);
+    i2c.endTransmission();
 }
 
 void HTS221::powerOff(){
     uint8_t ctrlReg = readRegister(CTRL_REG1);
     ctrlReg &= ~BIT_PD;
-    i2c.writeRegister(address, CTRL_REG1, ctrlReg);
+
+    i2c.beginTransmission(address);
+        i2c.writeRegister(CTRL_REG1, ctrlReg);
+    i2c.endTransmission();
 }
 
 void HTS221::enableContinuousUpdate(){
     uint8_t ctrlReg = readRegister(CTRL_REG1);
     ctrlReg &= ~BIT_BDU;
-    i2c.writeRegister(address, CTRL_REG1, ctrlReg);
+
+    i2c.beginTransmission(address);
+        i2c.writeRegister(CTRL_REG1, ctrlReg);
+    i2c.endTransmission();
 }
 
 void HTS221::disableContinuousUpdate(){
     uint8_t ctrlReg = readRegister(CTRL_REG1);
     ctrlReg |= BIT_BDU;
-    i2c.writeRegister(address, CTRL_REG1, ctrlReg);
+
+    i2c.beginTransmission(address);
+        i2c.writeRegister(CTRL_REG1, ctrlReg);
+    i2c.endTransmission();
+    
 }
 
 void HTS221::setOutputRate( HTS221_OUTPUT_RATE rate ){
     uint8_t ctrlReg = readRegister(CTRL_REG1);
     ctrlReg &= ~MASK_ODR;
     ctrlReg |= rate;
-    i2c.writeRegister(address, CTRL_REG1, ctrlReg);
+
+    i2c.beginTransmission(address);
+        i2c.writeRegister(CTRL_REG1, ctrlReg);
+    i2c.endTransmission();
 }
 
 void HTS221::enableHeater(){
     uint8_t ctrlReg = readRegister(CTRL_REG2);
     ctrlReg |= BIT_HEATER;
-    i2c.writeRegister(address, CTRL_REG2, ctrlReg);
+
+    i2c.beginTransmission(address);
+        i2c.writeRegister(CTRL_REG2, ctrlReg);
+    i2c.endTransmission();
 }
 
 void HTS221::disableHeater(){
     uint8_t ctrlReg = readRegister(CTRL_REG2);
     ctrlReg &= ~BIT_HEATER;
-    i2c.writeRegister(address, CTRL_REG2, ctrlReg);
+
+    i2c.beginTransmission(address);
+        i2c.writeRegister(CTRL_REG2, ctrlReg);
+    i2c.endTransmission();
 }
 
 void HTS221::startOneShotAcquisition(){
     uint8_t ctrlReg = readRegister(CTRL_REG2);
     ctrlReg |= BIT_ONE_SHOT;
-    i2c.writeRegister(address, CTRL_REG2, ctrlReg);
+
+    i2c.beginTransmission(address);
+        i2c.writeRegister(CTRL_REG2, ctrlReg);
+    i2c.endTransmission();
 }
 
 void HTS221::enableDataReadyOutputSignal( bool useOpenDrain, bool activeLow ){
@@ -133,13 +158,18 @@ void HTS221::enableDataReadyOutputSignal( bool useOpenDrain, bool activeLow ){
     if( useOpenDrain ){ ctrlReg |= BIT_PP_OD; }
     if( activeLow )   { ctrlReg |= BIT_DRDY_H_L; }
 
-    i2c.writeRegister(address, CTRL_REG3, ctrlReg);
+    i2c.beginTransmission(address);
+        i2c.writeRegister(CTRL_REG3, ctrlReg);
+    i2c.endTransmission();
 }
 
 void HTS221::disableDataReadyOutputSignal(){
     uint8_t ctrlReg = readRegister(CTRL_REG3);
     ctrlReg &= ~BIT_DRDY;
-    i2c.writeRegister(address, CTRL_REG3, ctrlReg);
+
+    i2c.beginTransmission(address);
+        i2c.writeRegister(CTRL_REG3, ctrlReg);
+    i2c.endTransmission();
 }
 
 bool HTS221::isTemperatureDataAvailable(){
@@ -154,18 +184,16 @@ bool HTS221::isHumidityDataAvailable(){
 
 float HTS221::getTemperature(){
     uint16_t rawValue = ( readRegister( TEMP_OUT_H ) << 8 ) | readRegister( TEMP_OUT_L );
-    return interpolateTemperature( rawValue / 8 );
+    return interpolateTemperature( rawValue );
 }
 
 float HTS221::getHumidity(){
     uint16_t rawValue = ( readRegister( HUMIDITY_OUT_H ) << 8 ) | readRegister( HUMIDITY_OUT_L );
-    return interpolateHumidity( rawValue / 2 );
+    return interpolateHumidity( rawValue );
 }
 
 uint8_t HTS221::readRegister( uint8_t reg ){
-    uint8_t regValue;
-    i2c.readRegister(address, reg, &regValue, 1);
-    return regValue;
+    return i2c.readRegister(address, reg, 1)[0];
 }
 
 void HTS221::readCalibrationValue(){
@@ -181,12 +209,11 @@ void HTS221::readCalibrationValue(){
     T1DegRaw <<= 6;
     T1DegRaw |= readRegister( T1_DEGC_X8 );
 
+    T0Deg = T0DegRaw >> 3;
+    T1Deg = T1DegRaw >> 3;
 
-    T0Deg = T0DegRaw / 8.0f;
-    T1Deg = T1DegRaw / 8.0f;
-
-    H0Rh = readRegister( H0_RH_X2 ) / 2.0f;
-    H1Rh = readRegister( H1_RH_X2 ) / 2.0f;
+    H0Rh = readRegister( H0_RH_X2 ) >> 1;
+    H1Rh = readRegister( H1_RH_X2 ) >> 1;
 
     T0Out = ( readRegister( T0_OUT_MSB ) << 8 ) | readRegister( T0_OUT_LSB );
     T1Out = ( readRegister( T1_OUT_MSB ) << 8 ) | readRegister( T1_OUT_LSB );
