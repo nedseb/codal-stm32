@@ -20,8 +20,8 @@ namespace codal{
             void invert( bool invert );
             void show();
 
-            virtual int writeCommand( uint8_t cmd ) = 0;
-            virtual int writeData( uint8_t* buf, unsigned size ) = 0;
+            virtual void writeCommand( uint8_t cmd ) = 0;
+            virtual void writeData( uint8_t* buf, unsigned size ) = 0;
 
         private:
             bool externalVCC;
@@ -32,8 +32,8 @@ namespace codal{
             SSD1306_I2C( STM32I2C i2c, uint16_t address, unsigned width, unsigned height, bool externalVCC = false );
             ~SSD1306_I2C();
 
-            int writeCommand( uint8_t cmd );
-            int writeData( uint8_t* buf, unsigned len );
+            void writeCommand( uint8_t cmd );
+            void writeData( uint8_t* buf, unsigned len );
 
         private:
             STM32I2C i2c;
