@@ -13,14 +13,6 @@ SSD1306_I2C::SSD1306_I2C( STM32I2C i2c, uint16_t address, unsigned width, unsign
 SSD1306_I2C::~SSD1306_I2C(){ }
 
 void SSD1306_I2C::writeCommand( uint8_t cmd ){
-
-    /*i2c.begin();
-    
-    uint8_t tmp[2] = { 0x80, cmd }; // Co = 1, D/C# = 0
-    return i2c.write(address, tmp, 2);
-
-    i2c.end();*/
-
     i2c.beginTransmission(address);
         i2c.write( 0x80 );
         i2c.write( cmd );
@@ -30,7 +22,6 @@ void SSD1306_I2C::writeCommand( uint8_t cmd ){
 
 void SSD1306_I2C::writeData( uint8_t* buf, unsigned len )
 {
-
     unsigned byteToSend = 1;
 
     i2c.beginTransmission(address);
