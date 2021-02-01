@@ -40,6 +40,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32_def.h"
 #include "PinNames.h"
+#include "PeripheralPins.h"
+#include "clock.h"
 
 #ifdef __cplusplus
 extern "C" {
