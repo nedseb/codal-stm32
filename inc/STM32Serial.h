@@ -54,7 +54,7 @@ namespace codal{
             STM32Serial( STM32Pin& rxPin, STM32Pin& txPin );
             ~STM32Serial();
 
-            void init( uint32_t baudrate, LengthSerial databits = SERIAL_8_BITS, ParitySerial parity = SERIAL_NONE_PARITY, StopBitSerial stopBit = SERIAL_STOP_1 );
+            void init( uint32_t baudrate, LengthSerial databits = LengthSerial::SERIAL_8_BITS, ParitySerial parity = ParitySerial::SERIAL_NONE_PARITY, StopBitSerial stopBit = StopBitSerial::SERIAL_STOP_1 );
 
             int putc(char c) final override;
             int getc() final override;
