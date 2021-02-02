@@ -36,7 +36,7 @@ void FrameBuffer::fill( uint16_t color ){
 
 void FrameBuffer::drawPixel( unsigned x, unsigned y, uint16_t color){
 
-    if( x >= width || y >= height || x < 0 || y < 0 ){ return; }
+    if( x >= width || y >= height ){ return; }
 
     switch( format ){
         case Format::MONO_VLSB:
