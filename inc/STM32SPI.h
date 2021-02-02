@@ -23,8 +23,6 @@ DEALINGS IN THE SOFTWARE.
 #ifndef CODAL_STM32_SPI_H
 #define CODAL_STM32_SPI_H
 
-#include <optional>
-
 #include "CodalConfig.h"
 #include "ErrorNo.h"
 #include "SPI.h"
@@ -55,7 +53,7 @@ public:
      * Default setup is 1 MHz, 8 bit, mode 0.
      * If `cs` is specified, the SPI is run in slave mode.
      */
-    STM32SPI(codal::Pin &mosi, codal::Pin &miso, codal::Pin &sclk, std::optional<codal::Pin> cs = std::nullopt);
+    STM32SPI(codal::Pin& mosi, codal::Pin& miso, codal::Pin& sclk, codal::Pin* cs = nullptr);
 
 
     virtual ~STM32SPI() = default;
