@@ -41,11 +41,11 @@ int STM32Serial::enableInterrupt(SerialInterruptType t){
         }
     }
 
-    return 0;
+    return DEVICE_OK;
 }
 
 int STM32Serial::disableInterrupt(SerialInterruptType t){
-    return 0;
+    return DEVICE_OK;
 }
 
 int STM32Serial::setBaudrate(uint32_t baudrate){
@@ -54,7 +54,7 @@ int STM32Serial::setBaudrate(uint32_t baudrate){
     uart_deinit(&serial);
     uart_init(&serial, baudrate, databits, parity, stopBit);
 
-    return 0;
+    return DEVICE_OK;
 }
 
 int STM32Serial::configurePins(Pin& tx, Pin& rx){
@@ -68,7 +68,7 @@ int STM32Serial::configurePins(Pin& tx, Pin& rx){
     uart_deinit(&serial);
     uart_init(&serial, baudrate, databits, parity, stopBit);
 
-    return 0;
+    return DEVICE_OK;
 }
 
 int STM32Serial::putc(char c){
