@@ -58,7 +58,7 @@ void STM32SPI::init_internal()
 
 }
 
-STM32SPI::STM32SPI(Pin &mosi, Pin &miso, Pin &sclk, std::optional<codal::Pin> cs) : codal::SPI()
+STM32SPI::STM32SPI(codal::Pin& mosi, codal::Pin& miso, codal::Pin& sclk, codal::Pin* cs): codal::SPI()
 {
 }
 
