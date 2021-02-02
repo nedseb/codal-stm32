@@ -70,6 +70,6 @@ void FrameBuffer::drawChar( char c, unsigned x, unsigned y, uint16_t color){
 
 void FrameBuffer::drawText(string str, unsigned x, unsigned y, uint16_t color){
     for( size_t i = 0; i < str.length(); ++i ){
-        drawChar( str[i], x + i * 8, y, color );
+        drawChar( str[i], x + i * 6, y, color );
     }
 }
