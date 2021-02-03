@@ -23,7 +23,9 @@ int STM32I2C::setFrequency(uint32_t frequency)
 
 void STM32I2C::beginTransmission(uint16_t address)
 {
-    if (isOnTransmission) { return; }
+    if (isOnTransmission) {
+        return;
+    }
 
     isOnTransmission = true;
     currentAddress   = address;
@@ -32,7 +34,9 @@ void STM32I2C::beginTransmission(uint16_t address)
 
 void STM32I2C::endTransmission(bool sendStop)
 {
-    if (!isOnTransmission) { return; }
+    if (!isOnTransmission) {
+        return;
+    }
 
     i2c_init(&i2c);
 
@@ -40,7 +44,9 @@ void STM32I2C::endTransmission(bool sendStop)
 
     unsigned packets = dataToSent.size() / getBufferSize();
 
-    if (getBufferSize() * packets < dataToSent.size()) { packets++; }
+    if (getBufferSize() * packets < dataToSent.size()) {
+        packets++;
+    }
 
     for (unsigned i = 0; i < packets; ++i) {
         auto offset = i * getBufferSize();
@@ -56,7 +62,9 @@ void STM32I2C::endTransmission(bool sendStop)
 
 int STM32I2C::write(uint8_t data)
 {
-    if (!isOnTransmission) { return 0; }
+    if (!isOnTransmission) {
+        return 0;
+    }
 
     dataToSent.push_back(data);
 
@@ -65,7 +73,9 @@ int STM32I2C::write(uint8_t data)
 
 int STM32I2C::write(uint8_t* data, size_t len)
 {
-    if (!isOnTransmission) { return 0; }
+    if (!isOnTransmission) {
+        return 0;
+    }
 
     dataToSent.insert(dataToSent.end(), data, data + len);
 
@@ -104,7 +114,9 @@ vector<uint8_t> STM32I2C::readRegister(uint8_t address, uint8_t reg, size_t len,
 void STM32I2C::setXferOptions(bool sendStop)
 {
 #if defined(I2C_OTHER_FRAME)
-    if (sendStop) { i2c.handle.XferOptions = I2C_OTHER_AND_LAST_FRAME; }
+    if (sendStop) {
+        i2c.handle.XferOptions = I2C_OTHER_AND_LAST_FRAME;
+    }
     else {
         i2c.handle.XferOptions = I2C_OTHER_FRAME;
     }

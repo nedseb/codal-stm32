@@ -32,9 +32,13 @@ void STM32Serial::init(uint32_t baudrate, LengthSerial databits, ParitySerial pa
 
 int STM32Serial::enableInterrupt(SerialInterruptType t)
 {
-    if (t == RxInterrupt) { uart_attach_rx_callback(&serial, RxIRQ); }
+    if (t == RxInterrupt) {
+        uart_attach_rx_callback(&serial, RxIRQ);
+    }
     else if (t == TxInterrupt) {
-        while (txBufferedSize() > 0) { dataTransmitted(); }
+        while (txBufferedSize() > 0) {
+            dataTransmitted();
+        }
     }
 
     return DEVICE_OK;
@@ -129,7 +133,9 @@ extern "C" GETCHAR_PROTOTYPE
     /* Place your implementation of fgetc here */
     /* e.g. readwrite a character to the USART2 and Loop until the end of transmission */
     uint8_t ch = 0;
-    if (default_serial_debug != nullptr && default_serial_debug->isReadable()) { ch = default_serial_debug->read(); }
+    if (default_serial_debug != nullptr && default_serial_debug->isReadable()) {
+        ch = default_serial_debug->read();
+    }
     return ch;
 }
 #endif

@@ -82,7 +82,8 @@ __attribute__((weak)) void target_panic(int statusCode)
     target_disable_irq();
 
     DMESG("*** CODAL PANIC : [%d]", statusCode);
-    while (1) {}
+    while (1) {
+    }
 }
 
 void debug_facility()

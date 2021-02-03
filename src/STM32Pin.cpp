@@ -64,9 +64,13 @@ extern uint32_t g_anOutputPinConfigured[MAX_NB_PORT];
 static inline uint32_t mapResolution(uint32_t value, uint32_t from, uint32_t to)
 {
     if (from != to) {
-        if (from > to) { value = (value < (uint32_t)(1 << (from - to))) ? 0 : ((value + 1) >> (from - to)) - 1; }
+        if (from > to) {
+            value = (value < (uint32_t)(1 << (from - to))) ? 0 : ((value + 1) >> (from - to)) - 1;
+        }
         else {
-            if (value != 0) { value = ((value + 1) << (to - from)) - 1; }
+            if (value != 0) {
+                value = ((value + 1) << (to - from)) - 1;
+            }
         }
     }
     return value;
@@ -110,7 +114,9 @@ void STM32Pin::disconnect()
     (defined(HAL_TIM_MODULE_ENABLED) && !defined(HAL_TIM_MODULE_ONLY))
     if (is_pin_configured(p, g_anOutputPinConfigured)) {
 #if defined(HAL_DAC_MODULE_ENABLED) && !defined(HAL_DAC_MODULE_ONLY)
-        if (pin_in_pinmap(p, PinMap_DAC)) { dac_stop(p); }
+        if (pin_in_pinmap(p, PinMap_DAC)) {
+            dac_stop(p);
+        }
         else
 #endif  // HAL_DAC_MODULE_ENABLED && !HAL_DAC_MODULE_ONLY
 
@@ -193,7 +199,9 @@ int STM32Pin::setAnalogValue(int value)
             // Defaults to digital write
             pin_function(to_pinName(this->name), STM_PIN_DATA(STM_MODE_OUTPUT_PP, map(this->pullMode), 0));
             value = mapResolution(value, _writeResolution, 8);
-            if (value < 128) { setDigitalValue(LOW); }
+            if (value < 128) {
+                setDigitalValue(LOW);
+            }
             else {
                 setDigitalValue(HIGH);
             }

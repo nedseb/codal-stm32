@@ -47,7 +47,9 @@ IRQn_Type getTimerCCIrq(TIM_TypeDef* tim);
 HardwareTimer::HardwareTimer(TIM_TypeDef* instance)
 {
     uint32_t index = get_timer_index(instance);
-    if (index == UNKNOWN_TIMER) { Error_Handler(); }
+    if (index == UNKNOWN_TIMER) {
+        Error_Handler();
+    }
 
     HardwareTimer_Handle[index] = &_timerObj;
 
@@ -72,7 +74,9 @@ HardwareTimer::HardwareTimer(TIM_TypeDef* instance)
     enableTimerClock(&(_timerObj.handle));
 
     // Initialize NULL callbacks
-    for (int i = 0; i < TIMER_CHANNELS + 1; i++) { callbacks[i] = NULL; }
+    for (int i = 0; i < TIMER_CHANNELS + 1; i++) {
+        callbacks[i] = NULL;
+    }
 
     // Initialize channel mode and complementary
     for (int i = 0; i < TIMER_CHANNELS; i++) {
@@ -122,10 +126,14 @@ void HardwareTimer::pauseChannel(uint32_t channel)
 {
     int timAssociatedInputChannel;
     int LLChannel = getLLChannel(channel);
-    if (LLChannel == -1) { Error_Handler(); }
+    if (LLChannel == -1) {
+        Error_Handler();
+    }
 
     int interrupt = getIT(channel);
-    if (interrupt == -1) { Error_Handler(); }
+    if (interrupt == -1) {
+        Error_Handler();
+    }
 
     // Disable channel and corresponding interrupt
     __HAL_TIM_DISABLE_IT(&(_timerObj.handle), interrupt);
@@ -310,13 +318,19 @@ void HardwareTimer::resumeChannel(uint32_t channel)
 {
     int timChannel = getChannel(channel);
     int timAssociatedInputChannel;
-    if (timChannel == -1) { Error_Handler(); }
+    if (timChannel == -1) {
+        Error_Handler();
+    }
 
     int interrupt = getIT(channel);
-    if (interrupt == -1) { Error_Handler(); }
+    if (interrupt == -1) {
+        Error_Handler();
+    }
 
     int LLChannel = getLLChannel(channel);
-    if (LLChannel == -1) { Error_Handler(); }
+    if (LLChannel == -1) {
+        Error_Handler();
+    }
 
     // Clear flag and enable IT
     if (callbacks[channel]) {
@@ -328,7 +342,9 @@ void HardwareTimer::resumeChannel(uint32_t channel)
         case TIMER_OUTPUT_COMPARE_PWM1:
         case TIMER_OUTPUT_COMPARE_PWM2: {
 #if defined(TIM_CCER_CC1NE)
-            if (isComplementaryChannel[channel - 1]) { HAL_TIMEx_PWMN_Start(&(_timerObj.handle), timChannel); }
+            if (isComplementaryChannel[channel - 1]) {
+                HAL_TIMEx_PWMN_Start(&(_timerObj.handle), timChannel);
+            }
             else
 #endif
             {
@@ -342,7 +358,9 @@ void HardwareTimer::resumeChannel(uint32_t channel)
         case TIMER_OUTPUT_COMPARE_FORCED_ACTIVE:
         case TIMER_OUTPUT_COMPARE_FORCED_INACTIVE: {
 #if defined(TIM_CCER_CC1NE)
-            if (isComplementaryChannel[channel - 1]) { HAL_TIMEx_OCN_Start(&(_timerObj.handle), timChannel); }
+            if (isComplementaryChannel[channel - 1]) {
+                HAL_TIMEx_OCN_Start(&(_timerObj.handle), timChannel);
+            }
             else
 #endif
             {
@@ -556,7 +574,9 @@ void HardwareTimer::setMode(uint32_t channel, TimerModes_t mode, PinName pin)
     TIM_OC_InitTypeDef channelOC;
     TIM_IC_InitTypeDef channelIC;
 
-    if (timChannel == -1) { Error_Handler(); }
+    if (timChannel == -1) {
+        Error_Handler();
+    }
 
     // Save channel selected mode to object attribute
     _ChannelMode[channel - 1] = mode;
@@ -682,7 +702,9 @@ void HardwareTimer::setMode(uint32_t channel, TimerModes_t mode, PinName pin)
  */
 TimerModes_t HardwareTimer::getMode(uint32_t channel)
 {
-    if ((1 <= channel) && (channel <= TIMER_CHANNELS)) { return _ChannelMode[channel - 1]; }
+    if ((1 <= channel) && (channel <= TIMER_CHANNELS)) {
+        return _ChannelMode[channel - 1];
+    }
     else {
         return TIMER_DISABLED;
     }
@@ -704,7 +726,9 @@ TimerModes_t HardwareTimer::getMode(uint32_t channel)
  */
 void HardwareTimer::setPreloadEnable(bool value)
 {
-    if (value) { LL_TIM_EnableARRPreload(_timerObj.handle.Instance); }
+    if (value) {
+        LL_TIM_EnableARRPreload(_timerObj.handle.Instance);
+    }
     else {
         LL_TIM_DisableARRPreload(_timerObj.handle.Instance);
     }
@@ -726,7 +750,9 @@ void HardwareTimer::setCaptureCompare(uint32_t channel, uint32_t compare, TimerC
     uint32_t Prescalerfactor = LL_TIM_GetPrescaler(_timerObj.handle.Instance) + 1;
     uint32_t CCR_RegisterValue;
 
-    if (timChannel == -1) { Error_Handler(); }
+    if (timChannel == -1) {
+        Error_Handler();
+    }
 
     switch (format) {
         case MICROSEC_COMPARE_FORMAT:
@@ -788,7 +814,9 @@ uint32_t HardwareTimer::getCaptureCompare(uint32_t channel, TimerCompareFormat_t
     uint32_t Prescalerfactor   = LL_TIM_GetPrescaler(_timerObj.handle.Instance) + 1;
     uint32_t return_value;
 
-    if (timChannel == -1) { Error_Handler(); }
+    if (timChannel == -1) {
+        Error_Handler();
+    }
 
     switch (format) {
         case MICROSEC_COMPARE_FORMAT:
@@ -861,8 +889,12 @@ void HardwareTimer::setPWM(uint32_t channel, PinName pin, uint32_t frequency, ui
     setMode(channel, TIMER_OUTPUT_COMPARE_PWM1, pin);
     setOverflow(frequency, HERTZ_FORMAT);
     setCaptureCompare(channel, dutycycle, PERCENT_COMPARE_FORMAT);
-    if (PeriodCallback) { attachInterrupt(PeriodCallback); }
-    if (CompareCallback) { attachInterrupt(channel, CompareCallback); }
+    if (PeriodCallback) {
+        attachInterrupt(PeriodCallback);
+    }
+    if (CompareCallback) {
+        attachInterrupt(channel, CompareCallback);
+    }
     resume();
 }
 
@@ -923,7 +955,9 @@ void HardwareTimer::detachInterrupt()
 void HardwareTimer::attachInterrupt(uint32_t channel, callback_function_t callback)
 {
     int interrupt = getIT(channel);
-    if (interrupt == -1) { Error_Handler(); }
+    if (interrupt == -1) {
+        Error_Handler();
+    }
 
     if ((channel == 0) || (channel > (TIMER_CHANNELS + 1))) {
         Error_Handler();  // only channel 1..4 have an interrupt
@@ -951,7 +985,9 @@ void HardwareTimer::attachInterrupt(uint32_t channel, callback_function_t callba
 void HardwareTimer::detachInterrupt(uint32_t channel)
 {
     int interrupt = getIT(channel);
-    if (interrupt == -1) { Error_Handler(); }
+    if (interrupt == -1) {
+        Error_Handler();
+    }
 
     if ((channel == 0) || (channel > (TIMER_CHANNELS + 1))) {
         Error_Handler();  // only channel 1..4 have an interrupt
@@ -1014,12 +1050,16 @@ TIM_HandleTypeDef* HardwareTimer::getHandle()
  */
 void HardwareTimer::updateCallback(TIM_HandleTypeDef* htim)
 {
-    if (!htim) { Error_Handler(); }
+    if (!htim) {
+        Error_Handler();
+    }
 
     timerObj_t* obj   = get_timer_obj(htim);
     HardwareTimer* HT = (HardwareTimer*)(obj->__this);
 
-    if (HT->callbacks[0]) { HT->callbacks[0](); }
+    if (HT->callbacks[0]) {
+        HT->callbacks[0]();
+    }
 }
 
 /**
@@ -1029,7 +1069,9 @@ void HardwareTimer::updateCallback(TIM_HandleTypeDef* htim)
  */
 void HardwareTimer::captureCompareCallback(TIM_HandleTypeDef* htim)
 {
-    if (!htim) { Error_Handler(); }
+    if (!htim) {
+        Error_Handler();
+    }
     uint32_t channel = htim->Channel;
 
     switch (htim->Channel) {
@@ -1056,7 +1098,9 @@ void HardwareTimer::captureCompareCallback(TIM_HandleTypeDef* htim)
     timerObj_t* obj   = get_timer_obj(htim);
     HardwareTimer* HT = (HardwareTimer*)(obj->__this);
 
-    if (HT->callbacks[channel]) { HT->callbacks[channel](); }
+    if (HT->callbacks[channel]) {
+        HT->callbacks[channel]();
+    }
 }
 
 /**
@@ -1081,70 +1125,114 @@ timer_index_t get_timer_index(TIM_TypeDef* instance)
     timer_index_t index = UNKNOWN_TIMER;
 
 #if defined(TIM1_BASE)
-    if (instance == TIM1) { index = TIMER1_INDEX; }
+    if (instance == TIM1) {
+        index = TIMER1_INDEX;
+    }
 #endif
 #if defined(TIM2_BASE)
-    if (instance == TIM2) { index = TIMER2_INDEX; }
+    if (instance == TIM2) {
+        index = TIMER2_INDEX;
+    }
 #endif
 #if defined(TIM3_BASE)
-    if (instance == TIM3) { index = TIMER3_INDEX; }
+    if (instance == TIM3) {
+        index = TIMER3_INDEX;
+    }
 #endif
 #if defined(TIM4_BASE)
-    if (instance == TIM4) { index = TIMER4_INDEX; }
+    if (instance == TIM4) {
+        index = TIMER4_INDEX;
+    }
 #endif
 #if defined(TIM5_BASE)
-    if (instance == TIM5) { index = TIMER5_INDEX; }
+    if (instance == TIM5) {
+        index = TIMER5_INDEX;
+    }
 #endif
 #if defined(TIM6_BASE)
-    if (instance == TIM6) { index = TIMER6_INDEX; }
+    if (instance == TIM6) {
+        index = TIMER6_INDEX;
+    }
 #endif
 #if defined(TIM7_BASE)
-    if (instance == TIM7) { index = TIMER7_INDEX; }
+    if (instance == TIM7) {
+        index = TIMER7_INDEX;
+    }
 #endif
 #if defined(TIM8_BASE)
-    if (instance == TIM8) { index = TIMER8_INDEX; }
+    if (instance == TIM8) {
+        index = TIMER8_INDEX;
+    }
 #endif
 #if defined(TIM9_BASE)
-    if (instance == TIM9) { index = TIMER9_INDEX; }
+    if (instance == TIM9) {
+        index = TIMER9_INDEX;
+    }
 #endif
 #if defined(TIM10_BASE)
-    if (instance == TIM10) { index = TIMER10_INDEX; }
+    if (instance == TIM10) {
+        index = TIMER10_INDEX;
+    }
 #endif
 #if defined(TIM11_BASE)
-    if (instance == TIM11) { index = TIMER11_INDEX; }
+    if (instance == TIM11) {
+        index = TIMER11_INDEX;
+    }
 #endif
 #if defined(TIM12_BASE)
-    if (instance == TIM12) { index = TIMER12_INDEX; }
+    if (instance == TIM12) {
+        index = TIMER12_INDEX;
+    }
 #endif
 #if defined(TIM13_BASE)
-    if (instance == TIM13) { index = TIMER13_INDEX; }
+    if (instance == TIM13) {
+        index = TIMER13_INDEX;
+    }
 #endif
 #if defined(TIM14_BASE)
-    if (instance == TIM14) { index = TIMER14_INDEX; }
+    if (instance == TIM14) {
+        index = TIMER14_INDEX;
+    }
 #endif
 #if defined(TIM15_BASE)
-    if (instance == TIM15) { index = TIMER15_INDEX; }
+    if (instance == TIM15) {
+        index = TIMER15_INDEX;
+    }
 #endif
 #if defined(TIM16_BASE)
-    if (instance == TIM16) { index = TIMER16_INDEX; }
+    if (instance == TIM16) {
+        index = TIMER16_INDEX;
+    }
 #endif
 #if defined(TIM17_BASE)
-    if (instance == TIM17) { index = TIMER17_INDEX; }
+    if (instance == TIM17) {
+        index = TIMER17_INDEX;
+    }
 #endif
 #if defined(TIM18_BASE)
-    if (instance == TIM18) { index = TIMER18_INDEX; }
+    if (instance == TIM18) {
+        index = TIMER18_INDEX;
+    }
 #endif
 #if defined(TIM19_BASE)
-    if (instance == TIM19) { index = TIMER19_INDEX; }
+    if (instance == TIM19) {
+        index = TIMER19_INDEX;
+    }
 #endif
 #if defined(TIM20_BASE)
-    if (instance == TIM20) { index = TIMER20_INDEX; }
+    if (instance == TIM20) {
+        index = TIMER20_INDEX;
+    }
 #endif
 #if defined(TIM21_BASE)
-    if (instance == TIM21) { index = TIMER21_INDEX; }
+    if (instance == TIM21) {
+        index = TIMER21_INDEX;
+    }
 #endif
 #if defined(TIM22_BASE)
-    if (instance == TIM22) { index = TIMER2_INDEX; }
+    if (instance == TIM22) {
+        index = TIMER2_INDEX;
+    }
 #endif
     return index;
 }
@@ -1318,17 +1406,23 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef* htim)
  */
 void TIM1_IRQHandler(void)
 {
-    if (HardwareTimer_Handle[TIMER1_INDEX]) { HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER1_INDEX]->handle); }
+    if (HardwareTimer_Handle[TIMER1_INDEX]) {
+        HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER1_INDEX]->handle);
+    }
 
 #if defined(STM32F1xx) || defined(STM32F2xx) || defined(STM32F4xx) || defined(STM32F7xx)
 #if defined(TIM10_BASE)
-    if (HardwareTimer_Handle[TIMER10_INDEX]) { HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER10_INDEX]->handle); }
+    if (HardwareTimer_Handle[TIMER10_INDEX]) {
+        HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER10_INDEX]->handle);
+    }
 #endif
 #endif
 
 #if defined(STM32F1xx) || defined(STM32F3xx) || defined(STM32G4xx) || defined(STM32L4xx) || defined(STM32WBxx)
 #if defined(TIM16_BASE)
-    if (HardwareTimer_Handle[TIMER16_INDEX]) { HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER16_INDEX]->handle); }
+    if (HardwareTimer_Handle[TIMER16_INDEX]) {
+        HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER16_INDEX]->handle);
+    }
 #endif
 #endif
 }
@@ -1336,7 +1430,9 @@ void TIM1_IRQHandler(void)
 #if !defined(STM32F3xx)
 void TIM1_CC_IRQHandler(void)
 {
-    if (HardwareTimer_Handle[TIMER1_INDEX]) { HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER1_INDEX]->handle); }
+    if (HardwareTimer_Handle[TIMER1_INDEX]) {
+        HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER1_INDEX]->handle);
+    }
 }
 #endif  // !STM32F3xx
 #endif  // TIM1_BASE
@@ -1349,7 +1445,9 @@ void TIM1_CC_IRQHandler(void)
  */
 void TIM2_IRQHandler(void)
 {
-    if (HardwareTimer_Handle[TIMER2_INDEX]) { HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER2_INDEX]->handle); }
+    if (HardwareTimer_Handle[TIMER2_INDEX]) {
+        HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER2_INDEX]->handle);
+    }
 }
 #endif  // TIM2_BASE
 
@@ -1361,7 +1459,9 @@ void TIM2_IRQHandler(void)
  */
 void TIM3_IRQHandler(void)
 {
-    if (HardwareTimer_Handle[TIMER3_INDEX]) { HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER3_INDEX]->handle); }
+    if (HardwareTimer_Handle[TIMER3_INDEX]) {
+        HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER3_INDEX]->handle);
+    }
 }
 #endif  // TIM3_BASE
 
@@ -1373,7 +1473,9 @@ void TIM3_IRQHandler(void)
  */
 void TIM4_IRQHandler(void)
 {
-    if (HardwareTimer_Handle[TIMER4_INDEX]) { HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER4_INDEX]->handle); }
+    if (HardwareTimer_Handle[TIMER4_INDEX]) {
+        HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER4_INDEX]->handle);
+    }
 }
 #endif  // TIM4_BASE
 
@@ -1385,7 +1487,9 @@ void TIM4_IRQHandler(void)
  */
 void TIM5_IRQHandler(void)
 {
-    if (HardwareTimer_Handle[TIMER5_INDEX]) { HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER5_INDEX]->handle); }
+    if (HardwareTimer_Handle[TIMER5_INDEX]) {
+        HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER5_INDEX]->handle);
+    }
 }
 #endif  // TIM5_BASE
 
@@ -1397,7 +1501,9 @@ void TIM5_IRQHandler(void)
  */
 void TIM6_IRQHandler(void)
 {
-    if (HardwareTimer_Handle[TIMER6_INDEX]) { HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER6_INDEX]->handle); }
+    if (HardwareTimer_Handle[TIMER6_INDEX]) {
+        HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER6_INDEX]->handle);
+    }
 }
 #endif  // TIM6_BASE
 
@@ -1409,7 +1515,9 @@ void TIM6_IRQHandler(void)
  */
 void TIM7_IRQHandler(void)
 {
-    if (HardwareTimer_Handle[TIMER7_INDEX]) { HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER7_INDEX]->handle); }
+    if (HardwareTimer_Handle[TIMER7_INDEX]) {
+        HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER7_INDEX]->handle);
+    }
 }
 #endif  // TIM7_BASE
 
@@ -1421,18 +1529,24 @@ void TIM7_IRQHandler(void)
  */
 void TIM8_IRQHandler(void)
 {
-    if (HardwareTimer_Handle[TIMER8_INDEX]) { HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER8_INDEX]->handle); }
+    if (HardwareTimer_Handle[TIMER8_INDEX]) {
+        HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER8_INDEX]->handle);
+    }
 
 #if defined(STM32F1xx) || defined(STM32F2xx) || defined(STM32F4xx) || defined(STM32F7xx) || defined(STM32H7xx)
 #if defined(TIMER13_BASE)
-    if (HardwareTimer_Handle[TIMER13_INDEX]) { HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER13_INDEX]->handle); }
+    if (HardwareTimer_Handle[TIMER13_INDEX]) {
+        HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER13_INDEX]->handle);
+    }
 #endif  // TIMER13_BASE
 #endif
 }
 
 void TIM8_CC_IRQHandler(void)
 {
-    if (HardwareTimer_Handle[TIMER8_INDEX]) { HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER8_INDEX]->handle); }
+    if (HardwareTimer_Handle[TIMER8_INDEX]) {
+        HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER8_INDEX]->handle);
+    }
 }
 #endif  // TIM8_BASE
 
@@ -1444,7 +1558,9 @@ void TIM8_CC_IRQHandler(void)
  */
 void TIM9_IRQHandler(void)
 {
-    if (HardwareTimer_Handle[TIMER9_INDEX]) { HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER9_INDEX]->handle); }
+    if (HardwareTimer_Handle[TIMER9_INDEX]) {
+        HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER9_INDEX]->handle);
+    }
 }
 #endif  // TIM9_BASE
 
@@ -1457,7 +1573,9 @@ void TIM9_IRQHandler(void)
  */
 void TIM10_IRQHandler(void)
 {
-    if (HardwareTimer_Handle[TIMER10_INDEX]) { HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER10_INDEX]->handle); }
+    if (HardwareTimer_Handle[TIMER10_INDEX]) {
+        HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER10_INDEX]->handle);
+    }
 }
 #endif
 #endif  // TIM10_BASE
@@ -1470,7 +1588,9 @@ void TIM10_IRQHandler(void)
  */
 void TIM11_IRQHandler(void)
 {
-    if (HardwareTimer_Handle[TIMER11_INDEX]) { HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER11_INDEX]->handle); }
+    if (HardwareTimer_Handle[TIMER11_INDEX]) {
+        HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER11_INDEX]->handle);
+    }
 }
 #endif  // TIM11_BASE
 
@@ -1482,7 +1602,9 @@ void TIM11_IRQHandler(void)
  */
 void TIM12_IRQHandler(void)
 {
-    if (HardwareTimer_Handle[TIMER12_INDEX]) { HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER12_INDEX]->handle); }
+    if (HardwareTimer_Handle[TIMER12_INDEX]) {
+        HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER12_INDEX]->handle);
+    }
 }
 #endif  // TIM12_BASE
 
@@ -1495,7 +1617,9 @@ void TIM12_IRQHandler(void)
  */
 void TIM13_IRQHandler(void)
 {
-    if (HardwareTimer_Handle[TIMER13_INDEX]) { HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER13_INDEX]->handle); }
+    if (HardwareTimer_Handle[TIMER13_INDEX]) {
+        HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER13_INDEX]->handle);
+    }
 }
 #endif
 #endif  // TIM13_BASE
@@ -1508,7 +1632,9 @@ void TIM13_IRQHandler(void)
  */
 void TIM14_IRQHandler(void)
 {
-    if (HardwareTimer_Handle[TIMER14_INDEX]) { HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER14_INDEX]->handle); }
+    if (HardwareTimer_Handle[TIMER14_INDEX]) {
+        HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER14_INDEX]->handle);
+    }
 }
 #endif  // TIM14_BASE
 
@@ -1520,7 +1646,9 @@ void TIM14_IRQHandler(void)
  */
 void TIM15_IRQHandler(void)
 {
-    if (HardwareTimer_Handle[TIMER15_INDEX]) { HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER15_INDEX]->handle); }
+    if (HardwareTimer_Handle[TIMER15_INDEX]) {
+        HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER15_INDEX]->handle);
+    }
 }
 #endif  // TIM15_BASE
 
@@ -1533,7 +1661,9 @@ void TIM15_IRQHandler(void)
  */
 void TIM16_IRQHandler(void)
 {
-    if (HardwareTimer_Handle[TIMER16_INDEX]) { HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER16_INDEX]->handle); }
+    if (HardwareTimer_Handle[TIMER16_INDEX]) {
+        HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER16_INDEX]->handle);
+    }
 }
 #endif
 #endif  // TIM16_BASE
@@ -1546,7 +1676,9 @@ void TIM16_IRQHandler(void)
  */
 void TIM17_IRQHandler(void)
 {
-    if (HardwareTimer_Handle[TIMER17_INDEX]) { HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER17_INDEX]->handle); }
+    if (HardwareTimer_Handle[TIMER17_INDEX]) {
+        HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER17_INDEX]->handle);
+    }
 }
 #endif  // TIM17_BASE
 
@@ -1558,11 +1690,15 @@ void TIM17_IRQHandler(void)
  */
 void TIM18_IRQHandler(void)
 {
-    if (HardwareTimer_Handle[TIMER18_INDEX]) { HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER18_INDEX]->handle); }
+    if (HardwareTimer_Handle[TIMER18_INDEX]) {
+        HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER18_INDEX]->handle);
+    }
 
 #if defined(STM32F3xx)
 #if defined(TIM1_BASE)
-    if (HardwareTimer_Handle[TIMER1_INDEX]) { HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER1_INDEX]->handle); }
+    if (HardwareTimer_Handle[TIMER1_INDEX]) {
+        HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER1_INDEX]->handle);
+    }
 #endif
 #endif
 }
@@ -1576,7 +1712,9 @@ void TIM18_IRQHandler(void)
  */
 void TIM19_IRQHandler(void)
 {
-    if (HardwareTimer_Handle[TIMER19_INDEX]) { HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER19_INDEX]->handle); }
+    if (HardwareTimer_Handle[TIMER19_INDEX]) {
+        HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER19_INDEX]->handle);
+    }
 }
 #endif  // TIM19_BASE
 
@@ -1588,12 +1726,16 @@ void TIM19_IRQHandler(void)
  */
 void TIM20_IRQHandler(void)
 {
-    if (HardwareTimer_Handle[TIMER20_INDEX]) { HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER20_INDEX]->handle); }
+    if (HardwareTimer_Handle[TIMER20_INDEX]) {
+        HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER20_INDEX]->handle);
+    }
 }
 
 void TIM20_CC_IRQHandler(void)
 {
-    if (HardwareTimer_Handle[TIMER20_INDEX]) { HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER20_INDEX]->handle); }
+    if (HardwareTimer_Handle[TIMER20_INDEX]) {
+        HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER20_INDEX]->handle);
+    }
 }
 #endif  // TIM20_BASE
 
@@ -1605,7 +1747,9 @@ void TIM20_CC_IRQHandler(void)
  */
 void TIM21_IRQHandler(void)
 {
-    if (HardwareTimer_Handle[TIMER21_INDEX]) { HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER21_INDEX]->handle); }
+    if (HardwareTimer_Handle[TIMER21_INDEX]) {
+        HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER21_INDEX]->handle);
+    }
 }
 #endif  // TIM21_BASE
 
@@ -1617,7 +1761,9 @@ void TIM21_IRQHandler(void)
  */
 void TIM22_IRQHandler(void)
 {
-    if (HardwareTimer_Handle[TIMER22_INDEX]) { HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER22_INDEX]->handle); }
+    if (HardwareTimer_Handle[TIMER22_INDEX]) {
+        HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER22_INDEX]->handle);
+    }
 }
 #endif  // TIM22_BASE
 }

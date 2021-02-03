@@ -10,7 +10,6 @@ BreakBeforeBraces: Stroustrup
 AccessModifierOffset: -2
 IndentCaseLabels: true
 AllowShortFunctionsOnASingleLine: Inline
-AllowShortBlocksOnASingleLine: true
 AlignConsecutiveAssignments: true
 AlignConsecutiveMacros: true
 AlignConsecutiveBitFields: true
