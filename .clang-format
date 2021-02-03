@@ -13,7 +13,10 @@ AllowShortFunctionsOnASingleLine: Inline
 AllowShortBlocksOnASingleLine: true
 AlignConsecutiveAssignments: true
 AlignConsecutiveMacros: true
+AlignConsecutiveBitFields: true
 AlignEscapedNewlines: true
-BinPackArguments : true
-BinPackParameters : true
+BinPackArguments: true
+BinPackParameters: true
 SortIncludes: true
+FixNamespaceComments: true
+SortUsingDeclarations: true
