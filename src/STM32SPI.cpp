@@ -62,11 +62,7 @@ int STM32SPI::transfer(const uint8_t* txBuffer, uint32_t txSize, uint8_t* rxBuff
     return DEVICE_SPI_ERROR;
 }
 
-int STM32SPI::startTransfer(const uint8_t* txBuffer,
-                            uint32_t txSize,
-                            uint8_t* rxBuffer,
-                            uint32_t rxSize,
-                            PVoidCallback doneHandler,
-                            void* arg) {
+int STM32SPI::startTransfer(const uint8_t* txBuffer, uint32_t txSize, uint8_t* rxBuffer, uint32_t rxSize,
+                            PVoidCallback doneHandler, void* arg) {
     return DEVICE_SPI_ERROR;
 }

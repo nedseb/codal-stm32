@@ -107,8 +107,7 @@ class STM32Pin : public Pin {
      * @return DEVICE_OK on success, DEVICE_INVALID_PARAMETER if value is out of range, or DEVICE_NOT_SUPPORTED
      *         if the given pin does not have analog capability.
      */
-    int setServoValue(int value,
-                      int range  = DEVICE_PIN_DEFAULT_SERVO_RANGE,
+    int setServoValue(int value, int range = DEVICE_PIN_DEFAULT_SERVO_RANGE,
                       int center = DEVICE_PIN_DEFAULT_SERVO_CENTER) final override;
 
     /**

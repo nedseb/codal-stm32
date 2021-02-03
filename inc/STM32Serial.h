@@ -52,8 +52,7 @@ class STM32Serial : public Serial {
     STM32Serial(STM32Pin& rxPin, STM32Pin& txPin);
     ~STM32Serial();
 
-    void init(uint32_t baudrate,
-              LengthSerial databits = LengthSerial::SERIAL_8_BITS,
+    void init(uint32_t baudrate, LengthSerial databits = LengthSerial::SERIAL_8_BITS,
               ParitySerial parity   = ParitySerial::SERIAL_NONE_PARITY,
               StopBitSerial stopBit = StopBitSerial::SERIAL_STOP_1);
 

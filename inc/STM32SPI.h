@@ -93,12 +93,8 @@ class STM32SPI : public codal::SPI, public codal::CodalComponent {
      */
     virtual int transfer(const uint8_t* txBuffer, uint32_t txSize, uint8_t* rxBuffer, uint32_t rxSize) override;
 
-    virtual int startTransfer(const uint8_t* txBuffer,
-                              uint32_t txSize,
-                              uint8_t* rxBuffer,
-                              uint32_t rxSize,
-                              PVoidCallback doneHandler,
-                              void* arg) override;
+    virtual int startTransfer(const uint8_t* txBuffer, uint32_t txSize, uint8_t* rxBuffer, uint32_t rxSize,
+                              PVoidCallback doneHandler, void* arg) override;
 
   private:
     Pin *mosi, *miso, *sclk;
