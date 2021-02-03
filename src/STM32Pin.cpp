@@ -105,20 +105,20 @@ void STM32Pin::disconnect() {
         return;
 
 // If the pin that support PWM or DAC output, we need to turn it off
-#if (defined(HAL_DAC_MODULE_ENABLED) && !defined(HAL_DAC_MODULE_ONLY)) || \
+#if (defined(HAL_DAC_MODULE_ENABLED) && !defined(HAL_DAC_MODULE_ONLY)) ||                                              \
     (defined(HAL_TIM_MODULE_ENABLED) && !defined(HAL_TIM_MODULE_ONLY))
     if (is_pin_configured(p, g_anOutputPinConfigured)) {
 #if defined(HAL_DAC_MODULE_ENABLED) && !defined(HAL_DAC_MODULE_ONLY)
         if (pin_in_pinmap(p, PinMap_DAC)) {
             dac_stop(p);
         } else
-#endif  // HAL_DAC_MODULE_ENABLED && !HAL_DAC_MODULE_ONLY
+#endif // HAL_DAC_MODULE_ENABLED && !HAL_DAC_MODULE_ONLY
 
 #if defined(HAL_TIM_MODULE_ENABLED) && !defined(HAL_TIM_MODULE_ONLY)
             if (pin_in_pinmap(p, PinMap_PWM)) {
             pwm_stop(p);
         }
-#endif  // HAL_TIM_MODULE_ENABLED && !HAL_TIM_MODULE_ONLY
+#endif // HAL_TIM_MODULE_ENABLED && !HAL_TIM_MODULE_ONLY
 
         reset_pin_configured(p, g_anOutputPinConfigured);
 #endif
@@ -175,7 +175,7 @@ int STM32Pin::setAnalogValue(int value) {
             value = mapResolution(value, _writeResolution, DACC_RESOLUTION);
             dac_write_value(p, value, do_init);
         } else
-#endif  // HAL_DAC_MODULE_ENABLED && !HAL_DAC_MODULE_ONLY
+#endif // HAL_DAC_MODULE_ENABLED && !HAL_DAC_MODULE_ONLY
 #if defined(HAL_TIM_MODULE_ENABLED) && !defined(HAL_TIM_MODULE_ONLY)
             if (pin_in_pinmap(p, PinMap_PWM)) {
             if (is_pin_configured(p, g_anOutputPinConfigured) == false) {

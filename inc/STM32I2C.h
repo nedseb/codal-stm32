@@ -54,70 +54,69 @@ class STM32I2C : public codal::I2C {
     int setFrequency(uint32_t frequency) final override;
 
     /** Get the I2C buffer size
-     * 
+     *
      */
-    unsigned getBufferSize(){ return I2C_TXRX_BUFFER_SIZE; }
+    unsigned getBufferSize() { return I2C_TXRX_BUFFER_SIZE; }
 
     /**
      * @brief Start I2C transmission with a slave.
-     * 
+     *
      * @param address The slave address
      */
-    void beginTransmission( uint16_t address );
+    void beginTransmission(uint16_t address);
 
     /**
      * @brief Terminate the I2C transmission. Sending all data to the slave.
-     * 
+     *
      * @param sendStop If True sending the STOP signal. (default: True)
      */
     void endTransmission(bool sendStop = true);
 
     /**
      * @brief Write single byte to TX buffer.
-     * 
+     *
      * @param data byte to write to buffer
-     * @return DEVICE_OK on success, DEVICE_I2C_ERROR if the the write request failed. 
+     * @return DEVICE_OK on success, DEVICE_I2C_ERROR if the the write request failed.
      */
-    int write( uint8_t data ) final override;
+    int write(uint8_t data) final override;
 
     /**
      * @brief Write bytes to TX buffer
-     * 
+     *
      * @param data pointer to the bytes to write
      * @param len the number of bytes to write
-     * @return DEVICE_OK on success, DEVICE_I2C_ERROR if the the write request failed. 
+     * @return DEVICE_OK on success, DEVICE_I2C_ERROR if the the write request failed.
      */
-    int write( uint8_t *data, size_t len );
+    int write(uint8_t* data, size_t len);
 
     /**
      * @brief Write byte to the slave's register
-     * 
+     *
      * @param reg register address
      * @param value byte to send
      */
-    void writeRegister( uint8_t reg, uint8_t value );
+    void writeRegister(uint8_t reg, uint8_t value);
 
     /**
      * @brief Read data from slave
-     * 
+     *
      * @param address the slave addres
      * @param len amount data to read
      * @param sendStop If True sending the STOP signal. (default: True)
      * @return bytes received from slave
      */
-    std::vector<uint8_t> read( uint8_t address, size_t len, bool sendStop = true );
+    std::vector<uint8_t> read(uint8_t address, size_t len, bool sendStop = true);
 
     /**
      * @brief Read value from slave's register
-     * 
+     *
      * @param address the slave address
      * @param reg the register address
      * @param len amount of data to read
      * @param sendStop If True sending the STOP signal. (default: True)
      * @return bytes received from slave
      */
-    std::vector<uint8_t> readRegister( uint8_t address, uint8_t reg, size_t len, bool sendStop = true );
-
+    std::vector<uint8_t> readRegister(uint8_t address, uint8_t reg, size_t len, bool sendStop = true);
 
   protected:
     /**
@@ -157,7 +156,9 @@ class STM32I2C : public codal::I2C {
      *
      * @return DEVICE_OK on success, DEVICE_I2C_ERROR if the the write request failed.
      */
-    int write(uint16_t address, uint8_t* data, int len, bool repeated = false) final override { return DEVICE_NOT_IMPLEMENTED; }
+    int write(uint16_t address, uint8_t* data, int len, bool repeated = false) final override {
+        return DEVICE_NOT_IMPLEMENTED;
+    }
 
     /**
      * Performs a typical register write operation to the I2C slave device provided.
@@ -195,7 +196,9 @@ class STM32I2C : public codal::I2C {
      *
      * @return DEVICE_OK on success, DEVICE_I2C_ERROR if the the read request failed.
      */
-    int read(uint16_t address, uint8_t* data, int len, bool repeated = false) final override { return DEVICE_NOT_IMPLEMENTED; }
+    int read(uint16_t address, uint8_t* data, int len, bool repeated = false) final override {
+        return DEVICE_NOT_IMPLEMENTED;
+    }
 
     /**
      * Performs a typical register read operation to the I2C slave device provided.
@@ -220,15 +223,17 @@ class STM32I2C : public codal::I2C {
      *
      * @return DEVICE_OK or DEVICE_I2C_ERROR if the the read request failed.
      */
-    int readRegister(uint16_t address, uint8_t reg, uint8_t* data, int length, bool repeated = true) final override { return DEVICE_NOT_IMPLEMENTED; }
+    int readRegister(uint16_t address, uint8_t reg, uint8_t* data, int length, bool repeated = true) final override {
+        return DEVICE_NOT_IMPLEMENTED;
+    }
 
     /**
      * @brief Set the XferOptions of i2c object
-     * 
+     *
      * @param sendStop If True sending the STOP signal.
      */
-    void setXferOptions( bool sendStop );
+    void setXferOptions(bool sendStop);
 };
-}  // namespace codal
+} // namespace codal
 
 #endif /*CODAL_STM32_I2C_H*/

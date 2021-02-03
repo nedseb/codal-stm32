@@ -1,4 +1,4 @@
-BasedOnStyle: Chromium
+BasedOnStyle: llvm
 Standard : c++20
 IndentWidth: 4
 TabWidth: 4

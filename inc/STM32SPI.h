@@ -33,17 +33,15 @@ DEALINGS IN THE SOFTWARE.
 namespace codal {
 
 class STM32SPI;
-struct SPI_HandleWithParent : public SPI_HandleTypeDef
-{
-    STM32SPI *stm32spi_parent;
+struct SPI_HandleWithParent : public SPI_HandleTypeDef {
+    STM32SPI* stm32spi_parent;
 };
 
 /**
  * Class definition for SPI service, derived from ARM mbed.
  */
-class STM32SPI : public codal::SPI, public codal::CodalComponent
-{
-public:
+class STM32SPI : public codal::SPI, public codal::CodalComponent {
+  public:
     static void _complete(uint32_t instance);
     static void _irq(uint32_t instance);
 
@@ -54,7 +52,6 @@ public:
      * If `cs` is specified, the SPI is run in slave mode.
      */
     STM32SPI(codal::Pin& mosi, codal::Pin& miso, codal::Pin& sclk, codal::Pin* cs = nullptr);
-
 
     virtual ~STM32SPI() = default;
 
@@ -95,23 +92,27 @@ public:
      *
      * Either buffer can be NULL.
      */
-    virtual int transfer(const uint8_t *txBuffer, uint32_t txSize, uint8_t *rxBuffer,
-                         uint32_t rxSize) override;
+    virtual int transfer(const uint8_t* txBuffer, uint32_t txSize, uint8_t* rxBuffer, uint32_t rxSize) override;
 
-    virtual int startTransfer(const uint8_t *txBuffer, uint32_t txSize, uint8_t *rxBuffer,
-                              uint32_t rxSize, PVoidCallback doneHandler, void *arg) override;
-private:
+    virtual int startTransfer(const uint8_t* txBuffer,
+                              uint32_t txSize,
+                              uint8_t* rxBuffer,
+                              uint32_t rxSize,
+                              PVoidCallback doneHandler,
+                              void* arg) override;
+
+  private:
     Pin *mosi, *miso, *sclk;
-    Pin *cs;
-    
+    Pin* cs;
+
     bool needsInit;
     bool isSlave;
     bool hasRx, hasTx;
-    
+
     void complete();
     void init_internal();
 };
 #define CODAL_SPI_SLAVE_SUPPORTED 1
-}  // namespace codal
+} // namespace codal
 
 #endif /*CODAL_STM32_SPI_H*/
