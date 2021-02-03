@@ -12,15 +12,18 @@ void STM32SPI::_complete(uint32_t instance) {}
 
 void STM32SPI::_irq(uint32_t instance) {}
 
-extern "C" void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef* hspi) {
+extern "C" void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef* hspi)
+{
     STM32SPI::_complete((uint32_t)hspi->Instance);
 }
 
-extern "C" void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef* hspi) {
+extern "C" void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef* hspi)
+{
     STM32SPI::_complete((uint32_t)hspi->Instance);
 }
 
-extern "C" void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef* hspi) {
+extern "C" void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef* hspi)
+{
     STM32SPI::_complete((uint32_t)hspi->Instance);
 }
 
@@ -46,23 +49,28 @@ void STM32SPI::init_internal() {}
 
 STM32SPI::STM32SPI(codal::Pin& mosi, codal::Pin& miso, codal::Pin& sclk, codal::Pin* cs) : codal::SPI() {}
 
-int STM32SPI::setFrequency(uint32_t frequency) {
+int STM32SPI::setFrequency(uint32_t frequency)
+{
     return DEVICE_SPI_ERROR;
 }
 
-int STM32SPI::setMode(int mode, int bits) {
+int STM32SPI::setMode(int mode, int bits)
+{
     return DEVICE_SPI_ERROR;
 }
 
-int STM32SPI::write(int data) {
+int STM32SPI::write(int data)
+{
     return DEVICE_SPI_ERROR;
 }
 
-int STM32SPI::transfer(const uint8_t* txBuffer, uint32_t txSize, uint8_t* rxBuffer, uint32_t rxSize) {
+int STM32SPI::transfer(const uint8_t* txBuffer, uint32_t txSize, uint8_t* rxBuffer, uint32_t rxSize)
+{
     return DEVICE_SPI_ERROR;
 }
 
 int STM32SPI::startTransfer(const uint8_t* txBuffer, uint32_t txSize, uint8_t* rxBuffer, uint32_t rxSize,
-                            PVoidCallback doneHandler, void* arg) {
+                            PVoidCallback doneHandler, void* arg)
+{
     return DEVICE_SPI_ERROR;
 }

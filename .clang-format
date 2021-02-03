@@ -6,12 +6,14 @@ UseTab: Never
 ColumnLimit: 120
 DerivePointerAlignment: false
 PointerAlignment: Left
-BreakBeforeBraces: Attach
+BreakBeforeBraces: Stroustrup
 AccessModifierOffset: -2
 IndentCaseLabels: true
 AllowShortFunctionsOnASingleLine: Inline
+AllowShortBlocksOnASingleLine: true
 AlignConsecutiveAssignments: true
 AlignConsecutiveMacros: true
+AlignEscapedNewlines: true
 BinPackArguments : true
 BinPackParameters : true
 SortIncludes: true

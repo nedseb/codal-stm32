@@ -154,7 +154,8 @@ class STM32I2C : public codal::I2C {
      *
      * @return DEVICE_OK on success, DEVICE_I2C_ERROR if the the write request failed.
      */
-    int write(uint16_t address, uint8_t* data, int len, bool repeated = false) final override {
+    int write(uint16_t address, uint8_t* data, int len, bool repeated = false) final override
+    {
         return DEVICE_NOT_IMPLEMENTED;
     }
 
@@ -194,7 +195,8 @@ class STM32I2C : public codal::I2C {
      *
      * @return DEVICE_OK on success, DEVICE_I2C_ERROR if the the read request failed.
      */
-    int read(uint16_t address, uint8_t* data, int len, bool repeated = false) final override {
+    int read(uint16_t address, uint8_t* data, int len, bool repeated = false) final override
+    {
         return DEVICE_NOT_IMPLEMENTED;
     }
 
@@ -221,7 +223,8 @@ class STM32I2C : public codal::I2C {
      *
      * @return DEVICE_OK or DEVICE_I2C_ERROR if the the read request failed.
      */
-    int readRegister(uint16_t address, uint8_t reg, uint8_t* data, int length, bool repeated = true) final override {
+    int readRegister(uint16_t address, uint8_t reg, uint8_t* data, int length, bool repeated = true) final override
+    {
         return DEVICE_NOT_IMPLEMENTED;
     }
 

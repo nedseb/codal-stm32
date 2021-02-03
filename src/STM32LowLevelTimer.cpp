@@ -1,7 +1,8 @@
 #include "STM32LowLevelTimer.h"
 using namespace codal;
 
-uint32_t getTIMChannel(uint8_t channel) {
+uint32_t getTIMChannel(uint8_t channel)
+{
     uint32_t timChannel = TIM_CHANNEL_1;
 
     if (channel == 1) timChannel = TIM_CHANNEL_2;
@@ -13,7 +14,8 @@ uint32_t getTIMChannel(uint8_t channel) {
     return timChannel;
 }
 
-uint32_t getCaptureCompareIT(uint8_t channel) {
+uint32_t getCaptureCompareIT(uint8_t channel)
+{
     uint32_t timCaptureCompareIt = TIM_IT_CC1;
 
     if (channel == 1) timCaptureCompareIt = TIM_IT_CC2;
@@ -28,14 +30,18 @@ uint32_t getCaptureCompareIT(uint8_t channel) {
 STM32LowLevelTimer::~STM32LowLevelTimer() {}
 
 STM32LowLevelTimer::STM32LowLevelTimer(TIM_TypeDef* timerInstance, IRQn_Type irqN)
-    : LowLevelTimer(TIMER_CHANNELS), irqN(irqN), hardwareTimer(timerInstance), mode(TimerModeTimer) {}
+    : LowLevelTimer(TIMER_CHANNELS), irqN(irqN), hardwareTimer(timerInstance), mode(TimerModeTimer)
+{
+}
 
-int STM32LowLevelTimer::setIRQPriority(uint32_t preemptPriority, uint32_t subPriority) {
+int STM32LowLevelTimer::setIRQPriority(uint32_t preemptPriority, uint32_t subPriority)
+{
     hardwareTimer.setInterruptPriority(preemptPriority, subPriority);
     return DEVICE_OK;
 }
 
-int STM32LowLevelTimer::setIRQPriority(int priority) {
+int STM32LowLevelTimer::setIRQPriority(int priority)
+{
     uint32_t preemptPriority;
     uint32_t subPriority;
     uint32_t priorityGroup = NVIC_GetPriorityGrouping();
@@ -43,7 +49,8 @@ int STM32LowLevelTimer::setIRQPriority(int priority) {
     return setIRQPriority(preemptPriority, subPriority);
 }
 
-int STM32LowLevelTimer::enable() {
+int STM32LowLevelTimer::enable()
+{
     NVIC_ClearPendingIRQ(this->irqN);
 
     if (enableIRQ() == DEVICE_OK) {
@@ -54,7 +61,8 @@ int STM32LowLevelTimer::enable() {
     return DEVICE_OK;
 }
 
-int STM32LowLevelTimer::enableIRQ() {
+int STM32LowLevelTimer::enableIRQ()
+{
     if (timer_pointer == nullptr) return DEVICE_INVALID_PARAMETER;
 
     NVIC_EnableIRQ(this->irqN);
@@ -62,7 +70,8 @@ int STM32LowLevelTimer::enableIRQ() {
     return DEVICE_OK;
 }
 
-int STM32LowLevelTimer::disable() {
+int STM32LowLevelTimer::disable()
+{
     if (disableIRQ() == DEVICE_OK) {
         HAL_TIM_OC_Stop_IT(hardwareTimer.getHandle(), TIM_CHANNEL_1);
         status &= ~STM_LOW_LEVEL_TIMER_STATUS_ENABLED;
@@ -71,13 +80,15 @@ int STM32LowLevelTimer::disable() {
     return DEVICE_OK;
 }
 
-int STM32LowLevelTimer::disableIRQ() {
+int STM32LowLevelTimer::disableIRQ()
+{
     if (timer_pointer == nullptr) return DEVICE_INVALID_PARAMETER;
     NVIC_DisableIRQ(this->irqN);
     return DEVICE_OK;
 }
 
-int STM32LowLevelTimer::reset() {
+int STM32LowLevelTimer::reset()
+{
     disableIRQ();
     __HAL_TIM_SET_COUNTER(hardwareTimer.getHandle(), 0);
     enableIRQ();
@@ -85,7 +96,8 @@ int STM32LowLevelTimer::reset() {
     return DEVICE_OK;
 }
 
-int STM32LowLevelTimer::setMode(TimerMode mode) {
+int STM32LowLevelTimer::setMode(TimerMode mode)
+{
     this->mode = mode;
     switch (this->mode) {
         case TimerModeTimer:
@@ -103,7 +115,8 @@ int STM32LowLevelTimer::setMode(TimerMode mode) {
     }
 }
 
-int STM32LowLevelTimer::setCompare(uint8_t channel, uint32_t value) {
+int STM32LowLevelTimer::setCompare(uint8_t channel, uint32_t value)
+{
     if (channel > getChannelCount()) return DEVICE_INVALID_PARAMETER;
 
     __HAL_TIM_DISABLE_IT(hardwareTimer.getHandle(), getCaptureCompareIT(channel));
@@ -114,7 +127,8 @@ int STM32LowLevelTimer::setCompare(uint8_t channel, uint32_t value) {
     return DEVICE_OK;
 }
 
-int STM32LowLevelTimer::offsetCompare(uint8_t channel, uint32_t value) {
+int STM32LowLevelTimer::offsetCompare(uint8_t channel, uint32_t value)
+{
     if (channel > getChannelCount()) return DEVICE_INVALID_PARAMETER;
 
     __HAL_TIM_DISABLE_IT(hardwareTimer.getHandle(), getCaptureCompareIT(channel));
@@ -125,7 +139,8 @@ int STM32LowLevelTimer::offsetCompare(uint8_t channel, uint32_t value) {
     return DEVICE_OK;
 }
 
-int STM32LowLevelTimer::clearCompare(uint8_t channel) {
+int STM32LowLevelTimer::clearCompare(uint8_t channel)
+{
     if (channel > getChannelCount()) return DEVICE_INVALID_PARAMETER;
 
     __HAL_TIM_DISABLE_IT(hardwareTimer.getHandle(), getCaptureCompareIT(channel));
@@ -134,15 +149,18 @@ int STM32LowLevelTimer::clearCompare(uint8_t channel) {
     return DEVICE_OK;
 }
 
-uint32_t STM32LowLevelTimer::captureCounter() {
+uint32_t STM32LowLevelTimer::captureCounter()
+{
     return __HAL_TIM_GET_COUNTER(hardwareTimer.getHandle());
 }
 
-int STM32LowLevelTimer::setClockSpeed(uint32_t speedKHz) {
+int STM32LowLevelTimer::setClockSpeed(uint32_t speedKHz)
+{
     return DEVICE_OK;
 }
 
-int STM32LowLevelTimer::setBitMode(TimerBitMode bitMode) {
+int STM32LowLevelTimer::setBitMode(TimerBitMode bitMode)
+{
     this->bitMode = bitMode;
     return DEVICE_OK;
 }

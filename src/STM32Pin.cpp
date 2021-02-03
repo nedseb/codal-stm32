@@ -61,20 +61,19 @@ static uint32_t _writeFreq = PWM_FREQUENCY;
 
 extern uint32_t g_anOutputPinConfigured[MAX_NB_PORT];
 
-static inline uint32_t mapResolution(uint32_t value, uint32_t from, uint32_t to) {
+static inline uint32_t mapResolution(uint32_t value, uint32_t from, uint32_t to)
+{
     if (from != to) {
-        if (from > to) {
-            value = (value < (uint32_t)(1 << (from - to))) ? 0 : ((value + 1) >> (from - to)) - 1;
-        } else {
-            if (value != 0) {
-                value = ((value + 1) << (to - from)) - 1;
-            }
+        if (from > to) { value = (value < (uint32_t)(1 << (from - to))) ? 0 : ((value + 1) >> (from - to)) - 1; }
+        else {
+            if (value != 0) { value = ((value + 1) << (to - from)) - 1; }
         }
     }
     return value;
 }
 
-STM32Pin::STM32Pin(int id, PinNumber name, PinCapability capability) : codal::Pin(id, name, capability) {
+STM32Pin::STM32Pin(int id, PinNumber name, PinCapability capability) : codal::Pin(id, name, capability)
+{
     this->pullMode = DEVICE_DEFAULT_PULLMODE;
 
     // Power up in a disconnected, low power state.
@@ -82,7 +81,8 @@ STM32Pin::STM32Pin(int id, PinNumber name, PinCapability capability) : codal::Pi
     this->status = 0x00;
 }
 
-inline int map(codal::PullMode pinMode) {
+inline int map(codal::PullMode pinMode)
+{
     switch (pinMode) {
         case PullMode::Up:
             return GPIO_PULLUP;
@@ -95,11 +95,13 @@ inline int map(codal::PullMode pinMode) {
     return GPIO_NOPULL;
 }
 
-inline PinName to_pinName(PinNumber pin) {
+inline PinName to_pinName(PinNumber pin)
+{
     return (PinName)pin;
 }
 
-void STM32Pin::disconnect() {
+void STM32Pin::disconnect()
+{
     PinName p = to_pinName(this->name);
     if (p == NC) return;
 
@@ -108,9 +110,8 @@ void STM32Pin::disconnect() {
     (defined(HAL_TIM_MODULE_ENABLED) && !defined(HAL_TIM_MODULE_ONLY))
     if (is_pin_configured(p, g_anOutputPinConfigured)) {
 #if defined(HAL_DAC_MODULE_ENABLED) && !defined(HAL_DAC_MODULE_ONLY)
-        if (pin_in_pinmap(p, PinMap_DAC)) {
-            dac_stop(p);
-        } else
+        if (pin_in_pinmap(p, PinMap_DAC)) { dac_stop(p); }
+        else
 #endif  // HAL_DAC_MODULE_ENABLED && !HAL_DAC_MODULE_ONLY
 
 #if defined(HAL_TIM_MODULE_ENABLED) && !defined(HAL_TIM_MODULE_ONLY)
@@ -125,7 +126,8 @@ void STM32Pin::disconnect() {
     }
 }
 
-int STM32Pin::setDigitalValue(int value) {
+int STM32Pin::setDigitalValue(int value)
+{
     // Ensure we have a valid value.
     if (value < 0 || value > 1) return DEVICE_INVALID_PARAMETER;
 
@@ -140,7 +142,8 @@ int STM32Pin::setDigitalValue(int value) {
     return DEVICE_OK;
 }
 
-int STM32Pin::getDigitalValue() {
+int STM32Pin::getDigitalValue()
+{
     // Move into a Digital input state if necessary.
     if (!(status & (IO_STATUS_DIGITAL_IN | IO_STATUS_EVENT_ON_EDGE | IO_STATUS_EVENT_PULSE_ON_EDGE))) {
         disconnect();
@@ -154,7 +157,8 @@ int STM32Pin::getDigitalValue() {
     return (level) ? HIGH : LOW;
 }
 
-int STM32Pin::setAnalogValue(int value) {
+int STM32Pin::setAnalogValue(int value)
+{
     // sanitise the level value
     if (value < 0 || value > DEVICE_PIN_MAX_OUTPUT) return DEVICE_INVALID_PARAMETER;
 
@@ -171,7 +175,8 @@ int STM32Pin::setAnalogValue(int value) {
             }
             value = mapResolution(value, _writeResolution, DACC_RESOLUTION);
             dac_write_value(p, value, do_init);
-        } else
+        }
+        else
 #endif  // HAL_DAC_MODULE_ENABLED && !HAL_DAC_MODULE_ONLY
 #if defined(HAL_TIM_MODULE_ENABLED) && !defined(HAL_TIM_MODULE_ONLY)
             if (pin_in_pinmap(p, PinMap_PWM)) {
@@ -180,16 +185,16 @@ int STM32Pin::setAnalogValue(int value) {
             }
             value = mapResolution(value, _writeResolution, _internalWriteResolution);
             pwm_start(p, _writeFreq, value, (TimerCompareFormat_t)_internalWriteResolution);
-        } else
+        }
+        else
 #endif /* HAL_TIM_MODULE_ENABLED && !HAL_TIM_MODULE_ONLY */
         {
             // DIGITAL PIN ONLY
             // Defaults to digital write
             pin_function(to_pinName(this->name), STM_PIN_DATA(STM_MODE_OUTPUT_PP, map(this->pullMode), 0));
             value = mapResolution(value, _writeResolution, 8);
-            if (value < 128) {
-                setDigitalValue(LOW);
-            } else {
+            if (value < 128) { setDigitalValue(LOW); }
+            else {
                 setDigitalValue(HIGH);
             }
         }
@@ -197,7 +202,8 @@ int STM32Pin::setAnalogValue(int value) {
     return DEVICE_OK;
 }
 
-int STM32Pin::setServoValue(int value, int range, int center) {
+int STM32Pin::setServoValue(int value, int range, int center)
+{
     // check if this pin has an analogue mode...
     if (!(PIN_CAPABILITY_ANALOG & capability)) return DEVICE_NOT_SUPPORTED;
 
@@ -218,7 +224,8 @@ int STM32Pin::setServoValue(int value, int range, int center) {
     return setServoPulseUs(scaled / 1000);
 }
 
-int STM32Pin::getAnalogValue() {
+int STM32Pin::getAnalogValue()
+{
     // check if this pin has an analogue mode...
     if (!(PIN_CAPABILITY_ANALOG & capability)) return DEVICE_NOT_SUPPORTED;
 
@@ -246,11 +253,13 @@ int STM32Pin::getAnalogValue() {
     return (value - adc_offset) >> 2;
 }
 
-int STM32Pin::isTouched() {
+int STM32Pin::isTouched()
+{
     return DEVICE_NOT_SUPPORTED;
 }
 
-int STM32Pin::setServoPulseUs(uint32_t pulseWidthUs) {
+int STM32Pin::setServoPulseUs(uint32_t pulseWidthUs)
+{
     // check if this pin has an analogue mode...
     if (!(PIN_CAPABILITY_ANALOG & capability)) return DEVICE_NOT_SUPPORTED;
 
@@ -269,16 +278,20 @@ int STM32Pin::setServoPulseUs(uint32_t pulseWidthUs) {
     return DEVICE_OK;
 }
 
-int STM32Pin::setAnalogPeriod(int period) {
+int STM32Pin::setAnalogPeriod(int period)
+{
     return 0;
 }
-int STM32Pin::setAnalogPeriodUs(uint32_t period) {
+int STM32Pin::setAnalogPeriodUs(uint32_t period)
+{
     return 0;
 }
-uint32_t STM32Pin::getAnalogPeriodUs() {
+uint32_t STM32Pin::getAnalogPeriodUs()
+{
     return 0;
 }
-int STM32Pin::setPull(PullMode pull) {
+int STM32Pin::setPull(PullMode pull)
+{
     if (pullMode == pull) return DEVICE_OK;
 
     pullMode = pull;
@@ -290,7 +303,8 @@ int STM32Pin::setPull(PullMode pull) {
     return DEVICE_OK;
 }
 
-int STM32Pin::eventOn(int eventType) {
+int STM32Pin::eventOn(int eventType)
+{
     switch (eventType) {
         case DEVICE_PIN_INTERRUPT_ON_EDGE:
         case DEVICE_PIN_EVENT_ON_EDGE:
@@ -309,11 +323,13 @@ int STM32Pin::eventOn(int eventType) {
     return DEVICE_OK;
 }
 
-int STM32Pin::enableRiseFallEvents(int eventType) {
+int STM32Pin::enableRiseFallEvents(int eventType)
+{
     return DEVICE_NOT_IMPLEMENTED;
 }
 
-int STM32Pin::disableEvents() {
+int STM32Pin::disableEvents()
+{
     if (status & (IO_STATUS_EVENT_ON_EDGE | IO_STATUS_EVENT_PULSE_ON_EDGE | IO_STATUS_TOUCH_IN)) {
         disconnect();
         getDigitalValue();
