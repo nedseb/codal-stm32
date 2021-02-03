@@ -23,6 +23,7 @@
   Modified to support Arduino_Core_STM32
 */
 #include "HardwareTimer.h"
+
 #include "analog.h"
 #include "pins_arduino.h"
 
@@ -30,7 +31,7 @@
 
 /* Private Defines */
 #define PIN_NOT_USED 0xFF
-#define MAX_RELOAD   ((1 << 16) - 1) // Currently even 32b timers are used as 16b to have generic behavior
+#define MAX_RELOAD   ((1 << 16) - 1)  // Currently even 32b timers are used as 16b to have generic behavior
 
 /* Private Variables */
 timerObj_t* HardwareTimer_Handle[TIMER_NUM] = {NULL};
@@ -560,9 +561,9 @@ void HardwareTimer::setMode(uint32_t channel, TimerModes_t mode, PinName pin) {
     _ChannelMode[channel - 1] = mode;
 
     /* Configure some default values. Maybe overwritten later */
-    channelOC.OCMode = TIMER_NOT_USED;
-    channelOC.Pulse =
-        __HAL_TIM_GET_COMPARE(&(_timerObj.handle), timChannel); // keep same value already written in hardware <register
+    channelOC.OCMode     = TIMER_NOT_USED;
+    channelOC.Pulse      = __HAL_TIM_GET_COMPARE(&(_timerObj.handle),
+                                            timChannel);  // keep same value already written in hardware <register
     channelOC.OCPolarity = TIM_OCPOLARITY_HIGH;
     channelOC.OCFastMode = TIM_OCFAST_DISABLE;
 #if defined(TIM_CR2_OIS1)
@@ -912,8 +913,9 @@ void HardwareTimer::attachInterrupt(callback_function_t callback) {
  */
 void HardwareTimer::detachInterrupt() {
     // Disable update interrupt and clear callback
-    __HAL_TIM_DISABLE_IT(&(_timerObj.handle),
-                         TIM_IT_UPDATE); // disables the interrupt call to save cpu cycles for useless context switching
+    __HAL_TIM_DISABLE_IT(
+        &(_timerObj.handle),
+        TIM_IT_UPDATE);  // disables the interrupt call to save cpu cycles for useless context switching
     callbacks[0] = NULL;
 }
 
@@ -930,7 +932,7 @@ void HardwareTimer::attachInterrupt(uint32_t channel, callback_function_t callba
     }
 
     if ((channel == 0) || (channel > (TIMER_CHANNELS + 1))) {
-        Error_Handler(); // only channel 1..4 have an interrupt
+        Error_Handler();  // only channel 1..4 have an interrupt
     }
     if (callbacks[channel]) {
         // Callback previously configured : do not clear neither enable IT, it is just a change of callback
@@ -958,7 +960,7 @@ void HardwareTimer::detachInterrupt(uint32_t channel) {
     }
 
     if ((channel == 0) || (channel > (TIMER_CHANNELS + 1))) {
-        Error_Handler(); // only channel 1..4 have an interrupt
+        Error_Handler();  // only channel 1..4 have an interrupt
     }
 
     // Disable interrupt corresponding to channel and clear callback
@@ -981,7 +983,7 @@ bool HardwareTimer::hasInterrupt() {
  */
 bool HardwareTimer::hasInterrupt(uint32_t channel) {
     if ((channel == 0) || (channel > (TIMER_CHANNELS + 1))) {
-        Error_Handler(); // only channel 1..4 have an interrupt
+        Error_Handler();  // only channel 1..4 have an interrupt
     }
     return callbacks[channel] != NULL;
 }
@@ -1226,7 +1228,7 @@ uint32_t HardwareTimer::getTimerClkFreq() {
             break;
 #endif
         default:
-        case 0: // Unknown timer clock source
+        case 0:  // Unknown timer clock source
             Error_Handler();
             break;
     }
@@ -1293,8 +1295,7 @@ uint32_t HardwareTimer::getTimerClkFreq() {
     RCC_PeriphCLKInitTypeDef PeriphClkConfig = {};
     HAL_RCCEx_GetPeriphCLKConfig(&PeriphClkConfig);
 
-    if (PeriphClkConfig.TIMPresSelection == RCC_TIMPRES_ACTIVATED)
-        switch (uwAPBxPrescaler) {
+    if (PeriphClkConfig.TIMPresSelection == RCC_TIMPRES_ACTIVATED) switch (uwAPBxPrescaler) {
             default:
             case RCC_HCLK_DIV1:
             case RCC_HCLK_DIV2:
@@ -1387,8 +1388,8 @@ void TIM1_CC_IRQHandler(void) {
         HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER1_INDEX]->handle);
     }
 }
-#endif // !STM32F3xx
-#endif // TIM1_BASE
+#endif  // !STM32F3xx
+#endif  // TIM1_BASE
 
 #if defined(TIM2_BASE)
 /**
@@ -1401,7 +1402,7 @@ void TIM2_IRQHandler(void) {
         HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER2_INDEX]->handle);
     }
 }
-#endif // TIM2_BASE
+#endif  // TIM2_BASE
 
 #if defined(TIM3_BASE)
 /**
@@ -1414,7 +1415,7 @@ void TIM3_IRQHandler(void) {
         HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER3_INDEX]->handle);
     }
 }
-#endif // TIM3_BASE
+#endif  // TIM3_BASE
 
 #if defined(TIM4_BASE)
 /**
@@ -1427,7 +1428,7 @@ void TIM4_IRQHandler(void) {
         HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER4_INDEX]->handle);
     }
 }
-#endif // TIM4_BASE
+#endif  // TIM4_BASE
 
 #if defined(TIM5_BASE)
 /**
@@ -1440,7 +1441,7 @@ void TIM5_IRQHandler(void) {
         HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER5_INDEX]->handle);
     }
 }
-#endif // TIM5_BASE
+#endif  // TIM5_BASE
 
 #if defined(TIM6_BASE)
 /**
@@ -1453,7 +1454,7 @@ void TIM6_IRQHandler(void) {
         HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER6_INDEX]->handle);
     }
 }
-#endif // TIM6_BASE
+#endif  // TIM6_BASE
 
 #if defined(TIM7_BASE)
 /**
@@ -1466,7 +1467,7 @@ void TIM7_IRQHandler(void) {
         HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER7_INDEX]->handle);
     }
 }
-#endif // TIM7_BASE
+#endif  // TIM7_BASE
 
 #if defined(TIM8_BASE)
 /**
@@ -1484,7 +1485,7 @@ void TIM8_IRQHandler(void) {
     if (HardwareTimer_Handle[TIMER13_INDEX]) {
         HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER13_INDEX]->handle);
     }
-#endif // TIMER13_BASE
+#endif  // TIMER13_BASE
 #endif
 }
 
@@ -1493,7 +1494,7 @@ void TIM8_CC_IRQHandler(void) {
         HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER8_INDEX]->handle);
     }
 }
-#endif // TIM8_BASE
+#endif  // TIM8_BASE
 
 #if defined(TIM9_BASE)
 /**
@@ -1506,7 +1507,7 @@ void TIM9_IRQHandler(void) {
         HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER9_INDEX]->handle);
     }
 }
-#endif // TIM9_BASE
+#endif  // TIM9_BASE
 
 #if defined(TIM10_BASE)
 #if !defined(STM32F1xx) && !defined(STM32F2xx) && !defined(STM32F4xx) && !defined(STM32F7xx)
@@ -1521,7 +1522,7 @@ void TIM10_IRQHandler(void) {
     }
 }
 #endif
-#endif // TIM10_BASE
+#endif  // TIM10_BASE
 
 #if defined(TIM11_BASE)
 /**
@@ -1534,7 +1535,7 @@ void TIM11_IRQHandler(void) {
         HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER11_INDEX]->handle);
     }
 }
-#endif // TIM11_BASE
+#endif  // TIM11_BASE
 
 #if defined(TIM12_BASE)
 /**
@@ -1547,7 +1548,7 @@ void TIM12_IRQHandler(void) {
         HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER12_INDEX]->handle);
     }
 }
-#endif // TIM12_BASE
+#endif  // TIM12_BASE
 
 #if defined(TIM13_BASE)
 #if !defined(STM32F1xx) && !defined(STM32F2xx) && !defined(STM32F4xx) && !defined(STM32F7xx) && !defined(STM32H7xx)
@@ -1562,7 +1563,7 @@ void TIM13_IRQHandler(void) {
     }
 }
 #endif
-#endif // TIM13_BASE
+#endif  // TIM13_BASE
 
 #if defined(TIM14_BASE)
 /**
@@ -1575,7 +1576,7 @@ void TIM14_IRQHandler(void) {
         HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER14_INDEX]->handle);
     }
 }
-#endif // TIM14_BASE
+#endif  // TIM14_BASE
 
 #if defined(TIM15_BASE)
 /**
@@ -1588,7 +1589,7 @@ void TIM15_IRQHandler(void) {
         HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER15_INDEX]->handle);
     }
 }
-#endif // TIM15_BASE
+#endif  // TIM15_BASE
 
 #if defined(TIM16_BASE)
 #if !defined(STM32F1xx) && !defined(STM32F3xx) && !defined(STM32G4xx) && !defined(STM32L4xx)
@@ -1603,7 +1604,7 @@ void TIM16_IRQHandler(void) {
     }
 }
 #endif
-#endif // TIM16_BASE
+#endif  // TIM16_BASE
 
 #if defined(TIM17_BASE)
 /**
@@ -1616,7 +1617,7 @@ void TIM17_IRQHandler(void) {
         HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER17_INDEX]->handle);
     }
 }
-#endif // TIM17_BASE
+#endif  // TIM17_BASE
 
 #if defined(TIM18_BASE)
 /**
@@ -1637,7 +1638,7 @@ void TIM18_IRQHandler(void) {
 #endif
 #endif
 }
-#endif // TIM18_BASE
+#endif  // TIM18_BASE
 
 #if defined(TIM19_BASE)
 /**
@@ -1650,7 +1651,7 @@ void TIM19_IRQHandler(void) {
         HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER19_INDEX]->handle);
     }
 }
-#endif // TIM19_BASE
+#endif  // TIM19_BASE
 
 #if defined(TIM20_BASE)
 /**
@@ -1669,7 +1670,7 @@ void TIM20_CC_IRQHandler(void) {
         HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER20_INDEX]->handle);
     }
 }
-#endif // TIM20_BASE
+#endif  // TIM20_BASE
 
 #if defined(TIM21_BASE)
 /**
@@ -1682,7 +1683,7 @@ void TIM21_IRQHandler(void) {
         HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER21_INDEX]->handle);
     }
 }
-#endif // TIM21_BASE
+#endif  // TIM21_BASE
 
 #if defined(TIM22_BASE)
 /**
@@ -1695,7 +1696,7 @@ void TIM22_IRQHandler(void) {
         HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER22_INDEX]->handle);
     }
 }
-#endif // TIM22_BASE
+#endif  // TIM22_BASE
 }
 
-#endif // HAL_TIM_MODULE_ENABLED && !HAL_TIM_MODULE_ONLY
+#endif  // HAL_TIM_MODULE_ENABLED && !HAL_TIM_MODULE_ONLY

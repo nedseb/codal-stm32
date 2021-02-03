@@ -26,7 +26,6 @@ DEALINGS IN THE SOFTWARE.
 #include "CodalConfig.h"
 #include "ErrorNo.h"
 #include "SPI.h"
-
 #include "STM32Pin.h"
 #include "pinmap.h"
 
@@ -113,6 +112,6 @@ class STM32SPI : public codal::SPI, public codal::CodalComponent {
     void init_internal();
 };
 #define CODAL_SPI_SLAVE_SUPPORTED 1
-} // namespace codal
+}  // namespace codal
 
 #endif /*CODAL_STM32_SPI_H*/

@@ -28,10 +28,8 @@ DEALINGS IN THE SOFTWARE.
 #include "CodalConfig.h"
 #include "ErrorNo.h"
 #include "I2C.h"
-
 #include "STM32Pin.h"
 #include "pinmap.h"
-
 #include "twi.h"
 
 namespace codal {
@@ -234,6 +232,6 @@ class STM32I2C : public codal::I2C {
      */
     void setXferOptions(bool sendStop);
 };
-} // namespace codal
+}  // namespace codal
 
 #endif /*CODAL_STM32_I2C_H*/

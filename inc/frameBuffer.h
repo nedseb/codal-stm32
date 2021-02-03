@@ -7,7 +7,6 @@
 namespace codal {
 
 class FrameBuffer {
-
   public:
     enum Format {
         MONO_VLSB,
@@ -35,6 +34,6 @@ class FrameBuffer {
     uint8_t pages;
     uint8_t* buffer;
 };
-} // namespace codal
+}  // namespace codal
 
 #endif

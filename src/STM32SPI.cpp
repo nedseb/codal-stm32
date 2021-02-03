@@ -1,4 +1,5 @@
 #include "STM32SPI.h"
+
 #include "CodalConfig.h"
 #include "CodalDmesg.h"
 #include "ErrorNo.h"
@@ -23,7 +24,7 @@ extern "C" void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef* hspi) {
     STM32SPI::_complete((uint32_t)hspi->Instance);
 }
 
-#define DEFIRQ(nm, id)                                                                                                 \
+#define DEFIRQ(nm, id) \
     extern "C" void nm() { STM32SPI::_irq(id); }
 
 DEFIRQ(SPI1_IRQHandler, SPI1_BASE)

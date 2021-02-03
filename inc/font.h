@@ -667,7 +667,7 @@ static const uint8_t ASCII_FONT[] /*PROGMEM*/ = {
     0x54,
     0x54,
     0x78,
-    0x42, // a-umlaut
+    0x42,  // a-umlaut
     0x21,
     0x55,
     0x54,
@@ -717,7 +717,7 @@ static const uint8_t ASCII_FONT[] /*PROGMEM*/ = {
     0x12,
     0x11,
     0x12,
-    0x7D, // A-umlaut
+    0x7D,  // A-umlaut
     0xF0,
     0x28,
     0x25,
@@ -747,7 +747,7 @@ static const uint8_t ASCII_FONT[] /*PROGMEM*/ = {
     0x44,
     0x44,
     0x44,
-    0x3A, // o-umlaut
+    0x3A,  // o-umlaut
     0x32,
     0x4A,
     0x48,
@@ -772,7 +772,7 @@ static const uint8_t ASCII_FONT[] /*PROGMEM*/ = {
     0x42,
     0x42,
     0x42,
-    0x3D, // O-umlaut
+    0x3D,  // O-umlaut
     0x3D,
     0x40,
     0x40,
@@ -887,18 +887,18 @@ static const uint8_t ASCII_FONT[] /*PROGMEM*/ = {
     0x00,
     0x55,
     0x00,
-    0x55, // #176 (25% block) missing in old
-          // code
+    0x55,  // #176 (25% block) missing in old
+           // code
     0xAA,
     0x55,
     0xAA,
     0x55,
-    0xAA, // 50% block
+    0xAA,  // 50% block
     0xFF,
     0x55,
     0xFF,
     0x55,
-    0xFF, // 75% block
+    0xFF,  // 75% block
     0x00,
     0x00,
     0x00,
@@ -1133,7 +1133,7 @@ static const uint8_t ASCII_FONT[] /*PROGMEM*/ = {
     0x4A,
     0x4A,
     0x4A,
-    0x34, // sharp-s or beta
+    0x34,  // sharp-s or beta
     0x7E,
     0x02,
     0x02,
@@ -1283,5 +1283,5 @@ static const uint8_t ASCII_FONT[] /*PROGMEM*/ = {
     0x00,
     0x00,
     0x00,
-    0x00 // #255 NBSP
+    0x00  // #255 NBSP
 };

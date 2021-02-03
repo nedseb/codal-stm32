@@ -1,4 +1,5 @@
 #include "frameBuffer.h"
+
 #include "font.h"
 
 using namespace codal;
@@ -6,7 +7,6 @@ using namespace std;
 
 FrameBuffer::FrameBuffer(unsigned widthPixel, unsigned heightPixel, FrameBuffer::Format format)
     : width(widthPixel), height(heightPixel), format(format) {
-
     switch (this->format) {
         case Format::MONO_VLSB:
             pages      = height / 8;
@@ -22,7 +22,6 @@ FrameBuffer::~FrameBuffer() {
 }
 
 void FrameBuffer::fill(uint16_t color) {
-
     switch (format) {
         case Format::MONO_VLSB:
             for (unsigned i = 0; i < bufferSize; ++i) {
@@ -33,7 +32,6 @@ void FrameBuffer::fill(uint16_t color) {
 }
 
 void FrameBuffer::drawPixel(unsigned x, unsigned y, uint16_t color) {
-
     if (x >= width || y >= height) {
         return;
     }
@@ -54,9 +52,7 @@ void FrameBuffer::drawPixel(unsigned x, unsigned y, uint16_t color) {
 }
 
 void FrameBuffer::drawChar(char c, unsigned x, unsigned y, uint16_t color) {
-
     for (int i = 0; i < 5; ++i) {
-
         uint8_t currentChar = ASCII_FONT[c * 5 + i];
 
         for (int j = 0; j < 8; ++j) {

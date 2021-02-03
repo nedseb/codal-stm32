@@ -37,6 +37,6 @@ class STM32LowLevelTimer : public LowLevelTimer {
 };
 
 void timer_irq_handler(uint8_t index);
-} // namespace codal
+}  // namespace codal
 
 #endif

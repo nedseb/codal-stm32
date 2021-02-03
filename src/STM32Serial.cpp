@@ -15,7 +15,6 @@ STM32Serial::~STM32Serial() {
 }
 
 void STM32Serial::init(uint32_t baudrate, LengthSerial databits, ParitySerial parity, StopBitSerial stopBit) {
-
     this->baudrate = baudrate;
     this->databits = databits;
     this->parity   = parity;
@@ -29,7 +28,6 @@ void STM32Serial::init(uint32_t baudrate, LengthSerial databits, ParitySerial pa
 }
 
 int STM32Serial::enableInterrupt(SerialInterruptType t) {
-
     if (t == RxInterrupt) {
         uart_attach_rx_callback(&serial, RxIRQ);
     } else if (t == TxInterrupt) {
@@ -55,7 +53,6 @@ int STM32Serial::setBaudrate(uint32_t baudrate) {
 }
 
 int STM32Serial::configurePins(Pin& tx, Pin& rx) {
-
     txPin = (STM32Pin&)tx;
     rxPin = (STM32Pin&)rx;
 
@@ -77,11 +74,9 @@ int STM32Serial::getc() {
 }
 
 void STM32Serial::RxIRQ(serial_t* obj) {
-
     unsigned char c;
 
     if (uart_getc(obj, &c) == 0) {
-
         STM32Serial* ser = mapSerialInstance[obj];
 
         uint16_t i = (unsigned int)(ser->rxBuffHead + 1) % ser->rxBuffSize;

@@ -3,10 +3,9 @@
 
 #include <map>
 
+#include "STM32Pin.h"
 #include "Serial.h"
 #include "uart.h"
-
-#include "STM32Pin.h"
 
 namespace codal {
 
@@ -63,6 +62,6 @@ class STM32Serial : public Serial {
 };
 
 extern STM32Serial* default_serial_debug;
-} // namespace codal
+}  // namespace codal
 
 #endif /*__STM32SERIAL_H__*/

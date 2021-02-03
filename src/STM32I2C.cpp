@@ -1,13 +1,13 @@
+#include "STM32I2C.h"
+
 #include <algorithm>
 
 #include "PeripheralPins.h"
-#include "STM32I2C.h"
 
 using namespace std;
 using namespace codal;
 
 STM32I2C::STM32I2C(STM32Pin& sda, STM32Pin& scl) : I2C(sda, scl), currentAddress(0), isOnTransmission(false) {
-
     i2c.sda         = (PinName)sda.name;
     i2c.scl         = (PinName)scl.name;
     i2c.isMaster    = 1;
@@ -30,7 +30,6 @@ void STM32I2C::beginTransmission(uint16_t address) {
 }
 
 void STM32I2C::endTransmission(bool sendStop) {
-
     if (!isOnTransmission) {
         return;
     }

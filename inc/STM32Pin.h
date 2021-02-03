@@ -253,6 +253,6 @@ class STM32Pin : public Pin {
     int disableEvents();
 };
 
-} // namespace codal
+}  // namespace codal
 
 #endif /* CODAL_STM32_PIN_H */

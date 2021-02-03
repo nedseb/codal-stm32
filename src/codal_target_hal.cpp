@@ -1,10 +1,10 @@
 #include "codal_target_hal.h"
+
 #include "CodalCompat.h"
 #include "CodalDmesg.h"
+#include "STM32InterruptHandlers.h"
 #include "Timer.h"
 #include "board.h"
-
-#include "STM32InterruptHandlers.h"
 #include "stm32yyxx_ll_pwr.h"
 #include "stm32yyxx_ll_rcc.h"
 
@@ -19,8 +19,7 @@ void target_enable_irq() {
 
 void target_disable_irq() {
     irq_disabled++;
-    if (irq_disabled == 1)
-        __disable_irq();
+    if (irq_disabled == 1) __disable_irq();
 }
 
 void target_wait_for_event() {

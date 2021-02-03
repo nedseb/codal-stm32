@@ -101,24 +101,23 @@ inline PinName to_pinName(PinNumber pin) {
 
 void STM32Pin::disconnect() {
     PinName p = to_pinName(this->name);
-    if (p == NC)
-        return;
+    if (p == NC) return;
 
 // If the pin that support PWM or DAC output, we need to turn it off
-#if (defined(HAL_DAC_MODULE_ENABLED) && !defined(HAL_DAC_MODULE_ONLY)) ||                                              \
+#if (defined(HAL_DAC_MODULE_ENABLED) && !defined(HAL_DAC_MODULE_ONLY)) || \
     (defined(HAL_TIM_MODULE_ENABLED) && !defined(HAL_TIM_MODULE_ONLY))
     if (is_pin_configured(p, g_anOutputPinConfigured)) {
 #if defined(HAL_DAC_MODULE_ENABLED) && !defined(HAL_DAC_MODULE_ONLY)
         if (pin_in_pinmap(p, PinMap_DAC)) {
             dac_stop(p);
         } else
-#endif // HAL_DAC_MODULE_ENABLED && !HAL_DAC_MODULE_ONLY
+#endif  // HAL_DAC_MODULE_ENABLED && !HAL_DAC_MODULE_ONLY
 
 #if defined(HAL_TIM_MODULE_ENABLED) && !defined(HAL_TIM_MODULE_ONLY)
             if (pin_in_pinmap(p, PinMap_PWM)) {
             pwm_stop(p);
         }
-#endif // HAL_TIM_MODULE_ENABLED && !HAL_TIM_MODULE_ONLY
+#endif  // HAL_TIM_MODULE_ENABLED && !HAL_TIM_MODULE_ONLY
 
         reset_pin_configured(p, g_anOutputPinConfigured);
 #endif
@@ -128,8 +127,7 @@ void STM32Pin::disconnect() {
 
 int STM32Pin::setDigitalValue(int value) {
     // Ensure we have a valid value.
-    if (value < 0 || value > 1)
-        return DEVICE_INVALID_PARAMETER;
+    if (value < 0 || value > 1) return DEVICE_INVALID_PARAMETER;
 
     // Move into a Digital input state if necessary.
     if (!(this->status & IO_STATUS_DIGITAL_OUT)) {
@@ -158,8 +156,7 @@ int STM32Pin::getDigitalValue() {
 
 int STM32Pin::setAnalogValue(int value) {
     // sanitise the level value
-    if (value < 0 || value > DEVICE_PIN_MAX_OUTPUT)
-        return DEVICE_INVALID_PARAMETER;
+    if (value < 0 || value > DEVICE_PIN_MAX_OUTPUT) return DEVICE_INVALID_PARAMETER;
 
 #if defined(HAL_DAC_MODULE_ENABLED) && !defined(HAL_DAC_MODULE_ONLY)
     uint8_t do_init = 0;
@@ -175,7 +172,7 @@ int STM32Pin::setAnalogValue(int value) {
             value = mapResolution(value, _writeResolution, DACC_RESOLUTION);
             dac_write_value(p, value, do_init);
         } else
-#endif // HAL_DAC_MODULE_ENABLED && !HAL_DAC_MODULE_ONLY
+#endif  // HAL_DAC_MODULE_ENABLED && !HAL_DAC_MODULE_ONLY
 #if defined(HAL_TIM_MODULE_ENABLED) && !defined(HAL_TIM_MODULE_ONLY)
             if (pin_in_pinmap(p, PinMap_PWM)) {
             if (is_pin_configured(p, g_anOutputPinConfigured) == false) {
@@ -202,16 +199,13 @@ int STM32Pin::setAnalogValue(int value) {
 
 int STM32Pin::setServoValue(int value, int range, int center) {
     // check if this pin has an analogue mode...
-    if (!(PIN_CAPABILITY_ANALOG & capability))
-        return DEVICE_NOT_SUPPORTED;
+    if (!(PIN_CAPABILITY_ANALOG & capability)) return DEVICE_NOT_SUPPORTED;
 
     // sanitise the servo level
-    if (value < 0 || range < 1 || center < 1)
-        return DEVICE_INVALID_PARAMETER;
+    if (value < 0 || range < 1 || center < 1) return DEVICE_INVALID_PARAMETER;
 
     // clip - just in case
-    if (value > DEVICE_PIN_MAX_SERVO_RANGE)
-        value = DEVICE_PIN_MAX_SERVO_RANGE;
+    if (value > DEVICE_PIN_MAX_SERVO_RANGE) value = DEVICE_PIN_MAX_SERVO_RANGE;
 
     // calculate the lower bound based on the midpoint
     int lower = (center - (range / 2)) * 1000;
@@ -226,8 +220,7 @@ int STM32Pin::setServoValue(int value, int range, int center) {
 
 int STM32Pin::getAnalogValue() {
     // check if this pin has an analogue mode...
-    if (!(PIN_CAPABILITY_ANALOG & capability))
-        return DEVICE_NOT_SUPPORTED;
+    if (!(PIN_CAPABILITY_ANALOG & capability)) return DEVICE_NOT_SUPPORTED;
 
     if (!(status & IO_STATUS_ANALOG_IN)) {
         disconnect();
@@ -259,8 +252,7 @@ int STM32Pin::isTouched() {
 
 int STM32Pin::setServoPulseUs(uint32_t pulseWidthUs) {
     // check if this pin has an analogue mode...
-    if (!(PIN_CAPABILITY_ANALOG & capability))
-        return DEVICE_NOT_SUPPORTED;
+    if (!(PIN_CAPABILITY_ANALOG & capability)) return DEVICE_NOT_SUPPORTED;
 
     PinName p = to_pinName(this->name);
     if (p != NC) {
@@ -287,8 +279,7 @@ uint32_t STM32Pin::getAnalogPeriodUs() {
     return 0;
 }
 int STM32Pin::setPull(PullMode pull) {
-    if (pullMode == pull)
-        return DEVICE_OK;
+    if (pullMode == pull) return DEVICE_OK;
 
     pullMode = pull;
 
