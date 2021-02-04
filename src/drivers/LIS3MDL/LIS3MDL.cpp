@@ -103,7 +103,6 @@ uint8_t LIS3MDL::IO_Read( uint8_t ReadAddr, uint8_t *pBuffer, uint16_t nBytesToR
     return 0;
 }
 
-
 int LIS3MDL::configure(){
 
     init();

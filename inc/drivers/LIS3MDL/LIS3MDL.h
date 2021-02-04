@@ -106,19 +106,6 @@ namespace codal {
             virtual int configure() override final;
 
             /**
-             * Attempts to set the sample rate of the compass to the specified period value (in ms).
-             *
-             * @param period the requested time between samples, in milliseconds.
-             * @return DEVICE_OK on success, DEVICE_I2C_ERROR is the request fails.
-             *
-             * @note The requested rate may not be possible on the hardware. In this case, the
-             * nearest lower rate is chosen.
-             *
-             * @note This method should be overriden (if supported) by specific magnetometer device drivers.
-             */
-            virtual int setPeriod(int period) override final;
-
-            /**
              * Poll to see if new data is available from the hardware. If so, update it.
              * n.b. it is not necessary to explicitly call this function to update data
              * (it normally happens in the background when the scheduler is idle), but a check is performed
