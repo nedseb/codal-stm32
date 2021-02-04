@@ -1,4 +1,4 @@
-#include "hts221.h"
+#include "HTS221.h"
 
 using namespace codal;
 
