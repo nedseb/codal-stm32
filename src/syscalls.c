@@ -13,6 +13,9 @@
 #undef errno
 extern int errno;
 
+extern int __io_putchar(int ch) __attribute__((weak));
+extern int __io_getchar(void) __attribute__((weak));
+
 extern size_t uart_debug_write(uint8_t *data, uint32_t size);
 
 // Helper macro to mark unused parameters and prevent compiler warnings.
