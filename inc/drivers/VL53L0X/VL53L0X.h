@@ -8,14 +8,14 @@
 
 namespace codal {
 
-    class VL53L0x {
+    class VL53L0X {
 
         private:
             VL53L0X_base baseDriver;
             uint8_t address;
 
         public:
-            VL53L0x( STM32I2C& i2c, STM32Pin& pin, uint8_t address );
+            VL53L0X( STM32I2C& i2c, STM32Pin& pin, uint8_t address );
 
             void init();
             void enable();
