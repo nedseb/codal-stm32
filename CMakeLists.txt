@@ -1,6 +1,12 @@
 project(codal-stm32)
 
 include("${CODAL_UTILS_LOCATION}")
+
+set(CMAKE_CXX_CLANG_TIDY
+    clang-tidy;
+    --extra-arg=-Wno-error;
+    --extra-arg=-std=c++20;)
+
 RECURSIVE_FIND_DIR(INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/inc" "*.h")
 list(APPEND INCLUDE_DIRS
     "${CMAKE_CURRENT_SOURCE_DIR}/inc"
