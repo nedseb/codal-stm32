@@ -66,7 +66,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 
-typedef unsigned long long uint64_t;
+//typedef unsigned long long uint64_t;
 
 
 /** @brief Typedef defining 32 bit unsigned int type.\n
