@@ -36,6 +36,7 @@
 #include "core_debug.h"
 #include "uart.h"
 #include "PinAF_STM32F1.h"
+#include "pins_arduino.h"
 
 #ifdef __cplusplus
 extern "C" {

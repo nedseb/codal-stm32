@@ -4,7 +4,7 @@
   * Implementation of newlib syscall.
   *
   */
-
+#include <stddef.h>
 #include "stm32_def.h"
 #if defined (  __GNUC__  ) /* GCC CS3 */
   #include <sys/stat.h>
@@ -29,27 +29,56 @@ extern size_t uart_debug_write(uint8_t *data, uint32_t size);
   #define UNUSED(x) x ## _UNUSED
 #endif
 
-
-register char * stack_ptr asm("sp");
-
-
-int _getpid(void)
+__attribute__((weak))
+caddr_t _sbrk(int incr)
 {
-	return 1;
+  extern char _estack; /* Defined in the linker script */
+  extern char _Min_Stack_Size; /* Defined in the linker script */
+  extern char _end; /* Defined by the linker */
+  static char *heap_end = &_end ;
+  char *prev_heap_end = heap_end;
+
+  if (heap_end + incr > (char *)__get_MSP()) {
+    /* Heap and stack collision */
+    errno = ENOMEM;
+    return (caddr_t) -1;
+  }
+  /* Ensure to keep minimun stack size defined in the linker script */
+  if (heap_end + incr >= (char *)(&_estack - &_Min_Stack_Size)) {
+    errno = ENOMEM;
+    return (caddr_t) -1;
+  }
+
+  heap_end += incr ;
+  return (caddr_t) prev_heap_end ;
 }
 
-int _kill(int pid, int sig)
+__attribute__((weak))
+int _close(UNUSED(int file))
 {
-	errno = EINVAL;
-	return -1;
+  return -1;
 }
 
-void _exit (int status)
+__attribute__((weak))
+int _fstat(UNUSED(int file), struct stat *st)
 {
-	_kill(status, -1);
-	while (1) {}		/* Make sure we hang here */
+  st->st_mode = S_IFCHR ;
+  return 0;
 }
 
+__attribute__((weak))
+int _isatty(UNUSED(int file))
+{
+  return 1;
+}
+
+__attribute__((weak))
+int _lseek(UNUSED(int file), UNUSED(int ptr), UNUSED(int dir))
+{
+  return 0;
+}
+
+__attribute__((weak))
 int _read (int file, char *ptr, int len)
 {
 	/* The I/O library uses an internal buffer */
@@ -62,6 +91,7 @@ int _read (int file, char *ptr, int len)
 	return 1;
 }
 
+__attribute__((weak))
 int _write(int file, char *ptr, int len)
 {
 	int DataIdx;
@@ -73,94 +103,21 @@ int _write(int file, char *ptr, int len)
 	return len;
 }
 
-caddr_t _sbrk(int incr)
+__attribute__((weak))
+void _exit(UNUSED(int status))
 {
-	extern char end asm("end");
-	static char *heap_end;
-	char *prev_heap_end;
-
-	if (heap_end == 0)
-		heap_end = &end;
-
-	prev_heap_end = heap_end;
-	if (heap_end + incr > stack_ptr)
-	{
-//		write(1, "Heap and stack collision\n", 25);
-//		abort();
-		errno = ENOMEM;
-		return (caddr_t) -1;
-	}
-
-	heap_end += incr;
-
-	return (caddr_t) prev_heap_end;
+  for (; ;) ;
 }
 
-int _close(int file)
+__attribute__((weak))
+int _kill(UNUSED(int pid), UNUSED(int sig))
 {
-	return -1;
+  errno = EINVAL;
+  return -1;
 }
 
-
-int _fstat(int file, struct stat *st)
+__attribute__((weak))
+int _getpid(void)
 {
-	st->st_mode = S_IFCHR;
-	return 0;
-}
-
-int _isatty(int file)
-{
-	return 1;
-}
-
-int _lseek(int file, int ptr, int dir)
-{
-	return 0;
-}
-
-int _open(char *path, int flags, ...)
-{
-	/* Pretend like we always fail */
-	return -1;
-}
-
-int _wait(int *status)
-{
-	errno = ECHILD;
-	return -1;
-}
-
-int _unlink(char *name)
-{
-	errno = ENOENT;
-	return -1;
-}
-
-int _times(struct tms *buf)
-{
-	return -1;
-}
-
-int _stat(char *file, struct stat *st)
-{
-	st->st_mode = S_IFCHR;
-	return 0;
-}
-
-int _link(char *old, char *new)
-{
-	errno = EMLINK;
-	return -1;
-}
-
-int _fork(void)
-{
-	errno = EAGAIN;
-	return -1;
-}
-
-int _execve(char *name, char **argv, char **env)
-{
-	errno = ENOMEM;
-	return -1;
+  return 1;
 }
