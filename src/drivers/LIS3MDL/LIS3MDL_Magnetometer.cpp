@@ -2,8 +2,8 @@
 
 using namespace codal;
 
-LIS3MDL_Magnetometer::LIS3MDL_Magnetometer(CoordinateSpace& coordinateSpace, STM32I2C& i2c, uint8_t address)
-    : LIS3MDL(i2c, address), Compass(coordinateSpace) {
+LIS3MDL_Magnetometer::LIS3MDL_Magnetometer(STM32I2C& i2c, uint8_t address, CoordinateSpace& coordinateSpace, uint16_t id)
+    : LIS3MDL(i2c, address), Compass(coordinateSpace, id) {
 }
 
 int LIS3MDL_Magnetometer::configure(){

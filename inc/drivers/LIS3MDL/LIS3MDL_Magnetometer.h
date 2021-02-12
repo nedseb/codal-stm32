@@ -8,7 +8,7 @@ namespace codal{
 class LIS3MDL_Magnetometer : public LIS3MDL, public Compass {
 
     public:
-        LIS3MDL_Magnetometer(CoordinateSpace& coordinateSpace, STM32I2C& i2c, uint8_t address);
+        LIS3MDL_Magnetometer(STM32I2C& i2c, uint8_t address, CoordinateSpace& coordinateSpace, uint16_t id = DEVICE_ID_COMPASS);
 
         /**
          * Configures the device for the sample rate defined
