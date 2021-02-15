@@ -4,87 +4,72 @@
 #include "CodalDmesg.h"
 
 using namespace codal;
+using namespace std;
 
-void STM32SPI::complete()
-{
-
+STM32SPI::STM32SPI( STM32Pin& miso, STM32Pin& mosi, STM32Pin& sclk, uint32_t freq, int mode, bool msbFirst )
+    : SPI(), frequency(freq), mode(modeToSpiMode(mode)), isMsbFirst(msbFirst), isOnTransaction(false) {
+    spi.pin_miso = (PinName)miso.name;
+    spi.pin_mosi = (PinName)mosi.name;
+    spi.pin_sclk = (PinName)sclk.name;
+    spi.pin_ssel = NC;
 }
 
-void STM32SPI::_complete(uint32_t instance)
-{
+void STM32SPI::beginTransaction(){
+    if(isOnTransaction) return;
 
+    buffer.clear();
+    isOnTransaction = true;
 }
 
-void STM32SPI::_irq(uint32_t instance)
-{
+vector<uint8_t> STM32SPI::endTransaction(uint32_t timeout, bool skipReceive){
+    if(!isOnTransaction) return vector<uint8_t>();
 
+    auto result = vector<uint8_t>( buffer.size() );
+
+    spi_init(&spi, frequency, mode, isMsbFirst);
+
+    spi_transfer( &spi, buffer.data(), result.data(), buffer.size(), timeout, skipReceive );
+
+    spi_deinit(&spi);
+
+    isOnTransaction = false;
+
+    return result;
 }
 
-extern "C" void HAL_SPI_TxCpltCallback(SPI_HandleTypeDef *hspi)
-{
-    STM32SPI::_complete((uint32_t)hspi->Instance);
+void STM32SPI::writeTransaction(uint8_t data){
+    if( !isOnTransaction ) return;
+    buffer.push_back(data);
 }
 
-extern "C" void HAL_SPI_RxCpltCallback(SPI_HandleTypeDef *hspi)
-{
-    STM32SPI::_complete((uint32_t)hspi->Instance);
+int STM32SPI::write(int data){
+
+    uint8_t sendData = data;
+    uint8_t result = 0;
+
+    spi_init(&spi, frequency, mode, isMsbFirst);
+    spi_transfer( &spi, &sendData, &result, 1, 1000, false );
+    spi_deinit(&spi);
+
+    return (int)result;
 }
 
-extern "C" void HAL_SPI_TxRxCpltCallback(SPI_HandleTypeDef *hspi)
-{
-    STM32SPI::_complete((uint32_t)hspi->Instance);
-}
+spi_mode_e STM32SPI::modeToSpiMode(int mode){
+    switch (mode)
+    {
+        case 0:
+            return SPI_MODE_0;
 
-#define DEFIRQ(nm, id)                                                                             \
-    extern "C" void nm() { STM32SPI::_irq(id); }
+        case 1:
+            return SPI_MODE_1;
 
-DEFIRQ(SPI1_IRQHandler, SPI1_BASE)
-DEFIRQ(SPI2_IRQHandler, SPI2_BASE)
-#ifdef SPI3_BASE
-DEFIRQ(SPI3_IRQHandler, SPI3_BASE)
-#endif
-#ifdef SPI4_BASE
-DEFIRQ(SPI4_IRQHandler, SPI4_BASE)
-#endif
-#ifdef SPI5_BASE
-DEFIRQ(SPI5_IRQHandler, SPI5_BASE)
-#endif
-#ifdef SPI6_BASE
-DEFIRQ(SPI6_IRQHandler, SPI6_BASE)
-#endif
+        case 2:
+            return SPI_MODE_2;
 
-void STM32SPI::init_internal()
-{
+        case 3:
+            return SPI_MODE_3;
 
-}
-
-STM32SPI::STM32SPI(codal::Pin& mosi, codal::Pin& miso, codal::Pin& sclk, codal::Pin* cs): codal::SPI()
-{
-}
-
-int STM32SPI::setFrequency(uint32_t frequency)
-{
-    return DEVICE_SPI_ERROR;
-}
-
-int STM32SPI::setMode(int mode, int bits)
-{
-    return DEVICE_SPI_ERROR;
-}
-
-int STM32SPI::write(int data)
-{
-    return DEVICE_SPI_ERROR;
-}
-
-int STM32SPI::transfer(const uint8_t *txBuffer, uint32_t txSize, uint8_t *rxBuffer, uint32_t rxSize)
-{
-    return DEVICE_SPI_ERROR;
-
-}
-
-int STM32SPI::startTransfer(const uint8_t *txBuffer, uint32_t txSize, uint8_t *rxBuffer,
-                        uint32_t rxSize, PVoidCallback doneHandler, void *arg)
-{
-    return DEVICE_SPI_ERROR;
+        default:
+            return SPI_MODE_0;
+    }
 }
