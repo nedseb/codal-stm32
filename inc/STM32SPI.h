@@ -23,95 +23,112 @@ DEALINGS IN THE SOFTWARE.
 #ifndef CODAL_STM32_SPI_H
 #define CODAL_STM32_SPI_H
 
-#include "CodalConfig.h"
-#include "ErrorNo.h"
-#include "SPI.h"
+#include <vector>
 
 #include "STM32Pin.h"
-#include "pinmap.h"
+
+#include "SPI.h"
+#include "spi_com.h"
 
 namespace codal {
 
-class STM32SPI;
-struct SPI_HandleWithParent : public SPI_HandleTypeDef
+class STM32SPI : public codal::SPI
 {
-    STM32SPI *stm32spi_parent;
+    public:
+        /**
+         * @brief Construct a new STM32SPI object
+         * 
+         * @param miso the MISO (CIPO) pin
+         * @param mosi the MOSI (COPI) pin
+         * @param sclk the SCLK pin
+         * @param freq the bus frequency in hertz (default: 14MHz)
+         * @param mode Clock polarity and phase mode (default: 0)
+         *
+         * @code
+         * mode | POL PHA
+         * -----+--------
+         *   0  |  0   0
+         *   1  |  0   1
+         *   2  |  1   0
+         *   3  |  1   1
+         * @endcode
+         * 
+         * @param msbFirst Trus if should send data MSB First
+         */
+        STM32SPI( STM32Pin& miso, STM32Pin& mosi, STM32Pin& sclk, uint32_t freq = 14000000, int mode = 0, bool msbFirst = true );
+
+        /** @brief Set the frequency of the SPI interface
+         *
+         * @param frequency The bus frequency in hertz
+         */
+        virtual int setFrequency(uint32_t frequency) override final {
+            this->frequency = frequency;
+            return DEVICE_OK;
+        }
+
+        /** @brief Set the mode of the SPI interface
+         *
+         * @param mode Clock polarity and phase mode (0 - 3)
+         * @param bits [Not used] Number of bits per SPI frame (4 - 16)
+         *
+         * @code
+         * mode | POL PHA
+         * -----+--------
+         *   0  |  0   0
+         *   1  |  0   1
+         *   2  |  1   0
+         *   3  |  1   1
+         * @endcode
+         */
+        virtual int setMode(int mode, int bits = 8) override final{
+            this->mode = modeToSpiMode(mode);
+            return DEVICE_OK;
+        }
+
+        /**
+         * @brief Writes the given byte to the SPI bus.
+         * The CPU will busy wait until the transmission is complete. 
+         * 
+         * @deprecated Should not be used directly. Use (begin/write/end)Transaction instead.
+         * 
+         * @param data The data to write.
+         * @return Response from the SPI slave or DEVICE_SPI_ERROR if the the write request failed.
+         */
+        virtual int write(int data) override final;
+
+        /**
+         * @brief 
+         * 
+         */
+        void beginTransaction();
+
+        /**
+         * @brief 
+         * 
+         * @param timeout 
+         * @param skipReceive 
+         * @return std::vector<uint8_t> 
+         */
+        std::vector<uint8_t> endTransaction(uint32_t timeout = 1000, bool skipReceive = false);
+
+        /**
+         * @brief 
+         * 
+         * @param data 
+         */
+        void writeTransaction(uint8_t data);
+
+    private:
+        spi_t spi;
+        uint32_t frequency;
+        spi_mode_e mode;
+        bool isMsbFirst;
+        bool isOnTransaction;
+        std::vector<uint8_t> buffer;
+
+        spi_mode_e modeToSpiMode(int mode);
 };
 
-/**
- * Class definition for SPI service, derived from ARM mbed.
- */
-class STM32SPI : public codal::SPI, public codal::CodalComponent
-{
-public:
-    static void _complete(uint32_t instance);
-    static void _irq(uint32_t instance);
-
-    /**
-     * Initialize SPI instance with given pins.
-     *
-     * Default setup is 1 MHz, 8 bit, mode 0.
-     * If `cs` is specified, the SPI is run in slave mode.
-     */
-    STM32SPI(codal::Pin& mosi, codal::Pin& miso, codal::Pin& sclk, codal::Pin* cs = nullptr);
-
-
-    virtual ~STM32SPI() = default;
-
-    /** Set the frequency of the SPI interface
-     *
-     * @param frequency The bus frequency in hertz
-     */
-    virtual int setFrequency(uint32_t frequency) override;
-
-    /** Set the mode of the SPI interface
-     *
-     * @param mode Clock polarity and phase mode (0 - 3)
-     * @param bits Number of bits per SPI frame (4 - 16)
-     *
-     * @code
-     * mode | POL PHA
-     * -----+--------
-     *   0  |  0   0
-     *   1  |  0   1
-     *   2  |  1   0
-     *   3  |  1   1
-     * @endcode
-     */
-    virtual int setMode(int mode, int bits = 8) override;
-
-    /**
-     * Writes the given byte to the SPI bus.
-     *
-     * The CPU will wait until the transmission is complete.
-     *
-     * @param data The data to write.
-     * @return Response from the SPI slave or DEVICE_SPI_ERROR if the the write request failed.
-     */
-    virtual int write(int data) override;
-
-    /**
-     * Writes and reads from the SPI bus concurrently. Waits un-scheduled for transfer to finish.
-     *
-     * Either buffer can be NULL.
-     */
-    virtual int transfer(const uint8_t *txBuffer, uint32_t txSize, uint8_t *rxBuffer,
-                         uint32_t rxSize) override;
-
-    virtual int startTransfer(const uint8_t *txBuffer, uint32_t txSize, uint8_t *rxBuffer,
-                              uint32_t rxSize, PVoidCallback doneHandler, void *arg) override;
-private:
-    Pin *mosi, *miso, *sclk;
-    Pin *cs;
-    
-    bool needsInit;
-    bool isSlave;
-    bool hasRx, hasTx;
-    
-    void complete();
-    void init_internal();
-};
-#define CODAL_SPI_SLAVE_SUPPORTED 1
-}  // namespace codal
+}
 
 #endif /*CODAL_STM32_SPI_H*/
