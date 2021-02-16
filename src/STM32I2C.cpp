@@ -95,6 +95,21 @@ vector<uint8_t> STM32I2C::readRegister( uint8_t address, uint8_t reg, size_t len
     return read(address, len, sendStop);
 }
 
+int STM32I2C::write(uint16_t address, uint8_t *data, int len, bool repeated){
+    beginTransmission(address);
+        write(data, len);
+    endTransmission(!repeated);
+
+    return DEVICE_OK;
+}
+
+int STM32I2C::read(uint16_t address, uint8_t *data, int len, bool repeated){
+    auto result = read(address, len, !repeated);
+    memcpy(data, result.data(), len);
+    return DEVICE_OK;
+}
+
+
 void STM32I2C::setXferOptions( bool sendStop ){
     #if defined(I2C_OTHER_FRAME)
         if (sendStop) {
