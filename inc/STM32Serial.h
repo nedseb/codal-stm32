@@ -11,7 +11,6 @@
 namespace codal{
 
     enum class LengthSerial : uint32_t {
-        SERIAL_7_BITS = UART_WORDLENGTH_7B,
         SERIAL_8_BITS = UART_WORDLENGTH_8B,
         SERIAL_9_BITS = UART_WORDLENGTH_9B
     };
@@ -23,9 +22,7 @@ namespace codal{
     };
 
     enum class StopBitSerial : uint32_t  {
-        SERIAL_STOP_0_5 = UART_STOPBITS_0_5,
         SERIAL_STOP_1   = UART_STOPBITS_1,
-        SERIAL_STOP_1_5 = UART_STOPBITS_1_5,
         SERIAL_STOP_2   = UART_STOPBITS_2
     };
 
