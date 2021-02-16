@@ -27,6 +27,7 @@ DEALINGS IN THE SOFTWARE.
 #include "CodalConfig.h"
 #include "Pin.h"
 #include "PinNumber.h"
+#include "PinNames.h"
 
 namespace codal {
 
@@ -48,6 +49,23 @@ class STM32Pin : public Pin {
      * @endcode
      */
     STM32Pin(int id, PinNumber name, PinCapability capability);
+
+    /**
+     * Constructor.
+     * Create a Pin instance, generally used to represent a pin on the edge connector.
+     *
+     * @param id the unique EventModel id of this component.
+     *
+     * @param name the PinName for this Pin instance.
+     *
+     * @param capability the capabilities this Pin instance should have.
+     *                   (PIN_CAPABILITY_DIGITAL, PIN_CAPABILITY_ANALOG, PIN_CAPABILITY_AD, PIN_CAPABILITY_ALL)
+     *
+     * @code
+     * Pin P0(DEVICE_ID_IO_P0, DEVICE_PIN_P0, PIN_CAPABILITY_ALL);
+     * @endcode
+     */
+    STM32Pin(int id, PinName name, PinCapability capability) : STM32Pin(id, (PinNumber)name, capability){}
 
     /**
      * Configures this IO pin as a digital output (if necessary) and sets the pin to 'value'.
