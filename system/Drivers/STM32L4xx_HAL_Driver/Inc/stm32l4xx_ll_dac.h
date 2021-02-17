@@ -133,7 +133,7 @@ extern "C" {
   * @retval Pointer to register address
 */
 #define __DAC_PTR_REG_OFFSET(__REG__, __REG_OFFFSET__)                         \
- ((uint32_t *)((uint32_t) ((uint32_t)(&(__REG__)) + ((__REG_OFFFSET__) << 2U))))
+ ((uint32_t *)((uint32_t) ((uintptr_t)(&(__REG__)) + ((__REG_OFFFSET__) << 2U))))
 
 /**
   * @}

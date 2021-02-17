@@ -2430,7 +2430,7 @@ __STATIC_INLINE uint32_t LL_USART_IsEnabledDMAReq_TX(USART_TypeDef *USARTx)
 __STATIC_INLINE uint32_t LL_USART_DMA_GetRegAddr(USART_TypeDef *USARTx)
 {
   /* return address of DR register */
-  return ((uint32_t) & (USARTx->DR));
+  return ((uintptr_t) & (USARTx->DR));
 }
 
 /**

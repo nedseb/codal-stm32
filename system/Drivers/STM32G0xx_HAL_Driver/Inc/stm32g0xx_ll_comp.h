@@ -81,7 +81,7 @@ extern "C" {
   * @retval Pointer to register address
   */
 #define __COMP_PTR_REG_OFFSET(__REG__, __REG_OFFFSET__)                        \
-  ((__IO uint32_t *)((uint32_t) ((uint32_t)(&(__REG__)) + ((__REG_OFFFSET__) << 2UL))))
+  ((__IO uint32_t *)((uint32_t) ((uintptr_t)(&(__REG__)) + ((__REG_OFFFSET__) << 2UL))))
 
 /**
   * @}

@@ -2358,10 +2358,10 @@ void HAL_RTCEx_BKUPWrite(RTC_HandleTypeDef * hrtc, uint32_t BackupRegister, uint
 
   /* Point on address of first backup register */
 #if defined(TAMP_BKP0R)
-  tmp = (uint32_t) & (((TAMP_TypeDef *)((uint32_t)hrtc->Instance + TAMP_OFFSET))->BKP0R);
+  tmp = (uintptr_t) & (((TAMP_TypeDef *)((uint32_t)hrtc->Instance + TAMP_OFFSET))->BKP0R);
 #endif /* TAMP_BKP0R */
 #if defined(RTC_BKP0R)
-  tmp = (uint32_t) & (hrtc->Instance->BKP0R);
+  tmp = (uintptr_t) & (hrtc->Instance->BKP0R);
 #endif /* RTC_BKP0R */
 
   tmp += (BackupRegister * 4U);
@@ -2388,10 +2388,10 @@ uint32_t HAL_RTCEx_BKUPRead(RTC_HandleTypeDef * hrtc, uint32_t BackupRegister)
 
   /* Point on address of first backup register */
 #if defined(TAMP_BKP0R)
-  tmp = (uint32_t) & (((TAMP_TypeDef *)((uint32_t)hrtc->Instance + TAMP_OFFSET))->BKP0R);
+  tmp = (uintptr_t) & (((TAMP_TypeDef *)((uint32_t)hrtc->Instance + TAMP_OFFSET))->BKP0R);
 #endif /* TAMP_BKP0R */
 #if defined(RTC_BKP0R)
-  tmp = (uint32_t) & (hrtc->Instance->BKP0R);
+  tmp = (uintptr_t) & (hrtc->Instance->BKP0R);
 #endif /* RTC_BKP0R */
 
   tmp += (BackupRegister * 4U);

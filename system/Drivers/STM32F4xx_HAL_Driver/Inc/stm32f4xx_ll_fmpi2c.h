@@ -584,12 +584,12 @@ __STATIC_INLINE uint32_t LL_FMPI2C_DMA_GetRegAddr(FMPI2C_TypeDef *FMPI2Cx, uint3
   if (Direction == LL_FMPI2C_DMA_REG_DATA_TRANSMIT)
   {
     /* return address of TXDR register */
-    data_reg_addr = (uint32_t) & (FMPI2Cx->TXDR);
+    data_reg_addr = (uintptr_t) & (FMPI2Cx->TXDR);
   }
   else
   {
     /* return address of RXDR register */
-    data_reg_addr = (uint32_t) & (FMPI2Cx->RXDR);
+    data_reg_addr = (uintptr_t) & (FMPI2Cx->RXDR);
   }
 
   return data_reg_addr;

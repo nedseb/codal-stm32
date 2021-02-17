@@ -448,7 +448,7 @@ __STATIC_INLINE uint32_t LL_I2C_IsEnabledDMAReq_RX(I2C_TypeDef *I2Cx)
   */
 __STATIC_INLINE uint32_t LL_I2C_DMA_GetRegAddr(I2C_TypeDef *I2Cx)
 {
-  return (uint32_t) & (I2Cx->DR);
+  return (uintptr_t) & (I2Cx->DR);
 }
 
 /**

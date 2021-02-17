@@ -2347,12 +2347,12 @@ void HAL_RTCEx_BKUPWrite(RTC_HandleTypeDef *hrtc, uint32_t BackupRegister, uint3
   /* Check the parameters */
   assert_param(IS_RTC_BKP(BackupRegister));
 
-  tmp = (uint32_t) & (tamp->BKP0R);
+  tmp = (uintptr_t) & (tamp->BKP0R);
 #else /* #if defined(STM32L412xx) || defined(STM32L422xx) || defined (STM32L4P5xx) || defined (STM32L4Q5xx) */
   /* Check the parameters */
   assert_param(IS_RTC_BKP(BackupRegister));
 
-  tmp = (uint32_t) & (hrtc->Instance->BKP0R);
+  tmp = (uintptr_t) & (hrtc->Instance->BKP0R);
 #endif /* #if defined(STM32L412xx) || defined(STM32L422xx) || defined (STM32L4P5xx) || defined (STM32L4Q5xx) */
 
   tmp += (BackupRegister * 4U);
@@ -2380,12 +2380,12 @@ uint32_t HAL_RTCEx_BKUPRead(RTC_HandleTypeDef *hrtc, uint32_t BackupRegister)
   /* Check the parameters */
   assert_param(IS_RTC_BKP(BackupRegister));
 
-  tmp = (uint32_t) & (tamp->BKP0R);
+  tmp = (uintptr_t) & (tamp->BKP0R);
 #else /* #if defined(STM32L412xx) || defined(STM32L422xx) || defined (STM32L4P5xx) || defined (STM32L4Q5xx) */
   /* Check the parameters */
   assert_param(IS_RTC_BKP(BackupRegister));
 
-  tmp = (uint32_t) & (hrtc->Instance->BKP0R);
+  tmp = (uintptr_t) & (hrtc->Instance->BKP0R);
 #endif /* #if defined(STM32L412xx) || defined(STM32L422xx) || defined (STM32L4P5xx) || defined (STM32L4Q5xx) */
 
   tmp += (BackupRegister * 4U);
