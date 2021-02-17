@@ -108,6 +108,18 @@ extern "C" {
 #define TIMER_TONE              TIM16
 #define TIMER_SERVO             TIM17
 
+#define TIM_MST      TIM2
+#define TIM_MST_IRQ  TIM2_IRQn
+#define TIM_MST_RCC  __HAL_RCC_TIM2_CLK_ENABLE()
+#define TIM_MST_DBGMCU_FREEZE  __HAL_DBGMCU_FREEZE_TIM2()
+
+#define TIM_MST_RESET_ON   __HAL_RCC_TIM2_FORCE_RESET()
+#define TIM_MST_RESET_OFF  __HAL_RCC_TIM2_RELEASE_RESET()
+
+#define TIM_MST_BIT_WIDTH  32 // 16 or 32
+
+#define TIM_MST_PCLK 
+
 // UART Definitions
 #define SERIAL_UART_INSTANCE    1 //Connected to ST-Link
 

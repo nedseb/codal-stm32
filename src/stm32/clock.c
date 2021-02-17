@@ -50,24 +50,6 @@ uint32_t getCurrentMillis(void)
   return HAL_GetTick();
 }
 
-void noOsSystickHandler()
-{
-
-}
-
-void osSystickHandler() __attribute__((weak, alias("noOsSystickHandler")));
-/**
-  * @brief  Function called when the tick interruption falls
-  * @param  None
-  * @retval None
-  */
-void SysTick_Handler(void)
-{
-  HAL_IncTick();
-  HAL_SYSTICK_IRQHandler();
-  osSystickHandler();
-}
-
 /**
   * @brief  Enable the specified clock if not already set
   * @param  source: clock source: LSE_CLOCK, LSI_CLOCK, HSI_CLOCK or HSE_CLOCK
