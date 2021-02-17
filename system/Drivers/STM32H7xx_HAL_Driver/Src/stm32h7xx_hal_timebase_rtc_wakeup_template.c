@@ -71,7 +71,7 @@
 #ifdef RTC_CLOCK_SOURCE_HSE
   #define RTC_ASYNCH_PREDIV       99U
   #define RTC_SYNCH_PREDIV        9U
-  #define RCC_RTCCLKSOURCE_1MHZ   ((uint32_t)((uint32_t)RCC_BDCR_RTCSEL | (uint32_t)((HSE_VALUE/1000000U) << 12U)))
+  #define RCC_RTCCLKSOURCE_1MHZ   ((uint32_t)((uintptr_t)RCC_BDCR_RTCSEL | (uint32_t)((HSE_VALUE/1000000U) << 12U)))
 #else /* RTC_CLOCK_SOURCE_LSE || RTC_CLOCK_SOURCE_LSI */
   #define RTC_ASYNCH_PREDIV       0U
   #define RTC_SYNCH_PREDIV        31U

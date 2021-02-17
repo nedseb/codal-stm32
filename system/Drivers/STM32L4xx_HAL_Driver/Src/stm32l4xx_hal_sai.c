@@ -1754,7 +1754,7 @@ HAL_StatusTypeDef HAL_SAI_EnableRxMuteMode(SAI_HandleTypeDef *hsai, SAIcallback 
   {
     /* set the mute counter */
     CLEAR_BIT(hsai->Instance->CR2, SAI_xCR2_MUTECNT);
-    SET_BIT(hsai->Instance->CR2, (uint32_t)((uint32_t)counter << SAI_xCR2_MUTECNT_Pos));
+    SET_BIT(hsai->Instance->CR2, (uint32_t)((uintptr_t)counter << SAI_xCR2_MUTECNT_Pos));
     hsai->mutecallback = callback;
     /* enable the IT interrupt */
     __HAL_SAI_ENABLE_IT(hsai, SAI_IT_MUTEDET);

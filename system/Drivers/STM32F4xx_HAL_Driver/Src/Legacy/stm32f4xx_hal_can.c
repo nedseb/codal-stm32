@@ -308,7 +308,7 @@ HAL_StatusTypeDef HAL_CAN_Init(CAN_HandleTypeDef* hcan)
     }
 
     /* Set the bit timing register */
-    hcan->Instance->BTR = (uint32_t)((uint32_t)hcan->Init.Mode) | \
+    hcan->Instance->BTR = (uint32_t)((uintptr_t)hcan->Init.Mode) | \
                 ((uint32_t)hcan->Init.SJW) | \
                 ((uint32_t)hcan->Init.BS1) | \
                 ((uint32_t)hcan->Init.BS2) | \

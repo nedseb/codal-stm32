@@ -1511,7 +1511,7 @@ __STATIC_INLINE uint32_t LL_DMA_GetPeriphRequest(DMA_TypeDef *DMAx, uint32_t Cha
   */
 __STATIC_INLINE void LL_DMA_SetPeriphRequest(DMA_TypeDef *DMAx, uint32_t Channel, uint32_t PeriphRequest)
 {
-  MODIFY_REG(((DMA_Request_TypeDef *)((uint32_t)((uint32_t)DMAx + DMA_CSELR_OFFSET)))->CSELR,
+  MODIFY_REG(((DMA_Request_TypeDef *)((uint32_t)((uintptr_t)DMAx + DMA_CSELR_OFFSET)))->CSELR,
              DMA_CSELR_C1S << ((Channel) * 4U), PeriphRequest << DMA_POSITION_CSELR_CXS);
 }
 
@@ -1545,7 +1545,7 @@ __STATIC_INLINE void LL_DMA_SetPeriphRequest(DMA_TypeDef *DMAx, uint32_t Channel
   */
 __STATIC_INLINE uint32_t LL_DMA_GetPeriphRequest(DMA_TypeDef *DMAx, uint32_t Channel)
 {
-  return (READ_BIT(((DMA_Request_TypeDef *)((uint32_t)((uint32_t)DMAx + DMA_CSELR_OFFSET)))->CSELR,
+  return (READ_BIT(((DMA_Request_TypeDef *)((uint32_t)((uintptr_t)DMAx + DMA_CSELR_OFFSET)))->CSELR,
                    DMA_CSELR_C1S << ((Channel) * 4U)) >> DMA_POSITION_CSELR_CXS);
 }
 #endif /* DMAMUX1 */

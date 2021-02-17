@@ -1220,7 +1220,7 @@ __STATIC_INLINE uint32_t LL_DMA_GetDataLength(DMA_TypeDef *DMAx, uint32_t Stream
   */
 __STATIC_INLINE void LL_DMA_SetPeriphRequest(DMA_TypeDef *DMAx, uint32_t Stream, uint32_t Request)
 {
-  MODIFY_REG(((DMAMUX_Channel_TypeDef *)(uint32_t)((uint32_t)DMAMUX1_Channel0 + (DMAMUX_CCR_SIZE * (Stream)) + (uint32_t)(DMAMUX_CCR_SIZE * LL_DMA_INSTANCE_TO_DMAMUX_CHANNEL(DMAx))))->CCR, DMAMUX_CxCR_DMAREQ_ID, Request);
+  MODIFY_REG(((DMAMUX_Channel_TypeDef *)(uint32_t)((uintptr_t)DMAMUX1_Channel0 + (DMAMUX_CCR_SIZE * (Stream)) + (uint32_t)(DMAMUX_CCR_SIZE * LL_DMA_INSTANCE_TO_DMAMUX_CHANNEL(DMAx))))->CCR, DMAMUX_CxCR_DMAREQ_ID, Request);
 }
 
 /**
@@ -1381,7 +1381,7 @@ __STATIC_INLINE void LL_DMA_SetPeriphRequest(DMA_TypeDef *DMAx, uint32_t Stream,
   */
 __STATIC_INLINE  uint32_t LL_DMA_GetPeriphRequest(DMA_TypeDef *DMAx, uint32_t Stream)
 {
-  return (READ_BIT(((DMAMUX_Channel_TypeDef *)((uint32_t)((uint32_t)DMAMUX1_Channel0 + (DMAMUX_CCR_SIZE * (Stream)) + (uint32_t)(DMAMUX_CCR_SIZE * LL_DMA_INSTANCE_TO_DMAMUX_CHANNEL(DMAx)))))->CCR, DMAMUX_CxCR_DMAREQ_ID));
+  return (READ_BIT(((DMAMUX_Channel_TypeDef *)((uint32_t)((uintptr_t)DMAMUX1_Channel0 + (DMAMUX_CCR_SIZE * (Stream)) + (uint32_t)(DMAMUX_CCR_SIZE * LL_DMA_INSTANCE_TO_DMAMUX_CHANNEL(DMAx)))))->CCR, DMAMUX_CxCR_DMAREQ_ID));
 }
 
 /**

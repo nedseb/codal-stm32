@@ -3473,9 +3473,9 @@ __STATIC_INLINE void LL_RCC_SetADCClockSource(uint32_t ClkSource)
 __STATIC_INLINE uint32_t LL_RCC_GetClockSource(uint32_t Periph)
 {
 #if defined(RCC_D1CCIPR_FMCSEL)
-  const uint32_t *pReg = (uint32_t *)((uint32_t)((uint32_t)(&RCC->D1CCIPR) + LL_CLKSOURCE_REG(Periph)));
+  const uint32_t *pReg = (uint32_t *)((uint32_t)((uintptr_t)(&RCC->D1CCIPR) + LL_CLKSOURCE_REG(Periph)));
 #else
-  const uint32_t *pReg = (uint32_t *)((uint32_t)((uint32_t)(&RCC->CDCCIPR) + LL_CLKSOURCE_REG(Periph)));
+  const uint32_t *pReg = (uint32_t *)((uint32_t)((uintptr_t)(&RCC->CDCCIPR) + LL_CLKSOURCE_REG(Periph)));
 #endif /* RCC_D1CCIPR_FMCSEL */
   return (uint32_t) (Periph | (((READ_BIT(*pReg, LL_CLKSOURCE_MASK(Periph))) >> LL_CLKSOURCE_SHIFT(Periph)) << LL_RCC_CONFIG_SHIFT) );
 }

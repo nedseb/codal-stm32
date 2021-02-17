@@ -22,7 +22,7 @@
        HAL_RTC_MODULE_ENABLED define in stm32wbxx_hal_conf.h 
 
     [..]
-    (@) HAL RTC alarm and HAL RTC wakeup drivers can’t be used with low power modes:
+    (@) HAL RTC alarm and HAL RTC wakeup drivers canï¿½t be used with low power modes:
         The wake up capability of the RTC may be intrusive in case of prior low power mode
         configuration requiring different wake up sources.
         Application/Example behavior is no more guaranteed 
@@ -71,7 +71,7 @@
 #ifdef RTC_CLOCK_SOURCE_HSE
   #define RTC_ASYNCH_PREDIV       99U
   #define RTC_SYNCH_PREDIV        9U
-  #define RCC_RTCCLKSOURCE_1MHZ   ((uint32_t)((uint32_t)RCC_BDCR_RTCSEL | (uint32_t)((HSE_VALUE/1000000U) << 16U)))
+  #define RCC_RTCCLKSOURCE_1MHZ   ((uint32_t)((uintptr_t)RCC_BDCR_RTCSEL | (uint32_t)((HSE_VALUE/1000000U) << 16U)))
 #else /* RTC_CLOCK_SOURCE_LSE || RTC_CLOCK_SOURCE_LSI */
   #define RTC_ASYNCH_PREDIV       0U
   #define RTC_SYNCH_PREDIV        31U

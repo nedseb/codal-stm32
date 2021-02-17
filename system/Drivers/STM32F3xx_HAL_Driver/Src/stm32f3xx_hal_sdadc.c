@@ -762,7 +762,7 @@ HAL_StatusTypeDef HAL_SDADC_PrepareChannelConfig(SDADC_HandleTypeDef *hsdadc,
     else
     {
       /* Program configuration register with parameters */
-      tmp = (uint32_t)((uint32_t)(hsdadc->Instance) + \
+      tmp = (uint32_t)((uintptr_t)(hsdadc->Instance) + \
                        SDADC_CONFREG_OFFSET + \
                        (uint32_t)(ConfIndex << 2UL));
       *(__IO uint32_t *) (tmp) = (uint32_t) (ConfParamStruct->InputMode | \

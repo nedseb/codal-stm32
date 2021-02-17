@@ -657,7 +657,7 @@ HAL_StatusTypeDef HAL_FLASHEx_OB_SelectPCROP(void)
 
   /* calculate the option byte to write */
   tmp1 = (uint16_t)(~(optiontmp2 ));
-  tmp2 = (uint32_t)(((uint32_t)((uint32_t)(tmp1) << 16U)) | ((uint32_t)optiontmp2));
+  tmp2 = (uint32_t)(((uint32_t)((uintptr_t)(tmp1) << 16U)) | ((uint32_t)optiontmp2));
 
   if(status == HAL_OK)
   {
@@ -700,7 +700,7 @@ HAL_StatusTypeDef HAL_FLASHEx_OB_DeSelectPCROP(void)
 
   /* calculate the option byte to write */
   tmp1 = (uint16_t)(~(optiontmp2 ));
-  tmp2 = (uint32_t)(((uint32_t)((uint32_t)(tmp1) << 16U)) | ((uint32_t)optiontmp2));
+  tmp2 = (uint32_t)(((uint32_t)((uintptr_t)(tmp1) << 16U)) | ((uint32_t)optiontmp2));
 
   if(status == HAL_OK)
   {
@@ -984,7 +984,7 @@ static HAL_StatusTypeDef FLASH_OB_RDPConfig(uint8_t OB_RDP)
 
     /* calculate the option byte to write */
     tmp1 = (~((uint32_t)(OB_RDP | tmp3)));
-    tmp2 = (uint32_t)(((uint32_t)((uint32_t)(tmp1) << 16U)) | ((uint32_t)(OB_RDP | tmp3)));
+    tmp2 = (uint32_t)(((uint32_t)((uintptr_t)(tmp1) << 16U)) | ((uint32_t)(OB_RDP | tmp3)));
 
     /* Wait for last operation to be completed */
     status = FLASH_WaitForLastOperation(FLASH_TIMEOUT_VALUE);
@@ -1435,7 +1435,7 @@ static HAL_StatusTypeDef FLASH_OB_UserConfig(uint8_t OB_IWDG, uint8_t OB_STOP, u
   tmp1 = OB->USER & ((~(FLASH_OBR_IWDG_SW | FLASH_OBR_nRST_STOP | FLASH_OBR_nRST_STDBY)) >> 16U);
 
   /* Calculate the user option byte to write */
-  tmp = (uint32_t)(((uint32_t)~((uint32_t)((uint32_t)(OB_IWDG) | (uint32_t)(OB_STOP) | (uint32_t)(OB_STDBY) | tmp1))) << 16U);
+  tmp = (uint32_t)(((uint32_t)~((uint32_t)((uintptr_t)(OB_IWDG) | (uint32_t)(OB_STOP) | (uint32_t)(OB_STDBY) | tmp1))) << 16U);
   tmp |= ((uint32_t)(OB_IWDG) | ((uint32_t)OB_STOP) | (uint32_t)(OB_STDBY) | tmp1);
 
   /* Wait for last operation to be completed */

@@ -341,7 +341,7 @@
 #define SlaveAddr_MSK       0x06U
 
 /* Private define for @ref PreviousState usage */
-#define FMPI2C_STATE_MSK             ((uint32_t)((uint32_t)((uint32_t)HAL_FMPI2C_STATE_BUSY_TX | (uint32_t)HAL_FMPI2C_STATE_BUSY_RX) & (uint32_t)(~((uint32_t)HAL_FMPI2C_STATE_READY)))) /*!< Mask State define, keep only RX and TX bits            */
+#define FMPI2C_STATE_MSK             ((uint32_t)((uintptr_t)((uint32_t)HAL_FMPI2C_STATE_BUSY_TX | (uint32_t)HAL_FMPI2C_STATE_BUSY_RX) & (uint32_t)(~((uint32_t)HAL_FMPI2C_STATE_READY)))) /*!< Mask State define, keep only RX and TX bits            */
 #define FMPI2C_STATE_NONE            ((uint32_t)(HAL_FMPI2C_MODE_NONE))                                                        /*!< Default Value                                          */
 #define FMPI2C_STATE_MASTER_BUSY_TX  ((uint32_t)(((uint32_t)HAL_FMPI2C_STATE_BUSY_TX & FMPI2C_STATE_MSK) | (uint32_t)HAL_FMPI2C_MODE_MASTER))            /*!< Master Busy TX, combinaison of State LSB and Mode enum */
 #define FMPI2C_STATE_MASTER_BUSY_RX  ((uint32_t)(((uint32_t)HAL_FMPI2C_STATE_BUSY_RX & FMPI2C_STATE_MSK) | (uint32_t)HAL_FMPI2C_MODE_MASTER))            /*!< Master Busy RX, combinaison of State LSB and Mode enum */

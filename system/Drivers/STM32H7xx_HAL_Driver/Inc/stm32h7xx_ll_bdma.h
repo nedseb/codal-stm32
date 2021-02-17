@@ -1409,7 +1409,7 @@ __STATIC_INLINE uint32_t LL_BDMA_GetMemory1Address(BDMA_TypeDef *BDMAx, uint32_t
 __STATIC_INLINE void LL_BDMA_SetPeriphRequest(BDMA_TypeDef *BDMAx, uint32_t Channel, uint32_t Request)
 {
   UNUSED(BDMAx);
-  MODIFY_REG(((DMAMUX_Channel_TypeDef *)(uint32_t)((uint32_t)DMAMUX2_Channel0 + (DMAMUX_CCR_SIZE * (Channel))))->CCR, DMAMUX_CxCR_DMAREQ_ID, Request);
+  MODIFY_REG(((DMAMUX_Channel_TypeDef *)(uint32_t)((uintptr_t)DMAMUX2_Channel0 + (DMAMUX_CCR_SIZE * (Channel))))->CCR, DMAMUX_CxCR_DMAREQ_ID, Request);
 }
 
 /**
@@ -1453,7 +1453,7 @@ __STATIC_INLINE void LL_BDMA_SetPeriphRequest(BDMA_TypeDef *BDMAx, uint32_t Chan
 __STATIC_INLINE uint32_t LL_BDMA_GetPeriphRequest(BDMA_TypeDef *BDMAx, uint32_t Channel)
 {
   UNUSED(BDMAx);
-  return (READ_BIT(((DMAMUX_Channel_TypeDef *)((uint32_t)((uint32_t)DMAMUX2_Channel0 + (DMAMUX_CCR_SIZE * (Channel)))))->CCR, DMAMUX_CxCR_DMAREQ_ID));
+  return (READ_BIT(((DMAMUX_Channel_TypeDef *)((uint32_t)((uintptr_t)DMAMUX2_Channel0 + (DMAMUX_CCR_SIZE * (Channel)))))->CCR, DMAMUX_CxCR_DMAREQ_ID));
 }
 
 /**

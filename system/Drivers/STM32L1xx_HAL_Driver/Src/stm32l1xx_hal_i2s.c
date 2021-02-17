@@ -391,7 +391,7 @@ HAL_StatusTypeDef HAL_I2S_Init(I2S_HandleTypeDef *hi2s)
   /*----------------------- SPIx I2SCFGR & I2SPR Configuration ----------------*/
 
   /* Write to SPIx I2SPR register the computed value */
-  hi2s->Instance->I2SPR = (uint32_t)((uint32_t)i2sdiv | (uint32_t)(i2sodd | (uint32_t)hi2s->Init.MCLKOutput));
+  hi2s->Instance->I2SPR = (uint32_t)((uintptr_t)i2sdiv | (uint32_t)(i2sodd | (uint32_t)hi2s->Init.MCLKOutput));
 
   /* Clear I2SMOD, I2SE, I2SCFG, PCMSYNC, I2SSTD, CKPOL, DATLEN and CHLEN bits */
   /* And configure the I2S with the I2S_InitStruct values                      */
