@@ -40,7 +40,6 @@
 #define HAL_RTC_MODULE_DISABLED /* RTC MODULE on Cortex-M side is not supported.
                                    Linux on Cortex-A will handle this. */
 #define HAL_ETH_MODULE_DISABLED /* ETH module is also not intended to be used */
-#define HAL_HSEM_MODULE_ENABLED
 #define HAL_MDMA_MODULE_ENABLED /* Some other modules (e.g. USART) require this */
 
 #if defined(ARDUINO_STM32MP157A_DK1) || defined(ARDUINO_STM32MP157C_DK2)
@@ -80,9 +79,11 @@
 #define HAL_RTC_MODULE_ENABLED
 #define HAL_SAI_MODULE_ENABLED
 #define HAL_SD_MODULE_ENABLED
+#define HAL_SMARTCARD_MODULE_ENABLED
 #define HAL_SMBUS_MODULE_ENABLED
 #define HAL_SPDIFRX_MODULE_ENABLED
 #define HAL_SPI_MODULE_ENABLED
+#define HAL_SRAM_MODULE_ENABLED
 #define HAL_TIM_MODULE_ENABLED
 #define HAL_UART_MODULE_ENABLED
 #define HAL_USART_MODULE_ENABLED
@@ -326,6 +327,10 @@
  #include "stm32mp1xx_hal_sd.h"
 #endif /* HAL_SD_MODULE_ENABLED */
 
+#ifdef HAL_SMARTCARD_MODULE_ENABLED
+ #include "stm32mp1xx_hal_smartcard.h"
+#endif /* HAL_SMARTCARD_MODULE_ENABLED */
+
 #ifdef HAL_SMBUS_MODULE_ENABLED
  #include "stm32mp1xx_hal_smbus.h"
 #endif /* HAL_SMBUS_MODULE_ENABLED */
@@ -337,6 +342,10 @@
 #ifdef HAL_SPI_MODULE_ENABLED
  #include "stm32mp1xx_hal_spi.h"
 #endif /* HAL_SPI_MODULE_ENABLED */
+
+#ifdef HAL_SRAM_MODULE_ENABLED
+  #include "stm32mp1xx_hal_sram.h"
+#endif /* HAL_SRAM_MODULE_ENABLED */
 
 #ifdef HAL_TIM_MODULE_ENABLED
  #include "stm32mp1xx_hal_tim.h"

@@ -1,44 +1,20 @@
-/**
-  ******************************************************************************
-  * @file    analog.c
-  * @author  WI6LABS
-  * @version V1.0.0
-  * @date    01-August-2016
-  * @brief   provide analog services (ADC + PWM)
-  *
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; COPYRIGHT(c) 2016 STMicroelectronics</center></h2>
-  *
-  * Redistribution and use in source and binary forms, with or without modification,
-  * are permitted provided that the following conditions are met:
-  *   1. Redistributions of source code must retain the above copyright notice,
-  *      this list of conditions and the following disclaimer.
-  *   2. Redistributions in binary form must reproduce the above copyright notice,
-  *      this list of conditions and the following disclaimer in the documentation
-  *      and/or other materials provided with the distribution.
-  *   3. Neither the name of STMicroelectronics nor the names of its contributors
-  *      may be used to endorse or promote products derived from this software
-  *      without specific prior written permission.
-  *
-  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-  *
-  ******************************************************************************
-  */
-#include "stm32_def.h"
+/*
+ *******************************************************************************
+ * Copyright (c) 2016-2021, STMicroelectronics
+ * All rights reserved.
+ *
+ * This software component is licensed by ST under BSD 3-Clause license,
+ * the "License"; You may not use this file except in compliance with the
+ * License. You may obtain a copy of the License at:
+ *                        opensource.org/licenses/BSD-3-Clause
+ *
+ *******************************************************************************
+ */
 #include "analog.h"
-#include "PinAF_STM32F1.h"
+#include "lock_resource.h"
 #include "stm32yyxx_ll_adc.h"
+#include "PinAF_STM32F1.h"
+
 
 #ifdef __cplusplus
 extern "C" {
@@ -114,7 +90,7 @@ static PinName g_current_pin = NC;
 #endif
 
 /* Private Functions */
-static uint32_t get_adc_channel(PinName pin)
+static uint32_t get_adc_channel(PinName pin, uint32_t *bank)
 {
   uint32_t function = pinmap_function(pin, PinMap_ADC);
   uint32_t channel = 0;
@@ -231,6 +207,15 @@ static uint32_t get_adc_channel(PinName pin)
       channel = 0;
       break;
   }
+#ifdef ADC_CHANNELS_BANK_B
+  if (STM_PIN_ANALOG_CHANNEL_BANK_B(function)) {
+    *bank = ADC_CHANNELS_BANK_B;
+  } else {
+    *bank = ADC_CHANNELS_BANK_A;
+  }
+#else
+  UNUSED(bank);
+#endif
   return channel;
 }
 
@@ -628,8 +613,10 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc)
      SystemClock_Config (variant.cpp) */
 #if defined(__HAL_RCC_ADC_CONFIG) && !defined(STM32F1xx) && \
     !defined(STM32H7xx) && !defined(STM32MP1xx)
+  hsem_lock(CFG_HW_RCC_CRRCR_CCIPR_SEMID, HSEM_LOCK_DEFAULT_RETRY);
   /* ADC Periph interface clock configuration */
   __HAL_RCC_ADC_CONFIG(RCC_ADCCLKSOURCE_SYSCLK);
+  hsem_unlock(CFG_HW_RCC_CRRCR_CCIPR_SEMID);
 #endif
 
   /* Configure ADC GPIO pin */
@@ -768,6 +755,7 @@ uint16_t adc_read_value(PinName pin, uint32_t resolution)
   __IO uint16_t uhADCxConvertedValue = 0;
   uint32_t samplingTime = ADC_SAMPLINGTIME;
   uint32_t channel = 0;
+  uint32_t bank = 0;
 
   if ((pin & PADC_BASE) && (pin < ANA_START)) {
 #if defined(STM32H7xx)
@@ -784,7 +772,7 @@ uint16_t adc_read_value(PinName pin, uint32_t resolution)
     samplingTime = ADC_SAMPLINGTIME_INTERNAL;
   } else {
     AdcHandle.Instance = (ADC_TypeDef *)pinmap_peripheral(pin, PinMap_ADC);
-    channel = get_adc_channel(pin);
+    channel = get_adc_channel(pin, &bank);
   }
 
   if (AdcHandle.Instance == NP) {
@@ -842,11 +830,13 @@ uint16_t adc_read_value(PinName pin, uint32_t resolution)
 #endif
 #if !defined(STM32F1xx) && !defined(STM32F2xx) && !defined(STM32F3xx) && \
     !defined(STM32F4xx) && !defined(STM32F7xx) && !defined(STM32G4xx) && \
-    !defined(STM32H7xx) && !defined(STM32L4xx) && !defined(STM32MP1xx) && \
-    !defined(STM32WBxx)
+    !defined(STM32H7xx) && !defined(STM32L4xx) && !defined(STM32L5xx) && \
+    !defined(STM32MP1xx) && !defined(STM32WBxx)
   AdcHandle.Init.LowPowerAutoPowerOff  = DISABLE;                       /* ADC automatically powers-off after a conversion and automatically wakes-up when a new conversion is triggered */
 #endif
-#ifdef ADC_CHANNELS_BANK_A
+#ifdef ADC_CHANNELS_BANK_B
+  AdcHandle.Init.ChannelsBank          = bank;
+#elif defined(ADC_CHANNELS_BANK_A)
   AdcHandle.Init.ChannelsBank          = ADC_CHANNELS_BANK_A;
 #endif
   AdcHandle.Init.ContinuousConvMode    = DISABLE;                       /* Continuous mode disabled to have only 1 conversion at each conversion trig */
@@ -913,7 +903,7 @@ uint16_t adc_read_value(PinName pin, uint32_t resolution)
 
   AdcChannelConf.Channel      = channel;                          /* Specifies the channel to configure into ADC */
 
-#if defined(STM32L4xx) || defined(STM32WBxx)
+#if defined(STM32L4xx) || defined(STM32L5xx) || defined(STM32WBxx)
   if (!IS_ADC_CHANNEL(&AdcHandle, AdcChannelConf.Channel)) {
 #elif defined(STM32G4xx)
   if (!IS_ADC_CHANNEL(&AdcHandle, AdcChannelConf.Channel)) {

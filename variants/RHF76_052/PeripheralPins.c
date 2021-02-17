@@ -11,7 +11,7 @@
  *******************************************************************************
  * Automatically generated from STM32L051C(6-8)Tx.xml
  */
-
+#include "Arduino.h"
 #include "PeripheralPins.h"
 
 /* =====

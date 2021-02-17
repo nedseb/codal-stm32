@@ -11,7 +11,7 @@
  *******************************************************************************
  * Automatically generated from STM32F103Z(C-D-E|F-G))Tx.xml
  */
-
+#include "Arduino.h"
 #include "PeripheralPins.h"
 
 /* =====

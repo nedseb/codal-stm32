@@ -198,8 +198,24 @@
     #define CMSIS_STARTUP_FILE "startup_stm32g483xx.s"
   #elif defined(STM32G484xx)
     #define CMSIS_STARTUP_FILE "startup_stm32g484xx.s"
+  #elif defined(STM32G491xx)
+    #define CMSIS_STARTUP_FILE "startup_stm32g491xx.s"
+  #elif defined(STM32G4A1xx)
+    #define CMSIS_STARTUP_FILE "startup_stm32g4a1xx.s"
   #elif defined(STM32GBK1CB)
     #define CMSIS_STARTUP_FILE "startup_stm32gbk1cb.s"
+  #elif defined(STM32H723xx)
+    #define CMSIS_STARTUP_FILE "startup_stm32h723xx.s"
+  #elif defined(STM32H725xx)
+    #define CMSIS_STARTUP_FILE "startup_stm32h725xx.s"
+  #elif defined(STM32H730xx)
+    #define CMSIS_STARTUP_FILE "startup_stm32h730xx.s"
+  #elif defined(STM32H730xxQ)
+    #define CMSIS_STARTUP_FILE "startup_stm32h730xxq.s"
+  #elif defined(STM32H733xx)
+    #define CMSIS_STARTUP_FILE "startup_stm32h733xx.s"
+  #elif defined(STM32H735xx)
+    #define CMSIS_STARTUP_FILE "startup_stm32h735xx.s"
   #elif defined(STM32H742xx)
     #define CMSIS_STARTUP_FILE "startup_stm32h742xx.s"
   #elif defined(STM32H743xx)
@@ -250,8 +266,6 @@
     #define CMSIS_STARTUP_FILE "startup_stm32l052xx.s"
   #elif defined(STM32L053xx)
     #define CMSIS_STARTUP_FILE "startup_stm32l053xx.s"
-  #elif defined(STM32L061xx)
-    #define CMSIS_STARTUP_FILE "startup_stm32l061xx.s"
   #elif defined(STM32L062xx)
     #define CMSIS_STARTUP_FILE "startup_stm32l062xx.s"
   #elif defined(STM32L063xx)
@@ -362,12 +376,34 @@
     #define CMSIS_STARTUP_FILE "startup_stm32l4s7xx.s"
   #elif defined(STM32L4S9xx)
     #define CMSIS_STARTUP_FILE "startup_stm32l4s9xx.s"
-  #elif defined(STM32MP1xx)
+  #elif defined(STM32L552xx)
+    #define CMSIS_STARTUP_FILE "startup_stm32l552xx.s"
+  #elif defined(STM32L562xx)
+    #define CMSIS_STARTUP_FILE "startup_stm32l562xx.s"
+  #elif defined(STM32MP151Axx)
+    #define CMSIS_STARTUP_FILE "startup_stm32mp151a_cm4 .s"
+  #elif defined(STM32MP151Cxx)
+    #define CMSIS_STARTUP_FILE "startup_stm32mp151c_cm4.s"
+  #elif defined(STM32MP153Axx)
+    #define CMSIS_STARTUP_FILE "startup_stm32mp153a_cm4.s"
+  #elif defined(STM32MP153Cxx)
+    #define CMSIS_STARTUP_FILE "startup_stm32mp153c_cm4.s"
+  #elif defined(STM32MP157Axx)
+    #define CMSIS_STARTUP_FILE "startup_stm32mp157a_cm4.s"
+  #elif defined(STM32MP157Cxx)
+    #define CMSIS_STARTUP_FILE "startup_stm32mp157c_cm4.s"
+  #elif defined(STM32MP15xx)
     #define CMSIS_STARTUP_FILE "startup_stm32mp15xx.s"
+  #elif defined(STM32WB30xx)
+    #define CMSIS_STARTUP_FILE "startup_stm32wb30xx_cm4.s"
+  #elif defined(STM32WB35xx)
+    #define CMSIS_STARTUP_FILE "startup_stm32wb35xx_cm4.s"
   #elif defined(STM32WB50xx)
     #define CMSIS_STARTUP_FILE "startup_stm32wb50xx_cm4.s"
   #elif defined(STM32WB55xx)
     #define CMSIS_STARTUP_FILE "startup_stm32wb55xx_cm4.s"
+  #elif defined(STM32WB5Mxx)
+    #define CMSIS_STARTUP_FILE "startup_stm32wb5mxx_cm4.s"
   #else
     #error UNKNOWN CHIP
   #endif

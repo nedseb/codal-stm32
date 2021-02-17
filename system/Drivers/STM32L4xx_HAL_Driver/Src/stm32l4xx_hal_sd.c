@@ -482,6 +482,7 @@ HAL_StatusTypeDef HAL_SD_InitCard(SD_HandleTypeDef *hsd)
   uint32_t errorstate;
   HAL_StatusTypeDef status;
   SD_InitTypeDef Init;
+  uint32_t sdmmc_clk;
 
   /* Default SDMMC peripheral configuration for SD card initialization */
   Init.ClockEdge           = SDMMC_CLOCK_EDGE_RISING;
@@ -491,7 +492,20 @@ HAL_StatusTypeDef HAL_SD_InitCard(SD_HandleTypeDef *hsd)
   Init.ClockPowerSave      = SDMMC_CLOCK_POWER_SAVE_DISABLE;
   Init.BusWide             = SDMMC_BUS_WIDE_1B;
   Init.HardwareFlowControl = SDMMC_HARDWARE_FLOW_CONTROL_DISABLE;
-  Init.ClockDiv            = SDMMC_INIT_CLK_DIV;
+
+  /* Init Clock should be less or equal to 400Khz*/
+  sdmmc_clk = HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_SDMMC1);
+  if (sdmmc_clk == 0U)
+  {
+      hsd->State = HAL_SD_STATE_READY;
+      hsd->ErrorCode = SDMMC_ERROR_INVALID_PARAMETER;
+      return HAL_ERROR;
+  }
+#if !defined(STM32L4P5xx) && !defined(STM32L4Q5xx) && !defined(STM32L4R5xx) && !defined(STM32L4R7xx) && !defined(STM32L4R9xx) && !defined(STM32L4S5xx) && !defined(STM32L4S7xx) && !defined(STM32L4S9xx)
+  Init.ClockDiv = ((sdmmc_clk/400000U) - 2U);
+#else
+  Init.ClockDiv = sdmmc_clk/(2U*400000U);
+#endif
 
 #if defined(STM32L4P5xx) || defined(STM32L4Q5xx) || defined(STM32L4R5xx) || defined(STM32L4R7xx) || defined(STM32L4R9xx) || defined(STM32L4S5xx) || defined(STM32L4S7xx) || defined(STM32L4S9xx)
   if(hsd->Init.Transceiver == SDMMC_TRANSCEIVER_ENABLE)
@@ -524,6 +538,15 @@ HAL_StatusTypeDef HAL_SD_InitCard(SD_HandleTypeDef *hsd)
   /* Enable SDMMC Clock */
   __HAL_SD_ENABLE(hsd);
 #endif /* !STM32L4P5xx && !STM32L4Q5xx && !STM32L4R5xx && !STM32L4R7xx && !STM32L4R9xx && !STM32L4S5xx && !STM32L4S7xx && !STM32L4S9xx */
+
+  /* wait 74 Cycles: required power up waiting time before starting
+     the SD initialization sequence */
+#if !defined(STM32L4P5xx) && !defined(STM32L4Q5xx) && !defined(STM32L4R5xx) && !defined(STM32L4R7xx) && !defined(STM32L4R9xx) && !defined(STM32L4S5xx) && !defined(STM32L4S7xx) && !defined(STM32L4S9xx)
+  sdmmc_clk = sdmmc_clk/(Init.ClockDiv + 2U);
+#else
+  sdmmc_clk = sdmmc_clk/(2U*Init.ClockDiv);
+#endif
+  HAL_Delay(1U+ (74U*1000U/(sdmmc_clk)));
 
   /* Identify card operating voltage */
   errorstate = SD_PowerON(hsd);
@@ -1645,7 +1668,7 @@ HAL_StatusTypeDef HAL_SD_Erase(SD_HandleTypeDef *hsd, uint32_t BlockStartAdd, ui
     }
 
     /* Send CMD38 ERASE */
-    errorstate = SDMMC_CmdErase(hsd->Instance);
+    errorstate = SDMMC_CmdErase(hsd->Instance, 0UL);
     if(errorstate != HAL_SD_ERROR_NONE)
     {
       /* Clear all the static flags */
@@ -3556,8 +3579,6 @@ static uint32_t SD_PowerON(SD_HandleTypeDef *hsd)
           /* Clean Status flags */
           hsd->Instance->ICR = 0xFFFFFFFFU;
         }
-
-        hsd->SdCard.CardSpeed = CARD_ULTRA_HIGH_SPEED;
       }
     }
 #endif /* STM32L4P5xx || STM32L4Q5xx || STM32L4R5xx || STM32L4R7xx || STM32L4R9xx || STM32L4S5xx || STM32L4S7xx || STM32L4S9xx */
@@ -3732,7 +3753,7 @@ static uint32_t SD_SendStatus(SD_HandleTypeDef *hsd, uint32_t *pCardStatus)
   */
 static uint32_t SD_WideBus_Enable(SD_HandleTypeDef *hsd)
 {
-  uint32_t scr[2U] = {0U, 0U};
+  uint32_t scr[2U] = {0UL, 0UL};
   uint32_t errorstate;
 
   if((SDMMC_GetResponse(hsd->Instance, SDMMC_RESP1) & SDMMC_CARD_LOCKED) == SDMMC_CARD_LOCKED)
@@ -3779,7 +3800,7 @@ static uint32_t SD_WideBus_Enable(SD_HandleTypeDef *hsd)
   */
 static uint32_t SD_WideBus_Disable(SD_HandleTypeDef *hsd)
 {
-  uint32_t scr[2U] = {0U, 0U};
+  uint32_t scr[2U] = {0UL, 0UL};
   uint32_t errorstate;
 
   if((SDMMC_GetResponse(hsd->Instance, SDMMC_RESP1) & SDMMC_CARD_LOCKED) == SDMMC_CARD_LOCKED)
@@ -3832,7 +3853,7 @@ static uint32_t SD_FindSCR(SD_HandleTypeDef *hsd, uint32_t *pSCR)
   uint32_t errorstate;
   uint32_t tickstart = HAL_GetTick();
   uint32_t index = 0U;
-  uint32_t tempscr[2U] = {0U, 0U};
+  uint32_t tempscr[2U] = {0UL, 0UL};
   uint32_t *scr = pSCR;
 
   /* Set Block Size To 8 Bytes */
@@ -4086,8 +4107,6 @@ uint32_t SD_HighSpeed(SD_HandleTypeDef *hsd)
     {
       __HAL_SD_CLEAR_FLAG(hsd, SDMMC_FLAG_DTIMEOUT);
 
-      errorstate = 0;
-
       return errorstate;
     }
     else if (__HAL_SD_GET_FLAG(hsd, SDMMC_FLAG_DCRCFAIL))
@@ -4200,8 +4219,6 @@ static uint32_t SD_UltraHighSpeed(SD_HandleTypeDef *hsd)
     if (__HAL_SD_GET_FLAG(hsd, SDMMC_FLAG_DTIMEOUT))
     {
       __HAL_SD_CLEAR_FLAG(hsd, SDMMC_FLAG_DTIMEOUT);
-
-      errorstate = 0;
 
       return errorstate;
     }
@@ -4331,8 +4348,6 @@ static uint32_t SD_DDR_Mode(SD_HandleTypeDef *hsd)
     if (__HAL_SD_GET_FLAG(hsd, SDMMC_FLAG_DTIMEOUT))
     {
       __HAL_SD_CLEAR_FLAG(hsd, SDMMC_FLAG_DTIMEOUT);
-
-      errorstate = 0;
 
       return errorstate;
     }

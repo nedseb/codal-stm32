@@ -11,7 +11,7 @@
  *******************************************************************************
  * Automatically generated from STM32G071R(6-8-B)Tx.xml
  */
-
+#include "Arduino.h"
 #include "PeripheralPins.h"
 
 /* =====

@@ -28,7 +28,7 @@
  *******************************************************************************
  * Automatically generated from STM32F103C(8-B)Tx.xml
  */
-
+#include "Arduino.h"
 #include "PeripheralPins.h"
 
 /* =====

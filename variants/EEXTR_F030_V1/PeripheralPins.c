@@ -28,7 +28,7 @@
  *******************************************************************************
  * Automatically generated from STM32F030C8Tx.xml
  */
-
+#include "Arduino.h"
 #include "PeripheralPins.h"
 
 /* =====

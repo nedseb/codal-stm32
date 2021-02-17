@@ -13,7 +13,7 @@
  * and merged manually with the STM32L072K(B-Z)Tx.xml
  * to fit ThunderPack requirements
  */
-
+#include "Arduino.h"
 #include "PeripheralPins.h"
 
 /* =====

@@ -28,7 +28,7 @@
  *******************************************************************************
  * Automatically generated from STM32F401R[(B-C)|(D-E)]Tx.xml
  */
-
+#include "Arduino.h"
 #include "PeripheralPins.h"
 
 /* =====

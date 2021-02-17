@@ -12,6 +12,7 @@
  * Automatically generated from STM32F411R(C-E)Tx.xml
  * Manually updated to support STM32F401R(D-E)Tx.xml
  */
+#include "Arduino.h"
 #include "PeripheralPins.h"
 
 /* =====

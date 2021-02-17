@@ -28,7 +28,7 @@
  *******************************************************************************
  * Automatically generated from STM32F207Z(C-E-F-G)Tx.xml
  */
-
+#include "Arduino.h"
 #include "PeripheralPins.h"
 
 /* =====

@@ -28,7 +28,7 @@
  *******************************************************************************
  * Automatically generated from STM32L073R(B-Z)Tx.xml
  */
-
+#include "Arduino.h"
 #include "PeripheralPins.h"
 
 /* =====

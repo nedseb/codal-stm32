@@ -28,7 +28,7 @@
  *******************************************************************************
  * Automatically generated from STM32F302R(6-8)Tx.xml
  */
-
+#include "Arduino.h"
 #include "PeripheralPins.h"
 
 /* =====

@@ -28,7 +28,7 @@
  *******************************************************************************
  * Automatically generated from STM32F030F4Px.xml
  */
-
+#include "Arduino.h"
 #include "PeripheralPins.h"
 
 /* =====

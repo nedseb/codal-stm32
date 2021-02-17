@@ -12,7 +12,7 @@
 
 #ifdef USBCON
 /* Includes ------------------------------------------------------------------*/
-
+#include "Arduino.h"
 
 /* Re-enumeration handling*/
 #ifndef USBD_ENUM_DELAY

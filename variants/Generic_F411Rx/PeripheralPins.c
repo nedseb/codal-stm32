@@ -11,7 +11,7 @@
  *******************************************************************************
  * Automatically generated from STM32F411R(C-E)Tx.xml
  */
-
+#include "Arduino.h"
 #include "PeripheralPins.h"
 
 /* =====
