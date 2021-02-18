@@ -49,18 +49,8 @@ jobs:
         with:
           path: ${{env.REPO_PATH}}
           submodules: recursive
-  build:
-    needs: checkouts
-    runs-on: ubuntu-latest
-    container:
-      image: nedseb/arm-gcc-none-eabi:latest
-      options: --user 1001 --security-opt no-new-privileges
-    env:
-      REPO_NAME: codal-stm32-DISCO_L475VG_IOT
-      REPO_PATH: codal/libraries/codal-stm32-DISCO_L475VG_IOT
-      REPO_URL: https://github.com/letssteam/codal-stm32-DISCO_L475VG_IOT
-    steps:
-      - name: create codal.json
+
+      - name: create codal.json for codal-stm32-DISCO_L475VG_IOT
         run: |
           echo \
             "{
@@ -72,13 +62,16 @@ jobs:
               \"dev\": true
               }
             }" > codal/codal.json
-
-      - name: build PR
+        env:
+          REPO_NAME: codal-stm32-DISCO_L475VG_IOT
+          REPO_PATH: codal/libraries/codal-stm32-DISCO_L475VG_IOT
+          REPO_URL: https://github.com/letssteam/codal-stm32-DISCO_L475VG_IOT
+      - name: build codal-stm32-DISCO_L475VG_IOT
         run: |
           cd codal
           ./build.py -c
 
-      - name: clean
+      - name: clean codal-stm32-DISCO_L475VG_IOT
         run: |
           cd codal
           rm -Rf samples source codal.json 
