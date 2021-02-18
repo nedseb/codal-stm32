@@ -75,3 +75,55 @@ jobs:
         run: |
           cd codal
           rm -Rf samples source codal.json 
+      - name: create codal.json for codal-stm32-NUCLEO_F4x1RE
+        run: |
+          echo \
+            "{
+              \"target\": {
+              \"name\": \"$REPO_NAME\", 
+              \"url\": \"$REPO_URL\",
+              \"branch\": \"main\",
+              \"type\": \"git\",
+              \"dev\": true
+              }
+            }" > codal/codal.json
+        env:
+          REPO_NAME: codal-stm32-NUCLEO_F4x1RE
+          REPO_PATH: codal/libraries/codal-stm32-NUCLEO_F4x1RE
+          REPO_URL: https://github.com/letssteam/codal-stm32-NUCLEO_F4x1RE
+      - name: build codal-stm32-NUCLEO_F4x1RE
+        run: |
+          cd codal
+          ./build.py -c
+
+      - name: clean codal-stm32-NUCLEO_F4x1RE
+        run: |
+          cd codal
+          rm -Rf samples source codal.json 
+      
+      
+      - name: create codal.json for codal-stm32-PNUCLEO_WB55RG
+        run: |
+          echo \
+            "{
+              \"target\": {
+              \"name\": \"$REPO_NAME\", 
+              \"url\": \"$REPO_URL\",
+              \"branch\": \"main\",
+              \"type\": \"git\",
+              \"dev\": true
+              }
+            }" > codal/codal.json
+        env:
+          REPO_NAME: codal-stm32-PNUCLEO_WB55RG
+          REPO_PATH: codal/libraries/codal-stm32-PNUCLEO_WB55RG
+          REPO_URL: https://github.com/letssteam/codal-stm32-PNUCLEO_WB55RG
+      - name: build codal-stm32-PNUCLEO_WB55RG
+        run: |
+          cd codal
+          ./build.py -c
+
+      - name: clean codal-stm32-PNUCLEO_WB55RG
+        run: |
+          cd codal
+          rm -Rf samples source codal.json 
