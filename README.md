@@ -2,9 +2,9 @@
 
 [![codal-stm32-DISCO_L475VG_IOT](https://img.shields.io/github/workflow/status/letssteam/codal-stm32-DISCO_L475VG_IOT/codal-buildtarget?label=codal-stm32-DISCO_L475VG_IOT)](https://github.com/letssteam/codal-stm32-DISCO_L475VG_IOT)
 
-![codal-stm32-NUCLEO_F4x1RE](https://img.shields.io/github/workflow/status/letssteam/codal-stm32-NUCLEO_F4x1RE/codal-buildtarget?label=codal-stm32-NUCLEO_F4x1RE)
+[![codal-stm32-NUCLEO_F4x1RE](https://img.shields.io/github/workflow/status/letssteam/codal-stm32-NUCLEO_F4x1RE/codal-buildtarget?label=codal-stm32-NUCLEO_F4x1RE)](https://github.com/letssteam/codal-stm32-NUCLEO_F4x1RE)
 
-![codal-stm32-PNUCLEO_WB55RG](https://img.shields.io/github/workflow/status/letssteam/codal-stm32-PNUCLEO_WB55RG/codal-buildtarget?label=codal-stm32-PNUCLEO_WB55RG)
+[![codal-stm32-PNUCLEO_WB55RG](https://img.shields.io/github/workflow/status/letssteam/codal-stm32-PNUCLEO_WB55RG/codal-buildtarget?label=codal-stm32-PNUCLEO_WB55RG)](https://github.com/letssteam/codal-stm32-PNUCLEO_WB55RG)
 
 Codal target for the STM32 familly. Codal is the core set of drivers, mechanisms and types that make up the runtime for a board in Makecode.
 
