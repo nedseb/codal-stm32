@@ -15,12 +15,38 @@ namespace codal {
             uint8_t address;
 
         public:
+            /**
+             * @brief Constructor
+             * 
+             * @param i2c the i2c interface to use to communicate with the sensor
+             * @param pin the shut pin
+             * @param address the sensor address
+             */
             VL53L0X( STM32I2C& i2c, STM32Pin& pin, uint8_t address );
 
+            /**
+             * @brief Init the sensor (and enable it)
+             * 
+             */
             void init();
+
+            /**
+             * @brief Enable the sensor
+             * 
+             */
             void enable();
+
+            /**
+             * @brief Disable the sensor
+             * 
+             */
             void disable();
 
+            /**
+             * @brief Get the measured distance (in mm)
+             * 
+             * @return uint32_t the measure
+             */
             uint32_t getDistance();
     };
 
