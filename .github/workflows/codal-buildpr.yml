@@ -17,7 +17,7 @@ jobs:
       - name: checkout codal
         uses: actions/checkout@v2
         with:
-          repository: letssteam/codal-letssteam
+          repository: letssteam/codal
           path: codal
 
       - name: checkout codal-core
