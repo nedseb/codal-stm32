@@ -72,11 +72,13 @@ jobs:
               \"dev\": true
               }
             }" > codal/codal.json
+
       - name: build PR
         run: |
           cd codal
           ./build.py -c
+
       - name: clean
         run: |
-        cd codal
-        rm -Rf samples source codal.json  
+          cd codal
+          rm -Rf samples source codal.json 
