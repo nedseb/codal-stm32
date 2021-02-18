@@ -22,5 +22,7 @@ jobs:
         run: |
           cd codal
           ./build.py -d codal-stm32-DISCO_L475VG_IOT
+          rm -Rf samples source codal.json  
           ./build.py -d codal-stm32-NUCLEO_F4x1RE
+          rm -Rf samples source codal.json  
           ./build.py -d codal-stm32-PNUCLEO_WB55RG
