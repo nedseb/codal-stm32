@@ -1,6 +1,6 @@
 # Codal target for STM32 MCU ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/letssteam/codal-stm32/codal-buildtarget?label=codal-stm32)
 
-![codal-stm32-DISCO_L475VG_IOT](https://img.shields.io/github/workflow/status/letssteam/codal-stm32-DISCO_L475VG_IOT/codal-buildtarget?label=codal-stm32-DISCO_L475VG_IOT)
+[codal-stm32-DISCO_L475VG_IOT ![codal-stm32-DISCO_L475VG_IOT](https://img.shields.io/github/workflow/status/letssteam/codal-stm32-DISCO_L475VG_IOT/codal-buildtarget?label=codal-stm32-DISCO_L475VG_IOT)](https://github.com/letssteam/codal-stm32-DISCO_L475VG_IOT)
 
 ![codal-stm32-NUCLEO_F4x1RE](https://img.shields.io/github/workflow/status/letssteam/codal-stm32-NUCLEO_F4x1RE/codal-buildtarget?label=codal-stm32-NUCLEO_F4x1RE)
 
