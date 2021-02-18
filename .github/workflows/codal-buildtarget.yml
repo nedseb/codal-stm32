@@ -1,0 +1,26 @@
+name: codal-buildtarget
+
+on:
+  push:
+    branches: 
+      - main
+  create:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: nedseb/arm-gcc-none-eabi:latest
+      options: --user 1001 --security-opt no-new-privileges
+    steps:
+      - name: checkout codal
+        uses: actions/checkout@v2
+        with:
+          repository: letssteam/codal-letssteam
+          path: codal
+      - name: codal build
+        run: |
+          cd codal
+          ./build.py -d codal-stm32-DISCO_L475VG_IOT
+          ./build.py -d codal-stm32-NUCLEO_F4x1RE
+          ./build.py -d codal-stm32-PNUCLEO_WB55RG
