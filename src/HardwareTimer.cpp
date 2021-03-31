@@ -1366,6 +1366,11 @@ void HardwareTimer::timerHandleDeinit()
   HAL_TIM_Base_DeInit(&(_timerObj.handle));
 }
 
+namespace codal{
+void timer_irq_handler(uint8_t index);
+}
+
+
 /******************************************************************************/
 /*                            TIMx IRQ HANDLER                                */
 /******************************************************************************/
@@ -1397,6 +1402,7 @@ extern "C" {
     if (HardwareTimer_Handle[TIMER1_INDEX]) {
       HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER1_INDEX]->handle);
     }
+    codal::timer_irq_handler(0);
 
 #if defined(STM32F1xx) || defined(STM32F2xx) || defined(STM32F4xx) || defined(STM32F7xx)
 #if defined (TIM10_BASE)
@@ -1437,6 +1443,7 @@ extern "C" {
     if (HardwareTimer_Handle[TIMER2_INDEX]) {
       HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER2_INDEX]->handle);
     }
+    codal::timer_irq_handler(1);
   }
 #endif //TIM2_BASE
 
@@ -1451,6 +1458,8 @@ extern "C" {
     if (HardwareTimer_Handle[TIMER3_INDEX]) {
       HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER3_INDEX]->handle);
     }
+    codal::timer_irq_handler(2);
+
   }
 #endif //TIM3_BASE
 
@@ -1465,6 +1474,8 @@ extern "C" {
     if (HardwareTimer_Handle[TIMER4_INDEX]) {
       HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER4_INDEX]->handle);
     }
+    codal::timer_irq_handler(3);
+
   }
 #endif //TIM4_BASE
 
@@ -1479,6 +1490,7 @@ extern "C" {
     if (HardwareTimer_Handle[TIMER5_INDEX]) {
       HAL_TIM_IRQHandler(&HardwareTimer_Handle[TIMER5_INDEX]->handle);
     }
+    codal::timer_irq_handler(4);
   }
 #endif //TIM5_BASE
 
