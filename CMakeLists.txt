@@ -24,6 +24,8 @@ list(APPEND INCLUDE_DIRS
     "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/${device.processor}xx_HAL_Driver/Inc"
     "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/${device.processor}xx_HAL_Driver/Src"
     "${CMAKE_CURRENT_SOURCE_DIR}/variants/${device.device}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/system/Middlewares/ST/STM32_USB_Device_Library/Core/Inc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/system/Middlewares/ST/STM32_USB_Device_Library/Core/Src"
     )
 
 string(TOLOWER  "${device.processor}xx" PROCESSOR_NAME)
