@@ -22,6 +22,7 @@
 #include "usbd_if.h"
 #include "usbd_ep_conf.h"
 #include "stm32yyxx_ll_pwr.h"
+#include "PeripheralPins.h"
 
 #ifndef HAL_PCD_MODULE_ENABLED
 #error "HAL_PCD_MODULE_ENABLED is required"

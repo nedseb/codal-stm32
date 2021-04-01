@@ -84,6 +84,8 @@ USBD_CDC_LineCodingTypeDef linecoding = {
   0x08    /* nb. of bits 8*/
 };
 
+void (*rx_callback)(void) = NULL;
+
 /* Private functions ---------------------------------------------------------*/
 
 /**
@@ -237,6 +239,11 @@ static int8_t USBD_CDC_Receive(uint8_t *Buf, uint32_t *Len)
   if (!CDC_resume_receive()) {
     USBD_CDC_ClearBuffer(&hUSBD_Device_CDC);
   }
+
+  if(rx_callback != NULL){
+    rx_callback();
+  }
+
   return ((int8_t)USBD_OK);
 }
 
@@ -348,6 +355,11 @@ bool CDC_resume_receive(void)
     }
   }
   return false;
+}
+
+
+void CDC_OnDataReceived( void (*callback)(void) ){
+  rx_callback = callback;
 }
 
 #endif /* USBD_USE_CDC */
