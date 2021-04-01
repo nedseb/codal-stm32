@@ -52,6 +52,8 @@ void CDC_init(void);
 void CDC_deInit(void);
 bool CDC_connected(void);
 
+void CDC_OnDataReceived( void (*callback)(void) );
+
 #ifdef __cplusplus
 }
 #endif
