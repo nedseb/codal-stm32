@@ -1,40 +1,35 @@
-#include "CodalDmesg.h"
-
 #include "STM32LowLevelTimer.h"
+
+#include "CodalDmesg.h"
 
 using codal::STM32LowLevelTimer;
 
-STM32LowLevelTimer* instances[5] = { 0 };
+STM32LowLevelTimer* instances[5] = {0};
 
 void codal::timer_irq_handler(uint8_t index)
 {
-    if (instances[index] == NULL)
-        return;
+    if (instances[index] == NULL) return;
 
     uint16_t channel_bitmsk = 0;
 
     TIM_HandleTypeDef* timHandle = &instances[index]->TimHandle;
 
-    if (__HAL_TIM_GET_IT_SOURCE(timHandle, TIM_FLAG_CC1) == SET)
-    {
+    if (__HAL_TIM_GET_IT_SOURCE(timHandle, TIM_FLAG_CC1) == SET) {
         channel_bitmsk |= (1 << 0);
         __HAL_TIM_CLEAR_IT(timHandle, TIM_IT_CC1);
     }
 
-    if (__HAL_TIM_GET_IT_SOURCE(timHandle, TIM_FLAG_CC2) == SET)
-    {
+    if (__HAL_TIM_GET_IT_SOURCE(timHandle, TIM_FLAG_CC2) == SET) {
         channel_bitmsk |= (1 << 1);
         __HAL_TIM_CLEAR_IT(timHandle, TIM_IT_CC2);
     }
 
-    if (__HAL_TIM_GET_IT_SOURCE(timHandle, TIM_FLAG_CC3) == SET)
-    {
+    if (__HAL_TIM_GET_IT_SOURCE(timHandle, TIM_FLAG_CC3) == SET) {
         channel_bitmsk |= (1 << 2);
         __HAL_TIM_CLEAR_IT(timHandle, TIM_IT_CC3);
     }
 
-    if (__HAL_TIM_GET_IT_SOURCE(timHandle, TIM_FLAG_CC4) == SET)
-    {
+    if (__HAL_TIM_GET_IT_SOURCE(timHandle, TIM_FLAG_CC4) == SET) {
         channel_bitmsk |= (1 << 3);
         __HAL_TIM_CLEAR_IT(timHandle, TIM_IT_CC4);
     }
@@ -44,26 +39,25 @@ void codal::timer_irq_handler(uint8_t index)
 
 void enable_tim_clk(uint32_t tim);
 
-STM32LowLevelTimer::~STM32LowLevelTimer(){}
-
+STM32LowLevelTimer::~STM32LowLevelTimer() {}
 
 STM32LowLevelTimer::STM32LowLevelTimer(TIM_TypeDef* timer, IRQn_Type irqn) : LowLevelTimer(4)
 {
     enable_tim_clk((uint32_t)timer);
 
     this->timer_instance = timer;
-    this->irqN = irqn;
+    this->irqN           = irqn;
     memset(&TimHandle, 0, sizeof(TIM_HandleTypeDef));
 
-    disableIRQ(); // otherwise it might hit us while we're initializing
+    disableIRQ();  // otherwise it might hit us while we're initializing
 
     DMESG("SYS CLK: %d %d", SystemCoreClock, (uint32_t)((SystemCoreClock / 1000000)));
 
-    TimHandle.Instance = this->timer_instance;
-    TimHandle.Init.Period = 0xFFFFFFFF;
-    TimHandle.Init.Prescaler = (uint32_t)((SystemCoreClock / 1000000)-1);
+    TimHandle.Instance           = this->timer_instance;
+    TimHandle.Init.Period        = 0xFFFFFFFF;
+    TimHandle.Init.Prescaler     = (uint32_t)((SystemCoreClock / 1000000) - 1);
     TimHandle.Init.ClockDivision = 0;
-    TimHandle.Init.CounterMode = TIM_COUNTERMODE_UP;
+    TimHandle.Init.CounterMode   = TIM_COUNTERMODE_UP;
     HAL_TIM_OC_Init(&TimHandle);
 
     // all timers run in at least 16 bit mode, so lets use it as a default.
@@ -71,15 +65,15 @@ STM32LowLevelTimer::STM32LowLevelTimer(TIM_TypeDef* timer, IRQn_Type irqn) : Low
 
     uint8_t instance_index = 0;
 
-    if (timer == TIM2)
-        instance_index = 1;
-    if (timer == TIM3)
-        instance_index = 2;
-    if (timer == TIM4)
-        instance_index = 3;
+    if (timer == TIM2) instance_index = 1;
+#ifdef TIM3
+    if (timer == TIM3) instance_index = 2;
+#endif
+#ifdef TIM4
+    if (timer == TIM4) instance_index = 3;
+#endif
 #ifdef TIM5
-    if (timer == TIM5)
-        instance_index = 4;
+    if (timer == TIM5) instance_index = 4;
 #endif
 
     instances[instance_index] = this;
@@ -139,28 +133,24 @@ int STM32LowLevelTimer::setMode(codal::TimerMode t)
 
 int STM32LowLevelTimer::setCompare(uint8_t channel, uint32_t value)
 {
-    if (channel > getChannelCount())
-        return DEVICE_INVALID_PARAMETER;
+    if (channel > getChannelCount()) return DEVICE_INVALID_PARAMETER;
 
     uint32_t hal_channel = TIM_CHANNEL_1;
-    uint32_t hal_int = TIM_IT_CC1;
+    uint32_t hal_int     = TIM_IT_CC1;
 
-    if (channel == 1)
-    {
+    if (channel == 1) {
         hal_channel = TIM_CHANNEL_2;
-        hal_int = TIM_IT_CC2;
+        hal_int     = TIM_IT_CC2;
     }
 
-    if (channel == 2)
-    {
+    if (channel == 2) {
         hal_channel = TIM_CHANNEL_3;
-        hal_int = TIM_IT_CC3;
+        hal_int     = TIM_IT_CC3;
     }
 
-    if (channel == 3)
-    {
+    if (channel == 3) {
         hal_channel = TIM_CHANNEL_4;
-        hal_int = TIM_IT_CC4;
+        hal_int     = TIM_IT_CC4;
     }
 
     __HAL_TIM_DISABLE_IT(&TimHandle, hal_int);
@@ -173,28 +163,24 @@ int STM32LowLevelTimer::setCompare(uint8_t channel, uint32_t value)
 
 int STM32LowLevelTimer::offsetCompare(uint8_t channel, uint32_t value)
 {
-    if (channel > getChannelCount())
-        return DEVICE_INVALID_PARAMETER;
+    if (channel > getChannelCount()) return DEVICE_INVALID_PARAMETER;
 
     uint32_t hal_channel = TIM_CHANNEL_1;
-    uint32_t hal_int = TIM_IT_CC1;
+    uint32_t hal_int     = TIM_IT_CC1;
 
-    if (channel == 1)
-    {
+    if (channel == 1) {
         hal_channel = TIM_CHANNEL_2;
-        hal_int = TIM_IT_CC2;
+        hal_int     = TIM_IT_CC2;
     }
 
-    if (channel == 2)
-    {
+    if (channel == 2) {
         hal_channel = TIM_CHANNEL_3;
-        hal_int = TIM_IT_CC3;
+        hal_int     = TIM_IT_CC3;
     }
 
-    if (channel == 3)
-    {
+    if (channel == 3) {
         hal_channel = TIM_CHANNEL_4;
-        hal_int = TIM_IT_CC4;
+        hal_int     = TIM_IT_CC4;
     }
 
     __HAL_TIM_DISABLE_IT(&TimHandle, hal_int);
@@ -207,19 +193,15 @@ int STM32LowLevelTimer::offsetCompare(uint8_t channel, uint32_t value)
 
 int STM32LowLevelTimer::clearCompare(uint8_t channel)
 {
-    if (channel > getChannelCount())
-        return DEVICE_INVALID_PARAMETER;
+    if (channel > getChannelCount()) return DEVICE_INVALID_PARAMETER;
 
     uint32_t hal_int = TIM_IT_CC1;
 
-    if (channel == 1)
-        hal_int = TIM_IT_CC2;
+    if (channel == 1) hal_int = TIM_IT_CC2;
 
-    if (channel == 2)
-        hal_int = TIM_IT_CC3;
+    if (channel == 2) hal_int = TIM_IT_CC3;
 
-    if (channel == 3)
-        hal_int = TIM_IT_CC4;
+    if (channel == 3) hal_int = TIM_IT_CC4;
 
     __HAL_TIM_DISABLE_IT(&TimHandle, hal_int);
 
@@ -242,10 +224,11 @@ int STM32LowLevelTimer::setBitMode(codal::TimerBitMode t)
     return DEVICE_OK;
 }
 
-void enable_tim_clk(uint32_t tim) {
+void enable_tim_clk(uint32_t tim)
+{
     // Enable TIM clock
 #if defined(TIM1_BASE)
-    if (tim == TIM1_BASE){
+    if (tim == TIM1_BASE) {
         __HAL_RCC_TIM1_CLK_ENABLE();
     }
 #endif
@@ -344,5 +327,4 @@ void enable_tim_clk(uint32_t tim) {
         __HAL_RCC_TIM22_CLK_ENABLE();
     }
 #endif
-
 }

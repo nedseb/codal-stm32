@@ -1,6 +1,6 @@
-#include "timer.h"
-#include "stm32yyxx_ll_tim.h"
 #include "LowLevelTimer.h"
+#include "stm32yyxx_ll_tim.h"
+#include "timer.h"
 
 #ifndef STM32_LOW_LEVEL_TIMER_H
 #define STM32_LOW_LEVEL_TIMER_H
@@ -13,11 +13,11 @@ class STM32LowLevelTimer : public LowLevelTimer {
     IRQn_Type irqN;
     TIM_TypeDef* timer_instance;
     TIM_HandleTypeDef TimHandle;
+    uint16_t status;  // Component defined state.
 
   public:
-
     STM32LowLevelTimer(TIM_TypeDef* timer, IRQn_Type irqn);
-    
+
     virtual ~STM32LowLevelTimer();
 
     virtual int setIRQPriority(int) override final;
@@ -45,11 +45,10 @@ class STM32LowLevelTimer : public LowLevelTimer {
     virtual int setClockSpeed(uint32_t speedKHz) override final;
 
     virtual int setBitMode(TimerBitMode t) override final;
-    
-    friend void timer_irq_handler(uint8_t index);
 
+    friend void timer_irq_handler(uint8_t index);
 };
 void timer_irq_handler(uint8_t index);
-} // namespace codal
+}  // namespace codal
 
 #endif
