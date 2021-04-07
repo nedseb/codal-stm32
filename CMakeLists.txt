@@ -4,7 +4,7 @@ include("${CODAL_UTILS_LOCATION}")
 
 #set(CMAKE_CXX_CLANG_TIDY
 #    clang-tidy;
-#    --extra-arg=-std=c++20;
+#    --extra-arg=-std=c++17;
 #    --extra-arg=-Wno-error;
 #    --extra-arg=-Wno-register;)
 
