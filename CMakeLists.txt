@@ -17,6 +17,7 @@ list(APPEND INCLUDE_DIRS
     "${CMAKE_CURRENT_SOURCE_DIR}/src/stm32/usb"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/stm32/usb/cdc"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/stm32/usb/hid"
+    "${CMAKE_CURRENT_SOURCE_DIR}/src/stm32/usb/webusb"
     "${CMAKE_CURRENT_SOURCE_DIR}/system/CMSIS/CMSIS/Core/Include"
     "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/CMSIS/Device/ST/${device.processor}xx/Include"
     "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/CMSIS/Device/ST/${device.processor}xx/Source/Templates/gcc"
@@ -26,8 +27,10 @@ list(APPEND INCLUDE_DIRS
     "${CMAKE_CURRENT_SOURCE_DIR}/variants/${device.device}"
     "${CMAKE_CURRENT_SOURCE_DIR}/system/Middlewares/ST/STM32_USB_Device_Library/Core/Inc"
     "${CMAKE_CURRENT_SOURCE_DIR}/system/Middlewares/ST/STM32_USB_Device_Library/Core/Src"
+    "${CMAKE_CURRENT_SOURCE_DIR}/system/Middlewares/ST/STM32_USB_Device_Library/Class/WebUSB/Inc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/system/Middlewares/ST/STM32_USB_Device_Library/Class/WebUSB/Src"
     )
-
+ 
 string(TOLOWER  "${device.processor}xx" PROCESSOR_NAME)
 
 RECURSIVE_FIND_FILE(C_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/" "*.c")
