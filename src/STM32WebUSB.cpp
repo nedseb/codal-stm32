@@ -1,3 +1,5 @@
+#ifdef USBCON
+
 #include "STM32WebUSB.h"
 
 #include "usbd_webusb_if.h"
@@ -17,3 +19,5 @@ void STM32WebUSB::deInit()
 {
     webUSB_deInit();
 }
+
+#endif /* USBCON */

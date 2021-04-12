@@ -3,6 +3,8 @@
 #ifndef __USB_WEBUSB_H
 #define __USB_WEBUSB_H
 
+#ifdef USBCON
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -72,6 +74,8 @@ extern USBD_ClassTypeDef USBD_WEBUSB_ClassDriver;
 #ifdef __cplusplus
 }
 #endif
+
+#endif  /* USBCON */
 
 #endif  /* __USB_WEBUSB_H */
 /**

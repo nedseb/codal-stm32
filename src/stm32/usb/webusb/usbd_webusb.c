@@ -1,4 +1,6 @@
 
+#ifdef USBCON
+
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_webusb.h"
 #include "usbd_ctlreq.h"
@@ -345,5 +347,8 @@ uint8_t *USBD_WEBUSB_GetDeviceQualifierDesc(uint16_t *length)
 /**
   * @}
   */
+
+
+#endif  /* USBCON */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
