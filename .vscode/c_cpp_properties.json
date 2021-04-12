@@ -1,24 +1,6 @@
 {
     "configurations": [
         {
-            "includePath": [
-                "/usr/lib/arm-none-eabi/include/**",
-                "${workspaceFolder}/inc/*",
-                "${workspaceFolder}/src/*",
-                "${workspaceFolder}/src/stm32/*",
-                "${workspaceFolder}/src/stm32/LL/*",
-                "${workspaceFolder}/src/stm32/HAL/*",
-                "${workspaceFolder}/src/stm32/OpenAMP/*",
-                "${workspaceFolder}/src/stm32/usb/*",
-                "${workspaceFolder}/system/**",
-                "${workspaceFolder}/system/Drivers/**",
-                "${workspaceFolder}/system/Drivers/**",
-                "${workspaceFolder}/variants/**",
-                "${workspaceFolder}/system/Drivers/CMSIS/Device/ST/**",
-                "${workspaceFolder}/system/Drivers/**",
-                "${workspaceFolder}/system/CMSIS/CMSIS/Core/*",
-                "${workspaceFolder}/**"
-            ],
             "name": "codal-stm32",
             "defines": [
                 "DMESG_SERIAL_DEBUG",
