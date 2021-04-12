@@ -11,6 +11,8 @@
 #include "usbd_cdc_if.h"
 #include "stm32yyxx_ll_system.h"
 
+void delay(uint32_t ms);
+
 #if !defined(USBD_REENUM_DISABLED)
 
 /*
