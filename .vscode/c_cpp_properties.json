@@ -4,7 +4,8 @@
             "name": "codal-stm32",
             "defines": [
                 "DMESG_SERIAL_DEBUG",
-                "USE_HAL_DRIVER"
+                "USE_HAL_DRIVER",
+                "USBCON"
             ],
             "intelliSenseMode": "gcc-arm",
             "cStandard": "c11",
