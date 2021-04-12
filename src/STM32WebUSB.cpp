@@ -4,17 +4,16 @@
 
 using namespace codal;
 
+STM32WebUSB::STM32WebUSB() : CodalComponent(DEVICE_ID_SERIAL, 0) {}
 
-
-STM32WebUSB::STM32WebUSB() {
-}
-
-
-void STM32WebUSB::init(){
+int STM32WebUSB::init()
+{
     webUSB_init();
+
+    return DEVICE_OK;
 }
 
-void STM32WebUSB::deInit(){
+void STM32WebUSB::deInit()
+{
     webUSB_deInit();
 }
-
