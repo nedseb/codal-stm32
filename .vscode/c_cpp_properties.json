@@ -5,7 +5,8 @@
             "defines": [
                 "DMESG_SERIAL_DEBUG",
                 "USE_HAL_DRIVER",
-                "USBCON"
+                "USBCON",
+                "USBD_USE_CDC"
             ],
             "intelliSenseMode": "gcc-arm",
             "cStandard": "c11",
