@@ -36,7 +36,7 @@ extern "C" {
 #error "This board does not support USB High Speed! Select 'Full Speed' in the 'Tools->USB interface' menu"
 #endif
 
-#include <stdio.h>
+//#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
