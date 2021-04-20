@@ -9,7 +9,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     container:
-      image: nedseb/arm-gcc-none-eabi:latest
+      image: letssteam/arm-gcc-none-eabi-toolchain:latest
       options: --user 1001 --security-opt no-new-privileges
     steps:
       - name: checkout codal
