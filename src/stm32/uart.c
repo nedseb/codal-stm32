@@ -272,12 +272,6 @@ void uart_init(serial_t *obj, uint32_t baudrate, uint32_t databits, uint32_t par
   }
 #endif
 
-#if defined(STM32F091xC) || defined (STM32F098xx)
-  /* Enable SYSCFG Clock */
-  /* Required to get SYSCFG interrupt status register */
-  __HAL_RCC_SYSCFG_CLK_ENABLE();
-#endif
-
   /* Configure UART GPIO pins */
   pinmap_pinout(obj->pin_tx, PinMap_UART_TX);
   if (uart_rx != NP) {
@@ -475,6 +469,13 @@ void uart_deinit(serial_t *obj)
       __HAL_RCC_UART10_CLK_DISABLE();
       break;
 #endif
+#if defined(USART10_BASE)
+    case UART10_INDEX:
+      __HAL_RCC_USART10_FORCE_RESET();
+      __HAL_RCC_USART10_RELEASE_RESET();
+      __HAL_RCC_USART10_CLK_DISABLE();
+      break;
+#endif
   }
 
   HAL_UART_DeInit(uart_handlers[obj->index]);
@@ -499,6 +500,7 @@ void uart_config_lowpower(serial_t *obj)
   /* Ensure HSI clock is enable */
   enableClock(HSI_CLOCK);
 
+  hsem_lock(CFG_HW_RCC_CRRCR_CCIPR_SEMID, HSEM_LOCK_DEFAULT_RETRY);
   /* Configure HSI as source clock for low power wakeup clock */
   switch (obj->index) {
 #if defined(USART1_BASE)
@@ -544,6 +546,7 @@ void uart_config_lowpower(serial_t *obj)
       break;
 #endif
   }
+  hsem_unlock(CFG_HW_RCC_CRRCR_CCIPR_SEMID);
 }
 #endif
 
@@ -704,7 +707,6 @@ void uart_attach_rx_callback(serial_t *obj, void (*callback)(serial_t *))
   HAL_UART_Receive_IT(uart_handlers[obj->index], &(obj->recv), 1);
 
   /* Enable interrupt */
-  HAL_NVIC_SetPriority(obj->irq, UART_IRQ_PRIO, UART_IRQ_SUBPRIO);
   HAL_NVIC_EnableIRQ(obj->irq);
 }
 
@@ -715,7 +717,7 @@ void uart_attach_rx_callback(serial_t *obj, void (*callback)(serial_t *))
  * @param callback : function call at the end of transmission
  * @retval none
  */
-void uart_attach_tx_callback(serial_t *obj, int (*callback)(serial_t *))
+void uart_attach_tx_callback(serial_t *obj, int (*callback)(serial_t *), size_t size)
 {
   if (obj == NULL) {
     return;
@@ -726,10 +728,9 @@ void uart_attach_tx_callback(serial_t *obj, int (*callback)(serial_t *))
   HAL_NVIC_DisableIRQ(obj->irq);
 
   /* The following function will enable UART_IT_TXE and error interrupts */
-  HAL_UART_Transmit_IT(uart_handlers[obj->index], &obj->tx_buff[obj->tx_tail], 1);
+  HAL_UART_Transmit_IT(uart_handlers[obj->index], &obj->tx_buff[obj->tx_tail], size);
 
   /* Enable interrupt */
-  HAL_NVIC_SetPriority(obj->irq, UART_IRQ_PRIO, UART_IRQ_SUBPRIO);
   HAL_NVIC_EnableIRQ(obj->irq);
 }
 
@@ -803,11 +804,8 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
 {
   serial_t *obj = get_serial_obj(huart);
-
-  if (obj && obj->tx_callback(obj) != -1) {
-    if (HAL_UART_Transmit_IT(huart, &obj->tx_buff[obj->tx_tail], 1) != HAL_OK) {
-      return;
-    }
+  if (obj) {
+    obj->tx_callback(obj);
   }
 }
 
@@ -904,7 +902,7 @@ void USART3_IRQHandler(void)
   if (uart_handlers[UART3_INDEX] != NULL) {
     HAL_UART_IRQHandler(uart_handlers[UART3_INDEX]);
   }
-#if defined(STM32F0xx)
+#if defined(STM32F0xx) || defined(STM32G0xx)
   /* USART3_4_IRQn */
   if (uart_handlers[UART4_INDEX] != NULL) {
     HAL_UART_IRQHandler(uart_handlers[UART4_INDEX]);
@@ -917,7 +915,12 @@ void USART3_IRQHandler(void)
     HAL_UART_IRQHandler(uart_handlers[UART6_INDEX]);
   }
 #endif /* STM32F030xC */
-#endif /* STM32F0xx */
+#if defined(STM32G0xx) && defined(LPUART1_BASE)
+  if (uart_handlers[LPUART1_INDEX] != NULL) {
+    HAL_UART_IRQHandler(uart_handlers[LPUART1_INDEX]);
+  }
+#endif /* STM32G0xx && LPUART1_BASE */
+#endif /* STM32F0xx || STM32G0xx */
 #endif /* STM32F091xC || STM32F098xx */
 }
 #endif
@@ -1042,6 +1045,19 @@ void UART9_IRQHandler(void)
 void UART10_IRQHandler(void)
 {
   HAL_NVIC_ClearPendingIRQ(UART10_IRQn);
+  HAL_UART_IRQHandler(uart_handlers[UART10_INDEX]);
+}
+#endif
+
+/**
+  * @brief  USART 10 IRQ handler
+  * @param  None
+  * @retval None
+  */
+#if defined(USART10_BASE)
+void USART10_IRQHandler(void)
+{
+  HAL_NVIC_ClearPendingIRQ(USART10_IRQn);
   HAL_UART_IRQHandler(uart_handlers[UART10_INDEX]);
 }
 #endif

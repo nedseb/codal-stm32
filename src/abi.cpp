@@ -1,5 +1,5 @@
 /*
-  Copyright (c) 2011 Arduino.  All right reserved.
+  Copyright (c) 2014 Arduino.  All right reserved.
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
@@ -16,36 +16,24 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "wiring_time.h"
-#include "clock.h"
+#include <stdlib.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-void yield(void);
+extern "C" void __cxa_pure_virtual(void) __attribute__((__noreturn__));
+extern "C" void __cxa_deleted_virtual(void) __attribute__((__noreturn__));
 
-uint32_t millis(void)
+void __cxa_pure_virtual(void)
 {
-  // ToDo: ensure no interrupts
-  return getCurrentMillis();
+  // We might want to write some diagnostics to uart in this case
+  //std::terminate();
+  while (1)
+    ;
 }
 
-// Interrupt-compatible version of micros
-uint32_t micros(void)
+void __cxa_deleted_virtual(void)
 {
-  return getCurrentMicros();
+  // We might want to write some diagnostics to uart in this case
+  //std::terminate();
+  while (1)
+    ;
 }
 
-void delay(uint32_t ms)
-{
-  if (ms != 0) {
-    uint32_t start = getCurrentMillis();
-    do {
-      yield();
-    } while (getCurrentMillis() - start < ms);
-  }
-}
-
-#ifdef __cplusplus
-}
-#endif
