@@ -19,33 +19,33 @@ list(APPEND INCLUDE_DIRS
     "${CMAKE_CURRENT_SOURCE_DIR}/src/stm32/usb/hid"
     "${CMAKE_CURRENT_SOURCE_DIR}/src/stm32/usb/webusb"
     "${CMAKE_CURRENT_SOURCE_DIR}/system/CMSIS/CMSIS/Core/Include"
-    "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/CMSIS/Device/ST/${device.processor}xx/Include"
-    "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/CMSIS/Device/ST/${device.processor}xx/Source/Templates/gcc"
-    "${CMAKE_CURRENT_SOURCE_DIR}/system/${device.processor}xx"
-    "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/${device.processor}xx_HAL_Driver/Inc"
-    "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/${device.processor}xx_HAL_Driver/Src"
-    "${CMAKE_CURRENT_SOURCE_DIR}/variants/${device.device}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/CMSIS/Device/ST/${device.series}/Include"
+    "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/CMSIS/Device/ST/${device.series}/Source/Templates/gcc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/system/${device.series}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/${device.series}_HAL_Driver/Inc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/${device.series}_HAL_Driver/Src"
+    "${CMAKE_CURRENT_SOURCE_DIR}/variants/${device.variant}"
     "${CMAKE_CURRENT_SOURCE_DIR}/system/Middlewares/ST/STM32_USB_Device_Library/Core/Inc"
     "${CMAKE_CURRENT_SOURCE_DIR}/system/Middlewares/ST/STM32_USB_Device_Library/Core/Src"
     "${CMAKE_CURRENT_SOURCE_DIR}/system/Middlewares/ST/STM32_USB_Device_Library/Class/WebUSB/Inc"
     "${CMAKE_CURRENT_SOURCE_DIR}/system/Middlewares/ST/STM32_USB_Device_Library/Class/WebUSB/Src"
     )
  
-string(TOLOWER  "${device.processor}xx" PROCESSOR_NAME)
+string(TOLOWER  "${device.series}" PROCESSOR_NAME)
 
 RECURSIVE_FIND_FILE(C_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/" "*.c")
 LIST(APPEND C_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/asm/CortexContextSwitch.s")
 LIST(APPEND C_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/stm32/startup_stm32yyxx.S")
-LIST(APPEND C_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/CMSIS/Device/ST/${device.processor}xx/Source/Templates/system_${PROCESSOR_NAME}.c")
-LIST(APPEND C_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/variants/${device.device}/variant.cpp")
-LIST(APPEND C_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/variants/${device.device}/PeripheralPins.c")
+LIST(APPEND C_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/CMSIS/Device/ST/${device.series}/Source/Templates/system_${PROCESSOR_NAME}.c")
+LIST(APPEND C_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/variants/${device.variant}/variant_${device.board}.cpp")
+LIST(APPEND C_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/variants/${device.variant}/PeripheralPins_${device.board}.c")
 
 
 
 RECURSIVE_FIND_FILE(CPP_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/" "*.c??")
 
-set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -T\"${CMAKE_CURRENT_LIST_DIR}/variants/${device.device}/ldscript.ld\"" PARENT_SCOPE)
-set(CMAKE_EXE_LINKER_FLAGS    "${CMAKE_EXE_LINKER_FLAGS} -T\"${CMAKE_CURRENT_LIST_DIR}/variants/${device.device}/ldscript.ld\"" PARENT_SCOPE)
+set(CMAKE_LINKER_FLAGS "${CMAKE_LINKER_FLAGS} -T\"${CMAKE_CURRENT_LIST_DIR}/variants/${device.variant}/ldscript.ld\"" PARENT_SCOPE)
+set(CMAKE_EXE_LINKER_FLAGS    "${CMAKE_EXE_LINKER_FLAGS} -T\"${CMAKE_CURRENT_LIST_DIR}/variants/${device.variant}/ldscript.ld\"" PARENT_SCOPE)
 set(CMAKE_SYSTEM_PROCESSOR "armv7-m" PARENT_SCOPE)
 
 # add them
