@@ -14,7 +14,7 @@
  * Automatically generated from STM32L475V(C-E-G)Tx.xml
  * CubeMX DB release 6.0.10
  */
-#if defined(ARDUINO_B_L475E_IOT01A)
+
 #include "Arduino.h"
 #include "PeripheralPins.h"
 
@@ -426,4 +426,3 @@ WEAK const PinMap PinMap_SD[] = {
   {NC,    NP,     0}
 };
 #endif
-#endif /* ARDUINO_B_L475E_IOT01A */
