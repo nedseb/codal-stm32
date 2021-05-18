@@ -1,21 +1,21 @@
 /**
-  ******************************************************************************
-  * @file    usbd_cdc_if.h
-  * @author  MCD Application Team
-  * @brief   Header for usbd_cdc_if.c file.
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2015 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under Ultimate Liberty license
-  * SLA0044, the "License"; You may not use this file except in compliance with
-  * the License. You may obtain a copy of the License at:
-  *                      www.st.com/SLA0044
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file    usbd_cdc_if.h
+ * @author  MCD Application Team
+ * @brief   Header for usbd_cdc_if.c file.
+ ******************************************************************************
+ * @attention
+ *
+ * <h2><center>&copy; Copyright (c) 2015 STMicroelectronics.
+ * All rights reserved.</center></h2>
+ *
+ * This software component is licensed by ST under Ultimate Liberty license
+ * SLA0044, the "License"; You may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at:
+ *                      www.st.com/SLA0044
+ *
+ ******************************************************************************
+ */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __USBD_CDC_IF_H
@@ -29,20 +29,19 @@ extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "usbd_cdc.h"
 #include "cdc_queue.h"
+#include "usbd_cdc.h"
 
 /* Periodically, the state of the buffer "UserTxBuffer" is checked.
    The period depends on CDC_POLLING_INTERVAL */
-#define CDC_POLLING_INTERVAL             2 /* in ms. The max is 65 and the min is 1 */
+#define CDC_POLLING_INTERVAL 2 /* in ms. The max is 65 and the min is 1 */
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 
-extern USBD_CDC_ItfTypeDef  USBD_CDC_fops;
+extern USBD_CDC_ItfTypeDef USBD_CDC_fops;
 extern CDC_TransmitQueue_TypeDef TransmitQueue;
 extern CDC_ReceiveQueue_TypeDef ReceiveQueue;
-
 
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
@@ -52,8 +51,9 @@ void CDC_init(void);
 void CDC_deInit(void);
 bool CDC_connected(void);
 
-void CDC_OnDataReceived( void (*callback)(void) );
+void CDC_OnDataReceived(void (*callback)(void));
 
+void CDC_enableDTR(bool enable);
 #ifdef __cplusplus
 }
 #endif
