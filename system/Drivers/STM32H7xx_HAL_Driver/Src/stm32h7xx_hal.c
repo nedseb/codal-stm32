@@ -47,10 +47,10 @@
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /**
- * @brief STM32H7xx HAL Driver version number V1.9.0
+ * @brief STM32H7xx HAL Driver version number V1.10.0
    */
 #define __STM32H7xx_HAL_VERSION_MAIN   (0x01UL) /*!< [31:24] main version */
-#define __STM32H7xx_HAL_VERSION_SUB1   (0x09UL) /*!< [23:16] sub1 version */
+#define __STM32H7xx_HAL_VERSION_SUB1   (0x0AUL) /*!< [23:16] sub1 version */
 #define __STM32H7xx_HAL_VERSION_SUB2   (0x00UL) /*!< [15:8]  sub2 version */
 #define __STM32H7xx_HAL_VERSION_RC     (0x00UL) /*!< [7:0]  release candidate */
 #define __STM32H7xx_HAL_VERSION         ((__STM32H7xx_HAL_VERSION_MAIN << 24)\
@@ -507,14 +507,14 @@ uint32_t HAL_GetUIDw2(void)
   * @brief Configure the internal voltage reference buffer voltage scale.
   * @param VoltageScaling  specifies the output voltage to achieve
   *          This parameter can be one of the following values:
-  *            @arg SYSCFG_VREFBUF_VOLTAGE_SCALE0: VREF_OUT1 around 2.048 V.
-  *                                                This requires VDDA equal to or higher than 2.4 V.
-  *            @arg SYSCFG_VREFBUF_VOLTAGE_SCALE1: VREF_OUT2 around 2.5 V.
+  *            @arg SYSCFG_VREFBUF_VOLTAGE_SCALE0: VREF_OUT1 around 2.5 V.
   *                                                This requires VDDA equal to or higher than 2.8 V.
-  *            @arg SYSCFG_VREFBUF_VOLTAGE_SCALE2: VREF_OUT3 around 1.5 V.
-  *                                                This requires VDDA equal to or higher than 1.8 V.
-  *            @arg SYSCFG_VREFBUF_VOLTAGE_SCALE3: VREF_OUT4 around 1.8 V.
+  *            @arg SYSCFG_VREFBUF_VOLTAGE_SCALE1: VREF_OUT2 around 2.048 V.
+  *                                                This requires VDDA equal to or higher than 2.4 V.
+  *            @arg SYSCFG_VREFBUF_VOLTAGE_SCALE2: VREF_OUT3 around 1.8 V.
   *                                                This requires VDDA equal to or higher than 2.1 V.
+  *            @arg SYSCFG_VREFBUF_VOLTAGE_SCALE3: VREF_OUT4 around 1.5 V.
+  *                                                This requires VDDA equal to or higher than 1.8 V.
   * @retval None
   */
 void HAL_SYSCFG_VREFBUF_VoltageScalingConfig(uint32_t VoltageScaling)
@@ -769,7 +769,7 @@ void HAL_SYSCFG_DisableCM4BOOT(void)
 /**
   * @brief  Enables the I/O Compensation Cell.
   * @note   The I/O compensation cell can be used only when the device supply
-  *         voltage ranges from 2.4 to 3.6 V.
+  *         voltage ranges from 1.62 to 2.0 V and from 2.7 to 3.6 V.
   * @retval None
   */
 void HAL_EnableCompensationCell(void)
@@ -780,7 +780,7 @@ void HAL_EnableCompensationCell(void)
 /**
   * @brief  Power-down the I/O Compensation Cell.
   * @note   The I/O compensation cell can be used only when the device supply
-  *         voltage ranges from 2.4 to 3.6 V.
+  *         voltage ranges from 1.62 to 2.0 V and from 2.7 to 3.6 V.
   * @retval None
   */
 void HAL_DisableCompensationCell(void)
@@ -1021,6 +1021,7 @@ void HAL_DisableDomain2DBGStandbyMode(void)
 }
 #endif /*DUAL_CORE*/
 
+#if defined(DBGMCU_CR_DBG_STOPD3)
 /**
   * @brief  Enable the Debug Module during Domain3/SRDomain STOP mode
   * @retval None
@@ -1029,6 +1030,7 @@ void HAL_EnableDomain3DBGStopMode(void)
 {
   SET_BIT(DBGMCU->CR, DBGMCU_CR_DBG_STOPD3);
 }
+
 /**
   * @brief  Disable the Debug Module during Domain3/SRDomain STOP mode
   * @retval None
@@ -1037,7 +1039,9 @@ void HAL_DisableDomain3DBGStopMode(void)
 {
   CLEAR_BIT(DBGMCU->CR, DBGMCU_CR_DBG_STOPD3);
 }
+#endif /*DBGMCU_CR_DBG_STOPD3*/
 
+#if defined(DBGMCU_CR_DBG_STANDBYD3)
 /**
   * @brief  Enable the Debug Module during Domain3/SRDomain STANDBY mode
   * @retval None
@@ -1055,6 +1059,7 @@ void HAL_DisableDomain3DBGStandbyMode(void)
 {
   CLEAR_BIT(DBGMCU->CR, DBGMCU_CR_DBG_STANDBYD3);
 }
+#endif /*DBGMCU_CR_DBG_STANDBYD3*/
 
 /**
   * @brief  Set the FMC Memory Mapping Swapping config.
@@ -1098,16 +1103,16 @@ void HAL_EXTI_EdgeConfig(uint32_t EXTI_Line , uint32_t EXTI_Edge )
   assert_param(IS_EXTI_EDGE_LINE(EXTI_Edge));
 
   /* Clear Rising Falling edge configuration */
-  CLEAR_BIT(*(__IO uint32_t *) (((uintptr_t) &(EXTI->FTSR1)) + ((EXTI_Line >> 5 ) * 0x20UL)), (uint32_t)(1UL << (EXTI_Line & 0x1FUL)));
-  CLEAR_BIT( *(__IO uint32_t *) (((uintptr_t) &(EXTI->RTSR1)) + ((EXTI_Line >> 5 ) * 0x20UL)), (uint32_t)(1UL << (EXTI_Line & 0x1FUL)));
+  CLEAR_BIT(*(__IO uint32_t *) (((uint32_t) &(EXTI->FTSR1)) + ((EXTI_Line >> 5 ) * 0x20UL)), (uint32_t)(1UL << (EXTI_Line & 0x1FUL)));
+  CLEAR_BIT( *(__IO uint32_t *) (((uint32_t) &(EXTI->RTSR1)) + ((EXTI_Line >> 5 ) * 0x20UL)), (uint32_t)(1UL << (EXTI_Line & 0x1FUL)));
 
   if( (EXTI_Edge & EXTI_RISING_EDGE) == EXTI_RISING_EDGE)
   {
-   SET_BIT( *(__IO uint32_t *) (((uintptr_t) &(EXTI->RTSR1)) + ((EXTI_Line >> 5 ) * 0x20UL)), (uint32_t)(1UL << (EXTI_Line & 0x1FUL)));
+   SET_BIT( *(__IO uint32_t *) (((uint32_t) &(EXTI->RTSR1)) + ((EXTI_Line >> 5 ) * 0x20UL)), (uint32_t)(1UL << (EXTI_Line & 0x1FUL)));
   }
   if( (EXTI_Edge & EXTI_FALLING_EDGE) == EXTI_FALLING_EDGE)
   {
-   SET_BIT(*(__IO uint32_t *) (((uintptr_t) &(EXTI->FTSR1)) + ((EXTI_Line >> 5 ) * 0x20UL)), (uint32_t)(1UL << (EXTI_Line & 0x1FUL)));
+   SET_BIT(*(__IO uint32_t *) (((uint32_t) &(EXTI->FTSR1)) + ((EXTI_Line >> 5 ) * 0x20UL)), (uint32_t)(1UL << (EXTI_Line & 0x1FUL)));
   }
 }
 
@@ -1122,7 +1127,7 @@ void HAL_EXTI_GenerateSWInterrupt(uint32_t EXTI_Line)
   /* Check the parameters */
   assert_param(IS_HAL_EXTI_CONFIG_LINE(EXTI_Line));
 
-  SET_BIT(*(__IO uint32_t *) (((uintptr_t) &(EXTI->SWIER1)) + ((EXTI_Line >> 5 ) * 0x20UL)), (uint32_t)(1UL << (EXTI_Line & 0x1FUL)));
+  SET_BIT(*(__IO uint32_t *) (((uint32_t) &(EXTI->SWIER1)) + ((EXTI_Line >> 5 ) * 0x20UL)), (uint32_t)(1UL << (EXTI_Line & 0x1FUL)));
 }
 
 
@@ -1136,7 +1141,7 @@ void HAL_EXTI_D1_ClearFlag(uint32_t EXTI_Line)
 {
   /* Check the parameters */
  assert_param(IS_EXTI_D1_LINE(EXTI_Line));
- WRITE_REG(*(__IO uint32_t *) (((uintptr_t) &(EXTI_D1->PR1)) + ((EXTI_Line >> 5 ) * 0x10UL)), (uint32_t)(1UL << (EXTI_Line & 0x1FUL)));
+ WRITE_REG(*(__IO uint32_t *) (((uint32_t) &(EXTI_D1->PR1)) + ((EXTI_Line >> 5 ) * 0x10UL)), (uint32_t)(1UL << (EXTI_Line & 0x1FUL)));
 
 }
 
@@ -1151,7 +1156,7 @@ void HAL_EXTI_D2_ClearFlag(uint32_t EXTI_Line)
 {
   /* Check the parameters */
  assert_param(IS_EXTI_D2_LINE(EXTI_Line));
- WRITE_REG(*(__IO uint32_t *) (((uintptr_t) &(EXTI_D2->PR1)) + ((EXTI_Line >> 5 ) * 0x10UL)), (uint32_t)(1UL << (EXTI_Line & 0x1FUL)));
+ WRITE_REG(*(__IO uint32_t *) (((uint32_t) &(EXTI_D2->PR1)) + ((EXTI_Line >> 5 ) * 0x10UL)), (uint32_t)(1UL << (EXTI_Line & 0x1FUL)));
 }
 
 #endif /*DUAL_CORE*/
@@ -1178,11 +1183,11 @@ void HAL_EXTI_D1_EventInputConfig(uint32_t EXTI_Line , uint32_t EXTI_Mode,  uint
      if( EXTI_LineCmd == 0UL)
      {
        /* Clear EXTI line configuration */
-        CLEAR_BIT(*(__IO uint32_t *) (((uintptr_t) &(EXTI_D1->IMR1)) + ((EXTI_Line >> 5 ) * 0x10UL)),(uint32_t)(1UL << (EXTI_Line & 0x1FUL)) );
+        CLEAR_BIT(*(__IO uint32_t *) (((uint32_t) &(EXTI_D1->IMR1)) + ((EXTI_Line >> 5 ) * 0x10UL)),(uint32_t)(1UL << (EXTI_Line & 0x1FUL)) );
      }
      else
      {
-        SET_BIT(*(__IO uint32_t *) (((uintptr_t) &(EXTI_D1->IMR1)) + ((EXTI_Line >> 5 ) * 0x10UL)), (uint32_t)(1UL << (EXTI_Line & 0x1FUL)));
+        SET_BIT(*(__IO uint32_t *) (((uint32_t) &(EXTI_D1->IMR1)) + ((EXTI_Line >> 5 ) * 0x10UL)), (uint32_t)(1UL << (EXTI_Line & 0x1FUL)));
      }
   }
 
@@ -1191,11 +1196,11 @@ void HAL_EXTI_D1_EventInputConfig(uint32_t EXTI_Line , uint32_t EXTI_Mode,  uint
     if( EXTI_LineCmd == 0UL)
     {
       /* Clear EXTI line configuration */
-      CLEAR_BIT(  *(__IO uint32_t *) (((uintptr_t) &(EXTI_D1->EMR1)) + ((EXTI_Line >> 5 ) * 0x10UL)), (uint32_t)(1UL << (EXTI_Line & 0x1FUL)));
+      CLEAR_BIT(  *(__IO uint32_t *) (((uint32_t) &(EXTI_D1->EMR1)) + ((EXTI_Line >> 5 ) * 0x10UL)), (uint32_t)(1UL << (EXTI_Line & 0x1FUL)));
     }
     else
     {
-      SET_BIT(  *(__IO uint32_t *) (((uintptr_t) &(EXTI_D1->EMR1)) + ((EXTI_Line >> 5 ) * 0x10UL)), (uint32_t)(1UL << (EXTI_Line & 0x1FUL)));
+      SET_BIT(  *(__IO uint32_t *) (((uint32_t) &(EXTI_D1->EMR1)) + ((EXTI_Line >> 5 ) * 0x10UL)), (uint32_t)(1UL << (EXTI_Line & 0x1FUL)));
     }
   }
 }
@@ -1224,11 +1229,11 @@ void HAL_EXTI_D2_EventInputConfig(uint32_t EXTI_Line , uint32_t EXTI_Mode,  uint
     if( EXTI_LineCmd == 0UL)
     {
     /* Clear EXTI line configuration */
-     CLEAR_BIT(*(__IO uint32_t *) (((uintptr_t) &(EXTI_D2->IMR1)) + ((EXTI_Line >> 5 ) * 0x10UL)),(uint32_t)(1UL << (EXTI_Line & 0x1FUL)) );
+     CLEAR_BIT(*(__IO uint32_t *) (((uint32_t) &(EXTI_D2->IMR1)) + ((EXTI_Line >> 5 ) * 0x10UL)),(uint32_t)(1UL << (EXTI_Line & 0x1FUL)) );
     }
     else
     {
-     SET_BIT(*(__IO uint32_t *) (((uintptr_t) &(EXTI_D2->IMR1)) + ((EXTI_Line >> 5 ) * 0x10UL)), (uint32_t)(1UL << (EXTI_Line & 0x1FUL)));
+     SET_BIT(*(__IO uint32_t *) (((uint32_t) &(EXTI_D2->IMR1)) + ((EXTI_Line >> 5 ) * 0x10UL)), (uint32_t)(1UL << (EXTI_Line & 0x1FUL)));
     }
   }
 
@@ -1237,11 +1242,11 @@ void HAL_EXTI_D2_EventInputConfig(uint32_t EXTI_Line , uint32_t EXTI_Mode,  uint
     if( EXTI_LineCmd == 0UL)
     {
       /* Clear EXTI line configuration */
-      CLEAR_BIT(  *(__IO uint32_t *) (((uintptr_t) &(EXTI_D2->EMR1)) + ((EXTI_Line >> 5 ) * 0x10UL)), (uint32_t)(1UL << (EXTI_Line & 0x1FUL)));
+      CLEAR_BIT(  *(__IO uint32_t *) (((uint32_t) &(EXTI_D2->EMR1)) + ((EXTI_Line >> 5 ) * 0x10UL)), (uint32_t)(1UL << (EXTI_Line & 0x1FUL)));
     }
     else
     {
-      SET_BIT(  *(__IO uint32_t *) (((uintptr_t) &(EXTI_D2->EMR1)) + ((EXTI_Line >> 5 ) * 0x10UL)), (uint32_t)(1UL << (EXTI_Line & 0x1FUL)));
+      SET_BIT(  *(__IO uint32_t *) (((uint32_t) &(EXTI_D2->EMR1)) + ((EXTI_Line >> 5 ) * 0x10UL)), (uint32_t)(1UL << (EXTI_Line & 0x1FUL)));
     }
   }
 }
@@ -1272,20 +1277,20 @@ void HAL_EXTI_D3_EventInputConfig(uint32_t EXTI_Line, uint32_t EXTI_LineCmd , ui
   if( EXTI_LineCmd == 0UL)
   {
     /* Clear EXTI line configuration */
-    CLEAR_BIT(*(__IO uint32_t *) (((uintptr_t) &(EXTI->D3PMR1)) + ((EXTI_Line >> 5 ) * 0x20UL)),(uint32_t)(1UL << (EXTI_Line & 0x1FUL)) );
+    CLEAR_BIT(*(__IO uint32_t *) (((uint32_t) &(EXTI->D3PMR1)) + ((EXTI_Line >> 5 ) * 0x20UL)),(uint32_t)(1UL << (EXTI_Line & 0x1FUL)) );
   }
   else
   {
-    SET_BIT(*(__IO uint32_t *) (((uintptr_t) &(EXTI->D3PMR1)) +((EXTI_Line >> 5 ) * 0x20UL)), (uint32_t)(1UL << (EXTI_Line & 0x1FUL)));
+    SET_BIT(*(__IO uint32_t *) (((uint32_t) &(EXTI->D3PMR1)) +((EXTI_Line >> 5 ) * 0x20UL)), (uint32_t)(1UL << (EXTI_Line & 0x1FUL)));
   }
 
   if(((EXTI_Line>>4)%2UL) == 0UL)
   {
-    pRegv = (__IO uint32_t *) (((uintptr_t) &(EXTI->D3PCR1L)) + ((EXTI_Line >> 5 ) * 0x20UL));
+    pRegv = (__IO uint32_t *) (((uint32_t) &(EXTI->D3PCR1L)) + ((EXTI_Line >> 5 ) * 0x20UL));
   }
   else
   {
-    pRegv = (__IO uint32_t *) (((uintptr_t) &(EXTI->D3PCR1H)) + ((EXTI_Line >> 5 ) * 0x20UL));
+    pRegv = (__IO uint32_t *) (((uint32_t) &(EXTI->D3PCR1H)) + ((EXTI_Line >> 5 ) * 0x20UL));
   }
   MODIFY_REG(*pRegv, (uint32_t)(3UL << ((EXTI_Line*2UL) & 0x1FUL)), (uint32_t)(EXTI_ClearSrc << ((EXTI_Line*2UL) & 0x1FUL)));
 

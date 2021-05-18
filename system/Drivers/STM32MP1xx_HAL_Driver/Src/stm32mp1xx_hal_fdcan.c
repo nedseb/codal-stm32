@@ -2264,8 +2264,8 @@ uint32_t HAL_FDCAN_IsRxBufferMessageAvailable(FDCAN_HandleTypeDef *hfdcan, uint3
   uint32_t NewData2 = hfdcan->Instance->NDAT2;
 
   /* Check new message reception on the selected buffer */
-  if (((RxBufferIndex < 32U) && ((NewData1 & (uint32_t)((uintptr_t)1 << RxBufferIndex)) == 0U)) ||
-      ((RxBufferIndex >= 32U) && ((NewData2 & (uint32_t)((uintptr_t)1 << (RxBufferIndex & 0x1FU))) == 0U)))
+  if (((RxBufferIndex < 32U) && ((NewData1 & (uint32_t)((uint32_t)1 << RxBufferIndex)) == 0U)) ||
+      ((RxBufferIndex >= 32U) && ((NewData2 & (uint32_t)((uint32_t)1 << (RxBufferIndex & 0x1FU))) == 0U)))
   {
     return 0;
   }

@@ -7,7 +7,7 @@
   *           + Initialization and De-initialization.
   *           + LUT configuration.
   *           + Force flush and/or invalidate of cache.
-  *           + Modify physical buffer adresses.
+  *           + Modify physical buffer addresses.
   *           + Modify cache and pre-fetch parameters.
   *           + Error management.
   *
@@ -40,7 +40,7 @@
     [..]
       (#) Use HAL_GFXMMU_ConfigForceCache() to flush and/or invalidate cache.
 
-    *** Modify physical buffer adresses ***
+    *** Modify physical buffer addresses ***
     =======================================
     [..]
       (#) Use HAL_GFXMMU_ModifyBuffers() to modify physical buffer addresses.
@@ -250,7 +250,7 @@ HAL_StatusTypeDef HAL_GFXMMU_Init(GFXMMU_HandleTypeDef *hgfxmmu)
     /* Configure default value on GFXMMU_DVR register */
     hgfxmmu->Instance->DVR = hgfxmmu->Init.DefaultValue;
 
-    /* Configure physical buffer adresses on GFXMMU_BxCR registers */
+    /* Configure physical buffer addresses on GFXMMU_BxCR registers */
     hgfxmmu->Instance->B0CR = hgfxmmu->Init.Buffers.Buf0Address;
     hgfxmmu->Instance->B1CR = hgfxmmu->Init.Buffers.Buf1Address;
     hgfxmmu->Instance->B2CR = hgfxmmu->Init.Buffers.Buf2Address;
@@ -501,7 +501,7 @@ HAL_StatusTypeDef HAL_GFXMMU_UnRegisterCallback(GFXMMU_HandleTypeDef        *hgf
     [..]  This section provides functions allowing to:
       (+) Configure LUT.
       (+) Force flush and/or invalidate of cache.
-      (+) Modify physical buffer adresses.
+      (+) Modify physical buffer addresses.
       (+) Modify cache and pre-fetch parameters.
       (+) Manage error.
 @endverbatim
@@ -542,8 +542,8 @@ HAL_StatusTypeDef HAL_GFXMMU_ConfigLut(GFXMMU_HandleTypeDef *hgfxmmu,
     /* Initialize local variables */
     current_address = Address;
     current_line    = 0U;
-    lutxl_address   = (uintptr_t) &(hgfxmmu->Instance->LUT[2U * FirstLine]);
-    lutxh_address   = (uintptr_t) &(hgfxmmu->Instance->LUT[(2U * FirstLine) + 1U]);
+    lutxl_address   = (uint32_t) &(hgfxmmu->Instance->LUT[2U * FirstLine]);
+    lutxh_address   = (uint32_t) &(hgfxmmu->Instance->LUT[(2U * FirstLine) + 1U]);
 
     /* Copy LUT from flash to look up RAM */
     while(current_line < LinesNumber)
@@ -592,8 +592,8 @@ HAL_StatusTypeDef HAL_GFXMMU_DisableLutLines(GFXMMU_HandleTypeDef *hgfxmmu,
 
     /* Initialize local variables */
     current_line    = 0U;
-    lutxl_address   = (uintptr_t) &(hgfxmmu->Instance->LUT[2U * FirstLine]);
-    lutxh_address   = (uintptr_t) &(hgfxmmu->Instance->LUT[(2U * FirstLine) + 1U]);
+    lutxl_address   = (uint32_t) &(hgfxmmu->Instance->LUT[2U * FirstLine]);
+    lutxh_address   = (uint32_t) &(hgfxmmu->Instance->LUT[(2U * FirstLine) + 1U]);
 
     /* Disable LUT lines */
     while(current_line < LinesNumber)
@@ -637,8 +637,8 @@ HAL_StatusTypeDef HAL_GFXMMU_ConfigLutLine(GFXMMU_HandleTypeDef *hgfxmmu, GFXMMU
     uint32_t lutxl_address, lutxh_address;
 
     /* Initialize local variables */
-    lutxl_address   = (uintptr_t) &(hgfxmmu->Instance->LUT[2U * lutLine->LineNumber]);
-    lutxh_address   = (uintptr_t) &(hgfxmmu->Instance->LUT[(2U * lutLine->LineNumber) + 1U]);
+    lutxl_address   = (uint32_t) &(hgfxmmu->Instance->LUT[2U * lutLine->LineNumber]);
+    lutxh_address   = (uint32_t) &(hgfxmmu->Instance->LUT[(2U * lutLine->LineNumber) + 1U]);
 
     /* Configure LUT line */
     if(lutLine->LineStatus == GFXMMU_LUT_LINE_ENABLE)
@@ -713,7 +713,7 @@ HAL_StatusTypeDef HAL_GFXMMU_ModifyBuffers(GFXMMU_HandleTypeDef *hgfxmmu, GFXMMU
   }
   else
   {
-    /* Modify physical buffer adresses on GFXMMU_BxCR registers */
+    /* Modify physical buffer addresses on GFXMMU_BxCR registers */
     hgfxmmu->Instance->B0CR = Buffers->Buf0Address;
     hgfxmmu->Instance->B1CR = Buffers->Buf1Address;
     hgfxmmu->Instance->B2CR = Buffers->Buf2Address;

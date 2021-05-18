@@ -87,7 +87,7 @@ extern "C" {
   * @retval Register address
 */
 #define __OPAMP_PTR_REG_OFFSET(__REG__, __REG_OFFSET__)                        \
- ((uint32_t *)((uint32_t) ((uintptr_t)(&(__REG__)) + ((__REG_OFFSET__) << 2U))))
+ ((uint32_t *)((uint32_t) ((uint32_t)(&(__REG__)) + ((__REG_OFFSET__) << 2U))))
 
 /**
   * @brief  Driver macro reserved for internal use: from OPAMP instance

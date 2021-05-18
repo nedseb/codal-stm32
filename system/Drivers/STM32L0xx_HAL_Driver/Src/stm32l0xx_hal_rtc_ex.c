@@ -462,7 +462,7 @@ HAL_StatusTypeDef HAL_RTCEx_SetTamper(RTC_HandleTypeDef *hrtc, RTC_TamperTypeDef
   }
 
   /* Configure the RTC_TAMPCR register */
-  tmpreg = (uint32_t)((uintptr_t)sTamper->Tamper | (uint32_t)sTamper->Trigger  | (uint32_t)sTamper->NoErase | \
+  tmpreg = (uint32_t)((uint32_t)sTamper->Tamper | (uint32_t)sTamper->Trigger  | (uint32_t)sTamper->NoErase | \
                       (uint32_t)sTamper->MaskFlag | (uint32_t)sTamper->Filter | (uint32_t)sTamper->SamplingFrequency | \
                       (uint32_t)sTamper->PrechargeDuration | (uint32_t)sTamper->TamperPullUp | (uint32_t)sTamper->TimeStampOnTamperDetection);
 
@@ -555,7 +555,7 @@ HAL_StatusTypeDef HAL_RTCEx_SetTamper_IT(RTC_HandleTypeDef *hrtc, RTC_TamperType
   }
 
   /* Configure the RTC_TAMPCR register */
-  tmpreg = (uint32_t)((uintptr_t)sTamper->Tamper | (uint32_t)sTamper->Interrupt | (uint32_t)sTamper->Trigger  | (uint32_t)sTamper->NoErase | \
+  tmpreg = (uint32_t)((uint32_t)sTamper->Tamper | (uint32_t)sTamper->Interrupt | (uint32_t)sTamper->Trigger  | (uint32_t)sTamper->NoErase | \
                       (uint32_t)sTamper->MaskFlag | (uint32_t)sTamper->Filter | (uint32_t)sTamper->SamplingFrequency                                | \
                       (uint32_t)sTamper->PrechargeDuration | (uint32_t)sTamper->TamperPullUp | (uint32_t)sTamper->TimeStampOnTamperDetection);
 
@@ -1313,7 +1313,7 @@ void HAL_RTCEx_BKUPWrite(RTC_HandleTypeDef *hrtc, uint32_t BackupRegister, uint3
   /* Check the parameters */
   assert_param(IS_RTC_BKP(BackupRegister));
 
-  tmp = (uintptr_t) & (hrtc->Instance->BKP0R);
+  tmp = (uint32_t) & (hrtc->Instance->BKP0R);
   tmp += (BackupRegister * 4U);
 
   /* Write the specified register */
@@ -1335,7 +1335,7 @@ uint32_t HAL_RTCEx_BKUPRead(RTC_HandleTypeDef *hrtc, uint32_t BackupRegister)
   /* Check the parameters */
   assert_param(IS_RTC_BKP(BackupRegister));
 
-  tmp = (uintptr_t) & (hrtc->Instance->BKP0R);
+  tmp = (uint32_t) & (hrtc->Instance->BKP0R);
   tmp += (BackupRegister * 4U);
 
   /* Read the specified register */
@@ -1403,7 +1403,7 @@ HAL_StatusTypeDef HAL_RTCEx_SetSmoothCalib(RTC_HandleTypeDef *hrtc, uint32_t Smo
   }
 
   /* Configure the Smooth calibration settings */
-  hrtc->Instance->CALR = (uint32_t)((uintptr_t)SmoothCalibPeriod | (uint32_t)SmoothCalibPlusPulses | (uint32_t)SmoothCalibMinusPulsesValue);
+  hrtc->Instance->CALR = (uint32_t)((uint32_t)SmoothCalibPeriod | (uint32_t)SmoothCalibPlusPulses | (uint32_t)SmoothCalibMinusPulsesValue);
 
   /* Enable the write protection for RTC registers */
   __HAL_RTC_WRITEPROTECTION_ENABLE(hrtc);

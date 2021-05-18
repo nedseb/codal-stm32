@@ -3045,7 +3045,7 @@ __STATIC_INLINE void LL_RCC_SetLPTIMClockSource(uint32_t ClkSource)
   */
 __STATIC_INLINE uint32_t LL_RCC_GetClockSource(uint32_t Periph)
 {
-  __IO const uint32_t *pReg = (uint32_t *)((uint32_t)((uintptr_t)(&RCC->I2C46CKSELR) + LL_CLKSOURCE_REG(Periph)));
+  __IO const uint32_t *pReg = (uint32_t *)((uint32_t)((uint32_t)(&RCC->I2C46CKSELR) + LL_CLKSOURCE_REG(Periph)));
 
   return (uint32_t)(Periph | ((READ_BIT(*pReg, LL_CLKSOURCE_MASK(Periph))) << RCC_CONFIG_SHIFT));
 }

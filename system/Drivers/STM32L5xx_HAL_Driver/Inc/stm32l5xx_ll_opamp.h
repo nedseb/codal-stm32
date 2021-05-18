@@ -86,7 +86,7 @@ extern "C" {
   * @retval Register address
 */
 #define __OPAMP_PTR_REG_OFFSET(__REG__, __REG_OFFSET__)                        \
- ((uint32_t *)((uint32_t) ((uintptr_t)(&(__REG__)) + ((__REG_OFFSET__) << 2U))))
+ ((uint32_t *)((uint32_t) ((uint32_t)(&(__REG__)) + ((__REG_OFFSET__) << 2U))))
 
 
 
@@ -153,8 +153,11 @@ typedef struct
 /** @defgroup OPAMP_LL_EC_POWERMODE OPAMP power mode
   * @{
   */
-#define LL_OPAMP_POWERMODE_NORMAL       (OPAMP_POWERMODE_OTR_REGOFFSET)                      /*!< OPAMP power mode normal */
+#define LL_OPAMP_POWERMODE_NORMALPOWER  (OPAMP_POWERMODE_OTR_REGOFFSET)                      /*!< OPAMP power mode normal */
 #define LL_OPAMP_POWERMODE_LOWPOWER     (OPAMP_POWERMODE_LPOTR_REGOFFSET | OPAMP_CSR_OPALPM) /*!< OPAMP power mode low-power */
+
+#define LL_OPAMP_POWERMODE_NORMAL       LL_OPAMP_POWERMODE_NORMALPOWER                       /*!< OPAMP power mode normal - Old Naming for compatibility */
+
 /**
   * @}
   */

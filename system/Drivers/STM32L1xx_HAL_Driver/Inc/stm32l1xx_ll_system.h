@@ -1375,7 +1375,7 @@ __STATIC_INLINE void LL_RI_OpenIOSwitchNotLinkedToADC(uint32_t IOSwitch)
   */
 __STATIC_INLINE void LL_RI_EnableHysteresis(uint32_t Port, uint32_t Pin)
 {
-  __IO uint32_t *reg = (__IO uint32_t *)(uint32_t)((uintptr_t)(&RI->HYSCR1) + (Port >> 1U));
+  __IO uint32_t *reg = (__IO uint32_t *)(uint32_t)((uint32_t)(&RI->HYSCR1) + (Port >> 1U));
   CLEAR_BIT(*reg, Pin << (16U * (Port & 1U)));
 }
 
@@ -1441,7 +1441,7 @@ __STATIC_INLINE void LL_RI_EnableHysteresis(uint32_t Port, uint32_t Pin)
   */
 __STATIC_INLINE void LL_RI_DisableHysteresis(uint32_t Port, uint32_t Pin)
 {
-  __IO uint32_t *reg = (__IO uint32_t *)(uint32_t)((uintptr_t)(&RI->HYSCR1) + ((Port >> 1U) << 2U));
+  __IO uint32_t *reg = (__IO uint32_t *)(uint32_t)((uint32_t)(&RI->HYSCR1) + ((Port >> 1U) << 2U));
   SET_BIT(*reg, Pin << (16U * (Port & 1U)));
 }
 
@@ -1503,7 +1503,7 @@ __STATIC_INLINE void LL_RI_DisableHysteresis(uint32_t Port, uint32_t Pin)
   */
 __STATIC_INLINE void LL_RI_ControlSwitchByADC(uint32_t Port, uint32_t Pin)
 {
-  __IO uint32_t *reg = (__IO uint32_t *)(uint32_t)((uintptr_t)(&RI->ASMR1) + ((Port * 3U) << 2));
+  __IO uint32_t *reg = (__IO uint32_t *)(uint32_t)((uint32_t)(&RI->ASMR1) + ((Port * 3U) << 2));
   CLEAR_BIT(*reg, Pin);
 }
 #endif /* RI_ASMR1_PA */
@@ -1566,7 +1566,7 @@ __STATIC_INLINE void LL_RI_ControlSwitchByADC(uint32_t Port, uint32_t Pin)
   */
 __STATIC_INLINE void LL_RI_ControlSwitchByTIM(uint32_t Port, uint32_t Pin)
 {
-  __IO uint32_t *reg = (__IO uint32_t *)(uint32_t)((uintptr_t)(&RI->ASMR1) + ((Port * 3U) << 2));
+  __IO uint32_t *reg = (__IO uint32_t *)(uint32_t)((uint32_t)(&RI->ASMR1) + ((Port * 3U) << 2));
   SET_BIT(*reg, Pin);
 }
 #endif /* RI_ASMR1_PA */
@@ -1629,7 +1629,7 @@ __STATIC_INLINE void LL_RI_ControlSwitchByTIM(uint32_t Port, uint32_t Pin)
   */
 __STATIC_INLINE void LL_RI_MaskChannelDuringAcquisition(uint32_t Port, uint32_t Pin)
 {
-  __IO uint32_t *reg = (__IO uint32_t *)(uint32_t)((uintptr_t)(&RI->CMR1) + ((Port * 3U) << 2));
+  __IO uint32_t *reg = (__IO uint32_t *)(uint32_t)((uint32_t)(&RI->CMR1) + ((Port * 3U) << 2));
   CLEAR_BIT(*reg, Pin);
 }
 #endif /* RI_CMR1_PA */
@@ -1692,7 +1692,7 @@ __STATIC_INLINE void LL_RI_MaskChannelDuringAcquisition(uint32_t Port, uint32_t 
   */
 __STATIC_INLINE void LL_RI_UnmaskChannelDuringAcquisition(uint32_t Port, uint32_t Pin)
 {
-  __IO uint32_t *reg = (__IO uint32_t *)(uint32_t)((uintptr_t)(&RI->CMR1) + ((Port * 3U) << 2));
+  __IO uint32_t *reg = (__IO uint32_t *)(uint32_t)((uint32_t)(&RI->CMR1) + ((Port * 3U) << 2));
   SET_BIT(*reg, Pin);
 }
 #endif /* RI_CMR1_PA */
@@ -1755,7 +1755,7 @@ __STATIC_INLINE void LL_RI_UnmaskChannelDuringAcquisition(uint32_t Port, uint32_
   */
 __STATIC_INLINE void LL_RI_IdentifyChannelIO(uint32_t Port, uint32_t Pin)
 {
-  __IO uint32_t *reg = (__IO uint32_t *)(uint32_t)((uintptr_t)(&RI->CICR1) + ((Port * 3U) << 2));
+  __IO uint32_t *reg = (__IO uint32_t *)(uint32_t)((uint32_t)(&RI->CICR1) + ((Port * 3U) << 2));
   CLEAR_BIT(*reg, Pin);
 }
 #endif /* RI_CICR1_PA */
@@ -1818,7 +1818,7 @@ __STATIC_INLINE void LL_RI_IdentifyChannelIO(uint32_t Port, uint32_t Pin)
   */
 __STATIC_INLINE void LL_RI_IdentifySamplingCapacitorIO(uint32_t Port, uint32_t Pin)
 {
-  __IO uint32_t *reg = (__IO uint32_t *)(uint32_t)((uintptr_t)(&RI->CICR1) + ((Port * 3U) << 2));
+  __IO uint32_t *reg = (__IO uint32_t *)(uint32_t)((uint32_t)(&RI->CICR1) + ((Port * 3U) << 2));
   SET_BIT(*reg, Pin);
 }
 #endif /* RI_CICR1_PA */

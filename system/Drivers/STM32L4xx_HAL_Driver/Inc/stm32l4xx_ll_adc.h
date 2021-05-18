@@ -375,7 +375,7 @@ extern "C" {
   * @retval Pointer to register address
   */
 #define __ADC_PTR_REG_OFFSET(__REG__, __REG_OFFFSET__)                         \
-  ((__IO uint32_t *)((uint32_t) ((uintptr_t)(&(__REG__)) + ((__REG_OFFFSET__) << 2UL))))
+  ((__IO uint32_t *)((uint32_t) ((uint32_t)(&(__REG__)) + ((__REG_OFFFSET__) << 2UL))))
 
 /**
   * @}
@@ -1348,7 +1348,7 @@ typedef struct
 /* Delay set to maximum value (refer to device datasheet,                     */
 /* parameter "tADCVREG_STUP").                                                */
 /* Unit: us                                                                   */
-#define LL_ADC_DELAY_INTERNAL_REGUL_STAB_US ( 10UL)  /*!< Delay for ADC stabilization time (ADC voltage regulator start-up time) */
+#define LL_ADC_DELAY_INTERNAL_REGUL_STAB_US ( 20UL)  /*!< Delay for ADC stabilization time (ADC voltage regulator start-up time) */
 
 /* Delay for internal voltage reference stabilization time.                   */
 /* Delay set to maximum value (refer to device datasheet,                     */
@@ -2377,12 +2377,12 @@ __STATIC_INLINE uint32_t LL_ADC_DMA_GetRegAddr(ADC_TypeDef *ADCx, uint32_t Regis
   if (Register == LL_ADC_DMA_REG_REGULAR_DATA)
   {
     /* Retrieve address of register DR */
-    data_reg_addr = (uintptr_t) &(ADCx->DR);
+    data_reg_addr = (uint32_t) &(ADCx->DR);
   }
   else /* (Register == LL_ADC_DMA_REG_REGULAR_DATA_MULTI) */
   {
     /* Retrieve address of register CDR */
-    data_reg_addr = (uintptr_t) &((__LL_ADC_COMMON_INSTANCE(ADCx))->CDR);
+    data_reg_addr = (uint32_t) &((__LL_ADC_COMMON_INSTANCE(ADCx))->CDR);
   }
 
   return data_reg_addr;
@@ -2394,7 +2394,7 @@ __STATIC_INLINE uint32_t LL_ADC_DMA_GetRegAddr(ADC_TypeDef *ADCx, uint32_t Regis
   (void)(Register);
 
   /* Retrieve address of register DR */
-  return (uintptr_t) &(ADCx->DR);
+  return (uint32_t) &(ADCx->DR);
 }
 #endif /* ADC_MULTIMODE_SUPPORT */
 
