@@ -14,7 +14,6 @@
  * Automatically generated from STM32F411R(C-E)Tx.xml
  * CubeMX DB release 6.0.21
  */
-#if !defined(CUSTOM_PERIPHERAL_PINS)
 #include "Arduino.h"
 #include "PeripheralPins.h"
 
@@ -277,4 +276,3 @@ WEAK const PinMap PinMap_SD[] = {
 };
 #endif
 
-#endif /* !CUSTOM_PERIPHERAL_PINS */
