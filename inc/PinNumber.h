@@ -2,10 +2,11 @@
 #define PINNUMBER_H
 
 #include "Pin.h"
+#include "PinNames.h"
 
 namespace codal {
 
-typedef enum { ALT0 = 0x100, ALT1 = 0x200, ALT2 = 0x300, ALT3 = 0x400 } ALTx;
+// typedef enum { ALT0 = 0x100, ALT1 = 0x200, ALT2 = 0x300, ALT3 = 0x400 } ALTx;
 
 enum class PinNumber : uint16_t {
     PA_0       = 0x00,
@@ -172,10 +173,10 @@ enum class PinNumber : uint16_t {
     STDIO_UART_RX = PB_7,
 
     // Generic signals namings
-    LED_1        = D13,    // Green LED (LD1)
-    LED_2        = PB_14,  // Green LED (LD2)
-    LED_3        = PC_9,   // Yellow LED (LD3 WIFI) / Blue LED (LD4 BLE)
-    LED_4        = LED_3,
+    LED_1       = D13,    // Green LED (LD1)
+    LED_2       = PB_14,  // Green LED (LD2)
+    LED_3       = PC_9,   // Yellow LED (LD3 WIFI) / Blue LED (LD4 BLE)
+    LED_4       = LED_3,
     USER_BUTTON = PC_13,
     BUTTON1     = USER_BUTTON,
     BUTTON2     = USER_BUTTON,
