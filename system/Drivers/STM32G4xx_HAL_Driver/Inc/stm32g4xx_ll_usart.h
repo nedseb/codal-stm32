@@ -184,21 +184,21 @@ typedef struct
   * @brief    Flags defines which can be used with LL_USART_WriteReg function
   * @{
   */
-#define LL_USART_ICR_PECF                       USART_ICR_PECF                /*!< Parity error flag */
-#define LL_USART_ICR_FECF                       USART_ICR_FECF                /*!< Framing error flag */
-#define LL_USART_ICR_NECF                       USART_ICR_NECF                /*!< Noise error detected flag */
-#define LL_USART_ICR_ORECF                      USART_ICR_ORECF               /*!< Overrun error flag */
-#define LL_USART_ICR_IDLECF                     USART_ICR_IDLECF              /*!< Idle line detected flag */
-#define LL_USART_ICR_TXFECF                     USART_ICR_TXFECF              /*!< TX FIFO Empty Clear flag */
-#define LL_USART_ICR_TCCF                       USART_ICR_TCCF                /*!< Transmission complete flag */
-#define LL_USART_ICR_TCBGTCF                    USART_ICR_TCBGTCF             /*!< Transmission completed before guard time flag */
-#define LL_USART_ICR_LBDCF                      USART_ICR_LBDCF               /*!< LIN break detection flag */
-#define LL_USART_ICR_CTSCF                      USART_ICR_CTSCF               /*!< CTS flag */
-#define LL_USART_ICR_RTOCF                      USART_ICR_RTOCF               /*!< Receiver timeout flag */
-#define LL_USART_ICR_EOBCF                      USART_ICR_EOBCF               /*!< End of block flag */
-#define LL_USART_ICR_UDRCF                      USART_ICR_UDRCF               /*!< SPI Slave Underrun Clear flag */
-#define LL_USART_ICR_CMCF                       USART_ICR_CMCF                /*!< Character match flag */
-#define LL_USART_ICR_WUCF                       USART_ICR_WUCF                /*!< Wakeup from Stop mode flag */
+#define LL_USART_ICR_PECF                       USART_ICR_PECF                /*!< Parity error clear flag */
+#define LL_USART_ICR_FECF                       USART_ICR_FECF                /*!< Framing error clear flag */
+#define LL_USART_ICR_NECF                       USART_ICR_NECF                /*!< Noise error detected clear flag */
+#define LL_USART_ICR_ORECF                      USART_ICR_ORECF               /*!< Overrun error clear flag */
+#define LL_USART_ICR_IDLECF                     USART_ICR_IDLECF              /*!< Idle line detected clear flag */
+#define LL_USART_ICR_TXFECF                     USART_ICR_TXFECF              /*!< TX FIFO Empty clear flag */
+#define LL_USART_ICR_TCCF                       USART_ICR_TCCF                /*!< Transmission complete clear flag */
+#define LL_USART_ICR_TCBGTCF                    USART_ICR_TCBGTCF             /*!< Transmission completed before guard time clear flag */
+#define LL_USART_ICR_LBDCF                      USART_ICR_LBDCF               /*!< LIN break detection clear flag */
+#define LL_USART_ICR_CTSCF                      USART_ICR_CTSCF               /*!< CTS clear flag */
+#define LL_USART_ICR_RTOCF                      USART_ICR_RTOCF               /*!< Receiver timeout clear flag */
+#define LL_USART_ICR_EOBCF                      USART_ICR_EOBCF               /*!< End of block clear flag */
+#define LL_USART_ICR_UDRCF                      USART_ICR_UDRCF               /*!< SPI Slave Underrun clear flag */
+#define LL_USART_ICR_CMCF                       USART_ICR_CMCF                /*!< Character match clear flag */
+#define LL_USART_ICR_WUCF                       USART_ICR_WUCF                /*!< Wakeup from Stop mode clear flag */
 /**
   * @}
   */
@@ -4226,12 +4226,12 @@ __STATIC_INLINE uint32_t LL_USART_DMA_GetRegAddr(USART_TypeDef *USARTx, uint32_t
   if (Direction == LL_USART_DMA_REG_DATA_TRANSMIT)
   {
     /* return address of TDR register */
-    data_reg_addr = (uintptr_t) &(USARTx->TDR);
+    data_reg_addr = (uint32_t) &(USARTx->TDR);
   }
   else
   {
     /* return address of RDR register */
-    data_reg_addr = (uintptr_t) &(USARTx->RDR);
+    data_reg_addr = (uint32_t) &(USARTx->RDR);
   }
 
   return data_reg_addr;

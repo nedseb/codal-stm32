@@ -126,7 +126,7 @@ uint32_t HID_ReadItem(HID_Report_ItemTypedef *ri, uint8_t ndx)
   /* read data bytes in little endian order */
   for (x = 0U; x < ((ri->size & 0x7U) ? (ri->size / 8U) + 1U : (ri->size / 8U)); x++)
   {
-    val = (uint32_t)((uintptr_t)(*data) << (x * 8U));
+    val = (uint32_t)((uint32_t)(*data) << (x * 8U));
   }
   val = (val >> shift) & ((1U << ri->size) - 1U);
 

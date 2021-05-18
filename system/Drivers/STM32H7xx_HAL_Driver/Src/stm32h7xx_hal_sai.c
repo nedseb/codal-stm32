@@ -1687,7 +1687,7 @@ HAL_StatusTypeDef HAL_SAI_Transmit_DMA(SAI_HandleTypeDef *hsai, uint8_t *pData, 
     /* Enable SAI Tx DMA Request */
     hsai->Instance->CR1 |= SAI_xCR1_DMAEN;
 
-    /* Wait untill FIFO is not empty */
+    /* Wait until FIFO is not empty */
     while ((hsai->Instance->SR & SAI_xSR_FLVL) == SAI_FIFOSTATUS_EMPTY)
     {
       /* Check for the Timeout */
@@ -1843,7 +1843,7 @@ HAL_StatusTypeDef HAL_SAI_EnableRxMuteMode(SAI_HandleTypeDef *hsai, SAIcallback 
   {
     /* set the mute counter */
     CLEAR_BIT(hsai->Instance->CR2, SAI_xCR2_MUTECNT);
-    SET_BIT(hsai->Instance->CR2, (uint32_t)((uintptr_t)counter << SAI_xCR2_MUTECNT_Pos));
+    SET_BIT(hsai->Instance->CR2, (uint32_t)((uint32_t)counter << SAI_xCR2_MUTECNT_Pos));
     hsai->mutecallback = callback;
     /* enable the IT interrupt */
     __HAL_SAI_ENABLE_IT(hsai, SAI_IT_MUTEDET);
@@ -1886,7 +1886,7 @@ void HAL_SAI_IRQHandler(SAI_HandleTypeDef *hsai)
     uint32_t cr1config = hsai->Instance->CR1;
     uint32_t tmperror;
 
-    /* SAI Fifo request interrupt occured ------------------------------------*/
+    /* SAI Fifo request interrupt occurred ------------------------------------*/
     if (((itflags & SAI_xSR_FREQ) == SAI_xSR_FREQ) && ((itsources & SAI_IT_FREQ) == SAI_IT_FREQ))
     {
       hsai->InterruptServiceRoutine(hsai);

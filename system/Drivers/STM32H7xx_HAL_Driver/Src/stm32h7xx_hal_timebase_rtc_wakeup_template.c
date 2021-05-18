@@ -6,7 +6,7 @@
   *
   *          This file overrides the native HAL time base functions (defined as weak)
   *          to use the RTC WAKEUP for the time base generation:
-  *           + Intializes the RTC peripheral and configures the wakeup timer to be
+  *           + Initializes the RTC peripheral and configures the wakeup timer to be
   *             incremented each 1ms
   *           + The wakeup feature is configured to assert an interrupt each 1ms
   *           + HAL_IncTick is called inside the HAL_RTCEx_WakeUpTimerEventCallback
@@ -71,7 +71,7 @@
 #ifdef RTC_CLOCK_SOURCE_HSE
   #define RTC_ASYNCH_PREDIV       99U
   #define RTC_SYNCH_PREDIV        9U
-  #define RCC_RTCCLKSOURCE_1MHZ   ((uint32_t)((uintptr_t)RCC_BDCR_RTCSEL | (uint32_t)((HSE_VALUE/1000000U) << 12U)))
+  #define RCC_RTCCLKSOURCE_1MHZ   ((uint32_t)((uint32_t)RCC_BDCR_RTCSEL | (uint32_t)((HSE_VALUE/1000000U) << 12U)))
 #else /* RTC_CLOCK_SOURCE_LSE || RTC_CLOCK_SOURCE_LSI */
   #define RTC_ASYNCH_PREDIV       0U
   #define RTC_SYNCH_PREDIV        31U
@@ -107,19 +107,19 @@ HAL_StatusTypeDef HAL_InitTick (uint32_t TickPriority)
   RCC_PeriphCLKInitTypeDef  PeriphClkInitStruct;
 
 #ifdef RTC_CLOCK_SOURCE_LSE
-  /* Configue LSE as RTC clock soucre */
+  /* Configure LSE as RTC clock source */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSE;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
   RCC_OscInitStruct.LSEState = RCC_LSE_ON;
   PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
 #elif defined (RTC_CLOCK_SOURCE_LSI)
-  /* Configue LSI as RTC clock soucre */
+  /* Configure LSI as RTC clock source */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
   RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_LSI;
 #elif defined (RTC_CLOCK_SOURCE_HSE)
-  /* Configue HSE as RTC clock soucre */
+  /* Configure HSE as RTC clock source */
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;

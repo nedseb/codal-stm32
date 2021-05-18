@@ -64,13 +64,13 @@ extern const uint8_t LL_RCC_PrescTable[16];
    --------------------------------------------------------*/
 
 #if defined(RCC_VER_2_0)
-/* Clock source register offset Vs CDCCIPR regsiter */
+/* Clock source register offset Vs CDCCIPR register */
 #define CDCCIP    0x0UL
 #define CDCCIP1   0x4UL
 #define CDCCIP2   0x8UL
 #define SRDCCIP   0xCUL
 #else
-/* Clock source register offset Vs D1CCIPR regsiter */
+/* Clock source register offset Vs D1CCIPR register */
 #define D1CCIP    0x0UL
 #define D2CCIP1   0x4UL
 #define D2CCIP2   0x8UL
@@ -3473,9 +3473,9 @@ __STATIC_INLINE void LL_RCC_SetADCClockSource(uint32_t ClkSource)
 __STATIC_INLINE uint32_t LL_RCC_GetClockSource(uint32_t Periph)
 {
 #if defined(RCC_D1CCIPR_FMCSEL)
-  const uint32_t *pReg = (uint32_t *)((uint32_t)((uintptr_t)(&RCC->D1CCIPR) + LL_CLKSOURCE_REG(Periph)));
+  const uint32_t *pReg = (uint32_t *)((uint32_t)((uint32_t)(&RCC->D1CCIPR) + LL_CLKSOURCE_REG(Periph)));
 #else
-  const uint32_t *pReg = (uint32_t *)((uint32_t)((uintptr_t)(&RCC->CDCCIPR) + LL_CLKSOURCE_REG(Periph)));
+  const uint32_t *pReg = (uint32_t *)((uint32_t)((uint32_t)(&RCC->CDCCIPR) + LL_CLKSOURCE_REG(Periph)));
 #endif /* RCC_D1CCIPR_FMCSEL */
   return (uint32_t) (Periph | (((READ_BIT(*pReg, LL_CLKSOURCE_MASK(Periph))) >> LL_CLKSOURCE_SHIFT(Periph)) << LL_RCC_CONFIG_SHIFT) );
 }
@@ -4594,7 +4594,9 @@ __STATIC_INLINE void LL_RCC_PLL1_SetM(uint32_t M)
   * @brief  Set PLL1 P Coefficient
   * @note   This API shall be called only when PLL1 is disabled.
   * @rmtoll PLL1DIVR        P1          LL_RCC_PLL1_SetP
-  * @param  P parameter can be a value between 2 and 128 (ODD division factor not supportted)
+  * @param  P parameter can be a value between 2 (or 1*) and 128 (ODD division factor not supported)
+  *
+  * (*) : For stm32h72xxx and stm32h73xxx family lines.
   */
 __STATIC_INLINE void LL_RCC_PLL1_SetP(uint32_t P)
 {

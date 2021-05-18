@@ -405,7 +405,7 @@ extern "C" {
   * @retval Pointer to register address
   */
 #define __ADC_PTR_REG_OFFSET(__REG__, __REG_OFFFSET__)                         \
- ((__IO uint32_t *)((uint32_t) ((uintptr_t)(&(__REG__)) + ((__REG_OFFFSET__) << 2U))))
+ ((__IO uint32_t *)((uint32_t) ((uint32_t)(&(__REG__)) + ((__REG_OFFFSET__) << 2U))))
 
 /**
   * @}
@@ -7498,7 +7498,7 @@ void        LL_ADC_INJ_StructInit(LL_ADC_INJ_InitTypeDef *ADC_INJ_InitStruct);
   * @retval Pointer to register address
   */
 #define __ADC_PTR_REG_OFFSET(__REG__, __REG_OFFFSET__)                         \
- ((uint32_t *)((uint32_t) ((uintptr_t)(&(__REG__)) + ((__REG_OFFFSET__) << 2U))))
+ ((uint32_t *)((uint32_t) ((uint32_t)(&(__REG__)) + ((__REG_OFFFSET__) << 2U))))
 
 /**
   * @}
