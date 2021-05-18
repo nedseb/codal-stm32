@@ -26,6 +26,13 @@ extern "C" {
   */
 void hw_config_init(void)
 {
+  configIPClock();
+
+#if defined(PWR_CR3_UCPD_DBDIS) || defined(STM32L5xx)
+  /* Disable the internal Pull-Up in Dead Battery pins of UCPD peripheral */
+  HAL_PWREx_DisableUCPDDeadBattery();
+#endif
+
   /* Init DWT if present */
 #ifdef DWT_BASE
   dwt_init();
@@ -33,10 +40,6 @@ void hw_config_init(void)
 
   /* Initialize the HAL */
   HAL_Init();
-
-#ifdef HSEM_BASE
-  __HAL_RCC_HSEM_CLK_ENABLE();
-#endif
 
   configHSECapacitorTuning();
 

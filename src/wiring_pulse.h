@@ -16,36 +16,18 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "wiring_time.h"
-#include "clock.h"
+#ifndef _WIRING_PULSE_
+#define _WIRING_PULSE_
 
 #ifdef __cplusplus
-extern "C" {
+  /*
+  * \brief Measures the length (in microseconds) of a pulse on the pin; state is HIGH
+  * or LOW, the type of pulse to measure.  Works on pulses from 2-3 microseconds
+  * to 3 minutes in length, but must be called at least a few dozen microseconds
+  * before the start of the pulse.
+  */
+  extern uint32_t pulseIn(uint32_t pin, uint32_t state, uint32_t timeout = 1000000L) ;
+  extern uint32_t pulseInLong(uint32_t pin, uint32_t state, uint32_t timeout = 1000000L) ;
 #endif
-void yield(void);
 
-uint32_t millis(void)
-{
-  // ToDo: ensure no interrupts
-  return getCurrentMillis();
-}
-
-// Interrupt-compatible version of micros
-uint32_t micros(void)
-{
-  return getCurrentMicros();
-}
-
-void delay(uint32_t ms)
-{
-  if (ms != 0) {
-    uint32_t start = getCurrentMillis();
-    do {
-      yield();
-    } while (getCurrentMillis() - start < ms);
-  }
-}
-
-#ifdef __cplusplus
-}
-#endif
+#endif /* _WIRING_PULSE_ */

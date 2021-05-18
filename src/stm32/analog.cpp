@@ -259,7 +259,7 @@ static uint32_t get_adc_internal_channel(PinName pin)
 #if defined(HAL_TIM_MODULE_ENABLED) && !defined(HAL_TIM_MODULE_ONLY)
 uint32_t get_pwm_channel(PinName pin)
 {
-  uint32_t function = pinmap_function(pin, PinMap_PWM);
+  uint32_t function = pinmap_function(pin, PinMap_TIM);
   uint32_t channel = 0;
   switch (STM_PIN_CHANNEL(function)) {
     case 1:
@@ -389,12 +389,6 @@ void dac_write_value(PinName pin, uint32_t value, uint8_t do_init)
     return;
   }
   if (do_init == 1) {
-
-    if (HAL_DAC_DeInit(&DacHandle) != HAL_OK) {
-      /* DeInitialization Error */
-      return;
-    }
-
     /*##-1- Configure the DAC peripheral #######################################*/
     g_current_pin = pin;
     if (HAL_DAC_Init(&DacHandle) != HAL_OK) {
@@ -404,6 +398,9 @@ void dac_write_value(PinName pin, uint32_t value, uint8_t do_init)
 
     dacChannelConf.DAC_Trigger = DAC_TRIGGER_NONE;
     dacChannelConf.DAC_OutputBuffer = DAC_OUTPUTBUFFER_ENABLE;
+#if defined(DAC_OUTPUTSWITCH_ENABLE)
+    dacChannelConf.DAC_OutputSwitch = DAC_OUTPUTSWITCH_ENABLE;
+#endif
     /*##-2- Configure DAC channel1 #############################################*/
     if (HAL_DAC_ConfigChannel(&DacHandle, &dacChannelConf, dacChannel) != HAL_OK) {
       /* Channel configuration Error */
@@ -1016,17 +1013,17 @@ uint16_t adc_read_value(PinName pin, uint32_t resolution)
   */
 void pwm_start(PinName pin, uint32_t PWM_freq, uint32_t value, TimerCompareFormat_t resolution)
 {
-  TIM_TypeDef *Instance = (TIM_TypeDef *)pinmap_peripheral(pin, PinMap_PWM);
+  TIM_TypeDef *Instance = (TIM_TypeDef *)pinmap_peripheral(pin, PinMap_TIM);
   HardwareTimer *HT;
   TimerModes_t previousMode;
   uint32_t index = get_timer_index(Instance);
   if (HardwareTimer_Handle[index] == NULL) {
-    HardwareTimer_Handle[index]->__this = new HardwareTimer((TIM_TypeDef *)pinmap_peripheral(pin, PinMap_PWM));
+    HardwareTimer_Handle[index]->__this = new HardwareTimer((TIM_TypeDef *)pinmap_peripheral(pin, PinMap_TIM));
   }
 
   HT = (HardwareTimer *)(HardwareTimer_Handle[index]->__this);
 
-  uint32_t channel = STM_PIN_CHANNEL(pinmap_function(pin, PinMap_PWM));
+  uint32_t channel = STM_PIN_CHANNEL(pinmap_function(pin, PinMap_TIM));
 
   previousMode = HT->getMode(channel);
   if (previousMode != TIMER_OUTPUT_COMPARE_PWM1) {
@@ -1046,11 +1043,11 @@ void pwm_start(PinName pin, uint32_t PWM_freq, uint32_t value, TimerCompareForma
   */
 void pwm_stop(PinName pin)
 {
-  TIM_TypeDef *Instance = (TIM_TypeDef *)pinmap_peripheral(pin, PinMap_PWM);
+  TIM_TypeDef *Instance = (TIM_TypeDef *)pinmap_peripheral(pin, PinMap_TIM);
   HardwareTimer *HT;
   uint32_t index = get_timer_index(Instance);
   if (HardwareTimer_Handle[index] == NULL) {
-    HardwareTimer_Handle[index]->__this = new HardwareTimer((TIM_TypeDef *)pinmap_peripheral(pin, PinMap_PWM));
+    HardwareTimer_Handle[index]->__this = new HardwareTimer((TIM_TypeDef *)pinmap_peripheral(pin, PinMap_TIM));
   }
 
   HT = (HardwareTimer *)(HardwareTimer_Handle[index]->__this);

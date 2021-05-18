@@ -30,6 +30,8 @@
 #ifndef _PINCONFIGURED_H
 #define _PINCONFIGURED_H
 
+#include "Arduino.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

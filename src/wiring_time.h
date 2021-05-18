@@ -20,7 +20,6 @@
 #ifndef _WIRING_TIME_H_
 #define _WIRING_TIME_H_
 
-#include "wiring_constants.h"
 #include "clock.h"
 #include "dwt.h"
 

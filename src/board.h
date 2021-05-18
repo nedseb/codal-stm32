@@ -12,6 +12,7 @@
 #include "digital_io.h"
 #include "dwt.h"
 #include "hw_config.h"
+#include "otp.h"
 #include "low_power.h"
 #include "rtc.h"
 #include "stm32_eeprom.h"

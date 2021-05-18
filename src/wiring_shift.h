@@ -16,36 +16,27 @@
   Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "wiring_time.h"
-#include "clock.h"
+#ifndef _WIRING_SHIFT_
+#define _WIRING_SHIFT_
+
+#include "pins_arduino.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-void yield(void);
 
-uint32_t millis(void)
-{
-  // ToDo: ensure no interrupts
-  return getCurrentMillis();
-}
+/*
+ * \brief
+ */
+extern uint32_t shiftIn(uint32_t ulDataPin, uint32_t ulClockPin, uint32_t ulBitOrder);
 
-// Interrupt-compatible version of micros
-uint32_t micros(void)
-{
-  return getCurrentMicros();
-}
-
-void delay(uint32_t ms)
-{
-  if (ms != 0) {
-    uint32_t start = getCurrentMillis();
-    do {
-      yield();
-    } while (getCurrentMillis() - start < ms);
-  }
-}
+/*
+ * \brief
+ */
+extern void shiftOut(uint32_t ulDataPin, uint32_t ulClockPin, uint32_t ulBitOrder, uint32_t ulVal);
 
 #ifdef __cplusplus
 }
 #endif
+
+#endif /* _WIRING_SHIFT_ */
