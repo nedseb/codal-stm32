@@ -1,15 +1,12 @@
-#ifndef _STM32YYXX_LL_CORDIC_H_
-#define _STM32YYXX_LL_CORDIC_H_
+#ifndef _STM32YYXX_LL_FMPI2C_H_
+#define _STM32YYXX_LL_FMPI2C_H_
 /* LL raised several warnings, ignore them */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 
-#ifdef STM32G4xx
-  #include "stm32g4xx_ll_cordic.h"
-#endif
-#ifdef STM32H7xx
-  #include "stm32h7xx_ll_cordic.h"
+#ifdef STM32F4xx
+  #include "stm32f4xx_ll_fmpi2c.h"
 #endif
 #pragma GCC diagnostic pop
-#endif /* _STM32YYXX_LL_CORDIC_H_ */
+#endif /* _STM32YYXX_LL_FMPI2C_H_ */
