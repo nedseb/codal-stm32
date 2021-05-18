@@ -37,8 +37,8 @@ RECURSIVE_FIND_FILE(C_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/" "*.c")
 LIST(APPEND C_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/asm/CortexContextSwitch.s")
 LIST(APPEND C_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/src/stm32/startup_stm32yyxx.S")
 LIST(APPEND C_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/CMSIS/Device/ST/${device.series}/Source/Templates/system_${PROCESSOR_NAME}.c")
-LIST(APPEND C_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/variants/${device.variant}/variant_${device.board}.cpp")
-LIST(APPEND C_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/variants/${device.variant}/PeripheralPins_${device.board}.c")
+LIST(APPEND C_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/variants/${device.variant}/${device.config.VARIANT}.cpp")
+LIST(APPEND C_SOURCE_FILES "${CMAKE_CURRENT_SOURCE_DIR}/variants/${device.variant}/${device.config.PERIPHERAL_PINS}.c")
 
 
 
