@@ -15,7 +15,6 @@
  * STM32WB55RGVx.xml
  * CubeMX DB release 6.0.21
  */
-#if !defined(CUSTOM_PERIPHERAL_PINS)
 #include "Arduino.h"
 #include "PeripheralPins.h"
 
@@ -275,5 +274,3 @@ WEAK const PinMap PinMap_USB[] = {
 #endif
 
 //*** No SD ***
-
-#endif /* !CUSTOM_PERIPHERAL_PINS */

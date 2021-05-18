@@ -10,8 +10,6 @@
  *
  *******************************************************************************
  */
-#if defined(ARDUINO_GENERIC_WB55RCVX) || defined(ARDUINO_GENERIC_WB55REVX) ||\
-    defined(ARDUINO_GENERIC_WB55RGVX)
 #include "pins_arduino.h"
 #include "lock_resource.h"
 
@@ -88,5 +86,3 @@ WEAK void SystemClock_Config(void)
   hsem_unlock(CFG_HW_RCC_SEMID);
 
 }
-
-#endif /* ARDUINO_GENERIC_* */
