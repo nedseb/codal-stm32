@@ -22,6 +22,7 @@
 
 #include "STM32Cube_FW/hw.h"
 #include "otp.h"
+#include "wiring_time.h"
 
 /* Private variables ---------------------------------------------------------*/
 PLACE_IN_SECTION("MB_MEM1") ALIGN(4) static TL_CmdPacket_t BleCmdBuffer;

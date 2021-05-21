@@ -19,10 +19,12 @@
 
 #include "BLELocalDescriptor.h"
 
-#include <Arduino.h>
+#include <bits/stl_algobase.h>
+
+#include <cstring>
 
 BLELocalDescriptor::BLELocalDescriptor(const char* uuid, const uint8_t value[], int valueSize)
-    : BLELocalAttribute(uuid), _value(value), _valueSize(min(valueSize, 512)), _handle(0x0000)
+    : BLELocalAttribute(uuid), _value(value), _valueSize(std::min(valueSize, 512)), _handle(0x0000)
 {
 }
 

@@ -20,6 +20,8 @@
 #ifndef _GAP_H_
 #define _GAP_H_
 
+#include <string>
+
 #include "BLEDevice.h"
 #include "utility/BLELinkedList.h"
 
@@ -33,9 +35,9 @@ class GAPClass {
     virtual void stopAdvertise();
 
     virtual int scan(bool withDuplicates);
-    virtual int scanForName(String name, bool withDuplicates);
-    virtual int scanForUuid(String uuid, bool withDuplicates);
-    virtual int scanForAddress(String address, bool withDuplicates);
+    virtual int scanForName(std::string name, bool withDuplicates);
+    virtual int scanForUuid(std::string uuid, bool withDuplicates);
+    virtual int scanForAddress(std::string address, bool withDuplicates);
     virtual int stopScan();
     virtual BLEDevice available();
 
@@ -65,10 +67,12 @@ class GAPClass {
     BLEDeviceEventHandler _discoverEventHandler;
     BLELinkedList<BLEDevice*> _discoveredDevices;
 
-    String _scanNameFilter;
-    String _scanUuidFilter;
-    String _scanAddressFilter;
+    std::string _scanNameFilter;
+    std::string _scanUuidFilter;
+    std::string _scanAddressFilter;
     uint8_t _ownBdaddrType;
+
+    bool equalsIgnoreCase(std::string& a, std::string b);
 };
 
 extern GAPClass& GAP;

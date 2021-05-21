@@ -21,61 +21,62 @@
 #define _BLE_REMOTE_CHARACTERISTIC_H_
 
 #include "BLECharacteristic.h"
+
 #include "BLERemoteAttribute.h"
 #include "BLERemoteDescriptor.h"
+
 #include "utility/BLELinkedList.h"
 
 class BLERemoteCharacteristic : public BLERemoteAttribute {
-  public:
-    BLERemoteCharacteristic(const uint8_t uuid[], uint8_t uuidLen, uint16_t connectionHandle, uint16_t startHandle,
-                            uint8_t properties, uint16_t valueHandle);
-    virtual ~BLERemoteCharacteristic();
+public:
+  BLERemoteCharacteristic(const uint8_t uuid[], uint8_t uuidLen, uint16_t connectionHandle, uint16_t startHandle, uint8_t properties, uint16_t valueHandle);
+  virtual ~BLERemoteCharacteristic();
 
-    uint8_t properties() const;
+  uint8_t properties() const;
 
-    const uint8_t* value() const;
-    int valueLength() const;
-    uint8_t operator[](int offset) const;
+  const uint8_t* value() const;
+  int valueLength() const;
+  uint8_t operator[] (int offset) const;
 
-    int writeValue(const uint8_t value[], int length, bool withResponse = true);
-    int writeValue(const char* value, bool withResponse = true);
+  int writeValue(const uint8_t value[], int length, bool withResponse = true);
+  int writeValue(const char* value, bool withResponse = true);
 
-    bool valueUpdated();
-    bool updatedValueRead();
+  bool valueUpdated();
+  bool updatedValueRead();
 
-    bool read();
-    bool writeCccd(uint16_t value);
+  bool read();
+  bool writeCccd(uint16_t value);
 
-    unsigned int descriptorCount() const;
-    BLERemoteDescriptor* descriptor(unsigned int index) const;
+  unsigned int descriptorCount() const;
+  BLERemoteDescriptor* descriptor(unsigned int index) const;
 
-    void setEventHandler(BLECharacteristicEvent event, BLECharacteristicEventHandler eventHandler);
+  void setEventHandler(BLECharacteristicEvent event, BLECharacteristicEventHandler eventHandler);
 
-  protected:
-    friend class ATTClass;
+protected:
+  friend class ATTClass;
 
-    uint16_t startHandle() const;
-    uint16_t valueHandle() const;
+  uint16_t startHandle() const;
+  uint16_t valueHandle() const;
 
-    void addDescriptor(BLERemoteDescriptor* descriptor);
+  void addDescriptor(BLERemoteDescriptor* descriptor);
 
-    void writeValue(BLEDevice device, const uint8_t value[], int length);
+  void writeValue(BLEDevice device, const uint8_t value[], int length);
 
-  private:
-    uint16_t _connectionHandle;
-    uint16_t _startHandle;
-    uint8_t _properties;
-    uint16_t _valueHandle;
+private:
+  uint16_t _connectionHandle;
+  uint16_t _startHandle;
+  uint8_t _properties;
+  uint16_t _valueHandle;
 
-    uint8_t* _value;
-    int _valueLength;
+  uint8_t* _value;
+  int _valueLength;
 
-    bool _valueUpdated;
-    bool _updatedValueRead;
+  bool _valueUpdated;
+  bool _updatedValueRead;
 
-    BLELinkedList<BLERemoteDescriptor*> _descriptors;
+  BLELinkedList<BLERemoteDescriptor*> _descriptors;
 
-    BLECharacteristicEventHandler _valueUpdatedEventHandler;
+  BLECharacteristicEventHandler _valueUpdatedEventHandler;
 };
 
 #endif

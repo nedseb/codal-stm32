@@ -20,10 +20,10 @@
 #ifndef _STM32DUINO_BLE_H_
 #define _STM32DUINO_BLE_H_
 
+#include "local/BLELocalDevice.h"
 #include "BLEProperty.h"
 #include "BLEStringCharacteristic.h"
 #include "BLETypedCharacteristics.h"
-#include "local/BLELocalDevice.h"
 
 #if defined(STM32WBxx)
 #include "utility/HCISharedMemTransport.h"

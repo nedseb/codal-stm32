@@ -42,7 +42,7 @@ class BLEUnsignedCharCharacteristic : public BLETypedCharacteristic<unsigned cha
     BLEUnsignedCharCharacteristic(const char* uuid, unsigned char properties);
 };
 
-class BLEByteCharacteristic : public BLETypedCharacteristic<byte> {
+class BLEByteCharacteristic : public BLETypedCharacteristic<uint8_t> {
   public:
     BLEByteCharacteristic(const char* uuid, unsigned char properties);
 };
@@ -57,7 +57,7 @@ class BLEUnsignedShortCharacteristic : public BLETypedCharacteristic<unsigned sh
     BLEUnsignedShortCharacteristic(const char* uuid, unsigned char properties);
 };
 
-class BLEWordCharacteristic : public BLETypedCharacteristic<word> {
+class BLEWordCharacteristic : public BLETypedCharacteristic<uint16_t> {
   public:
     BLEWordCharacteristic(const char* uuid, unsigned char properties);
 };

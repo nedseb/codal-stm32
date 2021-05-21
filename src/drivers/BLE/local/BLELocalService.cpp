@@ -17,70 +17,73 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "BLELocalService.h"
-
 #include "BLELocalCharacteristic.h"
 
-BLELocalService::BLELocalService(const char* uuid) : BLELocalAttribute(uuid), _startHandle(0x0000), _endHandle(0x0000)
+#include "BLELocalService.h"
+
+BLELocalService::BLELocalService(const char* uuid) :
+  BLELocalAttribute(uuid),
+  _startHandle(0x0000),
+  _endHandle(0x0000)
 {
 }
 
 BLELocalService::~BLELocalService()
 {
-    for (unsigned int i = 0; i < characteristicCount(); i++) {
-        BLELocalCharacteristic* c = characteristic(i);
+  for (unsigned int i = 0; i < characteristicCount(); i++) {
+    BLELocalCharacteristic* c = characteristic(i);
 
-        if (c->release() <= 0) {
-            delete c;
-        }
+    if (c->release() <= 0) {
+      delete c;
     }
+  }
 
-    _characteristics.clear();
+  _characteristics.clear();
 }
 
 enum BLEAttributeType BLELocalService::type() const
 {
-    return BLETypeService;
+  return BLETypeService;
 }
 
 void BLELocalService::addCharacteristic(BLECharacteristic& characteristic)
 {
-    BLELocalCharacteristic* localCharacteristic = characteristic.local();
+  BLELocalCharacteristic* localCharacteristic = characteristic.local();
 
-    if (localCharacteristic) {
-        addCharacteristic(localCharacteristic);
-    }
+  if (localCharacteristic) {
+    addCharacteristic(localCharacteristic);
+  }
 }
 
 void BLELocalService::setHandles(uint16_t start, uint16_t end)
 {
-    _startHandle = start;
-    _endHandle   = end;
+  _startHandle = start;
+  _endHandle = end;
 }
 
 uint16_t BLELocalService::startHandle() const
 {
-    return _startHandle;
+  return _startHandle;
 }
 
 uint16_t BLELocalService::endHandle() const
 {
-    return _endHandle;
+  return _endHandle;
 }
 
 unsigned int BLELocalService::characteristicCount() const
 {
-    return _characteristics.size();
+  return _characteristics.size();
 }
 
 BLELocalCharacteristic* BLELocalService::characteristic(unsigned int index) const
 {
-    return _characteristics.get(index);
+  return _characteristics.get(index);
 }
 
 void BLELocalService::addCharacteristic(BLELocalCharacteristic* characteristic)
 {
-    characteristic->retain();
+  characteristic->retain();
 
-    _characteristics.add(characteristic);
+  _characteristics.add(characteristic);
 }

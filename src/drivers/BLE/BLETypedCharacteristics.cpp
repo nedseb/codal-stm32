@@ -42,7 +42,7 @@ BLEUnsignedCharCharacteristic::BLEUnsignedCharCharacteristic(const char* uuid, u
 }
 
 BLEByteCharacteristic::BLEByteCharacteristic(const char* uuid, unsigned char properties)
-    : BLETypedCharacteristic<byte>(uuid, properties)
+    : BLETypedCharacteristic<uint8_t>(uuid, properties)
 {
 }
 
@@ -57,7 +57,7 @@ BLEUnsignedShortCharacteristic::BLEUnsignedShortCharacteristic(const char* uuid,
 }
 
 BLEWordCharacteristic::BLEWordCharacteristic(const char* uuid, unsigned char properties)
-    : BLETypedCharacteristic<word>(uuid, properties)
+    : BLETypedCharacteristic<uint16_t>(uuid, properties)
 {
 }
 

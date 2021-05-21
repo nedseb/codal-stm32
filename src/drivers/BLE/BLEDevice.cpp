@@ -16,8 +16,9 @@
   License along with this library; if not, write to the Free Software
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
-
 #include "BLEDevice.h"
+
+#include <strings.h>
 
 #include "remote/BLERemoteDevice.h"
 #include "utility/ATT.h"
@@ -63,7 +64,7 @@ bool BLEDevice::disconnect()
     return ATT.disconnect(_addressType, _address);
 }
 
-String BLEDevice::address() const
+std::string BLEDevice::address() const
 {
     char result[18];
     sprintf(result, "%02x:%02x:%02x:%02x:%02x:%02x", _address[5], _address[4], _address[3], _address[2], _address[1],
@@ -116,9 +117,9 @@ int BLEDevice::advertisedServiceUuidCount() const
     return advertisedServiceCount;
 }
 
-String BLEDevice::localName() const
+std::string BLEDevice::localName() const
 {
-    String localName = "";
+    std::string localName = "";
 
     for (int i = 0; i < _eirDataLength;) {
         int eirLength = _eirData[i++];
@@ -139,14 +140,14 @@ String BLEDevice::localName() const
     return localName;
 }
 
-String BLEDevice::advertisedServiceUuid() const
+std::string BLEDevice::advertisedServiceUuid() const
 {
     return advertisedServiceUuid(0);
 }
 
-String BLEDevice::advertisedServiceUuid(int index) const
+std::string BLEDevice::advertisedServiceUuid(int index) const
 {
-    String serviceUuid;
+    std::string serviceUuid;
     int uuidIndex = 0;
 
     for (unsigned char i = 0; i < _eirDataLength;) {
@@ -223,7 +224,7 @@ bool BLEDevice::operator!=(const BLEDevice& rhs) const
     return ((_addressType != rhs._addressType) || memcmp(_address, rhs._address, sizeof(_address)) != 0);
 }
 
-String BLEDevice::deviceName()
+std::string BLEDevice::deviceName()
 {
     BLERemoteDevice* device = ATT.device(_addressType, _address);
 
@@ -236,7 +237,7 @@ String BLEDevice::deviceName()
             if (deviceNameCharacteristic) {
                 deviceNameCharacteristic.read();
 
-                String result;
+                std::string result;
                 int valueLength   = deviceNameCharacteristic.valueLength();
                 const char* value = (const char*)deviceNameCharacteristic.value();
 
@@ -270,7 +271,7 @@ int BLEDevice::appearance()
                 uint16_t result = 0;
 
                 memcpy(&result, appearanceCharacteristic.value(),
-                       min((int)sizeof(result), appearanceCharacteristic.valueLength()));
+                       std::min((int)sizeof(result), appearanceCharacteristic.valueLength()));
 
                 return result;
             }

@@ -23,6 +23,7 @@
 #include "utility/GAP.h"
 #include "utility/GATT.h"
 #include "utility/L2CAPSignaling.h"
+#include "wiring_time.h"
 
 BLELocalDevice::BLELocalDevice(HCITransportInterface* HCITransport, uint8_t ownBdaddrType)
     : _HCITransport(HCITransport), _ownBdaddrType(ownBdaddrType)
@@ -111,7 +112,7 @@ bool BLELocalDevice::disconnect()
     return ATT.disconnect();
 }
 
-String BLELocalDevice::address() const
+std::string BLELocalDevice::address() const
 {
     uint8_t addr[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
     HCI.readBdAddr(addr);
@@ -220,17 +221,17 @@ int BLELocalDevice::scan(bool withDuplicates)
     return GAP.scan(withDuplicates);
 }
 
-int BLELocalDevice::scanForName(String name, bool withDuplicates)
+int BLELocalDevice::scanForName(std::string name, bool withDuplicates)
 {
     return GAP.scanForName(name, withDuplicates);
 }
 
-int BLELocalDevice::scanForUuid(String uuid, bool withDuplicates)
+int BLELocalDevice::scanForUuid(std::string uuid, bool withDuplicates)
 {
     return GAP.scanForUuid(uuid, withDuplicates);
 }
 
-int BLELocalDevice::scanForAddress(String address, bool withDuplicates)
+int BLELocalDevice::scanForAddress(std::string address, bool withDuplicates)
 {
     return GAP.scanForAddress(address, withDuplicates);
 }
@@ -289,12 +290,12 @@ void BLELocalDevice::setTimeout(unsigned long timeout)
     ATT.setTimeout(timeout);
 }
 
-void BLELocalDevice::debug(Stream& stream)
-{
-    HCI.debug(stream);
-}
+// void BLELocalDevice::debug(Stream& stream)
+// {
+//     HCI.debug(stream);
+// }
 
-void BLELocalDevice::noDebug()
-{
-    HCI.noDebug();
-}
+// void BLELocalDevice::noDebug()
+// {
+//     HCI.noDebug();
+// }

@@ -101,7 +101,7 @@ int GAPClass::scan(bool withDuplicates)
     return 1;
 }
 
-int GAPClass::scanForName(String name, bool withDuplicates)
+int GAPClass::scanForName(std::string name, bool withDuplicates)
 {
     _scanNameFilter    = name;
     _scanUuidFilter    = "";
@@ -110,7 +110,7 @@ int GAPClass::scanForName(String name, bool withDuplicates)
     return scan(withDuplicates);
 }
 
-int GAPClass::scanForUuid(String uuid, bool withDuplicates)
+int GAPClass::scanForUuid(std::string uuid, bool withDuplicates)
 {
     _scanNameFilter    = "";
     _scanUuidFilter    = uuid;
@@ -119,7 +119,7 @@ int GAPClass::scanForUuid(String uuid, bool withDuplicates)
     return scan(withDuplicates);
 }
 
-int GAPClass::scanForAddress(String address, bool withDuplicates)
+int GAPClass::scanForAddress(std::string address, bool withDuplicates)
 {
     _scanNameFilter    = "";
     _scanUuidFilter    = "";
@@ -257,14 +257,20 @@ void GAPClass::handleLeAdvertisingReport(uint8_t type, uint8_t addressType, uint
 
 bool GAPClass::matchesScanFilter(const BLEDevice& device)
 {
-    if (_scanAddressFilter.length() > 0 && !(_scanAddressFilter.equalsIgnoreCase(device.address()))) {
-        return false;  // drop doesn't match
+    if (_scanAddressFilter.length() > 0 &&
+        !equalsIgnoreCase(_scanAddressFilter,
+                          device.address())) { /*!(_scanAddressFilter.equalsIgnoreCase(device.address()))*/
+        return false;                          // drop doesn't match
     }
     else if (_scanNameFilter.length() > 0 && _scanNameFilter != device.localName()) {
         return false;  // drop doesn't match
     }
-    else if (_scanUuidFilter.length() > 0 && !(_scanUuidFilter.equalsIgnoreCase(device.advertisedServiceUuid()))) {
-        return false;  // drop doesn't match
+    else if (
+        _scanUuidFilter.length() > 0 &&
+        !equalsIgnoreCase(
+            _scanUuidFilter,
+            device.advertisedServiceUuid())) { /*!(_scanUuidFilter.equalsIgnoreCase(device.advertisedServiceUuid()))*/
+        return false;                          // drop doesn't match
     }
 
     return true;
@@ -273,6 +279,21 @@ bool GAPClass::matchesScanFilter(const BLEDevice& device)
 void GAPClass::setOwnBdaddrType(uint8_t ownBdaddrType)
 {
     _ownBdaddrType = ownBdaddrType;
+}
+
+bool GAPClass::equalsIgnoreCase(std::string& a, std::string b)
+{
+    if (a.length() != b.length()) {
+        return false;
+    }
+
+    for (size_t i = 0; i < a.length(); ++i) {
+        if (toupper(a[i]) != toupper(b[i])) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 #if !defined(FAKE_GAP)

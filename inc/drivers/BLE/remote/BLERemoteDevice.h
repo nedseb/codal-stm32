@@ -20,23 +20,24 @@
 #ifndef _BLE_REMOTE_DEVICE_H_
 #define _BLE_REMOTE_DEVICE_H_
 
-#include "BLERemoteService.h"
 #include "utility/BLELinkedList.h"
 
+#include "BLERemoteService.h"
+
 class BLERemoteDevice /*: public BLEDevice*/ {
-  public:
-    BLERemoteDevice();
-    virtual ~BLERemoteDevice();
+public:
+  BLERemoteDevice();
+  virtual ~BLERemoteDevice();
 
-    void addService(BLERemoteService* service);
+  void addService(BLERemoteService* service);
 
-    unsigned int serviceCount() const;
-    BLERemoteService* service(unsigned int index) const;
+  unsigned int serviceCount() const;
+  BLERemoteService* service(unsigned int index) const;
 
-    void clearServices();
+  void clearServices();
 
-  private:
-    BLELinkedList<BLERemoteService*> _services;
+private:
+  BLELinkedList<BLERemoteService*> _services;
 };
 
 #endif

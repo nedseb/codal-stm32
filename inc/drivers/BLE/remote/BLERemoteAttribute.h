@@ -20,7 +20,9 @@
 #ifndef _BLE_REMOTE_ATTRIBUTE_H_
 #define _BLE_REMOTE_ATTRIBUTE_H_
 
-#include <Arduino.h>
+#include <inttypes.h>
+
+#include <string>
 
 class BLERemoteAttribute {
   public:
@@ -33,7 +35,7 @@ class BLERemoteAttribute {
     int release();
 
   private:
-    String _uuid;
+    std::string _uuid;
     int _refCount;
 };
 

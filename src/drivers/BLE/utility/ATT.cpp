@@ -19,7 +19,7 @@
 
 #include "ATT.h"
 
-#include <Arduino.h>
+#include <strings.h>
 
 #include "BLEProperty.h"
 #include "GATT.h"
@@ -30,6 +30,7 @@
 #include "local/BLELocalService.h"
 #include "remote/BLERemoteDevice.h"
 #include "remote/BLERemoteService.h"
+#include "wiring_time.h"
 
 #define ATT_OP_ERROR              0x01
 #define ATT_OP_MTU_REQ            0x02
@@ -521,7 +522,7 @@ bool ATTClass::handleNotify(uint16_t handle, const uint8_t* value, int length)
         memcpy(&notification[1], &handle, sizeof(handle));
         notificationLength += sizeof(handle);
 
-        length = min((uint16_t)(_peers[i].mtu - notificationLength), (uint16_t)length);
+        length = std::min((uint16_t)(_peers[i].mtu - notificationLength), (uint16_t)length);
         memcpy(&notification[notificationLength], value, length);
         notificationLength += length;
 
@@ -551,7 +552,7 @@ bool ATTClass::handleInd(uint16_t handle, const uint8_t* value, int length)
         memcpy(&indication[1], &handle, sizeof(handle));
         indicationLength += sizeof(handle);
 
-        length = min((uint16_t)(_peers[i].mtu - indicationLength), (uint16_t)length);
+        length = std::min((uint16_t)(_peers[i].mtu - indicationLength), (uint16_t)length);
         memcpy(&indication[indicationLength], value, length);
         indicationLength += length;
 
@@ -977,7 +978,7 @@ void ATTClass::readOrReadBlobReq(uint16_t connectionHandle, uint16_t mtu, uint8_
                 return;
             }
 
-            valueLength = min(mtu - responseLength, valueLength - offset);
+            valueLength = std::min(mtu - responseLength, valueLength - offset);
 
             for (int i = 0; i < ATT_MAX_PEERS; i++) {
                 if (_peers[i].connectionHandle == connectionHandle) {
@@ -998,7 +999,7 @@ void ATTClass::readOrReadBlobReq(uint16_t connectionHandle, uint16_t mtu, uint8_
             return;
         }
 
-        valueLength = min(mtu - responseLength, valueLength - offset);
+        valueLength = std::min(mtu - responseLength, valueLength - offset);
 
         memcpy(&response[responseLength], descriptor->value() + offset, valueLength);
         responseLength += valueLength;
@@ -1093,7 +1094,7 @@ void ATTClass::readByTypeReq(uint16_t connectionHandle, uint16_t mtu, uint8_t dl
                 responseLength += sizeof(handle);
 
                 // add the value
-                int valueSize = min((uint16_t)(mtu - responseLength), (uint16_t)descriptor->valueSize());
+                int valueSize = std::min((uint16_t)(mtu - responseLength), (uint16_t)descriptor->valueSize());
                 memcpy(&response[responseLength], descriptor->value(), valueSize);
                 responseLength += valueSize;
 
@@ -1111,7 +1112,7 @@ void ATTClass::readByTypeReq(uint16_t connectionHandle, uint16_t mtu, uint8_t dl
             responseLength += sizeof(handle);
 
             // add the value
-            int valueLength = min((uint16_t)(mtu - responseLength), (uint16_t)characteristic->valueLength());
+            int valueLength = std::min((uint16_t)(mtu - responseLength), (uint16_t)characteristic->valueLength());
             memcpy(&response[responseLength], characteristic->value(), valueLength);
             responseLength += valueLength;
 

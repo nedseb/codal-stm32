@@ -20,6 +20,8 @@
 #ifndef _BLE_LOCAL_DEVICE_H_
 #define _BLE_LOCAL_DEVICE_H_
 
+#include <string>
+
 #include "BLEAdvertisingData.h"
 #include "BLEDevice.h"
 #include "BLEService.h"
@@ -44,7 +46,7 @@ class BLELocalDevice {
     virtual bool connected() const;
     virtual bool disconnect();
 
-    virtual String address() const;
+    virtual std::string address() const;
 
     virtual int rssi();
 
@@ -68,9 +70,9 @@ class BLELocalDevice {
     virtual void stopAdvertise();
 
     virtual int scan(bool withDuplicates = false);
-    virtual int scanForName(String name, bool withDuplicates = false);
-    virtual int scanForUuid(String uuid, bool withDuplicates = false);
-    virtual int scanForAddress(String address, bool withDuplicates = false);
+    virtual int scanForName(std::string name, bool withDuplicates = false);
+    virtual int scanForUuid(std::string uuid, bool withDuplicates = false);
+    virtual int scanForAddress(std::string address, bool withDuplicates = false);
     virtual int stopScan();
 
     virtual BLEDevice central();
@@ -85,8 +87,8 @@ class BLELocalDevice {
 
     virtual void setTimeout(unsigned long timeout);
 
-    virtual void debug(Stream& stream);
-    virtual void noDebug();
+    // virtual void debug(std::string& stream);
+    // virtual void noDebug();
 
   protected:
     virtual BLEAdvertisingData& getAdvertisingData();

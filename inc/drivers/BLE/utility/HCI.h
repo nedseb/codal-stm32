@@ -66,8 +66,8 @@ class HCIClass {
 
     virtual int disconnect(uint16_t handle);
 
-    virtual void debug(Stream& stream);
-    virtual void noDebug();
+    // virtual void debug(Stream& stream);
+    // virtual void noDebug();
 
     void setTransport(HCITransportInterface* HCITransport);
 
@@ -80,7 +80,7 @@ class HCIClass {
 
     virtual void dumpPkt(const char* prefix, uint8_t plen, uint8_t pdata[]);
 
-    Stream* _debug;
+    // Stream* _debug;
 
     int _recvIndex;
     uint8_t _recvBuffer[3 + 255];
