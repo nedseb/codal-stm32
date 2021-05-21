@@ -22,20 +22,19 @@
 
 #include <Arduino.h>
 
-class BLERemoteAttribute
-{
-public:
-  BLERemoteAttribute(const uint8_t uuid[], uint8_t uuidLen);
-  virtual ~BLERemoteAttribute();
+class BLERemoteAttribute {
+  public:
+    BLERemoteAttribute(const uint8_t uuid[], uint8_t uuidLen);
+    virtual ~BLERemoteAttribute();
 
-  const char* uuid() const;
+    const char* uuid() const;
 
-  int retain();
-  int release();
+    int retain();
+    int release();
 
-private:
-  String _uuid;
-  int _refCount;
+  private:
+    String _uuid;
+    int _refCount;
 };
 
 #endif

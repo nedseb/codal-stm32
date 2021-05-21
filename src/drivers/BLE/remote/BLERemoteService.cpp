@@ -19,49 +19,47 @@
 
 #include "BLERemoteService.h"
 
-BLERemoteService::BLERemoteService(const uint8_t uuid[], uint8_t uuidLen, uint16_t startHandle, uint16_t endHandle) :
-  BLERemoteAttribute(uuid, uuidLen),
-  _startHandle(startHandle),
-  _endHandle(endHandle)
+BLERemoteService::BLERemoteService(const uint8_t uuid[], uint8_t uuidLen, uint16_t startHandle, uint16_t endHandle)
+    : BLERemoteAttribute(uuid, uuidLen), _startHandle(startHandle), _endHandle(endHandle)
 {
 }
 
 BLERemoteService::~BLERemoteService()
 {
-  for (unsigned int i = 0; i < characteristicCount(); i++) {
-    BLERemoteCharacteristic* c = characteristic(i);
+    for (unsigned int i = 0; i < characteristicCount(); i++) {
+        BLERemoteCharacteristic* c = characteristic(i);
 
-    if (c->release() <= 0) {
-      delete c;
+        if (c->release() <= 0) {
+            delete c;
+        }
     }
-  }
 
-  _characteristics.clear();
+    _characteristics.clear();
 }
 
 uint16_t BLERemoteService::startHandle() const
 {
-  return _startHandle;
+    return _startHandle;
 }
 
 uint16_t BLERemoteService::endHandle() const
 {
-  return _endHandle;
+    return _endHandle;
 }
 
 unsigned int BLERemoteService::characteristicCount() const
 {
-  return _characteristics.size();
+    return _characteristics.size();
 }
 
 BLERemoteCharacteristic* BLERemoteService::characteristic(unsigned int index) const
 {
-  return _characteristics.get(index);
+    return _characteristics.get(index);
 }
 
 void BLERemoteService::addCharacteristic(BLERemoteCharacteristic* characteristic)
 {
-  characteristic-> retain();
+    characteristic->retain();
 
-  _characteristics.add(characteristic);
+    _characteristics.add(characteristic);
 }

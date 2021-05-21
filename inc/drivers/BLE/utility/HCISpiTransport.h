@@ -23,21 +23,17 @@
 #include "HCITransport.h"
 #include "SPI.h"
 
-typedef enum BLEChip_s {
-  SPBTLE_RF,
-  SPBTLE_1S,
-  BLUENRG_M2SP,
-  BLUENRG_M0
-} BLEChip_t;
+typedef enum BLEChip_s { SPBTLE_RF, SPBTLE_1S, BLUENRG_M2SP, BLUENRG_M0 } BLEChip_t;
 
 #ifndef BLE_SPI_BYTE_ORDER
-  #define BLE_SPI_BYTE_ORDER  MSBFIRST
+#define BLE_SPI_BYTE_ORDER MSBFIRST
 #endif
 #define BLE_MODULE_SPI_BUFFER_SIZE 128
 
 class HCISpiTransportClass : public HCITransportInterface {
   public:
-    HCISpiTransportClass(SPIClass &spi, BLEChip_t ble_chip, uint8_t cs_pin, uint8_t spi_irq, uint8_t ble_rst, uint32_t frequency, uint8_t spi_mode);
+    HCISpiTransportClass(SPIClass& spi, BLEChip_t ble_chip, uint8_t cs_pin, uint8_t spi_irq, uint8_t ble_rst,
+                         uint32_t frequency, uint8_t spi_mode);
     virtual ~HCISpiTransportClass();
 
     virtual int begin();
@@ -49,7 +45,7 @@ class HCISpiTransportClass : public HCITransportInterface {
     virtual int peek();
     virtual int read();
 
-    virtual size_t write(const uint8_t *data, size_t length);
+    virtual size_t write(const uint8_t* data, size_t length);
 
   private:
     void wait_for_blue_initialize();
@@ -61,7 +57,7 @@ class HCISpiTransportClass : public HCITransportInterface {
     void aci_gap_init();
     void wait_for_aci_read_config_parameter();
     void aci_read_config_parameter();
-    SPIClass *_spi;
+    SPIClass* _spi;
     SPISettings _spiSettings;
     BLEChip_t _ble_chip;
     uint8_t _cs_pin;

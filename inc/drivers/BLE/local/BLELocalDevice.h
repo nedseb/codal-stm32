@@ -20,10 +20,10 @@
 #ifndef _BLE_LOCAL_DEVICE_H_
 #define _BLE_LOCAL_DEVICE_H_
 
-#include "utility/HCI.h"
+#include "BLEAdvertisingData.h"
 #include "BLEDevice.h"
 #include "BLEService.h"
-#include "BLEAdvertisingData.h"
+#include "utility/HCI.h"
 
 #define PUBLIC_ADDR                 (0)
 #define STATIC_RANDOM_ADDR          (1)
@@ -31,71 +31,72 @@
 #define NON_RESOLVABLE_PRIVATE_ADDR (3)
 
 class BLELocalDevice {
-public:
-  BLELocalDevice(HCITransportInterface *HCITransport, uint8_t ownBdaddrType = STATIC_RANDOM_ADDR);
-  virtual ~BLELocalDevice();
+  public:
+    BLELocalDevice(HCITransportInterface* HCITransport, uint8_t ownBdaddrType = STATIC_RANDOM_ADDR);
+    virtual ~BLELocalDevice();
 
-  virtual int begin();
-  virtual void end();
+    virtual int begin();
+    virtual void end();
 
-  virtual void poll();
-  virtual void poll(unsigned long timeout);
+    virtual void poll();
+    virtual void poll(unsigned long timeout);
 
-  virtual bool connected() const;
-  virtual bool disconnect();
+    virtual bool connected() const;
+    virtual bool disconnect();
 
-  virtual String address() const;
+    virtual String address() const;
 
-  virtual int rssi();
+    virtual int rssi();
 
-  virtual bool setAdvertisedServiceUuid(const char* advertisedServiceUuid);
-  virtual bool setAdvertisedService(const BLEService& service);
-  virtual bool setAdvertisedServiceData(uint16_t uuid, const uint8_t data[], int length);
-  virtual bool setManufacturerData(const uint8_t manufacturerData[], int manufacturerDataLength);
-  virtual bool setManufacturerData(const uint16_t companyId, const uint8_t manufacturerData[], int manufacturerDataLength);
-  virtual bool setLocalName(const char *localName);
+    virtual bool setAdvertisedServiceUuid(const char* advertisedServiceUuid);
+    virtual bool setAdvertisedService(const BLEService& service);
+    virtual bool setAdvertisedServiceData(uint16_t uuid, const uint8_t data[], int length);
+    virtual bool setManufacturerData(const uint8_t manufacturerData[], int manufacturerDataLength);
+    virtual bool setManufacturerData(const uint16_t companyId, const uint8_t manufacturerData[],
+                                     int manufacturerDataLength);
+    virtual bool setLocalName(const char* localName);
 
-  virtual void setAdvertisingData(BLEAdvertisingData& advertisingData);
-  virtual void setScanResponseData(BLEAdvertisingData& scanResponseData);
+    virtual void setAdvertisingData(BLEAdvertisingData& advertisingData);
+    virtual void setScanResponseData(BLEAdvertisingData& scanResponseData);
 
-  virtual void setDeviceName(const char* deviceName);
-  virtual void setAppearance(uint16_t appearance);
+    virtual void setDeviceName(const char* deviceName);
+    virtual void setAppearance(uint16_t appearance);
 
-  virtual void addService(BLEService& service);
+    virtual void addService(BLEService& service);
 
-  virtual int advertise();
-  virtual void stopAdvertise();
+    virtual int advertise();
+    virtual void stopAdvertise();
 
-  virtual int scan(bool withDuplicates = false);
-  virtual int scanForName(String name, bool withDuplicates = false);
-  virtual int scanForUuid(String uuid, bool withDuplicates = false);
-  virtual int scanForAddress(String address, bool withDuplicates = false);
-  virtual int stopScan();
+    virtual int scan(bool withDuplicates = false);
+    virtual int scanForName(String name, bool withDuplicates = false);
+    virtual int scanForUuid(String uuid, bool withDuplicates = false);
+    virtual int scanForAddress(String address, bool withDuplicates = false);
+    virtual int stopScan();
 
-  virtual BLEDevice central();
-  virtual BLEDevice available();
+    virtual BLEDevice central();
+    virtual BLEDevice available();
 
-  virtual void setAdvertisingInterval(uint16_t advertisingInterval);
-  virtual void setConnectionInterval(uint16_t minimumConnectionInterval, uint16_t maximumConnectionInterval);
-  virtual void setSupervisionTimeout(uint16_t supervisionTimeout);
-  virtual void setConnectable(bool connectable); 
+    virtual void setAdvertisingInterval(uint16_t advertisingInterval);
+    virtual void setConnectionInterval(uint16_t minimumConnectionInterval, uint16_t maximumConnectionInterval);
+    virtual void setSupervisionTimeout(uint16_t supervisionTimeout);
+    virtual void setConnectable(bool connectable);
 
-  virtual void setEventHandler(BLEDeviceEvent event, BLEDeviceEventHandler eventHandler);
+    virtual void setEventHandler(BLEDeviceEvent event, BLEDeviceEventHandler eventHandler);
 
-  virtual void setTimeout(unsigned long timeout);
+    virtual void setTimeout(unsigned long timeout);
 
-  virtual void debug(Stream& stream);
-  virtual void noDebug();
-  
-protected:
-  virtual BLEAdvertisingData& getAdvertisingData();
-  virtual BLEAdvertisingData& getScanResponseData();
+    virtual void debug(Stream& stream);
+    virtual void noDebug();
 
-private:
-  HCITransportInterface *_HCITransport;
-  BLEAdvertisingData _advertisingData;
-  BLEAdvertisingData _scanResponseData;
-  uint8_t _ownBdaddrType;
+  protected:
+    virtual BLEAdvertisingData& getAdvertisingData();
+    virtual BLEAdvertisingData& getScanResponseData();
+
+  private:
+    HCITransportInterface* _HCITransport;
+    BLEAdvertisingData _advertisingData;
+    BLEAdvertisingData _scanResponseData;
+    uint8_t _ownBdaddrType;
 };
 
 extern BLELocalDevice& BLE;

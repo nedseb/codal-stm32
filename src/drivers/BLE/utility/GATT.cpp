@@ -17,159 +17,160 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
+#include "GATT.h"
+
 #include <Arduino.h>
 
+#include "BLEProperty.h"
 #include "local/BLELocalCharacteristic.h"
 #include "local/BLELocalDescriptor.h"
 #include "local/BLELocalService.h"
 
-#include "BLEProperty.h"
-
-#include "GATT.h"
-
-GATTClass::GATTClass() :
-  _genericAccessService(NULL),
-  _deviceNameCharacteristic(NULL),
-  _appearanceCharacteristic(NULL),
-  _genericAttributeService(NULL),
-  _servicesChangedCharacteristic(NULL)
+GATTClass::GATTClass()
+    : _genericAccessService(NULL),
+      _deviceNameCharacteristic(NULL),
+      _appearanceCharacteristic(NULL),
+      _genericAttributeService(NULL),
+      _servicesChangedCharacteristic(NULL)
 {
 }
 
 GATTClass::~GATTClass()
 {
-  clearAttributes();
+    clearAttributes();
 }
 
 void GATTClass::begin()
 {
-  _genericAccessService = new BLELocalService("1800");
-  _deviceNameCharacteristic = new BLELocalCharacteristic("2a00", BLERead, 20);
-  _appearanceCharacteristic = new BLELocalCharacteristic("2a01", BLERead, 2);
-  _genericAttributeService = new BLELocalService("1801");
-  _servicesChangedCharacteristic = new BLELocalCharacteristic("2a05", BLEIndicate, 4);
+    _genericAccessService          = new BLELocalService("1800");
+    _deviceNameCharacteristic      = new BLELocalCharacteristic("2a00", BLERead, 20);
+    _appearanceCharacteristic      = new BLELocalCharacteristic("2a01", BLERead, 2);
+    _genericAttributeService       = new BLELocalService("1801");
+    _servicesChangedCharacteristic = new BLELocalCharacteristic("2a05", BLEIndicate, 4);
 
-  _genericAccessService->retain();
-  _deviceNameCharacteristic->retain();
-  _appearanceCharacteristic->retain();
-  _genericAttributeService->retain();
-  _servicesChangedCharacteristic->retain();
+    _genericAccessService->retain();
+    _deviceNameCharacteristic->retain();
+    _appearanceCharacteristic->retain();
+    _genericAttributeService->retain();
+    _servicesChangedCharacteristic->retain();
 
-  _genericAccessService->addCharacteristic(_deviceNameCharacteristic);
-  _genericAccessService->addCharacteristic(_appearanceCharacteristic);
-  _genericAttributeService->addCharacteristic(_servicesChangedCharacteristic);
+    _genericAccessService->addCharacteristic(_deviceNameCharacteristic);
+    _genericAccessService->addCharacteristic(_appearanceCharacteristic);
+    _genericAttributeService->addCharacteristic(_servicesChangedCharacteristic);
 
-  setDeviceName("Arduino");
-  setAppearance(0x000);
+    setDeviceName("Arduino");
+    setAppearance(0x000);
 
-  clearAttributes();
+    clearAttributes();
 
-  addService(_genericAccessService);
-  addService(_genericAttributeService);
+    addService(_genericAccessService);
+    addService(_genericAttributeService);
 }
 
 void GATTClass::end()
 {
-  _attributes.clear();
+    _attributes.clear();
 }
 
 void GATTClass::setDeviceName(const char* deviceName)
 {
-  _deviceNameCharacteristic->writeValue(deviceName);
+    _deviceNameCharacteristic->writeValue(deviceName);
 }
 
 void GATTClass::setAppearance(uint16_t appearance)
 {
-  _appearanceCharacteristic->writeValue((uint8_t*)&appearance, sizeof(appearance));
+    _appearanceCharacteristic->writeValue((uint8_t*)&appearance, sizeof(appearance));
 }
 
 void GATTClass::addService(BLEService& service)
 {
-  BLELocalService* localService = service.local();
+    BLELocalService* localService = service.local();
 
-  if (localService) {
-    addService(localService);
-  }
+    if (localService) {
+        addService(localService);
+    }
 }
 
 unsigned int GATTClass::attributeCount() const
 {
-  return _attributes.size();
+    return _attributes.size();
 }
 
 BLELocalAttribute* GATTClass::attribute(unsigned int index) const
 {
-  return _attributes.get(index);
+    return _attributes.get(index);
 }
 
 uint16_t GATTClass::serviceUuidForCharacteristic(BLELocalCharacteristic* characteristic) const
 {
-  uint16_t serviceUuid = 0x0000;
+    uint16_t serviceUuid = 0x0000;
 
-  BLELocalService* lastService = NULL;
+    BLELocalService* lastService = NULL;
 
-  for (unsigned int i = 0; i < attributeCount(); i++) {
-    BLELocalAttribute* a = attribute(i);
-    uint16_t attributeType = a->type();
+    for (unsigned int i = 0; i < attributeCount(); i++) {
+        BLELocalAttribute* a   = attribute(i);
+        uint16_t attributeType = a->type();
 
-    if (attributeType == BLETypeService) {
-      lastService = (BLELocalService*)a;
-    } else if (a == characteristic) {
-      break;
+        if (attributeType == BLETypeService) {
+            lastService = (BLELocalService*)a;
+        }
+        else if (a == characteristic) {
+            break;
+        }
     }
-  }
 
-  if (lastService) {
-    if (lastService->uuidLength() == 2) {
-      serviceUuid = *(uint16_t*)(lastService->uuidData());
-    } else {
-      serviceUuid = *(uint16_t*)(lastService->uuidData() + 10);
+    if (lastService) {
+        if (lastService->uuidLength() == 2) {
+            serviceUuid = *(uint16_t*)(lastService->uuidData());
+        }
+        else {
+            serviceUuid = *(uint16_t*)(lastService->uuidData() + 10);
+        }
     }
-  }
 
-  return serviceUuid;
+    return serviceUuid;
 }
 
 void GATTClass::addService(BLELocalService* service)
 {
-  service->retain();
-  _attributes.add(service);
+    service->retain();
+    _attributes.add(service);
 
-  uint16_t startHandle = attributeCount();
+    uint16_t startHandle = attributeCount();
 
-  for (unsigned int i = 0; i < service->characteristicCount(); i++) {
-    BLELocalCharacteristic* characteristic = service->characteristic(i);
+    for (unsigned int i = 0; i < service->characteristicCount(); i++) {
+        BLELocalCharacteristic* characteristic = service->characteristic(i);
 
-    characteristic->retain();
-    _attributes.add(characteristic);
-    characteristic->setHandle(attributeCount());
-    
-    // add the characteristic again to make space of the characteristic value handle
-    _attributes.add(characteristic);
+        characteristic->retain();
+        _attributes.add(characteristic);
+        characteristic->setHandle(attributeCount());
 
-    for (unsigned int j = 0; j < characteristic->descriptorCount(); j++) {
-      BLELocalDescriptor* descriptor = characteristic->descriptor(j);
+        // add the characteristic again to make space of the characteristic value handle
+        _attributes.add(characteristic);
 
-      descriptor->retain();
-      _attributes.add(descriptor);
-      descriptor->setHandle(attributeCount());
+        for (unsigned int j = 0; j < characteristic->descriptorCount(); j++) {
+            BLELocalDescriptor* descriptor = characteristic->descriptor(j);
+
+            descriptor->retain();
+            _attributes.add(descriptor);
+            descriptor->setHandle(attributeCount());
+        }
     }
-  }
 
-  service->setHandles(startHandle, attributeCount());
+    service->setHandles(startHandle, attributeCount());
 }
 
 void GATTClass::clearAttributes()
 {
-  for (unsigned int i = 0; i < attributeCount(); i++) {
-    BLELocalAttribute* a = attribute(i);
+    for (unsigned int i = 0; i < attributeCount(); i++) {
+        BLELocalAttribute* a = attribute(i);
 
-    if (a->release() <= 0) {
-      delete a;
+        if (a->release() <= 0) {
+            delete a;
+        }
     }
-  }
 
-  _attributes.clear();
+    _attributes.clear();
 }
 
 #if !defined(FAKE_GATT)

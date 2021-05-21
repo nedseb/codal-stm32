@@ -24,16 +24,15 @@
 
 #include "BLECharacteristic.h"
 
-class BLEStringCharacteristic : public BLECharacteristic
-{
-public:
-  BLEStringCharacteristic(const char* uuid, unsigned char properties, int valueSize);
+class BLEStringCharacteristic : public BLECharacteristic {
+  public:
+    BLEStringCharacteristic(const char* uuid, unsigned char properties, int valueSize);
 
-  int writeValue(const String& value);
-  int setValue(const String& value) { return writeValue(value); }
-  String value(void);
+    int writeValue(const String& value);
+    int setValue(const String& value) { return writeValue(value); }
+    String value(void);
 
-private:
+  private:
 };
 
 #endif
