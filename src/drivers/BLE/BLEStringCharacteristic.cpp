@@ -24,14 +24,14 @@ BLEStringCharacteristic::BLEStringCharacteristic(const char* uuid, unsigned char
 {
 }
 
-int BLEStringCharacteristic::writeValue(const String& value)
+int BLEStringCharacteristic::writeValue(const std::string& value)
 {
     return BLECharacteristic::writeValue(value.c_str());
 }
 
-String BLEStringCharacteristic::value(void)
+std::string BLEStringCharacteristic::value(void)
 {
-    String str;
+    std::string str;
     int length         = BLECharacteristic::valueLength();
     const uint8_t* val = BLECharacteristic::value();
 

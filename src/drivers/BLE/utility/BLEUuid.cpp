@@ -22,6 +22,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <cstdio>
+
 BLEUuid::BLEUuid(const char* str) : _str(str)
 {
     char temp[] = {0, 0, 0};
@@ -74,8 +76,8 @@ const char* BLEUuid::uuidToString(const uint8_t* data, uint8_t length)
     for (int i = length - 1; i >= 0; i--) {
         uint8_t b = data[i];
 
-        utoa(b >> 4, c++, 16);
-        utoa(b & 0x0f, c++, 16);
+        sprintf(c++, "%x", b >> 4);    // utoa(b >> 4, c++, 16);
+        sprintf(c++, "%x", b & 0x0f);  // utoa(b & 0x0f, c++, 16);
 
         if (i == 6 || i == 8 || i == 10 || i == 12) {
             *c++ = '-';

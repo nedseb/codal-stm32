@@ -21,38 +21,40 @@
 #define _BLE_LOCAL_SERVICE_H_
 
 #include "BLECharacteristic.h"
+
 #include "BLELocalAttribute.h"
+
 #include "utility/BLELinkedList.h"
 
 class BLELocalCharacteristic;
 
 class BLELocalService : public BLELocalAttribute {
-  public:
-    BLELocalService(const char* uuid);
-    virtual ~BLELocalService();
+public:
+  BLELocalService(const char* uuid);
+  virtual ~BLELocalService();
 
-    virtual enum BLEAttributeType type() const;
+  virtual enum BLEAttributeType type() const;
 
-    void addCharacteristic(BLECharacteristic& characteristic);
+  void addCharacteristic(BLECharacteristic& characteristic);
 
-  protected:
-    friend class ATTClass;
-    friend class GATTClass;
+protected:
+  friend class ATTClass;
+  friend class GATTClass;
 
-    void setHandles(uint16_t start, uint16_t end);
-    uint16_t startHandle() const;
-    uint16_t endHandle() const;
+  void setHandles(uint16_t start, uint16_t end);
+  uint16_t startHandle() const;
+  uint16_t endHandle() const;
 
-    unsigned int characteristicCount() const;
-    BLELocalCharacteristic* characteristic(unsigned int index) const;
+  unsigned int characteristicCount() const;
+  BLELocalCharacteristic* characteristic(unsigned int index) const;
 
-    void addCharacteristic(BLELocalCharacteristic* characteristic);
+  void addCharacteristic(BLELocalCharacteristic* characteristic);
 
-  private:
-    uint16_t _startHandle;
-    uint16_t _endHandle;
+private:
+  uint16_t _startHandle;
+  uint16_t _endHandle;
 
-    BLELinkedList<BLELocalCharacteristic*> _characteristics;
+  BLELinkedList<BLELocalCharacteristic*> _characteristics;
 };
 
 #endif

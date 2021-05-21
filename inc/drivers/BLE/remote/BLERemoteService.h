@@ -20,6 +20,8 @@
 #ifndef _BLE_REMOTE_SERVICE_H_
 #define _BLE_REMOTE_SERVICE_H_
 
+#include <string>
+
 #include "BLERemoteAttribute.h"
 #include "BLERemoteCharacteristic.h"
 #include "utility/BLELinkedList.h"
@@ -44,7 +46,7 @@ class BLERemoteService : public BLERemoteAttribute {
     uint16_t _startHandle;
     uint16_t _endHandle;
 
-    String _uuid;
+    std::string _uuid;
 
     BLELinkedList<BLERemoteCharacteristic*> _characteristics;
 };

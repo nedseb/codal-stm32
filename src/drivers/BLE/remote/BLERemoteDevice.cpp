@@ -19,39 +19,41 @@
 
 #include "BLERemoteDevice.h"
 
-BLERemoteDevice::BLERemoteDevice() {}
+BLERemoteDevice::BLERemoteDevice()
+{
+}
 
 BLERemoteDevice::~BLERemoteDevice()
 {
-    clearServices();
+  clearServices();
 }
 
 void BLERemoteDevice::addService(BLERemoteService* service)
 {
-    service->retain();
+  service->retain();
 
-    _services.add(service);
+  _services.add(service);
 }
 
 unsigned int BLERemoteDevice::serviceCount() const
 {
-    return _services.size();
+  return _services.size();
 }
 
 BLERemoteService* BLERemoteDevice::service(unsigned int index) const
 {
-    return _services.get(index);
+  return _services.get(index);
 }
 
 void BLERemoteDevice::clearServices()
 {
-    for (unsigned int i = 0; i < serviceCount(); i++) {
-        BLERemoteService* s = service(i);
+  for (unsigned int i = 0; i < serviceCount(); i++) {
+    BLERemoteService* s = service(i);
 
-        if (s->release() <= 0) {
-            delete s;
-        }
+    if (s->release() <= 0) {
+      delete s;
     }
+  }
 
-    _services.clear();
+  _services.clear();
 }

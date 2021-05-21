@@ -20,7 +20,7 @@
 #ifndef _BLE_STRING_CHARACTERISTIC_H_
 #define _BLE_STRING_CHARACTERISTIC_H_
 
-#include <Arduino.h>
+#include <string>
 
 #include "BLECharacteristic.h"
 
@@ -28,9 +28,9 @@ class BLEStringCharacteristic : public BLECharacteristic {
   public:
     BLEStringCharacteristic(const char* uuid, unsigned char properties, int valueSize);
 
-    int writeValue(const String& value);
-    int setValue(const String& value) { return writeValue(value); }
-    String value(void);
+    int writeValue(const std::string& value);
+    int setValue(const std::string& value) { return writeValue(value); }
+    std::string value(void);
 
   private:
 };

@@ -22,133 +22,126 @@
 
 #include <stddef.h>
 
-template <class T>
-struct BLELinkedListNode {
-    T data;
-    BLELinkedListNode<T>* next;
+template<class T> struct BLELinkedListNode
+{
+  T data;
+  BLELinkedListNode<T>* next;
 };
 
-template <typename T>
-class BLELinkedList {
-  public:
-    BLELinkedList();
-    ~BLELinkedList();
+template <typename T> class BLELinkedList {
+public:
+  BLELinkedList();
+  ~BLELinkedList();
 
-    void add(T);
-    T get(unsigned int index) const;
-    void clear();
-    T remove(unsigned int index);
+  void add(T);
+  T get(unsigned int index) const;
+  void clear();
+  T remove(unsigned int index);
 
-    unsigned int size() const;
+  unsigned int size() const;
 
-  private:
-    unsigned int _size;
-    BLELinkedListNode<T>* _root;
-    BLELinkedListNode<T>* _last;
+private:
+  unsigned int _size;
+  BLELinkedListNode<T>* _root;
+  BLELinkedListNode<T>* _last;
 };
 
-template <typename T>
-BLELinkedList<T>::BLELinkedList() : _size(0), _root(NULL), _last(NULL)
+template <typename T> BLELinkedList<T>::BLELinkedList() :
+  _size(0),
+  _root(NULL),
+  _last(NULL)
 {
 }
 
-template <typename T>
-BLELinkedList<T>::~BLELinkedList()
+template <typename T> BLELinkedList<T>::~BLELinkedList()
 {
-    clear();
+  clear();
 }
 
-template <typename T>
-void BLELinkedList<T>::add(T item)
+template <typename T> void BLELinkedList<T>::add(T item)
 {
-    BLELinkedListNode<T>* itemNode = new BLELinkedListNode<T>();
+  BLELinkedListNode<T>* itemNode = new BLELinkedListNode<T>();
 
-    itemNode->data = item;
-    itemNode->next = NULL;
+  itemNode->data = item;
+  itemNode->next = NULL;
 
-    if (_root == NULL) {
-        _root = itemNode;
-    }
-    else {
-        _last->next = itemNode;
-    }
-    _last = itemNode;
+  if (_root == NULL) {
+    _root = itemNode;
+  } else {
+    _last->next = itemNode;
+  }
+  _last = itemNode;
 
-    _size++;
+  _size++;
 }
 
-template <typename T>
-T BLELinkedList<T>::get(unsigned int index) const
+template <typename T> T BLELinkedList<T>::get(unsigned int index) const
 {
-    if (index >= _size) {
-        return T();
-    }
+  if (index >= _size) {
+    return T();
+  }
 
-    BLELinkedListNode<T>* itemNode = _root;
+  BLELinkedListNode<T>* itemNode = _root;
 
-    for (unsigned int i = 0; i < index; i++) {
-        itemNode = itemNode->next;
-    }
+  for (unsigned int i = 0; i < index; i++) {
+    itemNode = itemNode->next;
+  }
 
-    return itemNode->data;
+  return itemNode->data;
 }
 
-template <typename T>
-void BLELinkedList<T>::clear()
+template <typename T> void BLELinkedList<T>::clear()
 {
-    BLELinkedListNode<T>* itemNode = _root;
+  BLELinkedListNode<T>* itemNode = _root;
 
-    for (unsigned int i = 0; i < _size; i++) {
-        BLELinkedListNode<T>* n = itemNode;
+  for (unsigned int i = 0; i < _size; i++) {
+    BLELinkedListNode<T>* n = itemNode;
 
-        itemNode = itemNode->next;
+    itemNode = itemNode->next;
 
-        delete n;
-    }
+    delete n;
+  }
 
-    _size = 0;
-    _root = NULL;
-    _last = NULL;
+  _size = 0;
+  _root = NULL;
+  _last = NULL;
 }
 
-template <typename T>
-unsigned int BLELinkedList<T>::size() const
+template <typename T> unsigned int BLELinkedList<T>::size() const
 {
-    return _size;
+  return _size;
 }
 
-template <typename T>
-T BLELinkedList<T>::remove(unsigned int index)
+template <typename T> T BLELinkedList<T>::remove(unsigned int index)
 {
-    if (index >= _size) {
-        return T();
-    }
+  if (index >= _size) {
+    return T();
+  }
 
-    BLELinkedListNode<T>* previousItemNode = NULL;
-    BLELinkedListNode<T>* itemNode         = _root;
+  BLELinkedListNode<T>* previousItemNode = NULL;
+  BLELinkedListNode<T>* itemNode = _root;
 
-    for (unsigned int i = 0; i < index; i++) {
-        previousItemNode = itemNode;
-        itemNode         = itemNode->next;
-    }
+  for (unsigned int i = 0; i < index; i++) {
+    previousItemNode = itemNode;
+    itemNode = itemNode->next;
+  }
 
-    T result = itemNode->data;
+  T result = itemNode->data;
 
-    if (previousItemNode == NULL) {
-        _root = itemNode->next;
-    }
-    else {
-        previousItemNode->next = itemNode->next;
-    }
+  if (previousItemNode == NULL) {
+    _root = itemNode->next;
+  } else {
+    previousItemNode->next = itemNode->next;
+  }
 
-    if (_last == itemNode) {
-        _last = previousItemNode;
-    }
+  if (_last == itemNode) {
+    _last = previousItemNode;
+  }
 
-    delete itemNode;
-    _size--;
+  delete itemNode;
+  _size--;
 
-    return result;
+  return result;
 }
 
 #endif

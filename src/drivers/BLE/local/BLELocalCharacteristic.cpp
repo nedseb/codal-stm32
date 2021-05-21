@@ -31,7 +31,7 @@
 BLELocalCharacteristic::BLELocalCharacteristic(const char* uuid, uint8_t properties, int valueSize, bool fixedLength)
     : BLELocalAttribute(uuid),
       _properties(properties),
-      _valueSize(min(valueSize, 512)),
+      _valueSize(std::min(valueSize, 512)),
       _valueLength(0),
       _fixedLength(fixedLength),
       _handle(0x0000),
@@ -105,7 +105,7 @@ uint8_t BLELocalCharacteristic::operator[](int offset) const
 
 int BLELocalCharacteristic::writeValue(const uint8_t value[], int length)
 {
-    _valueLength = min(length, _valueSize);
+    _valueLength = std::min(length, _valueSize);
     memcpy(_value, value, _valueLength);
 
     if (_fixedLength) {

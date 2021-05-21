@@ -22,6 +22,8 @@
 
 #include <stdint.h>
 
+#include <cstring>
+
 #include "BLEDescriptor.h"
 
 enum BLECharacteristicEvent {

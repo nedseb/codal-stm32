@@ -22,6 +22,7 @@
 #include "ATT.h"
 #include "GAP.h"
 #include "L2CAPSignaling.h"
+#include "wiring_time.h"
 
 #define HCI_COMMAND_PKT 0x01
 #define HCI_ACLDATA_PKT 0x02
@@ -71,7 +72,13 @@
 
 #define HCI_OE_USER_ENDED_CONNECTION 0x13
 
-HCIClass::HCIClass() : _debug(NULL), _recvIndex(0), _pendingPkt(0), _HCITransport(0) {}
+HCIClass::HCIClass()
+    :  //_debug(NULL),
+      _recvIndex(0),
+      _pendingPkt(0),
+      _HCITransport(0)
+{
+}
 
 HCIClass::~HCIClass() {}
 
@@ -99,15 +106,15 @@ void HCIClass::poll(unsigned long timeout)
     }
 
     while (_HCITransport->available()) {
-        byte b = _HCITransport->read();
+        uint8_t b = _HCITransport->read();
 
         _recvBuffer[_recvIndex++] = b;
 
         if (_recvBuffer[0] == HCI_ACLDATA_PKT) {
             if (_recvIndex > 5 && _recvIndex >= (5 + (_recvBuffer[3] + (_recvBuffer[4] << 8)))) {
-                if (_debug) {
-                    dumpPkt("HCI ACLDATA RX <- ", _recvIndex, _recvBuffer);
-                }
+                // if (_debug) {
+                //     dumpPkt("HCI ACLDATA RX <- ", _recvIndex, _recvBuffer);
+                // }
 
                 int pktLen = _recvIndex - 1;
                 _recvIndex = 0;
@@ -117,9 +124,9 @@ void HCIClass::poll(unsigned long timeout)
         }
         else if (_recvBuffer[0] == HCI_EVENT_PKT) {
             if (_recvIndex > 3 && _recvIndex >= (3 + _recvBuffer[2])) {
-                if (_debug) {
-                    dumpPkt("HCI EVENT RX <- ", _recvIndex, _recvBuffer);
-                }
+                // if (_debug) {
+                //     dumpPkt("HCI EVENT RX <- ", _recvIndex, _recvBuffer);
+                // }
 
                 // received full event
                 int pktLen = _recvIndex - 1;
@@ -131,9 +138,9 @@ void HCIClass::poll(unsigned long timeout)
         else {
             _recvIndex = 0;
 
-            if (_debug) {
-                _debug->println(b, HEX);
-            }
+            // if (_debug) {
+            //     _debug->println(b, HEX);
+            // }
         }
     }
 }
@@ -403,9 +410,9 @@ int HCIClass::sendAclPkt(uint16_t handle, uint8_t cid, uint8_t plen, void* data)
     memcpy(txBuffer, &aclHdr, sizeof(aclHdr));
     memcpy(&txBuffer[sizeof(aclHdr)], data, plen);
 
-    if (_debug) {
-        dumpPkt("HCI ACLDATA TX -> ", sizeof(aclHdr) + plen, txBuffer);
-    }
+    // if (_debug) {
+    //     dumpPkt("HCI ACLDATA TX -> ", sizeof(aclHdr) + plen, txBuffer);
+    // }
 
     _pendingPkt++;
     _HCITransport->write(txBuffer, sizeof(aclHdr) + plen);
@@ -423,15 +430,15 @@ int HCIClass::disconnect(uint16_t handle)
     return sendCommand(OGF_LINK_CTL << 10 | OCF_DISCONNECT, sizeof(disconnectData), &disconnectData);
 }
 
-void HCIClass::debug(Stream& stream)
-{
-    _debug = &stream;
-}
+// void HCIClass::debug(Stream& stream)
+// {
+//     _debug = &stream;
+// }
 
-void HCIClass::noDebug()
-{
-    _debug = NULL;
-}
+// void HCIClass::noDebug()
+// {
+//     _debug = NULL;
+// }
 
 int HCIClass::sendCommand(uint16_t opcode, uint8_t plen, void* parameters)
 {
@@ -445,9 +452,9 @@ int HCIClass::sendCommand(uint16_t opcode, uint8_t plen, void* parameters)
     memcpy(txBuffer, &pktHdr, sizeof(pktHdr));
     memcpy(&txBuffer[sizeof(pktHdr)], parameters, plen);
 
-    if (_debug) {
-        dumpPkt("HCI COMMAND TX -> ", sizeof(pktHdr) + plen, txBuffer);
-    }
+    // if (_debug) {
+    //     dumpPkt("HCI COMMAND TX -> ", sizeof(pktHdr) + plen, txBuffer);
+    // }
 
     _HCITransport->write(txBuffer, sizeof(pktHdr) + plen);
 
@@ -640,22 +647,22 @@ void HCIClass::handleEventPkt(uint8_t /*plen*/, uint8_t pdata[])
 
 void HCIClass::dumpPkt(const char* prefix, uint8_t plen, uint8_t pdata[])
 {
-    if (_debug) {
-        _debug->print(prefix);
+    // if (_debug) {
+    //     _debug->print(prefix);
 
-        for (uint8_t i = 0; i < plen; i++) {
-            byte b = pdata[i];
+    //     for (uint8_t i = 0; i < plen; i++) {
+    //         byte b = pdata[i];
 
-            if (b < 16) {
-                _debug->print("0");
-            }
+    //         if (b < 16) {
+    //             _debug->print("0");
+    //         }
 
-            _debug->print(b, HEX);
-        }
+    //         _debug->print(b, HEX);
+    //     }
 
-        _debug->println();
-        _debug->flush();
-    }
+    //     _debug->println();
+    //     _debug->flush();
+    // }
 }
 
 void HCIClass::setTransport(HCITransportInterface* HCITransport)

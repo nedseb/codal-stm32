@@ -25,30 +25,31 @@
 #define SIGNALING_CID 0x0005
 
 class L2CAPSignalingClass {
-  public:
-    L2CAPSignalingClass();
-    virtual ~L2CAPSignalingClass();
+public:
+  L2CAPSignalingClass();
+  virtual ~L2CAPSignalingClass();
 
-    virtual void addConnection(uint16_t handle, uint8_t role, uint8_t peerBdaddrType, uint8_t peerBdaddr[6],
-                               uint16_t interval, uint16_t latency, uint16_t supervisionTimeout,
-                               uint8_t masterClockAccuracy);
+  virtual void addConnection(uint16_t handle, uint8_t role, uint8_t peerBdaddrType,
+                    uint8_t peerBdaddr[6], uint16_t interval,
+                    uint16_t latency, uint16_t supervisionTimeout,
+                    uint8_t masterClockAccuracy);
 
-    virtual void handleData(uint16_t connectionHandle, uint8_t dlen, uint8_t data[]);
+  virtual void handleData(uint16_t connectionHandle, uint8_t dlen, uint8_t data[]);
 
-    virtual void removeConnection(uint8_t handle, uint16_t reason);
+  virtual void removeConnection(uint8_t handle, uint16_t reason);
 
-    virtual void setConnectionInterval(uint16_t minInterval, uint16_t maxInterval);
+  virtual void setConnectionInterval(uint16_t minInterval, uint16_t maxInterval);
 
-    virtual void setSupervisionTimeout(uint16_t supervisionTimeout);
+  virtual void setSupervisionTimeout(uint16_t supervisionTimeout);
 
-  private:
-    virtual void connectionParameterUpdateRequest(uint16_t handle, uint8_t identifier, uint8_t dlen, uint8_t data[]);
-    virtual void connectionParameterUpdateResponse(uint16_t handle, uint8_t identifier, uint8_t dlen, uint8_t data[]);
+private:
+  virtual void connectionParameterUpdateRequest(uint16_t handle, uint8_t identifier, uint8_t dlen, uint8_t data[]);
+  virtual void connectionParameterUpdateResponse(uint16_t handle, uint8_t identifier, uint8_t dlen, uint8_t data[]);
 
-  private:
-    uint16_t _minInterval;
-    uint16_t _maxInterval;
-    uint16_t _supervisionTimeout;
+private:
+  uint16_t _minInterval;
+  uint16_t _maxInterval;
+  uint16_t _supervisionTimeout;
 };
 
 extern L2CAPSignalingClass& L2CAPSignaling;

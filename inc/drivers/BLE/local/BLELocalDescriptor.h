@@ -25,28 +25,28 @@
 #include "BLELocalAttribute.h"
 
 class BLELocalDescriptor : public BLELocalAttribute {
-  public:
-    BLELocalDescriptor(const char* uuid, const uint8_t value[], int valueSize);
-    BLELocalDescriptor(const char* uuid, const char* value);
-    virtual ~BLELocalDescriptor();
+public:
+  BLELocalDescriptor(const char* uuid, const uint8_t value[], int valueSize);
+  BLELocalDescriptor(const char* uuid, const char* value);
+  virtual ~BLELocalDescriptor();
 
-    virtual enum BLEAttributeType type() const;
+  virtual enum BLEAttributeType type() const;
 
-    int valueSize() const;
-    const uint8_t* value() const;
-    uint8_t operator[](int offset) const;
+  int valueSize() const;
+  const uint8_t* value() const;
+  uint8_t operator[] (int offset) const;
 
-  protected:
-    friend class GATTClass;
+protected:
+  friend class GATTClass;
 
-    void setHandle(uint16_t handle);
-    uint16_t handle() const;
+  void setHandle(uint16_t handle);
+  uint16_t handle() const;
 
-  private:
-    const uint8_t* _value;
-    int _valueSize;
+private:
+  const uint8_t* _value;
+  int            _valueSize;
 
-    uint16_t _handle;
+  uint16_t       _handle;
 };
 
 #endif

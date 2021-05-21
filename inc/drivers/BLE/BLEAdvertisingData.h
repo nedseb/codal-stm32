@@ -20,7 +20,7 @@
 #ifndef _BLE_ADVERTISING_DATA_H_
 #define _BLE_ADVERTISING_DATA_H_
 
-#include <Arduino.h>
+#include <cstring>
 
 #include "BLEService.h"
 #include "utility/BLEUuid.h"

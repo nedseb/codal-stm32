@@ -19,6 +19,8 @@
 
 #include "BLEService.h"
 
+#include <strings.h>
+
 #include "local/BLELocalService.h"
 #include "remote/BLERemoteService.h"
 

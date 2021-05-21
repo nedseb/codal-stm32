@@ -20,7 +20,7 @@
 #ifndef _BLE_DEVICE_H_
 #define _BLE_DEVICE_H_
 
-#include <Arduino.h>
+#include <string>
 
 #include "BLEService.h"
 
@@ -47,7 +47,7 @@ class BLEDevice {
     virtual bool connected() const;
     virtual bool disconnect();
 
-    virtual String address() const;
+    virtual std::string address() const;
 
     bool hasLocalName() const;
 
@@ -55,9 +55,9 @@ class BLEDevice {
     bool hasAdvertisedServiceUuid(int index) const;
     int advertisedServiceUuidCount() const;
 
-    String localName() const;
-    String advertisedServiceUuid() const;
-    String advertisedServiceUuid(int index) const;
+    std::string localName() const;
+    std::string advertisedServiceUuid() const;
+    std::string advertisedServiceUuid(int index) const;
 
     virtual int rssi();
 
@@ -69,7 +69,7 @@ class BLEDevice {
     virtual bool operator==(const BLEDevice& rhs) const;
     virtual bool operator!=(const BLEDevice& rhs) const;
 
-    String deviceName();
+    std::string deviceName();
     int appearance();
 
     int serviceCount() const;

@@ -21,6 +21,8 @@
 
 #include <stddef.h>
 
+#include <cstring>
+
 #include "local/BLELocalDescriptor.h"
 #include "remote/BLERemoteDescriptor.h"
 
@@ -135,7 +137,7 @@ int BLEDescriptor::readValue(uint8_t value[], int length)
     int bytesRead = 0;
 
     if (_local) {
-        bytesRead = min(length, _local->valueSize());
+        bytesRead = std::min(length, _local->valueSize());
 
         memcpy(value, _local->value(), bytesRead);
     }
@@ -146,7 +148,7 @@ int BLEDescriptor::readValue(uint8_t value[], int length)
             return 0;
         }
 
-        bytesRead = min(length, _remote->valueLength());
+        bytesRead = std::min(length, _remote->valueLength());
 
         memcpy(value, _remote->value(), bytesRead);
     }

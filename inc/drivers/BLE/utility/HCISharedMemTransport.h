@@ -23,14 +23,14 @@
 #include "HCITransport.h"
 
 /* STM32WB include files */
-#include "STM32Cube_FW/app_conf.h"
+#include "stm32wb55xx.h"
+#include "stm32wbxx_ll_rcc.h"
+#include "stm32wbxx_ll_ipcc.h"
+#include "stm32wbxx_ll_system.h"
+#include "STM32Cube_FW/tl.h"
 #include "STM32Cube_FW/shci.h"
 #include "STM32Cube_FW/shci_tl.h"
-#include "STM32Cube_FW/tl.h"
-#include "stm32wb55xx.h"
-#include "stm32wbxx_ll_ipcc.h"
-#include "stm32wbxx_ll_rcc.h"
-#include "stm32wbxx_ll_system.h"
+#include "STM32Cube_FW/app_conf.h"
 
 /* this one is for printing info content when HW serial enabled */
 //#define PRINT_IPCC_INFO
@@ -42,25 +42,25 @@
  * BLE config parameters
  ******************************************************************************/
 /*  Defined from WB Cube reference SW */
-#define CFG_TLBLE_EVT_QUEUE_LENGTH        5
-#define CFG_TLBLE_MOST_EVENT_PAYLOAD_SIZE 255 /**< Set to 255 with the memory manager and the mailbox */
-#define TL_BLE_EVENT_FRAME_SIZE           (TL_EVT_HDR_SIZE + CFG_TLBLE_MOST_EVENT_PAYLOAD_SIZE)
-#define POOL_SIZE                         (CFG_TLBLE_EVT_QUEUE_LENGTH * 4 * DIVC((sizeof(TL_PacketHeader_t) + TL_BLE_EVENT_FRAME_SIZE), 4))
+#define CFG_TLBLE_EVT_QUEUE_LENGTH 5
+#define CFG_TLBLE_MOST_EVENT_PAYLOAD_SIZE 255   /**< Set to 255 with the memory manager and the mailbox */
+#define TL_BLE_EVENT_FRAME_SIZE ( TL_EVT_HDR_SIZE + CFG_TLBLE_MOST_EVENT_PAYLOAD_SIZE )
+#define POOL_SIZE (CFG_TLBLE_EVT_QUEUE_LENGTH*4*DIVC(( sizeof(TL_PacketHeader_t) + TL_BLE_EVENT_FRAME_SIZE ), 4))
 
-#define CONFIG_DATA_PUBADDR_OFFSET (0x00) /**< Bluetooth public address */
-#define CONFIG_DATA_PUBADDR_LEN    (6)
+#define CONFIG_DATA_PUBADDR_OFFSET          (0x00) /**< Bluetooth public address */
+#define CONFIG_DATA_PUBADDR_LEN             (6)
 
-#define BT_BUF_CMD     1
+#define BT_BUF_CMD 1
 #define BT_BUF_ACL_OUT 2
 
 /* timeout (in ms) to wait for an incoming event */
 #define BLE_IPCC_TIMEOUT 10000
 
 /* to received BLE packet from the SharedMem */
-void evt_received(TL_EvtPacket_t* hcievt);
+void evt_received(TL_EvtPacket_t *hcievt);
 
 /* to send BLE packet to the SharedMem */
-uint16_t mbox_write(uint8_t type, uint16_t len, const uint8_t* pData);
+uint16_t mbox_write(uint8_t type, uint16_t len, const uint8_t *pData);
 
 class HCISharedMemTransportClass : public HCITransportInterface {
   public:
@@ -76,9 +76,10 @@ class HCISharedMemTransportClass : public HCITransportInterface {
     virtual int peek();
     virtual int read();
 
-    virtual size_t write(const uint8_t* data, size_t length);
+    virtual size_t write(const uint8_t *data, size_t length);
 
   private:
+
     /* method to initialize the BLE device */
     void transport_init(void);
     void start_ble_rf(void);

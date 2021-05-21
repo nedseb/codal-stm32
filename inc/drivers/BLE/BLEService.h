@@ -26,42 +26,42 @@ class BLELocalService;
 class BLERemoteService;
 
 class BLEService {
-  public:
-    BLEService();
-    BLEService(const char* uuid);
-    BLEService(const BLEService& other);
-    virtual ~BLEService();
+public:
+  BLEService();
+  BLEService(const char* uuid);
+  BLEService(const BLEService& other);
+  virtual ~BLEService();
 
-    const char* uuid() const;
+  const char* uuid() const;
 
-    void addCharacteristic(BLECharacteristic& characteristic);
+  void addCharacteristic(BLECharacteristic& characteristic);
 
-    operator bool() const;
+  operator bool() const;
 
-    int characteristicCount() const;
-    bool hasCharacteristic(const char* uuid) const;
-    bool hasCharacteristic(const char* uuid, int index) const;
-    BLECharacteristic characteristic(int index) const;
-    BLECharacteristic characteristic(const char* uuid) const;
-    BLECharacteristic characteristic(const char* uuid, int index) const;
+  int characteristicCount() const;
+  bool hasCharacteristic(const char* uuid) const;
+  bool hasCharacteristic(const char* uuid, int index) const;
+  BLECharacteristic characteristic(int index) const;
+  BLECharacteristic characteristic(const char * uuid) const;
+  BLECharacteristic characteristic(const char * uuid, int index) const;
 
-  protected:
-    friend class GATTClass;
+protected:
+  friend class GATTClass;
 
-    BLEService(BLELocalService* local);
+  BLEService(BLELocalService* local);
 
-    BLELocalService* local();
+  BLELocalService* local();
 
-    void addCharacteristic(BLELocalCharacteristic* characteristic);
+  void addCharacteristic(BLELocalCharacteristic* characteristic);
 
-  protected:
-    friend class BLEDevice;
+protected:
+  friend class BLEDevice;
 
-    BLEService(BLERemoteService* remote);
+  BLEService(BLERemoteService* remote);
 
-  private:
-    BLELocalService* _local;
-    BLERemoteService* _remote;
+private:
+  BLELocalService* _local;
+  BLERemoteService* _remote;
 };
 
 #endif

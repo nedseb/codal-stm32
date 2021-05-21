@@ -17,119 +17,118 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "BLERemoteDescriptor.h"
-
 #include "utility/ATT.h"
 
-BLERemoteDescriptor::BLERemoteDescriptor(const uint8_t uuid[], uint8_t uuidLen, uint16_t connectionHandle,
-                                         uint16_t handle)
-    : BLERemoteAttribute(uuid, uuidLen),
-      _connectionHandle(connectionHandle),
-      _handle(handle),
-      _value(NULL),
-      _valueLength(0)
+#include "BLERemoteDescriptor.h"
+
+BLERemoteDescriptor::BLERemoteDescriptor(const uint8_t uuid[], uint8_t uuidLen, uint16_t connectionHandle, uint16_t handle) :
+  BLERemoteAttribute(uuid, uuidLen),
+  _connectionHandle(connectionHandle),
+  _handle(handle),
+  _value(NULL),
+  _valueLength(0)
 {
 }
 
 BLERemoteDescriptor::~BLERemoteDescriptor()
 {
-    if (_value) {
-        free(_value);
-        _value = NULL;
-    }
+  if (_value) {
+    free(_value);
+    _value = NULL;
+  }
 }
 
 const uint8_t* BLERemoteDescriptor::value() const
 {
-    return _value;
+  return _value;
 }
 
 int BLERemoteDescriptor::valueLength() const
 {
-    return _valueLength;
+  return _valueLength;
 }
 
-uint8_t BLERemoteDescriptor::operator[](int offset) const
+uint8_t BLERemoteDescriptor::operator[] (int offset) const
 {
-    if (_value) {
-        return _value[offset];
-    }
+  if (_value) {
+    return _value[offset];
+  }
 
-    return 0;
+  return 0;
 }
 
 int BLERemoteDescriptor::writeValue(const uint8_t value[], int length)
 {
-    if (!ATT.connected(_connectionHandle)) {
-        return false;
-    }
+  if (!ATT.connected(_connectionHandle)) {
+    return false;
+  }
 
-    uint16_t maxLength = ATT.mtu(_connectionHandle) - 3;
+  uint16_t maxLength = ATT.mtu(_connectionHandle) - 3;
 
-    if (length > (int)maxLength) {
-        // cap to MTU max length
-        length = maxLength;
-    }
+  if (length > (int)maxLength) {
+    // cap to MTU max length
+    length = maxLength;
+  }
 
-    _value = (uint8_t*)realloc(_value, length);
-    if (_value == NULL) {
-        // realloc failed
-        return 0;
-    }
+  _value = (uint8_t*)realloc(_value, length);
+  if (_value == NULL) {
+    // realloc failed
+    return 0;
+  }  
 
-    uint8_t resp[4];
-    int respLength = ATT.writeReq(_connectionHandle, _handle, value, length, resp);
+  uint8_t resp[4];
+  int respLength = ATT.writeReq(_connectionHandle, _handle, value, length, resp);
 
-    if (!respLength) {
-        return 0;
-    }
+  if (!respLength) {
+    return 0;
+  }
 
-    if (resp[0] == 0x01) {
-        // error
-        return 0;
-    }
+  if (resp[0] == 0x01) {
+    // error
+    return 0;
+  }
 
-    memcpy(_value, value, length);
-    _valueLength = length;
+  memcpy(_value, value, length);
+  _valueLength = length;
 
-    return 1;
+  return 1;
 }
 
 bool BLERemoteDescriptor::read()
 {
-    if (!ATT.connected(_connectionHandle)) {
-        return false;
-    }
+  if (!ATT.connected(_connectionHandle)) {
+    return false;
+  }
 
-    uint8_t resp[256];
+  uint8_t resp[256];
 
-    int respLength = ATT.readReq(_connectionHandle, _handle, resp);
+  int respLength = ATT.readReq(_connectionHandle, _handle, resp);
 
-    if (!respLength) {
-        _valueLength = 0;
-        return false;
-    }
+  if (!respLength) {
+    _valueLength = 0;
+    return false;
+  }
 
-    if (resp[0] == 0x01) {
-        // error
-        _valueLength = 0;
-        return false;
-    }
+  if (resp[0] == 0x01) {
+    // error
+    _valueLength = 0;
+    return false;
+  }
 
-    _valueLength = respLength - 1;
-    _value       = (uint8_t*)realloc(_value, _valueLength);
+  _valueLength = respLength - 1;
+  _value = (uint8_t*)realloc(_value, _valueLength);
 
-    if (_value == NULL) {
-        _valueLength = 0;
-        return false;
-    }
+  if (_value == NULL) {
+    _valueLength = 0;
+    return false;
+  }
 
-    memcpy(_value, &resp[1], _valueLength);
+  memcpy(_value, &resp[1], _valueLength); 
 
-    return true;
+  return true;
 }
 
 uint16_t BLERemoteDescriptor::handle() const
 {
-    return _handle;
+  return _handle;
 }
