@@ -22,32 +22,31 @@
 
 #include "BLERemoteAttribute.h"
 #include "BLERemoteCharacteristic.h"
-
 #include "utility/BLELinkedList.h"
 
 class BLERemoteService : public BLERemoteAttribute {
-public:
-  BLERemoteService(const uint8_t uuid[], uint8_t uuidLen, uint16_t startHandle, uint16_t endHandle);
-  virtual ~BLERemoteService();
+  public:
+    BLERemoteService(const uint8_t uuid[], uint8_t uuidLen, uint16_t startHandle, uint16_t endHandle);
+    virtual ~BLERemoteService();
 
-  unsigned int characteristicCount() const;
-  BLERemoteCharacteristic* characteristic(unsigned int index) const;
+    unsigned int characteristicCount() const;
+    BLERemoteCharacteristic* characteristic(unsigned int index) const;
 
-protected:
-  friend class ATTClass;
+  protected:
+    friend class ATTClass;
 
-  uint16_t startHandle() const;
-  uint16_t endHandle() const;
+    uint16_t startHandle() const;
+    uint16_t endHandle() const;
 
-  void addCharacteristic(BLERemoteCharacteristic* characteristic);
+    void addCharacteristic(BLERemoteCharacteristic* characteristic);
 
-private:
-  uint16_t _startHandle;
-  uint16_t _endHandle;
+  private:
+    uint16_t _startHandle;
+    uint16_t _endHandle;
 
-  String _uuid;
+    String _uuid;
 
-  BLELinkedList<BLERemoteCharacteristic*> _characteristics;
+    BLELinkedList<BLERemoteCharacteristic*> _characteristics;
 };
 
 #endif

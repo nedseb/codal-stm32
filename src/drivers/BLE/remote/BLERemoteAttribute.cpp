@@ -17,35 +17,32 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "utility/BLEUuid.h"
-
 #include "BLERemoteAttribute.h"
 
-BLERemoteAttribute::BLERemoteAttribute(const uint8_t uuid[], uint8_t uuidLen) :
-  _uuid(BLEUuid::uuidToString(uuid, uuidLen)),
-  _refCount(0)
+#include "utility/BLEUuid.h"
+
+BLERemoteAttribute::BLERemoteAttribute(const uint8_t uuid[], uint8_t uuidLen)
+    : _uuid(BLEUuid::uuidToString(uuid, uuidLen)), _refCount(0)
 {
 }
 
-BLERemoteAttribute::~BLERemoteAttribute()
-{
-}
+BLERemoteAttribute::~BLERemoteAttribute() {}
 
 const char* BLERemoteAttribute::uuid() const
 {
-  return _uuid.c_str();
+    return _uuid.c_str();
 }
 
 int BLERemoteAttribute::retain()
 {
-  _refCount++;
+    _refCount++;
 
-  return _refCount;
+    return _refCount;
 }
 
 int BLERemoteAttribute::release()
 {
-  _refCount--;
+    _refCount--;
 
-  return _refCount;
+    return _refCount;
 }

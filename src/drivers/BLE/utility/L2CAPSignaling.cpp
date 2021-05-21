@@ -17,154 +17,153 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include "HCI.h"
-
 #include "L2CAPSignaling.h"
+
+#include "HCI.h"
 
 #define CONNECTION_PARAMETER_UPDATE_REQUEST  0x12
 #define CONNECTION_PARAMETER_UPDATE_RESPONSE 0x13
 
-L2CAPSignalingClass::L2CAPSignalingClass() :
-  _minInterval(0),
-  _maxInterval(0),
-  _supervisionTimeout(0)
-{
-}
+L2CAPSignalingClass::L2CAPSignalingClass() : _minInterval(0), _maxInterval(0), _supervisionTimeout(0) {}
 
-L2CAPSignalingClass::~L2CAPSignalingClass()
-{
-}
+L2CAPSignalingClass::~L2CAPSignalingClass() {}
 
 void L2CAPSignalingClass::addConnection(uint16_t handle, uint8_t role, uint8_t /*peerBdaddrType*/,
-                                        uint8_t /*peerBdaddr*/[6], uint16_t interval,
-                                        uint16_t /*latency*/, uint16_t supervisionTimeout,
-                                        uint8_t /*masterClockAccuracy*/)
+                                        uint8_t /*peerBdaddr*/[6], uint16_t interval, uint16_t /*latency*/,
+                                        uint16_t supervisionTimeout, uint8_t /*masterClockAccuracy*/)
 {
-  if (role != 1) {
-    // ignore
-    return;
-  }
-
-  bool updateParameters = false;
-  uint16_t updatedMinInterval = interval;
-  uint16_t updatedMaxInterval = interval;
-  uint16_t updatedSupervisionTimeout = supervisionTimeout;
-
-  if (_minInterval && _maxInterval) {
-    if (interval < _minInterval || interval > _maxInterval) {
-      updatedMinInterval = _minInterval;
-      updatedMaxInterval = _maxInterval;
-      updateParameters = true;
+    if (role != 1) {
+        // ignore
+        return;
     }
-  }
 
-  if (_supervisionTimeout && supervisionTimeout != _supervisionTimeout) {
-    updatedSupervisionTimeout = _supervisionTimeout;
-    updateParameters = true;
-  }
+    bool updateParameters              = false;
+    uint16_t updatedMinInterval        = interval;
+    uint16_t updatedMaxInterval        = interval;
+    uint16_t updatedSupervisionTimeout = supervisionTimeout;
 
-  if (updateParameters) {
-    struct __attribute__ ((packed)) L2CAPConnectionParameterUpdateRequest {
-      uint8_t code;
-      uint8_t identifier;
-      uint16_t length;
-      uint16_t minInterval;
-      uint16_t maxInterval;
-      uint16_t latency;
-      uint16_t supervisionTimeout;
-    } request = { CONNECTION_PARAMETER_UPDATE_REQUEST, 0x01, 8,
-                  updatedMinInterval, updatedMaxInterval, 0x0000, updatedSupervisionTimeout };
+    if (_minInterval && _maxInterval) {
+        if (interval < _minInterval || interval > _maxInterval) {
+            updatedMinInterval = _minInterval;
+            updatedMaxInterval = _maxInterval;
+            updateParameters   = true;
+        }
+    }
 
-    HCI.sendAclPkt(handle, SIGNALING_CID, sizeof(request), &request);
-  }
+    if (_supervisionTimeout && supervisionTimeout != _supervisionTimeout) {
+        updatedSupervisionTimeout = _supervisionTimeout;
+        updateParameters          = true;
+    }
+
+    if (updateParameters) {
+        struct __attribute__((packed)) L2CAPConnectionParameterUpdateRequest {
+            uint8_t code;
+            uint8_t identifier;
+            uint16_t length;
+            uint16_t minInterval;
+            uint16_t maxInterval;
+            uint16_t latency;
+            uint16_t supervisionTimeout;
+        } request = {CONNECTION_PARAMETER_UPDATE_REQUEST,
+                     0x01,
+                     8,
+                     updatedMinInterval,
+                     updatedMaxInterval,
+                     0x0000,
+                     updatedSupervisionTimeout};
+
+        HCI.sendAclPkt(handle, SIGNALING_CID, sizeof(request), &request);
+    }
 }
 
 void L2CAPSignalingClass::handleData(uint16_t connectionHandle, uint8_t dlen, uint8_t data[])
 {
-  struct __attribute__ ((packed)) L2CAPSignalingHdr {
-    uint8_t code;
-    uint8_t identifier;
-    uint16_t length;
-  } *l2capSignalingHdr = (L2CAPSignalingHdr*)data;
+    struct __attribute__((packed)) L2CAPSignalingHdr {
+        uint8_t code;
+        uint8_t identifier;
+        uint16_t length;
+    }* l2capSignalingHdr = (L2CAPSignalingHdr*)data;
 
-  if (dlen < sizeof(L2CAPSignalingHdr)) {
-    // too short, ignore
-    return;
-  }
+    if (dlen < sizeof(L2CAPSignalingHdr)) {
+        // too short, ignore
+        return;
+    }
 
-  if (dlen != (sizeof(L2CAPSignalingHdr) + l2capSignalingHdr->length)) {
-    // invalid length, ignore
-    return;
-  }
+    if (dlen != (sizeof(L2CAPSignalingHdr) + l2capSignalingHdr->length)) {
+        // invalid length, ignore
+        return;
+    }
 
-  uint8_t code = l2capSignalingHdr->code;
-  uint8_t identifier = l2capSignalingHdr->identifier;
-  uint16_t length = l2capSignalingHdr->length;
-  data = &data[sizeof(L2CAPSignalingHdr)];
+    uint8_t code       = l2capSignalingHdr->code;
+    uint8_t identifier = l2capSignalingHdr->identifier;
+    uint16_t length    = l2capSignalingHdr->length;
+    data               = &data[sizeof(L2CAPSignalingHdr)];
 
-  if (code == CONNECTION_PARAMETER_UPDATE_REQUEST) {
-    connectionParameterUpdateRequest(connectionHandle, identifier, length, data);
-  } else if (code == CONNECTION_PARAMETER_UPDATE_RESPONSE) {
-    connectionParameterUpdateResponse(connectionHandle, identifier, length, data);
-  }
+    if (code == CONNECTION_PARAMETER_UPDATE_REQUEST) {
+        connectionParameterUpdateRequest(connectionHandle, identifier, length, data);
+    }
+    else if (code == CONNECTION_PARAMETER_UPDATE_RESPONSE) {
+        connectionParameterUpdateResponse(connectionHandle, identifier, length, data);
+    }
 }
 
-void L2CAPSignalingClass::removeConnection(uint8_t /*handle*/, uint16_t /*reason*/)
-{
-}
+void L2CAPSignalingClass::removeConnection(uint8_t /*handle*/, uint16_t /*reason*/) {}
 
 void L2CAPSignalingClass::setConnectionInterval(uint16_t minInterval, uint16_t maxInterval)
 {
-  _minInterval = minInterval;
-  _maxInterval = maxInterval;
+    _minInterval = minInterval;
+    _maxInterval = maxInterval;
 }
 
 void L2CAPSignalingClass::setSupervisionTimeout(uint16_t supervisionTimeout)
 {
-  _supervisionTimeout = supervisionTimeout;
+    _supervisionTimeout = supervisionTimeout;
 }
 
-void L2CAPSignalingClass::connectionParameterUpdateRequest(uint16_t handle, uint8_t identifier, uint8_t dlen, uint8_t data[])
+void L2CAPSignalingClass::connectionParameterUpdateRequest(uint16_t handle, uint8_t identifier, uint8_t dlen,
+                                                           uint8_t data[])
 {
-  struct __attribute__ ((packed)) L2CAPConnectionParameterUpdateRequest {
-    uint16_t minInterval;
-    uint16_t maxInterval;
-    uint16_t latency;
-    uint16_t supervisionTimeout;
-  } *request = (L2CAPConnectionParameterUpdateRequest*)data;
+    struct __attribute__((packed)) L2CAPConnectionParameterUpdateRequest {
+        uint16_t minInterval;
+        uint16_t maxInterval;
+        uint16_t latency;
+        uint16_t supervisionTimeout;
+    }* request = (L2CAPConnectionParameterUpdateRequest*)data;
 
-  if (dlen < sizeof(L2CAPConnectionParameterUpdateRequest)) {
-    // too short, ignore
-    return;
-  }
-
-  struct __attribute__ ((packed)) L2CAPConnectionParameterUpdateResponse {
-    uint8_t code;
-    uint8_t identifier;
-    uint16_t length;
-    uint16_t value;
-  } response = { CONNECTION_PARAMETER_UPDATE_RESPONSE, identifier, 2, 0x0000 };
-
-  if (_minInterval && _maxInterval) {
-    if (request->minInterval < _minInterval || request->maxInterval > _maxInterval) {
-      response.value = 0x0001; // reject
+    if (dlen < sizeof(L2CAPConnectionParameterUpdateRequest)) {
+        // too short, ignore
+        return;
     }
-  }
 
-  if  (_supervisionTimeout) {
-    if (request->supervisionTimeout != _supervisionTimeout) {
-      response.value = 0x0001; // reject
+    struct __attribute__((packed)) L2CAPConnectionParameterUpdateResponse {
+        uint8_t code;
+        uint8_t identifier;
+        uint16_t length;
+        uint16_t value;
+    } response = {CONNECTION_PARAMETER_UPDATE_RESPONSE, identifier, 2, 0x0000};
+
+    if (_minInterval && _maxInterval) {
+        if (request->minInterval < _minInterval || request->maxInterval > _maxInterval) {
+            response.value = 0x0001;  // reject
+        }
     }
-  }
 
-  HCI.sendAclPkt(handle, SIGNALING_CID, sizeof(response), &response);
+    if (_supervisionTimeout) {
+        if (request->supervisionTimeout != _supervisionTimeout) {
+            response.value = 0x0001;  // reject
+        }
+    }
 
-  if (response.value == 0x0000) {
-    HCI.leConnUpdate(handle, request->minInterval, request->maxInterval, request->latency, request->supervisionTimeout);
-  }
+    HCI.sendAclPkt(handle, SIGNALING_CID, sizeof(response), &response);
+
+    if (response.value == 0x0000) {
+        HCI.leConnUpdate(handle, request->minInterval, request->maxInterval, request->latency,
+                         request->supervisionTimeout);
+    }
 }
 
-void L2CAPSignalingClass::connectionParameterUpdateResponse(uint16_t /*handle*/, uint8_t /*identifier*/, uint8_t /*dlen*/, uint8_t /*data*/[])
+void L2CAPSignalingClass::connectionParameterUpdateResponse(uint16_t /*handle*/, uint8_t /*identifier*/,
+                                                            uint8_t /*dlen*/, uint8_t /*data*/[])
 {
 }
 

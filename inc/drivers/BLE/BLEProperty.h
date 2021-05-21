@@ -21,12 +21,12 @@
 #define _BLE_PROPERTY_H_
 
 enum BLEProperty {
-  BLEBroadcast            = 0x01,
-  BLERead                 = 0x02,
-  BLEWriteWithoutResponse = 0x04,
-  BLEWrite                = 0x08,
-  BLENotify               = 0x10,
-  BLEIndicate             = 0x20
+    BLEBroadcast            = 0x01,
+    BLERead                 = 0x02,
+    BLEWriteWithoutResponse = 0x04,
+    BLEWrite                = 0x08,
+    BLENotify               = 0x10,
+    BLEIndicate             = 0x20
 };
 
 #endif

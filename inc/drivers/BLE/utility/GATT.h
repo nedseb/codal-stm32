@@ -20,51 +20,49 @@
 #ifndef _GATT_H_
 #define _GATT_H_
 
-#include "utility/BLELinkedList.h"
-
+#include "BLEService.h"
 #include "local/BLELocalAttribute.h"
 #include "local/BLELocalCharacteristic.h"
 #include "local/BLELocalService.h"
-
-#include "BLEService.h"
+#include "utility/BLELinkedList.h"
 
 class GATTClass {
-public:
-  GATTClass();
-  virtual ~GATTClass();
+  public:
+    GATTClass();
+    virtual ~GATTClass();
 
-  virtual void begin();
-  virtual void end();
+    virtual void begin();
+    virtual void end();
 
-  virtual void setDeviceName(const char* deviceName);
-  virtual void setAppearance(uint16_t appearance);
+    virtual void setDeviceName(const char* deviceName);
+    virtual void setAppearance(uint16_t appearance);
 
-  virtual void addService(BLEService& service);
+    virtual void addService(BLEService& service);
 
-protected:
-  friend class ATTClass;
+  protected:
+    friend class ATTClass;
 
-  virtual unsigned int attributeCount() const;
-  virtual BLELocalAttribute* attribute(unsigned int index) const;
+    virtual unsigned int attributeCount() const;
+    virtual BLELocalAttribute* attribute(unsigned int index) const;
 
-protected:
-  friend class BLELocalCharacteristic;
+  protected:
+    friend class BLELocalCharacteristic;
 
-  virtual uint16_t serviceUuidForCharacteristic(BLELocalCharacteristic* characteristic) const;
+    virtual uint16_t serviceUuidForCharacteristic(BLELocalCharacteristic* characteristic) const;
 
-private:
-  virtual void addService(BLELocalService* service);
+  private:
+    virtual void addService(BLELocalService* service);
 
-  virtual void clearAttributes();
+    virtual void clearAttributes();
 
-private:
-  BLELinkedList<BLELocalAttribute*> _attributes;
+  private:
+    BLELinkedList<BLELocalAttribute*> _attributes;
 
-  BLELocalService*              _genericAccessService;
-  BLELocalCharacteristic*       _deviceNameCharacteristic;
-  BLELocalCharacteristic*       _appearanceCharacteristic;
-  BLELocalService*              _genericAttributeService;
-  BLELocalCharacteristic*       _servicesChangedCharacteristic;
+    BLELocalService* _genericAccessService;
+    BLELocalCharacteristic* _deviceNameCharacteristic;
+    BLELocalCharacteristic* _appearanceCharacteristic;
+    BLELocalService* _genericAttributeService;
+    BLELocalCharacteristic* _servicesChangedCharacteristic;
 };
 
 extern GATTClass& GATT;

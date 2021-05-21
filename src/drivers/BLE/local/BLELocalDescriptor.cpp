@@ -17,53 +17,48 @@
   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 */
 
-#include <Arduino.h>
-
 #include "BLELocalDescriptor.h"
 
-BLELocalDescriptor::BLELocalDescriptor(const char* uuid, const uint8_t value[], int valueSize) :
-  BLELocalAttribute(uuid),
-  _value(value),
-  _valueSize(min(valueSize, 512)),
-  _handle(0x0000)
+#include <Arduino.h>
+
+BLELocalDescriptor::BLELocalDescriptor(const char* uuid, const uint8_t value[], int valueSize)
+    : BLELocalAttribute(uuid), _value(value), _valueSize(min(valueSize, 512)), _handle(0x0000)
 {
 }
 
-BLELocalDescriptor::BLELocalDescriptor(const char* uuid, const char* value) :
-  BLELocalDescriptor(uuid, (const uint8_t*)value, strlen(value))
+BLELocalDescriptor::BLELocalDescriptor(const char* uuid, const char* value)
+    : BLELocalDescriptor(uuid, (const uint8_t*)value, strlen(value))
 {
 }
 
-BLELocalDescriptor::~BLELocalDescriptor()
-{
-}
+BLELocalDescriptor::~BLELocalDescriptor() {}
 
 enum BLEAttributeType BLELocalDescriptor::type() const
 {
-  return BLETypeDescriptor;
+    return BLETypeDescriptor;
 }
 
 int BLELocalDescriptor::valueSize() const
 {
-  return _valueSize;
+    return _valueSize;
 }
 
 const uint8_t* BLELocalDescriptor::value() const
 {
-  return _value;
+    return _value;
 }
 
-uint8_t BLELocalDescriptor::operator[] (int offset) const
+uint8_t BLELocalDescriptor::operator[](int offset) const
 {
-  return _value[offset];
+    return _value[offset];
 }
 
 void BLELocalDescriptor::setHandle(uint16_t handle)
 {
-  _handle = handle;
+    _handle = handle;
 }
 
 uint16_t BLELocalDescriptor::handle() const
 {
-  return _handle;
+    return _handle;
 }

@@ -19,27 +19,27 @@
 
 #include "BLEStringCharacteristic.h"
 
-BLEStringCharacteristic::BLEStringCharacteristic(const char* uuid, unsigned char properties, int valueSize) :
-  BLECharacteristic(uuid, properties, valueSize)
+BLEStringCharacteristic::BLEStringCharacteristic(const char* uuid, unsigned char properties, int valueSize)
+    : BLECharacteristic(uuid, properties, valueSize)
 {
 }
 
 int BLEStringCharacteristic::writeValue(const String& value)
 {
-  return BLECharacteristic::writeValue(value.c_str());
+    return BLECharacteristic::writeValue(value.c_str());
 }
 
 String BLEStringCharacteristic::value(void)
 {
-  String str;
-  int length = BLECharacteristic::valueLength();
-  const uint8_t* val = BLECharacteristic::value();
+    String str;
+    int length         = BLECharacteristic::valueLength();
+    const uint8_t* val = BLECharacteristic::value();
 
-  str.reserve(length);
+    str.reserve(length);
 
-  for (int i = 0; i < length; i++) {
-    str += (char)val[i];
-  }
+    for (int i = 0; i < length; i++) {
+        str += (char)val[i];
+    }
 
-  return str;
+    return str;
 }
