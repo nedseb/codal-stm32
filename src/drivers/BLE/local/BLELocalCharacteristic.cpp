@@ -37,9 +37,10 @@ BLELocalCharacteristic::BLELocalCharacteristic(const char* uuid, uint8_t propert
       _handle(0x0000),
       _broadcast(false),
       _written(false),
-      _cccdValue(0x0000)
+      _cccdValue(0x0000),
+      _eventHandlers{nullptr}
 {
-    memset(_eventHandlers, 0x00, sizeof(_eventHandlers));
+    // memset(_eventHandlers, 0x00, sizeof(_eventHandlers));
 
     if (properties & (BLENotify | BLEIndicate)) {
         BLELocalDescriptor* cccd = new BLELocalDescriptor("2902", (uint8_t*)&_cccdValue, sizeof(_cccdValue));

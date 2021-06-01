@@ -23,6 +23,7 @@
 #include <stdint.h>
 
 #include <cstring>
+#include <functional>
 
 #include "BLEDescriptor.h"
 
@@ -39,7 +40,8 @@ enum BLECharacteristicEvent {
 class BLECharacteristic;
 class BLEDevice;
 
-typedef void (*BLECharacteristicEventHandler)(BLEDevice device, BLECharacteristic characteristic);
+// typedef void (*BLECharacteristicEventHandler)(BLEDevice device, BLECharacteristic characteristic);
+using BLECharacteristicEventHandler = std::function<void(BLEDevice, BLECharacteristic)>;
 
 class BLELocalCharacteristic;
 class BLERemoteCharacteristic;
