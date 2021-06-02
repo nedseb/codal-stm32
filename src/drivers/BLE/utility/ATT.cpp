@@ -80,7 +80,12 @@
 #define ATT_ECODE_INSUFF_RESOURCES     0x11
 
 ATTClass::ATTClass()
-    : _maxMtu(23), _timeout(5000), _longWriteHandle(0x0000), _longWriteValue(NULL), _longWriteValueLength(0)
+    : _maxMtu(23),
+      _timeout(5000),
+      _longWriteHandle(0x0000),
+      _longWriteValue(NULL),
+      _longWriteValueLength(0),
+      _eventHandlers{nullptr}
 {
     for (int i = 0; i < ATT_MAX_PEERS; i++) {
         _peers[i].connectionHandle = 0xffff;
@@ -91,7 +96,7 @@ ATTClass::ATTClass()
         _peers[i].device = NULL;
     }
 
-    memset(_eventHandlers, 0x00, sizeof(_eventHandlers));
+    // memset(_eventHandlers, 0x00, sizeof(_eventHandlers));
 }
 
 ATTClass::~ATTClass()

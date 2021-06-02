@@ -34,7 +34,8 @@ enum BLEDeviceEvent {
 
 class BLEDevice;
 
-typedef void (*BLEDeviceEventHandler)(BLEDevice device);
+// typedef void (*BLEDeviceEventHandler)(BLEDevice device);
+using BLEDeviceEventHandler = std::function<void(BLEDevice)>;
 
 class BLEDevice {
   public:
