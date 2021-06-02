@@ -20,11 +20,6 @@ STM32SerialBLE::STM32SerialBLE(const char* serviceUUID, const char* rxUUID, cons
     rxSerialCharac.setEventHandler(BLEWritten, [&](BLEDevice d, BLECharacteristic c) { rxReceivedData(c); });
 }
 
-string STM32SerialBLE::read(size_t nb)
-{
-    return string((char*)(readBuffer(nb).data()));
-}
-
 string STM32SerialBLE::readUntil(char delimiter)
 {
     string result;
@@ -74,15 +69,14 @@ void STM32SerialBLE::sendBuffer(uint8_t* buf, size_t len)
     send(str);
 }
 
-size_t STM32SerialBLE::available()
-{
-    return rxBuffer.size();
-}
-
 void STM32SerialBLE::rxReceivedData(BLECharacteristic& characteristic)
 {
     auto value = characteristic.value();
     for (int i = 0; i < characteristic.valueLength(); ++i) {
         rxBuffer.push(value[i]);
+    }
+
+    if (fctOnDelimiter && count(value, value + characteristic.valueLength(), (uint8_t)charOnDelimiter) > 0) {
+        fctOnDelimiter();
     }
 }
