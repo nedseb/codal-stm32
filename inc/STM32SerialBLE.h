@@ -26,7 +26,7 @@ class STM32SerialBLE {
      * @param nb The number of characters to read (by default, '0' mean all)
      * @return std::string
      */
-    std::string read(size_t nb = 0);
+    std::string read(size_t nb = 0) { return std::string((char*)(readBuffer(nb).data())); }
 
     /**
      * @brief Read string from buffer until the delimiter (included)
@@ -64,7 +64,7 @@ class STM32SerialBLE {
      *
      * @return size_t the number of bytes
      */
-    size_t available();
+    size_t available() { return rxBuffer.size(); }
 
     /**
      * @brief Get the BLEService object
@@ -73,11 +73,26 @@ class STM32SerialBLE {
      */
     const BLEService getService() { return serialService; }
 
+    /**
+     * @brief Execute the `fct` function when the delimiter `delim` is received
+     *
+     * @param delim the delimiter
+     * @param fct the function to execute
+     */
+    void onDelimiterReceived(char delim, std::function<void()> fct)
+    {
+        charOnDelimiter = delim;
+        fctOnDelimiter  = fct;
+    }
+
   private:
     std::queue<uint8_t> rxBuffer;
     BLEService serialService;
     BLEStringCharacteristic rxSerialCharac;
     BLEStringCharacteristic txSerialCharac;
+
+    char charOnDelimiter;
+    std::function<void()> fctOnDelimiter;
 
     void rxReceivedData(BLECharacteristic& characteristic);
 };
