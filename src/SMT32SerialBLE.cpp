@@ -12,7 +12,8 @@ STM32SerialBLE::STM32SerialBLE(const char* serviceUUID, const char* rxUUID, cons
     : CodalComponent(STM32_ID_BLE_SERIAL, 0),
       serialService(serviceUUID),
       rxSerialCharac(rxUUID, BLEWrite | BLEWriteWithoutResponse, BLE_RX_BUFFER_SIZE),
-      txSerialCharac(txUUID, BLEIndicate, BLE_TX_BUFFER_SIZE)
+      txSerialCharac(txUUID, BLEIndicate, BLE_TX_BUFFER_SIZE),
+      charOnDelimiter(0)
 {
     serialService.addCharacteristic(rxSerialCharac);
     serialService.addCharacteristic(txSerialCharac);
@@ -77,5 +78,7 @@ void STM32SerialBLE::rxReceivedData(BLECharacteristic& characteristic)
         rxBuffer.push(value[i]);
     }
 
-    codal::Event(STM32_ID_BLE_SERIAL, STM32_BLE_EVT_DELIMITER);
+    if (count(value, value + characteristic.valueLength(), (uint8_t)charOnDelimiter) > 0) {
+        codal::Event(STM32_ID_BLE_SERIAL, STM32_BLE_EVT_DELIMITER);
+    }
 }

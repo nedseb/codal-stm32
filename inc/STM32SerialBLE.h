@@ -75,6 +75,13 @@ class STM32SerialBLE : CodalComponent {
      */
     const BLEService getService() { return serialService; }
 
+    /**
+     * @brief Set the delimiter char when delimiter event should be fired
+     *
+     * @param delim the delimiter
+     */
+    void onDelimiterReceived(char delim) { charOnDelimiter = delim; }
+
     virtual void periodicCallback() override final { BLE.poll(); }
 
   private:
@@ -82,6 +89,8 @@ class STM32SerialBLE : CodalComponent {
     BLEService serialService;
     BLEStringCharacteristic rxSerialCharac;
     BLEStringCharacteristic txSerialCharac;
+
+    char charOnDelimiter;
 
     void rxReceivedData(BLECharacteristic& characteristic);
 };
