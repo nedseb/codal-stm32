@@ -1,15 +1,17 @@
 #ifndef __STM32_SERIAL_BLUETOOTH__
 #define __STM32_SERIAL_BLUETOOTH__
-
 #include <queue>
 #include <string>
 #include <vector>
 
+#include "CodalComponent.h"
+#include "Event.h"
+#include "ExternalEvents.h"
 #include "STM32duinoBLE.h"
 
 namespace codal {
 
-class STM32SerialBLE {
+class STM32SerialBLE : CodalComponent {
   public:
     /**
      * @brief Construct a new STM32SerialBLE object
@@ -73,26 +75,13 @@ class STM32SerialBLE {
      */
     const BLEService getService() { return serialService; }
 
-    /**
-     * @brief Execute the `fct` function when the delimiter `delim` is received
-     *
-     * @param delim the delimiter
-     * @param fct the function to execute
-     */
-    void onDelimiterReceived(char delim, std::function<void()> fct)
-    {
-        charOnDelimiter = delim;
-        fctOnDelimiter  = fct;
-    }
+    virtual void periodicCallback() override final { BLE.poll(); }
 
   private:
     std::queue<uint8_t> rxBuffer;
     BLEService serialService;
     BLEStringCharacteristic rxSerialCharac;
     BLEStringCharacteristic txSerialCharac;
-
-    char charOnDelimiter;
-    std::function<void()> fctOnDelimiter;
 
     void rxReceivedData(BLECharacteristic& characteristic);
 };
