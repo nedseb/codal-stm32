@@ -9,7 +9,8 @@ using namespace codal;
 #define BLE_RX_BUFFER_SIZE 512
 
 STM32SerialBLE::STM32SerialBLE(const char* serviceUUID, const char* rxUUID, const char* txUUID)
-    : serialService(serviceUUID),
+    : CodalComponent(STM32_ID_BLE_SERIAL, 0),
+      serialService(serviceUUID),
       rxSerialCharac(rxUUID, BLEWrite | BLEWriteWithoutResponse, BLE_RX_BUFFER_SIZE),
       txSerialCharac(txUUID, BLEIndicate, BLE_TX_BUFFER_SIZE)
 {
@@ -76,7 +77,5 @@ void STM32SerialBLE::rxReceivedData(BLECharacteristic& characteristic)
         rxBuffer.push(value[i]);
     }
 
-    if (fctOnDelimiter && count(value, value + characteristic.valueLength(), (uint8_t)charOnDelimiter) > 0) {
-        fctOnDelimiter();
-    }
+    codal::Event(STM32_ID_BLE_SERIAL, STM32_BLE_EVT_DELIMITER);
 }
