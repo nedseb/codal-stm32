@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <functional>
 
 #include "STM32SerialBLE.h"
