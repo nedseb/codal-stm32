@@ -40,7 +40,7 @@ bool GAPClass::advertising()
     return _advertising;
 }
 
-int GAPClass::advertise(uint8_t* advData, uint8_t advDataLen, uint8_t* scanData, uint8_t scanDataLen)
+int GAPClass::advertise(uint8_t* advData, uint8_t advDataLen, uint8_t* scanData, uint8_t scanDataLen, uint8_t channel)
 {
     uint8_t directBdaddr[6] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
@@ -49,7 +49,7 @@ int GAPClass::advertise(uint8_t* advData, uint8_t advDataLen, uint8_t* scanData,
     stopAdvertise();
 
     if (HCI.leSetAdvertisingParameters(_advertisingInterval, _advertisingInterval, type, _ownBdaddrType, 0x00,
-                                       directBdaddr, 0x07, 0) != 0) {
+                                       directBdaddr, channel, 0) != 0) {
         return 0;
     }
 
