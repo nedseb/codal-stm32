@@ -203,7 +203,7 @@ void BLELocalDevice::addService(BLEService& service)
     GATT.addService(service);
 }
 
-int BLELocalDevice::advertise()
+int BLELocalDevice::advertise(uint8_t channel)
 {
     _advertisingData.updateData();
     _scanResponseData.updateData();

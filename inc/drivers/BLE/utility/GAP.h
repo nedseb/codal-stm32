@@ -31,7 +31,8 @@ class GAPClass {
     virtual ~GAPClass();
 
     virtual bool advertising();
-    virtual int advertise(uint8_t* advData, uint8_t advDataLength, uint8_t* scanData, uint8_t scanDataLength);
+    virtual int advertise(uint8_t* advData, uint8_t advDataLength, uint8_t* scanData, uint8_t scanDataLength,
+                          uint8_t channel = 0x07);
     virtual void stopAdvertise();
 
     virtual int scan(bool withDuplicates);

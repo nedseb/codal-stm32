@@ -66,7 +66,7 @@ class BLELocalDevice {
 
     virtual void addService(BLEService& service);
 
-    virtual int advertise();
+    virtual int advertise(uint8_t channel = 0x07);
     virtual void stopAdvertise();
 
     virtual int scan(bool withDuplicates = false);
