@@ -4,7 +4,7 @@
   * Implementation of newlib syscall.
   *
   */
-
+#include <stddef.h>
 #include "stm32_def.h"
 #if defined (  __GNUC__  ) /* GCC CS3 */
   #include <sys/stat.h>
@@ -12,6 +12,9 @@
 #include <errno.h>
 #undef errno
 extern int errno;
+
+extern int __io_putchar(int ch) __attribute__((weak));
+extern int __io_getchar(void) __attribute__((weak));
 
 extern size_t uart_debug_write(uint8_t *data, uint32_t size);
 
@@ -76,17 +79,29 @@ int _lseek(UNUSED(int file), UNUSED(int ptr), UNUSED(int dir))
 }
 
 __attribute__((weak))
-int _read(UNUSED(int file), UNUSED(char *ptr), UNUSED(int len))
+int _read (int file, char *ptr, int len)
 {
-  return 0;
+	/* The I/O library uses an internal buffer */
+	/* It asks for 1024 characters even if only getc() is used. */
+	/* If we use a for(;;) loop on the number of characters requested, */
+	/* the user is forced to enter the exact number requested, even if only one is needed. */
+	/* So here we return only 1 character even if requested length is > 1 */
+	*ptr = __io_getchar();
+
+	return 1;
 }
 
-/* Moved to Print.cpp to support Print::printf()
 __attribute__((weak))
-int _write(UNUSED(int file), char *ptr, int len)
+int _write(int file, char *ptr, int len)
 {
+	int DataIdx;
+
+	for (DataIdx = 0; DataIdx < len; DataIdx++)
+	{
+		__io_putchar(*ptr++);
+	}
+	return len;
 }
-*/
 
 __attribute__((weak))
 void _exit(UNUSED(int status))
