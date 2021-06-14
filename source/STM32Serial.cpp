@@ -8,9 +8,13 @@ using namespace codal;
 using namespace std;
 
 STM32Serial* codal::default_serial_debug = nullptr;
-std::map<serial_t*, STM32Serial*> STM32Serial::mapSerialInstance;
 
-STM32Serial::STM32Serial(STM32Pin& rxPin, STM32Pin& txPin) : Serial(txPin, rxPin), rxPin(rxPin), txPin(txPin)
+// We need to be sure that this object should be constructed before any static STM32Serial object. I'm so sorry for
+// that. Please don't judge me :)
+std::map<serial_t*, STM32Serial*> STM32Serial::mapSerialInstance __attribute__((init_priority(102)));
+
+STM32Serial::STM32Serial(STM32Pin& rxPin, STM32Pin& txPin)
+    : Serial(txPin, rxPin), rxPin(rxPin), txPin(txPin), serial(), baudrate(), databits(), parity(), stopBit()
 {
     mapSerialInstance.insert(pair<serial_t*, STM32Serial*>(&serial, this));
 }
