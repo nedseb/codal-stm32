@@ -4307,7 +4307,7 @@ int VL53L0X_base::InitSensor(uint8_t NewAddr)
     if (!status) {
         VL53L0X_DataInit(Device);
         if (status != VL53L0X_ERROR_NONE) {
-            printf("Failed to init VL53L0X sensor!\n\r");
+            printf("Failed to init VL53L0X sensor!\r\n");
             return status;
         }
 
@@ -4316,19 +4316,19 @@ int VL53L0X_base::InitSensor(uint8_t NewAddr)
 
         status = Prepare();
         if (status != VL53L0X_ERROR_NONE) {
-            printf("Failed to prepare VL53L0X!\n\r");
+            printf("Failed to prepare VL53L0X!\r\n");
             return status;
         }
 
         if (NewAddr != VL53L0x_DEFAULT_DEVICE_ADDRESS) {
             status = SetDeviceAddress(NewAddr);
             if (status) {
-                printf("Failed to change I2C address!\n\r");
+                printf("Failed to change I2C address!\r\n");
                 return status;
             }
         }
         else {
-            printf("Invalid new address!\n\r");
+            printf("Invalid new address!\r\n");
             return VL53L0X_ERROR_INVALID_PARAMS;
         }
     }
