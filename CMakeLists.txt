@@ -14,6 +14,10 @@ list(APPEND INCLUDE_DIRS
     "${CMAKE_CURRENT_SOURCE_DIR}/source/"
     "${CMAKE_CURRENT_SOURCE_DIR}/source/stm32"
     "${CMAKE_CURRENT_SOURCE_DIR}/source/stm32/LL"
+    "${CMAKE_CURRENT_SOURCE_DIR}/source/stm32/usb"
+    "${CMAKE_CURRENT_SOURCE_DIR}/source/stm32/usb/cdc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/source/stm32/usb/hid"
+    "${CMAKE_CURRENT_SOURCE_DIR}/source/stm32/usb/webusb"
     "${CMAKE_CURRENT_SOURCE_DIR}/system/CMSIS_5/CMSIS/Core/Include"
     "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/CMSIS/Device/ST/${device.series}/Include"
     "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/CMSIS/Device/ST/${device.series}/Source/Templates/gcc"
@@ -21,6 +25,10 @@ list(APPEND INCLUDE_DIRS
     "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/${device.series}_HAL_Driver/Inc"
     "${CMAKE_CURRENT_SOURCE_DIR}/system/Drivers/${device.series}_HAL_Driver/Src"
     "${CMAKE_CURRENT_SOURCE_DIR}/variants/${device.variant}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/system/Middlewares/ST/STM32_USB_Device_Library/Core/Inc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/system/Middlewares/ST/STM32_USB_Device_Library/Core/Src"
+    "${CMAKE_CURRENT_SOURCE_DIR}/system/Middlewares/ST/STM32_USB_Device_Library/Class/WebUSB/Inc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/system/Middlewares/ST/STM32_USB_Device_Library/Class/WebUSB/Src"
     )
  
 string(TOLOWER  "${device.series}" PROCESSOR_NAME)
