@@ -82,7 +82,8 @@ class STM32SerialBLE : CodalComponent {
      */
     void onDelimiterReceived(char delim) { charOnDelimiter = delim; }
 
-    virtual void periodicCallback() override final { BLE.poll(); }
+    virtual void periodicCallback() override final;
+    virtual int begin() final;
 
   private:
     std::queue<uint8_t> rxBuffer;

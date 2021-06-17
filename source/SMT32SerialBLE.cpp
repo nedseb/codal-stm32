@@ -6,6 +6,8 @@
 using namespace std;
 using namespace codal;
 
+#define DEVICE_INITIALIZED 0x01
+
 #define BLE_TX_BUFFER_SIZE 512
 #define BLE_RX_BUFFER_SIZE 512
 
@@ -16,11 +18,29 @@ STM32SerialBLE::STM32SerialBLE(const char* serviceUUID, const char* rxUUID, cons
       txSerialCharac(txUUID, BLEIndicate, BLE_TX_BUFFER_SIZE),
       charOnDelimiter(0)
 {
+}
+
+void STM32SerialBLE::periodicCallback()
+{
+    if ((status & DEVICE_INITIALIZED) != 0) {
+        BLE.poll();
+    }
+}
+
+int STM32SerialBLE::begin()
+{
+    if ((status & DEVICE_INITIALIZED) != 0) {
+        return DEVICE_NOT_SUPPORTED;
+    }
+
+    status |= DEVICE_INITIALIZED;
+
     serialService.addCharacteristic(rxSerialCharac);
     serialService.addCharacteristic(txSerialCharac);
     BLE.addService(serialService);
 
     rxSerialCharac.setEventHandler(BLEWritten, [&](BLEDevice d, BLECharacteristic c) { rxReceivedData(c); });
+    return DEVICE_OK;
 }
 
 string STM32SerialBLE::readUntil(char delimiter)
