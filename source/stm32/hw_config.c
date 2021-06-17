@@ -13,7 +13,7 @@
 #include "dwt.h"
 #include "hw_config.h"
 #include "clock.h"
-//#include "usbd_if.h"
+#include "usbd_if.h"
 
 #ifdef __cplusplus
 extern "C" {
