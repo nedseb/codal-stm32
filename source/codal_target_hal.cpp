@@ -7,6 +7,7 @@
 #include "board.h"
 #include "stm32yyxx_ll_pwr.h"
 #include "stm32yyxx_ll_rcc.h"
+#include "variant.h"
 
 static int8_t irq_disabled;
 void target_enable_irq()
