@@ -2,9 +2,13 @@
 
 #include "CodalDmesg.h"
 
+/* Private Defines */
+#define PIN_NOT_USED 0xFF
+#define MAX_RELOAD   ((1 << 16) - 1)  // Currently even 32b timers are used as 16b to have generic behavior
+
 using namespace codal;
 
-STM32LowLevelTimer* instances[5] = {0};
+STM32LowLevelTimer* instances[TIMER_NUM] = {nullptr};
 
 void codal::timer_irq_handler(uint8_t index)
 {
@@ -60,29 +64,44 @@ extern "C" void TIM5_IRQHandler()
 
 STM32LowLevelTimer::STM32LowLevelTimer(TIM_TypeDef* timer, uint8_t irqn) : LowLevelTimer(4)
 {
-    __HAL_RCC_TIM5_CLK_ENABLE();
+    uint32_t index = get_timer_index(timer);
+    if (index == UNKNOWN_TIMER) {
+        Error_Handler();
+    }
     this->timer_instance = timer;
     this->irqN           = irqn;
+
     memset(&TimHandle, 0, sizeof(TIM_HandleTypeDef));
+    TimHandle.Instance = timer;
+    TimHandle.Channel  = HAL_TIM_ACTIVE_CHANNEL_CLEARED;
+    TimHandle.hdma[0]  = NULL;
+    TimHandle.hdma[1]  = NULL;
+    TimHandle.hdma[2]  = NULL;
+    TimHandle.hdma[3]  = NULL;
+    TimHandle.hdma[4]  = NULL;
+    TimHandle.hdma[5]  = NULL;
+    TimHandle.hdma[6]  = NULL;
+    TimHandle.Lock     = HAL_UNLOCKED;
+    TimHandle.State    = HAL_TIM_STATE_RESET;
 
-    DMESG("SYS CLK: %d %d", SystemCoreClock, (uint32_t)((SystemCoreClock / 1000000)));
+    enableTimerClock(&TimHandle);
 
-    TimHandle.Instance           = this->timer_instance;
-    TimHandle.Init.Period        = 0xFFFFFFFF;
+    /* Configure timer with some default values */
     TimHandle.Init.Prescaler     = (uint32_t)((SystemCoreClock / 1000000) - 1);
-    TimHandle.Init.ClockDivision = 0;
+    TimHandle.Init.Period        = MAX_RELOAD;
     TimHandle.Init.CounterMode   = TIM_COUNTERMODE_UP;
-    HAL_TIM_OC_Init(&TimHandle);
+    TimHandle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+#if defined(TIM_RCR_REP)
+    TimHandle.Init.RepetitionCounter = 0;
+#endif
+    TimHandle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+
+    HAL_TIM_Base_Init(&TimHandle);
 
     // all timers run in at least 16 bit mode, so lets use it as a default.
     setBitMode(BitMode16);
 
-    uint8_t instance_index = 0;
-
-    if (timer == TIM2) instance_index = 1;
-    if (timer == TIM3) instance_index = 2;
-    if (timer == TIM4) instance_index = 3;
-    if (timer == TIM5) instance_index = 4;
+    uint8_t instance_index = get_timer_index(timer);
 
     instances[instance_index] = this;
 }
@@ -274,4 +293,126 @@ int STM32LowLevelTimer::setBitMode(TimerBitMode t)
 
     this->bitMode = t;
     return DEVICE_OK;
+}
+
+/**
+ * @brief  return timer index from timer handle
+ * @param  htim : one of the defined timer
+ * @retval timer index
+ */
+timer_index_t codal::get_timer_index(TIM_TypeDef* instance)
+{
+    timer_index_t index = UNKNOWN_TIMER;
+
+#if defined(TIM1_BASE)
+    if (instance == TIM1) {
+        index = TIMER1_INDEX;
+    }
+#endif
+#if defined(TIM2_BASE)
+    if (instance == TIM2) {
+        index = TIMER2_INDEX;
+    }
+#endif
+#if defined(TIM3_BASE)
+    if (instance == TIM3) {
+        index = TIMER3_INDEX;
+    }
+#endif
+#if defined(TIM4_BASE)
+    if (instance == TIM4) {
+        index = TIMER4_INDEX;
+    }
+#endif
+#if defined(TIM5_BASE)
+    if (instance == TIM5) {
+        index = TIMER5_INDEX;
+    }
+#endif
+#if defined(TIM6_BASE)
+    if (instance == TIM6) {
+        index = TIMER6_INDEX;
+    }
+#endif
+#if defined(TIM7_BASE)
+    if (instance == TIM7) {
+        index = TIMER7_INDEX;
+    }
+#endif
+#if defined(TIM8_BASE)
+    if (instance == TIM8) {
+        index = TIMER8_INDEX;
+    }
+#endif
+#if defined(TIM9_BASE)
+    if (instance == TIM9) {
+        index = TIMER9_INDEX;
+    }
+#endif
+#if defined(TIM10_BASE)
+    if (instance == TIM10) {
+        index = TIMER10_INDEX;
+    }
+#endif
+#if defined(TIM11_BASE)
+    if (instance == TIM11) {
+        index = TIMER11_INDEX;
+    }
+#endif
+#if defined(TIM12_BASE)
+    if (instance == TIM12) {
+        index = TIMER12_INDEX;
+    }
+#endif
+#if defined(TIM13_BASE)
+    if (instance == TIM13) {
+        index = TIMER13_INDEX;
+    }
+#endif
+#if defined(TIM14_BASE)
+    if (instance == TIM14) {
+        index = TIMER14_INDEX;
+    }
+#endif
+#if defined(TIM15_BASE)
+    if (instance == TIM15) {
+        index = TIMER15_INDEX;
+    }
+#endif
+#if defined(TIM16_BASE)
+    if (instance == TIM16) {
+        index = TIMER16_INDEX;
+    }
+#endif
+#if defined(TIM17_BASE)
+    if (instance == TIM17) {
+        index = TIMER17_INDEX;
+    }
+#endif
+#if defined(TIM18_BASE)
+    if (instance == TIM18) {
+        index = TIMER18_INDEX;
+    }
+#endif
+#if defined(TIM19_BASE)
+    if (instance == TIM19) {
+        index = TIMER19_INDEX;
+    }
+#endif
+#if defined(TIM20_BASE)
+    if (instance == TIM20) {
+        index = TIMER20_INDEX;
+    }
+#endif
+#if defined(TIM21_BASE)
+    if (instance == TIM21) {
+        index = TIMER21_INDEX;
+    }
+#endif
+#if defined(TIM22_BASE)
+    if (instance == TIM22) {
+        index = TIMER22_INDEX;
+    }
+#endif
+    return index;
 }
