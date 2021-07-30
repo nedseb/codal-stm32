@@ -1,5 +1,4 @@
-#ifndef __STM32_INTERRUPT_HANDLERS_H
-#define __STM32_INTERRUPT_HANDLERS_H
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -18,6 +17,4 @@ void SysTick_Handler(void);
 
 #ifdef __cplusplus
 }
-#endif
-
 #endif

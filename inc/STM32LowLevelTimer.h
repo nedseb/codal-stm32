@@ -1,54 +1,48 @@
-#include "LowLevelTimer.h"
-#include "stm32yyxx_ll_tim.h"
-#include "timer.h"
+#pragma once
 
-#ifndef STM32_LOW_LEVEL_TIMER_H
-#define STM32_LOW_LEVEL_TIMER_H
+#include "LowLevelTimer.h"
+#include "stm32yyxx_hal_conf.h"
+#include "timer.h"
 
 #define STM_LOW_LEVEL_TIMER_STATUS_ENABLED 0x02
 
 namespace codal {
+
 class STM32LowLevelTimer : public LowLevelTimer {
   private:
-    IRQn_Type irqN;
+    uint8_t irqN;
     TIM_TypeDef* timer_instance;
     TIM_HandleTypeDef TimHandle;
-    uint16_t status;  // Component defined state.
 
   public:
-    STM32LowLevelTimer(TIM_TypeDef* timer, IRQn_Type irqn);
+    STM32LowLevelTimer(TIM_TypeDef* timer, uint8_t irqn);
 
-    virtual ~STM32LowLevelTimer();
+    virtual int enable();
 
-    virtual int setIRQPriority(int) override final;
+    virtual int enableIRQ();
 
-    virtual int enable() override final;
+    virtual int disable();
 
-    virtual int enableIRQ() override final;
+    virtual int disableIRQ();
 
-    virtual int disable() override final;
+    virtual int reset();
 
-    virtual int disableIRQ() override final;
+    virtual int setMode(TimerMode t);
 
-    virtual int reset() override final;
+    virtual int setCompare(uint8_t channel, uint32_t value);
 
-    virtual int setMode(TimerMode t) override final;
+    virtual int offsetCompare(uint8_t channel, uint32_t value);
 
-    virtual int setCompare(uint8_t channel, uint32_t value) override final;
+    virtual int clearCompare(uint8_t channel);
 
-    virtual int offsetCompare(uint8_t channel, uint32_t value) override final;
+    virtual uint32_t captureCounter();
 
-    virtual int clearCompare(uint8_t channel) override final;
+    virtual int setClockSpeed(uint32_t speedKHz);
 
-    virtual uint32_t captureCounter() override final;
-
-    virtual int setClockSpeed(uint32_t speedKHz) override final;
-
-    virtual int setBitMode(TimerBitMode t) override final;
+    virtual int setBitMode(TimerBitMode t);
 
     friend void timer_irq_handler(uint8_t index);
 };
+
 void timer_irq_handler(uint8_t index);
 }  // namespace codal
-
-#endif

@@ -290,4 +290,3 @@ restore_register_context:
 
     @ Return to caller (normally the scheduler).
     BX      LR
-    
