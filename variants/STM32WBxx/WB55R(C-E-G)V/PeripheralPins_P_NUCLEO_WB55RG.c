@@ -15,7 +15,7 @@
  * STM32WB55RGVx.xml
  * CubeMX DB release 6.0.21
  */
-#if !defined(CUSTOM_PERIPHERAL_PINS)
+#if defined(ARDUINO_P_NUCLEO_WB55RG)
 #include "Arduino.h"
 #include "PeripheralPins.h"
 
