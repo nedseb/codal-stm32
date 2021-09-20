@@ -6,40 +6,40 @@
 #include "STM32I2C.h"
 #include "frameBuffer.h"
 
-namespace codal{
-    
-    class SSD1306 : public FrameBuffer{
-        public:
-            SSD1306(unsigned width, unsigned height, bool externalVCC = false);
-            ~SSD1306();
+namespace codal {
 
-            void init();
-            void powerOff();
-            void powerOn();
-            void contrast( uint8_t contrast);
-            void invert( bool invert );
-            void show();
+class SSD1306 : public FrameBuffer {
+  public:
+    SSD1306(unsigned width, unsigned height, bool externalVCC = false);
+    ~SSD1306();
 
-            virtual void writeCommand( uint8_t cmd ) = 0;
-            virtual void writeData( uint8_t* buf, unsigned size ) = 0;
+    void init();
+    void powerOff();
+    void powerOn();
+    void contrast(uint8_t contrast);
+    void invert(bool invert);
+    void show();
 
-        private:
-            bool externalVCC;
-    };
+    virtual void writeCommand(uint8_t cmd)              = 0;
+    virtual void writeData(uint8_t* buf, unsigned size) = 0;
 
-    class SSD1306_I2C : public SSD1306 {
-        public:
-            SSD1306_I2C( STM32I2C i2c, uint16_t address, unsigned width, unsigned height, bool externalVCC = false );
-            ~SSD1306_I2C();
+  private:
+    bool externalVCC;
+};
 
-            void writeCommand( uint8_t cmd );
-            void writeData( uint8_t* buf, unsigned len );
+class SSD1306_I2C : public SSD1306 {
+  public:
+    SSD1306_I2C(STM32I2C* i2c, uint16_t address, unsigned width, unsigned height, bool externalVCC = false);
+    ~SSD1306_I2C();
 
-        private:
-            STM32I2C i2c;
-            uint16_t address;
-    };
+    void writeCommand(uint8_t cmd);
+    void writeData(uint8_t* buf, unsigned len);
 
-}
+  private:
+    STM32I2C* i2c;
+    uint16_t address;
+};
+
+}  // namespace codal
 
 #endif

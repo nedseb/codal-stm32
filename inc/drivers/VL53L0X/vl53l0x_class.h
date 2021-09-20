@@ -241,7 +241,7 @@ class VL53L0X_base {
      * @param[in] shutPin XShut pin, for enable/disable the sensor
      * @param[in] DevAddr device address, 0x29 by default
      */
-    VL53L0X_base(STM32I2C& i2c, STM32Pin& shutPin, uint8_t DevAddr = VL53L0x_DEFAULT_DEVICE_ADDRESS);
+    VL53L0X_base(STM32I2C* i2c, STM32Pin* shutPin, uint8_t DevAddr = VL53L0x_DEFAULT_DEVICE_ADDRESS);
 
     /** Destructor
      */
@@ -609,8 +609,8 @@ class VL53L0X_base {
   protected:
     VL53L0X_DeviceInfo_t DeviceInfo;
 
-    STM32I2C& dev_i2c;
-    STM32Pin& shutPin;
+    STM32I2C* dev_i2c;
+    STM32Pin* shutPin;
 
     VL53L0X_Dev_t MyDevice;
     VL53L0X_DEV Device;

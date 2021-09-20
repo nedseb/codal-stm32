@@ -35,157 +35,152 @@
  ******************************************************************************
  */
 
-
 #ifndef __LPS22HB_H__
 #define __LPS22HB_H__
-
 
 #include "STM32I2C.h"
 #include "lps22hb_driver.h"
 
+namespace codal {
 
-namespace codal{
+class LPS22HB {
+  public:
+    /**
+     * @brief Constructor
+     * @param i2c object of an helper class which handles the I2C peripheral
+     * @param address the address of the component's instance (default : 0xB8)
+     */
+    LPS22HB(STM32I2C* i2c, uint8_t address = 0xB8);
 
-    class LPS22HB
+    /**
+     * @brief Init the sensor
+     *
+     */
+    void init();
+
+    /**
+     * @brief Turn on the sensor
+     *
+     */
+    void enable(void);
+
+    /**
+     * @brief Turn off the sensor
+     *
+     */
+    void disable(void);
+
+    /**
+     * @brief  Read ID address of LPS22HB
+     * @retval The ID of the device is stored
+     */
+    uint8_t readID();
+
+    /**
+     * @brief  Reboot memory content of LPS22HB
+     */
+    void reset(void);
+
+    /**
+     * @brief  Read LPS22HB output register, and calculate the pressure in mbar
+     * @retval The pressure value
+     */
+    float getPressure();
+
+    /**
+     * @brief  Read LPS22HB output register, and calculate the temperature
+     * @retval The temperature value
+     */
+    float getTemperature();
+
+    /**
+     * @brief  Read LPS22HB output data rate
+     * @retval The output data rate
+     */
+    float getODR();
+
+    /**
+     * @brief  Set ODR
+     * @param  odr the output data rate to be set
+     */
+    void setODR(float odr);
+
+    /**
+     * @brief Read the data from register
+     * @param reg register address
+     * @retval The register data
+     */
+    uint8_t readReg(uint8_t reg);
+
+    /**
+     * @brief Write the data to register
+     * @param reg register address
+     * @param data register data
+     * @retval True in case of success, false otherwise
+     */
+    bool writeReg(uint8_t reg, uint8_t data);
+
+    /**
+     * @brief Utility function to read data.
+     * @param  pBuffer: pointer to data to be read.
+     * @param  RegisterAddr: specifies internal address register to be read.
+     * @param  NumByteToRead: number of bytes to be read.
+     * @retval 0 if ok, an error code otherwise.
+     */
+    uint8_t IO_Read(uint8_t* pBuffer, uint8_t RegisterAddr, uint16_t NumByteToRead)
     {
-        public: 
-            /**
-             * @brief Constructor
-             * @param i2c object of an helper class which handles the I2C peripheral
-             * @param address the address of the component's instance (default : 0xB8)
-             */
-            LPS22HB(STM32I2C& i2c, uint8_t address = 0xB8);
-            
-            /**
-             * @brief Init the sensor
-             * 
-             */
-            void init();
+        auto result = dev_i2c->readRegister(address, RegisterAddr, NumByteToRead);
+        memcpy(pBuffer, result.data(), NumByteToRead);
 
-            /**
-             * @brief Turn on the sensor
-             * 
-             */
-            void enable(void);
-
-            /**
-             * @brief Turn off the sensor
-             * 
-             */
-            void disable(void);
-
-            /**
-             * @brief  Read ID address of LPS22HB
-             * @retval The ID of the device is stored
-             */
-            uint8_t readID();
-
-            /**
-             * @brief  Reboot memory content of LPS22HB
-             */
-            void reset(void);
-
-            /**
-             * @brief  Read LPS22HB output register, and calculate the pressure in mbar
-             * @retval The pressure value
-             */
-            float getPressure();
-
-            /**
-             * @brief  Read LPS22HB output register, and calculate the temperature
-             * @retval The temperature value
-             */
-            float getTemperature();
-
-            /**
-             * @brief  Read LPS22HB output data rate
-             * @retval The output data rate
-             */
-            float getODR();
-
-            /**
-             * @brief  Set ODR
-             * @param  odr the output data rate to be set
-             */
-            void setODR(float odr);
-
-            /**
-             * @brief Read the data from register
-             * @param reg register address
-             * @retval The register data
-             */
-            uint8_t readReg(uint8_t reg);
-
-            /**
-             * @brief Write the data to register
-             * @param reg register address
-             * @param data register data
-             * @retval True in case of success, false otherwise
-             */
-            bool writeReg(uint8_t reg, uint8_t data);
-            
-            /**
-             * @brief Utility function to read data.
-             * @param  pBuffer: pointer to data to be read.
-             * @param  RegisterAddr: specifies internal address register to be read.
-             * @param  NumByteToRead: number of bytes to be read.
-             * @retval 0 if ok, an error code otherwise.
-             */
-            uint8_t IO_Read(uint8_t* pBuffer, uint8_t RegisterAddr, uint16_t NumByteToRead)
-            {
-                auto result = dev_i2c.readRegister(address, RegisterAddr, NumByteToRead);
-                memcpy( pBuffer, result.data(), NumByteToRead );
-
-                return 0;
-            }
-            
-            /**
-             * @brief Utility function to write data.
-             * @param  pBuffer: pointer to data to be written.
-             * @param  RegisterAddr: specifies internal address register to be written.
-             * @param  NumByteToWrite: number of bytes to write.
-             * @retval 0 if ok, an error code otherwise.
-             */
-            uint8_t IO_Write(uint8_t* pBuffer, uint8_t RegisterAddr, uint16_t NumByteToWrite)
-            {
-                dev_i2c.beginTransmission(address);
-                    dev_i2c.write(RegisterAddr);
-                    dev_i2c.write(pBuffer, NumByteToWrite);
-                dev_i2c.endTransmission();
-
-                return 0;
-            }
-
-        private:
-            STM32I2C& dev_i2c;
-            uint8_t address;
-            bool isEnabled;
-            float Last_ODR;
-
-            /**
-             * @brief Set the LPS22HB sensor output data rate when enabled
-             * @param odr the functional output data rate to be set
-             * @retval True in case of success, false otherwise
-             */
-            bool setODR_When_Enabled(float odr);
-
-            /**
-             * @brief Set the LPS22HB sensor output data rate when disabled
-             * @param odr the functional output data rate to be set
-             * @retval True in case of success, false otherwise
-             */
-            bool setODR_When_Disabled(float odr);
-
-    };
-}
-
-#ifdef __cplusplus
-    extern "C" {
-#endif
-        uint8_t LPS22HB_IO_Write( void *handle, uint8_t WriteAddr, uint8_t *pBuffer, uint16_t nBytesToWrite );
-        uint8_t LPS22HB_IO_Read( void *handle, uint8_t ReadAddr, uint8_t *pBuffer, uint16_t nBytesToRead );
-#ifdef __cplusplus
+        return 0;
     }
+
+    /**
+     * @brief Utility function to write data.
+     * @param  pBuffer: pointer to data to be written.
+     * @param  RegisterAddr: specifies internal address register to be written.
+     * @param  NumByteToWrite: number of bytes to write.
+     * @retval 0 if ok, an error code otherwise.
+     */
+    uint8_t IO_Write(uint8_t* pBuffer, uint8_t RegisterAddr, uint16_t NumByteToWrite)
+    {
+        dev_i2c->beginTransmission(address);
+        dev_i2c->write(RegisterAddr);
+        dev_i2c->write(pBuffer, NumByteToWrite);
+        dev_i2c->endTransmission();
+
+        return 0;
+    }
+
+  private:
+    STM32I2C* dev_i2c;
+    uint8_t address;
+    bool isEnabled;
+    float Last_ODR;
+
+    /**
+     * @brief Set the LPS22HB sensor output data rate when enabled
+     * @param odr the functional output data rate to be set
+     * @retval True in case of success, false otherwise
+     */
+    bool setODR_When_Enabled(float odr);
+
+    /**
+     * @brief Set the LPS22HB sensor output data rate when disabled
+     * @param odr the functional output data rate to be set
+     * @retval True in case of success, false otherwise
+     */
+    bool setODR_When_Disabled(float odr);
+};
+}  // namespace codal
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+uint8_t LPS22HB_IO_Write(void* handle, uint8_t WriteAddr, uint8_t* pBuffer, uint16_t nBytesToWrite);
+uint8_t LPS22HB_IO_Read(void* handle, uint8_t ReadAddr, uint8_t* pBuffer, uint16_t nBytesToRead);
+#ifdef __cplusplus
+}
 #endif
 
 #endif

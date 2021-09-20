@@ -76,23 +76,23 @@ using namespace codal;
 
 uint32_t refArrayQuadrants[4] = {REF_ARRAY_SPAD_10, REF_ARRAY_SPAD_5, REF_ARRAY_SPAD_0, REF_ARRAY_SPAD_5};
 
-VL53L0X_base::VL53L0X_base(STM32I2C& i2c, STM32Pin& pin, uint8_t DevAddr) : dev_i2c(i2c), shutPin(pin)
+VL53L0X_base::VL53L0X_base(STM32I2C* i2c, STM32Pin* pin, uint8_t DevAddr) : dev_i2c(i2c), shutPin(pin)
 {
     MyDevice.I2cDevAddr      = DevAddr;
     MyDevice.comms_type      = 1;  // VL53L0X_COMMS_I2C
     MyDevice.comms_speed_khz = 400;
     Device                   = &MyDevice;
-    shutPin.setDigitalValue(0);
+    shutPin->setDigitalValue(0);
 }
 
 void VL53L0X_base::VL53L0X_On(void)
 {
-    shutPin.setDigitalValue(1);
+    shutPin->setDigitalValue(1);
 }
 
 void VL53L0X_base::VL53L0X_Off(void)
 {
-    shutPin.setDigitalValue(0);
+    shutPin->setDigitalValue(0);
 }
 
 VL53L0X_Error VL53L0X_base::VL53L0X_device_read_strobe(VL53L0X_DEV Dev)
@@ -4216,17 +4216,17 @@ VL53L0X_Error VL53L0X_base::VL53L0X_UpdateByte(VL53L0X_DEV Dev, uint8_t index, u
 VL53L0X_Error VL53L0X_base::VL53L0X_I2CWrite(uint8_t DeviceAddr, uint8_t RegisterAddr, uint8_t* pBuffer,
                                              uint16_t NumByteToWrite)
 {
-    dev_i2c.beginTransmission(DeviceAddr);
-    dev_i2c.write(RegisterAddr);
-    dev_i2c.write(pBuffer, NumByteToWrite);
-    dev_i2c.endTransmission(true);
+    dev_i2c->beginTransmission(DeviceAddr);
+    dev_i2c->write(RegisterAddr);
+    dev_i2c->write(pBuffer, NumByteToWrite);
+    dev_i2c->endTransmission(true);
     return 0;
 }
 
 VL53L0X_Error VL53L0X_base::VL53L0X_I2CRead(uint8_t DeviceAddr, uint8_t RegisterAddr, uint8_t* pBuffer,
                                             uint16_t NumByteToRead)
 {
-    auto result = dev_i2c.readRegister(DeviceAddr, RegisterAddr, NumByteToRead);
+    auto result = dev_i2c->readRegister(DeviceAddr, RegisterAddr, NumByteToRead);
     memcpy(pBuffer, result.data(), NumByteToRead);
     return 0;
 }
