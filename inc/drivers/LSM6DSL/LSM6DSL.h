@@ -17,7 +17,7 @@ class LSM6DSL{
          * @param i2c object of an helper class which handles the I2C peripheral
          * @param address the address of the component's instance
          */
-        LSM6DSL( STM32I2C& i2c, uint8_t address );
+        LSM6DSL( STM32I2C* i2c, uint8_t address );
 
         /**
          * @brief Initialize the sensor
@@ -130,7 +130,7 @@ class LSM6DSL{
         uint8_t IO_Read( uint8_t ReadAddr, uint8_t *pBuffer, uint16_t nBytesToRead );
         
     protected:
-        STM32I2C& i2c;
+        STM32I2C* i2c;
         uint8_t address;
         bool isGyroscopeEnable;
         bool isAccelerometerEnable;

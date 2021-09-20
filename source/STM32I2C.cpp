@@ -8,10 +8,10 @@
 using namespace std;
 using namespace codal;
 
-STM32I2C::STM32I2C(STM32Pin& sda, STM32Pin& scl) : I2C(sda, scl), currentAddress(0), isOnTransmission(false)
+STM32I2C::STM32I2C(STM32Pin* sda, STM32Pin* scl) : I2C(*sda, *scl), currentAddress(0), isOnTransmission(false)
 {
-    i2c.sda         = (PinName)sda.name;
-    i2c.scl         = (PinName)scl.name;
+    i2c.sda         = (PinName)sda->name;
+    i2c.scl         = (PinName)scl->name;
     i2c.isMaster    = 1;
     i2c.generalCall = 0;
 }

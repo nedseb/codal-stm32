@@ -5,30 +5,32 @@
 #include "STM32I2C.h"
 #include "Sensor.h"
 
-namespace codal{
+namespace codal {
 
 class HTS221_Temperature : public HTS221, public Sensor {
-    public:
-        HTS221_Temperature( uint8_t id, STM32I2C& i2c, uint16_t address, uint16_t sensitivity = SENSOR_DEFAULT_SENSITIVITY, uint16_t samplePeriod = SENSOR_DEFAULT_SAMPLE_PERIOD );
+  public:
+    HTS221_Temperature(uint8_t id, STM32I2C* i2c, uint16_t address, uint16_t sensitivity = SENSOR_DEFAULT_SENSITIVITY,
+                       uint16_t samplePeriod = SENSOR_DEFAULT_SAMPLE_PERIOD);
 
-        /**
-         * @brief Configure the sensor
-         * 
-         */
-        void configure();
+    /**
+     * @brief Configure the sensor
+     *
+     */
+    void configure();
 
-        /**
-         * Read the value from underlying hardware.
-         */
-        virtual int readValue( ) override final{
-            if(!isInitialized) configure();
-            return (int)getTemperature();
-        }
+    /**
+     * Read the value from underlying hardware.
+     */
+    virtual int readValue() override final
+    {
+        if (!isInitialized) configure();
+        return (int)getTemperature();
+    }
 
-    private:
-        bool isInitialized;
+  private:
+    bool isInitialized;
 };
 
-}
+}  // namespace codal
 
 #endif

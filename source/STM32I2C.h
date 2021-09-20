@@ -45,7 +45,7 @@ class STM32I2C : public codal::I2C {
     bool isOnTransmission;
 
   public:
-    STM32I2C(STM32Pin& sda, STM32Pin& scl);
+    STM32I2C(STM32Pin* sda, STM32Pin* scl);
 
     /** Set the frequency of the I2C interface
      *
