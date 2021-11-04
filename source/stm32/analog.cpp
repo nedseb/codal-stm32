@@ -1002,7 +1002,238 @@ uint16_t adc_read_value(PinName pin, uint32_t resolution)
 #endif /* HAL_ADC_MODULE_ENABLED && !HAL_ADC_MODULE_ONLY*/
 
 #if defined(HAL_TIM_MODULE_ENABLED) && !defined(HAL_TIM_MODULE_ONLY)
+
 ////////////////////////// PWM INTERFACE FUNCTIONS /////////////////////////////
+
+void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef* htim_pwm)
+{
+    // Enable TIM clock
+#if defined(TIM1_BASE)
+    if (htim_pwm->Instance == TIM1) {
+        __HAL_RCC_TIM1_CLK_ENABLE();
+    }
+#endif
+#if defined(TIM2_BASE)
+    if (htim_pwm->Instance == TIM2) {
+        __HAL_RCC_TIM2_CLK_ENABLE();
+    }
+#endif
+#if defined(TIM3_BASE)
+    if (htim_pwm->Instance == TIM3) {
+        __HAL_RCC_TIM3_CLK_ENABLE();
+    }
+#endif
+#if defined(TIM4_BASE)
+    if (htim_pwm->Instance == TIM4) {
+        __HAL_RCC_TIM4_CLK_ENABLE();
+    }
+#endif
+#if defined(TIM5_BASE)
+    if (htim_pwm->Instance == TIM5) {
+        __HAL_RCC_TIM5_CLK_ENABLE();
+    }
+#endif
+#if defined(TIM6_BASE)
+    if (htim_pwm->Instance == TIM6) {
+        __HAL_RCC_TIM6_CLK_ENABLE();
+    }
+#endif
+#if defined(TIM7_BASE)
+    if (htim_pwm->Instance == TIM7) {
+        __HAL_RCC_TIM7_CLK_ENABLE();
+    }
+#endif
+#if defined(TIM8_BASE)
+    if (htim_pwm->Instance == TIM8) {
+        __HAL_RCC_TIM8_CLK_ENABLE();
+    }
+#endif
+#if defined(TIM9_BASE)
+    if (htim_pwm->Instance == TIM9) {
+        __HAL_RCC_TIM9_CLK_ENABLE();
+    }
+#endif
+#if defined(TIM10_BASE)
+    if (htim_pwm->Instance == TIM10) {
+        __HAL_RCC_TIM10_CLK_ENABLE();
+    }
+#endif
+#if defined(TIM11_BASE)
+    if (htim_pwm->Instance == TIM11) {
+        __HAL_RCC_TIM11_CLK_ENABLE();
+    }
+#endif
+#if defined(TIM12_BASE)
+    if (htim_pwm->Instance == TIM12) {
+        __HAL_RCC_TIM12_CLK_ENABLE();
+    }
+#endif
+#if defined(TIM13_BASE)
+    if (htim_pwm->Instance == TIM13) {
+        __HAL_RCC_TIM13_CLK_ENABLE();
+    }
+#endif
+#if defined(TIM14_BASE)
+    if (htim_pwm->Instance == TIM14) {
+        __HAL_RCC_TIM14_CLK_ENABLE();
+    }
+#endif
+#if defined(TIM15_BASE)
+    if (htim_pwm->Instance == TIM15) {
+        __HAL_RCC_TIM15_CLK_ENABLE();
+    }
+#endif
+#if defined(TIM16_BASE)
+    if (htim_pwm->Instance == TIM16) {
+        __HAL_RCC_TIM16_CLK_ENABLE();
+    }
+#endif
+#if defined(TIM17_BASE)
+    if (htim_pwm->Instance == TIM17) {
+        __HAL_RCC_TIM17_CLK_ENABLE();
+    }
+#endif
+#if defined(TIM18_BASE)
+    if (htim_pwm->Instance == TIM18) {
+        __HAL_RCC_TIM18_CLK_ENABLE();
+    }
+#endif
+#if defined(TIM19_BASE)
+    if (htim_pwm->Instance == TIM19) {
+        __HAL_RCC_TIM19_CLK_ENABLE();
+    }
+#endif
+#if defined(TIM20_BASE)
+    if (htim_pwm->Instance == TIM20) {
+        __HAL_RCC_TIM20_CLK_ENABLE();
+    }
+#endif
+#if defined(TIM21_BASE)
+    if (htim_pwm->Instance == TIM21) {
+        __HAL_RCC_TIM21_CLK_ENABLE();
+    }
+#endif
+#if defined(TIM22_BASE)
+    if (htim_pwm->Instance == TIM22) {
+        __HAL_RCC_TIM22_CLK_ENABLE();
+    }
+#endif
+}
+
+void HAL_TIM_PWM_MspDeInit(TIM_HandleTypeDef* htim_pwm)
+{
+    // Enable TIM clock
+#if defined(TIM1_BASE)
+    if (htim_pwm->Instance == TIM1) {
+        __HAL_RCC_TIM1_CLK_DISABLE();
+    }
+#endif
+#if defined(TIM2_BASE)
+    if (htim_pwm->Instance == TIM2) {
+        __HAL_RCC_TIM2_CLK_DISABLE();
+    }
+#endif
+#if defined(TIM3_BASE)
+    if (htim_pwm->Instance == TIM3) {
+        __HAL_RCC_TIM3_CLK_DISABLE();
+    }
+#endif
+#if defined(TIM4_BASE)
+    if (htim_pwm->Instance == TIM4) {
+        __HAL_RCC_TIM4_CLK_DISABLE();
+    }
+#endif
+#if defined(TIM5_BASE)
+    if (htim_pwm->Instance == TIM5) {
+        __HAL_RCC_TIM5_CLK_DISABLE();
+    }
+#endif
+#if defined(TIM6_BASE)
+    if (htim_pwm->Instance == TIM6) {
+        __HAL_RCC_TIM6_CLK_DISABLE();
+    }
+#endif
+#if defined(TIM7_BASE)
+    if (htim_pwm->Instance == TIM7) {
+        __HAL_RCC_TIM7_CLK_DISABLE();
+    }
+#endif
+#if defined(TIM8_BASE)
+    if (htim_pwm->Instance == TIM8) {
+        __HAL_RCC_TIM8_CLK_DISABLE();
+    }
+#endif
+#if defined(TIM9_BASE)
+    if (htim_pwm->Instance == TIM9) {
+        __HAL_RCC_TIM9_CLK_DISABLE();
+    }
+#endif
+#if defined(TIM10_BASE)
+    if (htim_pwm->Instance == TIM10) {
+        __HAL_RCC_TIM10_CLK_DISABLE();
+    }
+#endif
+#if defined(TIM11_BASE)
+    if (htim_pwm->Instance == TIM11) {
+        __HAL_RCC_TIM11_CLK_DISABLE();
+    }
+#endif
+#if defined(TIM12_BASE)
+    if (htim_pwm->Instance == TIM12) {
+        __HAL_RCC_TIM12_CLK_DISABLE();
+    }
+#endif
+#if defined(TIM13_BASE)
+    if (htim_pwm->Instance == TIM13) {
+        __HAL_RCC_TIM13_CLK_DISABLE();
+    }
+#endif
+#if defined(TIM14_BASE)
+    if (htim_pwm->Instance == TIM14) {
+        __HAL_RCC_TIM14_CLK_DISABLE();
+    }
+#endif
+#if defined(TIM15_BASE)
+    if (htim_pwm->Instance == TIM15) {
+        __HAL_RCC_TIM15_CLK_DISABLE();
+    }
+#endif
+#if defined(TIM16_BASE)
+    if (htim_pwm->Instance == TIM16) {
+        __HAL_RCC_TIM16_CLK_DISABLE();
+    }
+#endif
+#if defined(TIM17_BASE)
+    if (htim_pwm->Instance == TIM17) {
+        __HAL_RCC_TIM17_CLK_DISABLE();
+    }
+#endif
+#if defined(TIM18_BASE)
+    if (htim_pwm->Instance == TIM18) {
+        __HAL_RCC_TIM18_CLK_DISABLE();
+    }
+#endif
+#if defined(TIM19_BASE)
+    if (htim_pwm->Instance == TIM19) {
+        __HAL_RCC_TIM19_CLK_DISABLE();
+    }
+#endif
+#if defined(TIM20_BASE)
+    if (htim_pwm->Instance == TIM20) {
+        __HAL_RCC_TIM20_CLK_DISABLE();
+    }
+#endif
+#if defined(TIM21_BASE)
+    if (htim_pwm->Instance == TIM21) {
+        __HAL_RCC_TIM21_CLK_DISABLE();
+    }
+#endif
+#if defined(TIM22_BASE)
+    if (htim_pwm->Instance == TIM22) {
+        __HAL_RCC_TIM22_CLK_DISABLE();
+    }
+#endif
+}
 
 /**
  * @brief  This function will set the PWM to the required value
@@ -1012,51 +1243,15 @@ uint16_t adc_read_value(PinName pin, uint32_t resolution)
  * @param  value : the value to push on the PWM output
  * @retval None
  */
-void pwm_start(PinName pin, uint32_t PWM_freq, uint32_t value, TimerCompareFormat_t resolution)
-{
-    // TIM_TypeDef* Instance = (TIM_TypeDef*)pinmap_peripheral(pin, PinMap_TIM);
-    // HardwareTimer* HT;
-    // TimerModes_t previousMode;
-    // uint32_t index = get_timer_index(Instance);
-    // if (HardwareTimer_Handle[index] == NULL) {
-    //     HardwareTimer_Handle[index]->__this = new HardwareTimer((TIM_TypeDef*)pinmap_peripheral(pin, PinMap_TIM));
-    // }
+void pwm_start(PinName pin, uint32_t PWM_freq, uint32_t value, TimerCompareFormat_t resolution) {}
 
-    // HT = (HardwareTimer*)(HardwareTimer_Handle[index]->__this);
-
-    // uint32_t channel = STM_PIN_CHANNEL(pinmap_function(pin, PinMap_TIM));
-
-    // previousMode = HT->getMode(channel);
-    // if (previousMode != TIMER_OUTPUT_COMPARE_PWM1) {
-    //     HT->setMode(channel, TIMER_OUTPUT_COMPARE_PWM1, pin);
-    // }
-    // HT->setOverflow(PWM_freq, HERTZ_FORMAT);
-    // HT->setCaptureCompare(channel, value, resolution);
-    // if (previousMode != TIMER_OUTPUT_COMPARE_PWM1) {
-    //     HT->resume();
-    // }
-}
 /**
  * @brief  This function will disable the PWM
  * @param  port : the gpio port to use
  * @param  pin : the gpio pin to use
  * @retval None
  */
-void pwm_stop(PinName pin)
-{
-    // TIM_TypeDef* Instance = (TIM_TypeDef*)pinmap_peripheral(pin, PinMap_TIM);
-    // HardwareTimer* HT;
-    // uint32_t index = get_timer_index(Instance);
-    // if (HardwareTimer_Handle[index] == NULL) {
-    //     HardwareTimer_Handle[index]->__this = new HardwareTimer((TIM_TypeDef*)pinmap_peripheral(pin, PinMap_TIM));
-    // }
-
-    // HT = (HardwareTimer*)(HardwareTimer_Handle[index]->__this);
-    // if (HT != NULL) {
-    //     delete (HT);
-    //     HT = NULL;
-    // }
-}
+void pwm_stop(PinName pin) {}
 #endif /* HAL_TIM_MODULE_ENABLED && !HAL_TIM_MODULE_ONLY */
 
 #ifdef __cplusplus
