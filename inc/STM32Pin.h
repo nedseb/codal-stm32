@@ -189,7 +189,7 @@ class STM32Pin : public Pin {
      * @return DEVICE_OK on success, or DEVICE_NOT_SUPPORTED if the
      *         given pin is not configured as an analog output.
      */
-    int setAnalogPeriod(int period) final override;
+    int setAnalogPeriod(int periodMs) final override;
 
     /**
      * Configures the PWM period of the analog output to the given value.
@@ -199,7 +199,7 @@ class STM32Pin : public Pin {
      * @return DEVICE_OK on success, or DEVICE_NOT_SUPPORTED if the
      *         given pin is not configured as an analog output.
      */
-    int setAnalogPeriodUs(uint32_t period) final override;
+    int setAnalogPeriodUs(uint32_t periodUs) final override;
 
     /**
      * Obtains the PWM period of the analog output in microseconds.
