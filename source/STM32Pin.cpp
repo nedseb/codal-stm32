@@ -207,25 +207,25 @@ int STM32Pin::setServoPulseUs(uint32_t pulseWidthUs)
     return DEVICE_OK;
 }
 
-int STM32Pin::setAnalogPeriod(int period)
+int STM32Pin::setAnalogPeriod(int periodMs)
 {
     // check if this pin has an analogue mode...
     if (!(PIN_CAPABILITY_ANALOG & capability)) return DEVICE_NOT_SUPPORTED;
 
     if (pwm == nullptr) return DEVICE_NOT_SUPPORTED;
 
-    analogFrequency = (uint32_t)1000 / period;
+    analogFrequency = (uint32_t)1000 / periodMs;
 
     return DEVICE_OK;
 }
-int STM32Pin::setAnalogPeriodUs(uint32_t period)
+int STM32Pin::setAnalogPeriodUs(uint32_t periodUs)
 {
     // check if this pin has an analogue mode...
     if (!(PIN_CAPABILITY_ANALOG & capability)) return DEVICE_NOT_SUPPORTED;
 
     if (pwm == nullptr) return DEVICE_NOT_SUPPORTED;
 
-    analogFrequency = (uint32_t)1000000 / period;
+    analogFrequency = (uint32_t)1000000 / periodUs;
 
     return DEVICE_OK;
 }
@@ -238,11 +238,11 @@ uint32_t STM32Pin::getAnalogPeriodUs()
 
     return (uint32_t)1000000 / analogFrequency;
 }
-int STM32Pin::setPull(PullMode pull)
+int STM32Pin::setPull(PullMode newPullMode)
 {
-    if (pullMode == pull) return DEVICE_OK;
+    if (pullMode == newPullMode) return DEVICE_OK;
 
-    pullMode = pull;
+    pullMode = newPullMode;
 
     // have to disconnect to flush the change to the hardware
     disconnect();
