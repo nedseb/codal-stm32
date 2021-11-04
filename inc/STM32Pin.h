@@ -26,8 +26,9 @@ DEALINGS IN THE SOFTWARE.
 #include "CodalComponent.h"
 #include "CodalConfig.h"
 #include "Pin.h"
-#include "PinNumber.h"
 #include "PinNames.h"
+#include "PinNumber.h"
+#include "STM32PWM.h"
 
 namespace codal {
 
@@ -65,7 +66,12 @@ class STM32Pin : public Pin {
      * Pin P0(DEVICE_ID_IO_P0, DEVICE_PIN_P0, PIN_CAPABILITY_ALL);
      * @endcode
      */
-    STM32Pin(int id, PinName name, PinCapability capability) : STM32Pin(id, (PinNumber)name, capability){}
+    STM32Pin(int id, PinName name, PinCapability capability) : STM32Pin(id, (PinNumber)name, capability) {}
+
+    ~STM32Pin()
+    {
+        if (pwm != nullptr) delete pwm;
+    }
 
     /**
      * Configures this IO pin as a digital output (if necessary) and sets the pin to 'value'.
@@ -268,6 +274,9 @@ class STM32Pin : public Pin {
      * @return DEVICE_OK on success.
      */
     int disableEvents();
+
+    codal::STM32PWM* pwm;
+    uint32_t analogFrequency;
 };
 
 }  // namespace codal
