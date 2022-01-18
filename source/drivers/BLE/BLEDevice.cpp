@@ -479,6 +479,100 @@ BLECharacteristic BLEDevice::characteristic(const char* uuid, int index) const
     return BLECharacteristic();
 }
 
+uint8_t BLEDevice::manufacturerDataCount() const
+{
+    uint8_t result = 0;
+    uint8_t length, type;
+
+    for (uint8_t i = 0; i < _eirDataLength;) {
+        length = _eirData[i];
+        ++i;
+        type = _eirData[i];
+        i += length;
+
+        if (type == 0xFF) {
+            result++;
+        }
+    }
+
+    return result;
+}
+
+const std::vector<uint8_t> BLEDevice::getManufacturerData(uint8_t index) const
+{
+    uint8_t currentIndex = 0;
+    uint8_t pos          = 0;
+    uint8_t length, type;
+
+    while (pos < _eirDataLength) {
+        length = _eirData[pos];
+        ++pos;
+        type = _eirData[pos];
+
+        if (type == 0xFF) {
+            if (currentIndex == index) {
+                break;
+            }
+
+            currentIndex++;
+            pos += length;
+        }
+    }
+
+    if (pos == _eirDataLength) {
+        return std::vector<uint8_t>();
+    }
+
+    return std::vector<uint8_t>(_eirData + pos + 1, _eirData + pos + length);
+}
+
+uint8_t BLEDevice::advertisingDataCount() const
+{
+    uint8_t result = 0;
+    uint8_t length, type;
+
+    for (uint8_t i = 0; i < _eirDataLength;) {
+        length = _eirData[i];
+        ++i;
+        type = _eirData[i];
+        i += length;
+
+        if (type == 0x16) {
+            result++;
+        }
+    }
+
+    return result;
+}
+
+const std::vector<uint8_t> BLEDevice::getAdvertisingData(uint8_t index) const
+{
+    uint8_t currentIndex = 0;
+    uint8_t pos          = 0;
+    uint8_t length, type;
+
+    while (pos < _eirDataLength) {
+        length = _eirData[pos];
+        ++pos;
+        type = _eirData[pos];
+
+        if (type == 0x16) {
+            if (currentIndex == index) {
+                break;
+            }
+
+            currentIndex++;
+            pos += length;
+        }
+    }
+
+    if (pos == _eirDataLength) {
+        return std::vector<uint8_t>();
+    }
+
+    return std::vector<uint8_t>(_eirData + pos + 1, _eirData + pos + length);
+}
+
 bool BLEDevice::hasAddress(uint8_t addressType, uint8_t address[6])
 {
     return (_addressType == addressType) && (memcmp(_address, address, sizeof(_address)) == 0);

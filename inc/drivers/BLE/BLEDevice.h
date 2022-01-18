@@ -21,6 +21,7 @@
 #define _BLE_DEVICE_H_
 
 #include <string>
+#include <vector>
 
 #include "BLEService.h"
 
@@ -85,6 +86,11 @@ class BLEDevice {
     BLECharacteristic characteristic(int index) const;
     BLECharacteristic characteristic(const char* uuid) const;
     BLECharacteristic characteristic(const char* uuid, int index) const;
+
+    uint8_t manufacturerDataCount() const;
+    const std::vector<uint8_t> getManufacturerData(uint8_t index = 0) const;
+    uint8_t advertisingDataCount() const;
+    const std::vector<uint8_t> getAdvertisingData(uint8_t index = 0) const;
 
   protected:
     friend class ATTClass;
