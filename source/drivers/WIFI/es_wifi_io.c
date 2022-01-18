@@ -259,10 +259,10 @@ int8_t SPI_WIFI_DeInit(void)
 
 int wait_cmddata_rdy_high(int timeout)
 {
-  int tickstart = HAL_GetTick();
+  uint32_t tickstart = HAL_GetTick();
   while (WIFI_IS_CMDDATA_READY()==0)
   {
-    if((HAL_GetTick() - tickstart ) > timeout)
+    if((HAL_GetTick() - tickstart) > (uint32_t)timeout)
     {
       return -1;
     }
@@ -280,7 +280,7 @@ int wait_cmddata_rdy_rising_event(int timeout)
   int tickstart = HAL_GetTick();
   while (cmddata_rdy_rising_event==1)
   {
-    if((HAL_GetTick() - tickstart ) > timeout)
+    if((HAL_GetTick() - tickstart ) > (uint32_t)timeout)
     {
       return -1;
     }
@@ -297,7 +297,7 @@ int wait_spi_rx_event(int timeout)
   int tickstart = HAL_GetTick();
   while (spi_rx_event==1)
   {
-    if((HAL_GetTick() - tickstart ) > timeout)
+    if((HAL_GetTick() - tickstart ) > (uint32_t)timeout)
     {
       return -1;
     }
@@ -314,7 +314,7 @@ int wait_spi_tx_event(int timeout)
   int tickstart = HAL_GetTick();
   while (spi_tx_event==1)
   {
-    if((HAL_GetTick() - tickstart ) > timeout)
+    if((HAL_GetTick() - tickstart ) > (uint32_t)timeout)
     {
       return -1;
     }

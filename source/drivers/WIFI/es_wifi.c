@@ -515,16 +515,18 @@ static void AT_ParseConnSettings(char *pdata, ES_WIFI_Network_t *NetSettings)
   while (ptr != NULL) {
     switch (num++) {
     case 0:
-      strncpy((char *)NetSettings->SSID,  ptr, ES_WIFI_MAX_SSID_NAME_SIZE + 1);
+      strncpy((char *)NetSettings->SSID,  ptr, ES_WIFI_MAX_SSID_NAME_SIZE);
+      NetSettings->SSID[ES_WIFI_MAX_SSID_NAME_SIZE] = '\0';
       break;
 
     case 1:
-      strncpy((char *)NetSettings->pswd,  ptr, ES_WIFI_MAX_PSWD_NAME_SIZE + 1);
+      strncpy((char *)NetSettings->pswd,  ptr, ES_WIFI_MAX_PSWD_NAME_SIZE);
+      NetSettings->pswd[ES_WIFI_MAX_PSWD_NAME_SIZE] = '\0';
       break;
 
     case 2:
-        NetSettings->Security = (ES_WIFI_SecurityType_t)ParseNumber(ptr, NULL);
-        break;
+      NetSettings->Security = (ES_WIFI_SecurityType_t)ParseNumber(ptr, NULL);
+      break;
 
     case 3:
       NetSettings->DHCP_IsEnabled = ParseNumber(ptr, NULL);
@@ -661,7 +663,7 @@ static void AT_ParseIsConnected(char *pdata, uint8_t *isConnected)
 static void AT_ParsePing(int32_t res[], uint32_t count,char* pdata)
 {
   char *ptr;
-  int i=0;
+  uint32_t i=0;
 
   ptr= strtok(pdata,",\n\r");
   while(ptr)
@@ -815,7 +817,7 @@ static ES_WIFI_Status_t AT_RequestReceiveData(ES_WIFIObject_t *Obj, uint8_t* cmd
     }
     len-=2;
     p+=2;
-    if (len >= AT_OK_STRING_LEN)
+    if (len >= (int)AT_OK_STRING_LEN)
     {
      while(len && (p[len-1]==0x15)) len--;
      p[len] = '\0';
@@ -887,6 +889,7 @@ ES_WIFI_Status_t  ES_WIFI_Init(ES_WIFIObject_t *Obj)
 ES_WIFI_Status_t  ES_WIFI_GetProductID(ES_WIFIObject_t *Obj, uint8_t *productID)
 {
   strncpy((char *)productID, (char *)Obj->Product_ID, ES_WIFI_PRODUCT_ID_SIZE);
+  productID[ES_WIFI_PRODUCT_ID_SIZE] = '\0';
   return ES_WIFI_STATUS_OK;
 }
 
@@ -899,6 +902,7 @@ ES_WIFI_Status_t  ES_WIFI_GetProductID(ES_WIFIObject_t *Obj, uint8_t *productID)
 ES_WIFI_Status_t  ES_WIFI_GetFWRevID(ES_WIFIObject_t *Obj, uint8_t *FWRev)
 {
   strncpy((char *)FWRev, (char *)Obj->FW_Rev, ES_WIFI_FW_REV_SIZE);
+  FWRev[ES_WIFI_FW_REV_SIZE] = '\0';
   return ES_WIFI_STATUS_OK;
 }
 
@@ -911,6 +915,7 @@ ES_WIFI_Status_t  ES_WIFI_GetFWRevID(ES_WIFIObject_t *Obj, uint8_t *FWRev)
 ES_WIFI_Status_t  ES_WIFI_GetProductName(ES_WIFIObject_t *Obj, uint8_t *productName)
 {
   strncpy((char *)productName, (char *)Obj->Product_Name, ES_WIFI_PRODUCT_NAME_SIZE);
+  productName[ES_WIFI_PRODUCT_NAME_SIZE] = '\0';
   return ES_WIFI_STATUS_OK;
 }
 
@@ -923,6 +928,7 @@ ES_WIFI_Status_t  ES_WIFI_GetProductName(ES_WIFIObject_t *Obj, uint8_t *productN
 ES_WIFI_Status_t  ES_WIFI_GetAPIRev(ES_WIFIObject_t *Obj, uint8_t *APIRev)
 {
   strncpy((char *)APIRev, (char *)Obj->API_Rev, ES_WIFI_API_REV_SIZE);
+  APIRev[ES_WIFI_API_REV_SIZE] ='\0';
   return ES_WIFI_STATUS_OK;
 }
 
@@ -935,6 +941,7 @@ ES_WIFI_Status_t  ES_WIFI_GetAPIRev(ES_WIFIObject_t *Obj, uint8_t *APIRev)
 ES_WIFI_Status_t  ES_WIFI_GetStackRev(ES_WIFIObject_t *Obj, uint8_t *StackRev)
 {
   strncpy((char *)StackRev, (char *)Obj->Stack_Rev, ES_WIFI_STACK_REV_SIZE);
+  StackRev[ES_WIFI_STACK_REV_SIZE] = '\0';
   return ES_WIFI_STATUS_OK;
 }
 
@@ -947,6 +954,7 @@ ES_WIFI_Status_t  ES_WIFI_GetStackRev(ES_WIFIObject_t *Obj, uint8_t *StackRev)
 ES_WIFI_Status_t  ES_WIFI_GetRTOSRev(ES_WIFIObject_t *Obj, uint8_t *RTOSRev)
 {
   strncpy((char *)RTOSRev, (char *)Obj->RTOS_Rev, ES_WIFI_RTOS_REV_SIZE);
+  RTOSRev[ES_WIFI_RTOS_REV_SIZE] = '\0';
   return ES_WIFI_STATUS_OK;
 }
 
@@ -1165,6 +1173,8 @@ ES_WIFI_Status_t ES_WIFI_GetNetworkSettings(ES_WIFIObject_t *Obj)
   UNLOCK_WIFI();
   return ret;
 }
+
+char 	*strtok_r (char *__restrict, const char *__restrict, char **__restrict);
 
 /**
   * @brief  Configure and activate SoftAP.
