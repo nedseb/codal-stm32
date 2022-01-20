@@ -46,18 +46,6 @@ class STM32AdvertisingBLE : public CodalComponent {
     void setServiceData(uint16_t uuidService, uint8_t* data, size_t length);
 
     /**
-     * @brief Set the Service Data to send over advertising. Due to the limit of the advertising frame, the message will
-     * be truncated if has a length greater than MAX_ADVERTISING_DATA_LENGTH bytes.
-     *
-     * Note : Both types of data (Service or Manufacturer) cannot be sent at the same time. The last one to be set will
-     * be sent.
-     *
-     * @param uuidService The service UUID to use (see: https://www.bluetooth.com/specifications/assigned-numbers/)
-     * @param data The string to be sent
-     */
-    void setServiceData(uint16_t uuidService, const char* data);
-
-    /**
      * @brief Set the Manufacturer Data to send over advertising. Due to the limit of the advertising frame, the message
      * will be truncated if has a length greater than MAX_ADVERTISING_DATA_LENGTH bytes.
      *
@@ -70,19 +58,6 @@ class STM32AdvertisingBLE : public CodalComponent {
      * @param length The length of data to send
      */
     void setManufacturerData(uint16_t companyUUID, uint8_t* data, size_t length);
-
-    /**
-     * @brief Set the Manufacturer Data to send over advertising. Due to the limit of the advertising frame, the message
-     * will be truncated if has a length greater than MAX_ADVERTISING_DATA_LENGTH bytes.
-     *
-     * Note : Both types of data (Service or Manufacturer) cannot be sent at the same time. The last one to be set will
-     * be sent.
-     *
-     * @param uuidService The company UUID to use (see:
-     * https://www.bluetooth.com/specifications/assigned-numbers/company-identifiers/)
-     * @param data The string to be sent
-     */
-    void setManufacturerData(uint16_t companyUUID, const char* data);
 
     /**
      * @brief Clear all data, and stop emitting
