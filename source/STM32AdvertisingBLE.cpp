@@ -48,19 +48,9 @@ void STM32AdvertisingBLE::setServiceData(uint16_t uuidService, uint8_t* data, si
     setData(uuidService, data, length, true);
 }
 
-void STM32AdvertisingBLE::setServiceData(uint16_t uuidService, const char* data)
-{
-    setData(uuidService, (uint8_t*)data, strlen(data), true);
-}
-
 void STM32AdvertisingBLE::setManufacturerData(uint16_t companyUUID, uint8_t* data, size_t length)
 {
     setData(companyUUID, data, length, false);
-}
-
-void STM32AdvertisingBLE::setManufacturerData(uint16_t companyUUID, const char* data)
-{
-    setData(companyUUID, (uint8_t*)data, strlen(data), false);
 }
 
 void STM32AdvertisingBLE::clearData()
