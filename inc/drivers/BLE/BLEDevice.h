@@ -33,6 +33,11 @@ enum BLEDeviceEvent {
     BLEDeviceLastEvent
 };
 
+struct ManufacturerData {
+    const uint16_t companyIdentifier;
+    const std::vector<uint8_t> data;
+};
+
 class BLEDevice;
 
 // typedef void (*BLEDeviceEventHandler)(BLEDevice device);
@@ -88,7 +93,7 @@ class BLEDevice {
     BLECharacteristic characteristic(const char* uuid, int index) const;
 
     uint8_t manufacturerDataCount() const;
-    const std::vector<uint8_t> getManufacturerData(uint8_t index = 0) const;
+    ManufacturerData getManufacturerData(uint8_t index = 0) const;
     uint8_t advertisingDataCount() const;
     const std::vector<uint8_t> getAdvertisingData(uint8_t index = 0) const;
 
