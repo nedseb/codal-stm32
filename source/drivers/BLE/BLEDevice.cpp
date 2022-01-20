@@ -498,7 +498,7 @@ uint8_t BLEDevice::manufacturerDataCount() const
     return result;
 }
 
-const std::vector<uint8_t> BLEDevice::getManufacturerData(uint8_t index) const
+ManufacturerData BLEDevice::getManufacturerData(uint8_t index) const
 {
     uint8_t currentIndex = 0;
     uint8_t pos          = 0;
@@ -506,11 +506,12 @@ const std::vector<uint8_t> BLEDevice::getManufacturerData(uint8_t index) const
 
     while (pos < _eirDataLength) {
         length = _eirData[pos];
-        ++pos;
+        pos += 1;
         type = _eirData[pos];
 
         if (type == 0xFF) {
             if (currentIndex == index) {
+                pos += 1;
                 break;
             }
 
@@ -520,10 +521,13 @@ const std::vector<uint8_t> BLEDevice::getManufacturerData(uint8_t index) const
     }
 
     if (pos == _eirDataLength) {
-        return std::vector<uint8_t>();
+        return {0x0000, std::vector<uint8_t>()};
     }
 
-    return std::vector<uint8_t>(_eirData + pos + 1, _eirData + pos + length);
+    uint16_t id = _eirData[pos] + (_eirData[pos + 1] << 8);
+    pos += 2;
+
+    return {id, std::vector<uint8_t>(_eirData + pos, _eirData + pos + length - 3)};
 }
 
 uint8_t BLEDevice::advertisingDataCount() const
@@ -553,11 +557,12 @@ const std::vector<uint8_t> BLEDevice::getAdvertisingData(uint8_t index) const
 
     while (pos < _eirDataLength) {
         length = _eirData[pos];
-        ++pos;
+        pos += 1;
         type = _eirData[pos];
 
         if (type == 0x16) {
             if (currentIndex == index) {
+                pos += 1;
                 break;
             }
 
@@ -570,7 +575,7 @@ const std::vector<uint8_t> BLEDevice::getAdvertisingData(uint8_t index) const
         return std::vector<uint8_t>();
     }
 
-    return std::vector<uint8_t>(_eirData + pos + 1, _eirData + pos + length);
+    return std::vector<uint8_t>(_eirData + pos, _eirData + pos + length);
 }
 
 bool BLEDevice::hasAddress(uint8_t addressType, uint8_t address[6])
