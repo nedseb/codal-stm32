@@ -7,10 +7,7 @@
                 "USE_HAL_DRIVER",
                 "USBCON",
                 "USBD_USE_CDC"
-            ],
-            "intelliSenseMode": "gcc-arm",
-            "cStandard": "c11",
-            "cppStandard": "c++17"
+            ]
         }
     ],
     "version": 4
