@@ -32,7 +32,7 @@ typedef enum BLEChip_s { SPBTLE_RF, SPBTLE_1S, BLUENRG_M2SP, BLUENRG_M0 } BLEChi
 
 class HCISpiTransportClass : public HCITransportInterface {
   public:
-    HCISpiTransportClass(codal::SPI& spi, BLEChip_t ble_chip, uint8_t cs_pin, uint8_t spi_irq, uint8_t ble_rst,
+    HCISpiTransportClass(codal::SPI* spi, BLEChip_t ble_chip, uint8_t cs_pin, uint8_t spi_irq, uint8_t ble_rst,
                          uint32_t frequency, uint8_t spi_mode);
     virtual ~HCISpiTransportClass();
 
