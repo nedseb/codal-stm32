@@ -28,9 +28,9 @@ volatile int data_avail = 0;
 
 using namespace codal;
 
-HCISpiTransportClass::HCISpiTransportClass(SPI& spi, BLEChip_t ble_chip, uint8_t cs_pin, uint8_t spi_irq,
+HCISpiTransportClass::HCISpiTransportClass(SPI* spi, BLEChip_t ble_chip, uint8_t cs_pin, uint8_t spi_irq,
                                            uint8_t ble_rst, uint32_t frequency, uint8_t spi_mode)
-    : _spi(&spi), _ble_chip(ble_chip), _cs_pin(cs_pin), _spi_irq(spi_irq), _ble_rst(ble_rst)
+    : _spi(spi), _ble_chip(ble_chip), _cs_pin(cs_pin), _spi_irq(spi_irq), _ble_rst(ble_rst)
 {
     //_spiSettings         = SPISettings(frequency, (BitOrder)BLE_SPI_BYTE_ORDER, spi_mode);
     _read_index          = 0;
