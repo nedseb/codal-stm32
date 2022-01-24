@@ -42,24 +42,6 @@ static int volatile spi_rx_event             = 0;
 static int volatile spi_tx_event             = 0;
 static int volatile cmddata_rdy_rising_event = 0;
 
-#ifdef WIFI_USE_CMSIS_OS
-osMutexId es_wifi_mutex;
-osMutexDef(es_wifi_mutex);
-
-static osMutexId spi_mutex;
-osMutexDef(spi_mutex);
-
-static osSemaphoreId spi_rx_sem;
-osSemaphoreDef(spi_rx_sem);
-
-static osSemaphoreId spi_tx_sem;
-osSemaphoreDef(spi_tx_sem);
-
-static osSemaphoreId cmddata_rdy_rising_sem;
-osSemaphoreDef(cmddata_rdy_rising_sem);
-
-#endif
-
 /* Private function prototypes -----------------------------------------------*/
 static int wait_cmddata_rdy_high(int timeout);
 static int wait_cmddata_rdy_rising_event(int timeout);
@@ -179,19 +161,6 @@ int8_t SPI_WIFI_Init(uint16_t mode)
         HAL_NVIC_SetPriority((IRQn_Type)SPI3_IRQn, SPI_INTERFACE_PRIO, 0);
         HAL_NVIC_EnableIRQ((IRQn_Type)SPI3_IRQn);
 
-#ifdef WIFI_USE_CMSIS_OS
-        cmddata_rdy_rising_event = 0;
-        es_wifi_mutex            = osMutexCreate(osMutex(es_wifi_mutex));
-        spi_mutex                = osMutexCreate(osMutex(spi_mutex));
-        spi_rx_sem               = osSemaphoreCreate(osSemaphore(spi_rx_sem), 1);
-        spi_tx_sem               = osSemaphoreCreate(osSemaphore(spi_tx_sem), 1);
-        cmddata_rdy_rising_sem   = osSemaphoreCreate(osSemaphore(cmddata_rdy_rising_sem), 1);
-        /* take semaphore */
-        SEM_WAIT(cmddata_rdy_rising_sem, 1);
-        SEM_WAIT(spi_rx_sem, 1);
-        SEM_WAIT(spi_tx_sem, 1);
-
-#endif
         /* first call used for calibration */
         SPI_WIFI_DelayUs(10);
     }
@@ -237,13 +206,6 @@ int8_t SPI_WIFI_ResetModule(void)
 int8_t SPI_WIFI_DeInit(void)
 {
     HAL_SPI_DeInit(&hspi);
-#ifdef WIFI_USE_CMSIS_OS
-    osMutexDelete(spi_mutex);
-    osMutexDelete(es_wifi_mutex);
-    osSemaphoreDelete(spi_tx_sem);
-    osSemaphoreDelete(spi_rx_sem);
-    osSemaphoreDelete(cmddata_rdy_rising_sem);
-#endif
     return 0;
 }
 
