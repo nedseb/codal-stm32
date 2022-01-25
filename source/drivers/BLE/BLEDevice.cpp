@@ -482,7 +482,8 @@ BLECharacteristic BLEDevice::characteristic(const char* uuid, int index) const
 uint8_t BLEDevice::manufacturerDataCount() const
 {
     uint8_t result = 0;
-    uint8_t length, type;
+    uint8_t length = 0;
+    uint8_t type   = 0;
 
     for (uint8_t i = 0; i < _eirDataLength;) {
         length = _eirData[i];
@@ -502,7 +503,8 @@ ManufacturerData BLEDevice::getManufacturerData(uint8_t index) const
 {
     uint8_t currentIndex = 0;
     uint8_t pos          = 0;
-    uint8_t length, type;
+    uint8_t length       = 0;
+    uint8_t type         = 0;
 
     while (pos < _eirDataLength) {
         length = _eirData[pos];
