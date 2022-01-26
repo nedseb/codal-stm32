@@ -1,14 +1,20 @@
 #include "STM32AdvertisingBLE.h"
 
+#include "EventModel.h"
+#include "Timer.h"
 #include "clock.h"
 #include "codal_target_hal.h"
 
 using namespace std;
 using namespace codal;
 
-STM32AdvertisingBLE::STM32AdvertisingBLE(uint16_t id, uint8_t channel)
-    : CodalComponent(id, 0),
-      state(OFF),
+// 0x1415 because 0x1415 = 5141 in decimal...\o/
+#define TIMER_EVENT_VALUE 0x1415
+
+bool STM32AdvertisingBLE::isTimerSet = false;
+
+STM32AdvertisingBLE::STM32AdvertisingBLE(uint8_t channel)
+    : state(OFF),
       hasData(false),
       isRunning(false),
       channel(channel),
@@ -19,7 +25,12 @@ STM32AdvertisingBLE::STM32AdvertisingBLE(uint16_t id, uint8_t channel)
       localName("Default Name")
 {
     scanResults.clear();
-    status = DEVICE_COMPONENT_STATUS_SYSTEM_TICK;
+
+    if (!isTimerSet) {
+        system_timer_event_every_us(1000, DEVICE_ID_RADIO, TIMER_EVENT_VALUE);
+    }
+
+    EventModel::defaultEventBus->listen(DEVICE_ID_RADIO, TIMER_EVENT_VALUE, this, &STM32AdvertisingBLE::state_update);
 }
 
 void STM32AdvertisingBLE::begin()
@@ -80,7 +91,7 @@ size_t STM32AdvertisingBLE::getResultWithManufacturerData(BLEDevice output[], si
     return length;
 }
 
-void STM32AdvertisingBLE::periodicCallback()
+void STM32AdvertisingBLE::state_update(Event)
 {
     if (!isRunning) {
         return;

@@ -5,6 +5,7 @@
 #include <map>
 
 #include "CodalComponent.h"
+#include "Event.h"
 #include "STM32duinoBLE.h"
 
 namespace codal {
@@ -16,7 +17,7 @@ struct DeviceScanResult {
     uint32_t time;
 };
 
-class STM32AdvertisingBLE : public CodalComponent {
+class STM32AdvertisingBLE {
   public:
     /**
      * @brief Construct a new STM32AdvertisingBLE object
@@ -24,7 +25,7 @@ class STM32AdvertisingBLE : public CodalComponent {
      * @param id
      * @param channel the channel use to send advertising data (Note: advertising channel are: 37[default], 38 or 39)
      */
-    STM32AdvertisingBLE(uint16_t id, uint8_t channel = 37);
+    STM32AdvertisingBLE(uint8_t channel = 37);
 
     /**
      * @brief Destroy the STM32AdvertisingBLE object
@@ -126,9 +127,19 @@ class STM32AdvertisingBLE : public CodalComponent {
      */
     void clearResult() { scanResults.clear(); }
 
-    virtual int init() final override { return DEVICE_OK; };
+    /**
+     * @brief Get if the current status is EMITTING
+     *
+     * @return true is the device currently emitting, false otherwise
+     */
+    bool isEmitting() { return state == EMIT; }
 
-    virtual void periodicCallback() final override;
+    /**
+     * @brief Get if the current status is SCANNING
+     *
+     * @return true is the device currently scanning, false otherwise
+     */
+    bool isScanning() { return state == SCAN; }
 
     /**
      * @brief Maximum advertising data length
@@ -137,6 +148,7 @@ class STM32AdvertisingBLE : public CodalComponent {
     static constexpr size_t MAX_ADVERTISING_DATA_LENGTH = 27;
 
   private:
+    void state_update(Event);
     void setData(uint16_t uuid, uint8_t* data, size_t length, bool isService);
     void enableScan();
     void disableScan();
@@ -156,5 +168,7 @@ class STM32AdvertisingBLE : public CodalComponent {
     uint32_t lastStateChange;
     const char* localName;
     std::map<std::string, DeviceScanResult> scanResults;
+
+    static bool isTimerSet;
 };
 }  // namespace codal
