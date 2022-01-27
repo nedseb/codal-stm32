@@ -100,17 +100,6 @@ class STM32SPI : public codal::SPI {
     /**
      * @brief
      *
-     * @param tx_buffer
-     * @param rx_buffer
-     * @param len
-     *
-     * @return
-     */
-    uint8_t* write(uint8_t* tx_buffer, uint8_t* rx_buffer, uint16_t len);
-
-    /**
-     * @brief
-     *
      */
     void beginTransaction();
 
@@ -139,6 +128,17 @@ class STM32SPI : public codal::SPI {
     std::vector<uint8_t> buffer;
 
     spi_mode_e modeToSpiMode(int mode);
+
+    /**
+     * @brief
+     *
+     * @param tx_buffer
+     * @param rx_buffer
+     * @param len
+     *
+     * @return
+     */
+    uint8_t* write(uint8_t* tx_buffer, uint8_t* rx_buffer, uint16_t len);
 };
 
 }  // namespace codal
