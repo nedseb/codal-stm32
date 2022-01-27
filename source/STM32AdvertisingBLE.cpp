@@ -72,15 +72,77 @@ void STM32AdvertisingBLE::clearData()
 
 bool STM32AdvertisingBLE::hasResultWithManufacturerData()
 {
-    return scanResults.size() > 0;
+    for (auto& device : scanResults) {
+        if (device.second.device.manufacturerDataCount() > 0) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
-size_t STM32AdvertisingBLE::getResultWithManufacturerData(BLEDevice output[], size_t max_length)
+size_t STM32AdvertisingBLE::getResultWithManufacturerData(BLEDevice output[], size_t maxLength)
 {
     size_t length = 0;
 
     for (auto& device : scanResults) {
-        if (length >= max_length) {
+        if (length >= maxLength) {
+            break;
+        }
+
+        if (device.second.device.manufacturerDataCount() == 0) {
+            continue;
+        }
+
+        output[length] = device.second.device;
+        length++;
+    }
+
+    return length;
+}
+
+bool STM32AdvertisingBLE::hasResultWithAdvertisingData()
+{
+    for (auto& device : scanResults) {
+        if (device.second.device.advertisingDataCount() > 0) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+size_t STM32AdvertisingBLE::getResultWithAdvertisingData(BLEDevice output[], size_t maxLength)
+{
+    size_t length = 0;
+
+    for (auto& device : scanResults) {
+        if (length >= maxLength) {
+            break;
+        }
+
+        if (device.second.device.advertisingDataCount() == 0) {
+            continue;
+        }
+
+        output[length] = device.second.device;
+        length++;
+    }
+
+    return length;
+}
+
+bool STM32AdvertisingBLE::hasResults()
+{
+    return scanResults.size() > 0;
+}
+
+size_t STM32AdvertisingBLE::getAllResults(BLEDevice output[], size_t maxLength)
+{
+    size_t length = 0;
+
+    for (auto& device : scanResults) {
+        if (length >= maxLength) {
             break;
         }
 

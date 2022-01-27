@@ -116,10 +116,43 @@ class STM32AdvertisingBLE {
     /**
      * @brief Get all Device with Manufacturer data
      *
-     * @param output The array will contains value
+     * @param output The array will contains results
+     * @param maxLength The maximum result to retrieve (e.g. the size of ouput array)
      * @return uint8_t The number of results
      */
-    size_t getResultWithManufacturerData(BLEDevice output[], size_t max_length);
+    size_t getResultWithManufacturerData(BLEDevice output[], size_t maxLength);
+
+    /**
+     * @brief Know if there is result with advertising data
+     *
+     * @return true is there are data, false otherwise
+     */
+    bool hasResultWithAdvertisingData();
+
+    /**
+     * @brief Get all Device with advertising data
+     *
+     * @param output The array will contains results
+     * @param maxLength The maximum result to retrieve (e.g. the size of ouput array)
+     * @return uint8_t The number of results
+     */
+    size_t getResultWithAdvertisingData(BLEDevice output[], size_t maxLength);
+
+    /**
+     * @brief Know if there is result
+     *
+     * @return true is there are results, false otherwise
+     */
+    bool hasResults();
+
+    /**
+     * @brief Get all device
+     *
+     * @param output The array will contains results
+     * @param maxLength The maximum result to retrieve (e.g. the size of ouput array)
+     * @return size_t The number of result
+     */
+    size_t getAllResults(BLEDevice output[], size_t maxLength);
 
     /**
      * @brief Clear all scan result
