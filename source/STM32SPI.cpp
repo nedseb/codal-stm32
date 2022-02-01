@@ -55,6 +55,28 @@ uint8_t* STM32SPI::write(uint8_t* tx_buffer, uint8_t* rx_buffer, uint16_t len)
     return rx_buffer;
 }
 
+int STM32SPI::write16(uint16_t data)
+{
+    uint16_t tmp;
+    uint16_t result = 0;
+
+    if (isMsbFirst) {
+        tmp  = ((data & 0xff00) >> 8) | ((data & 0xff) << 8);
+        data = tmp;
+    }
+
+    spi_init(&spi, frequency, mode, isMsbFirst);
+    spi_transfer(&spi, (uint8_t*)&data, (uint8_t*)&result, sizeof(uint16_t), 1000, false);
+    spi_deinit(&spi);
+
+    if (isMsbFirst) {
+        tmp    = ((result & 0xff00) >> 8) | ((result & 0xff) << 8);
+        result = tmp;
+    }
+
+    return (int)result;
+}
+
 int STM32SPI::write(int data)
 {
     uint8_t sendData = data;

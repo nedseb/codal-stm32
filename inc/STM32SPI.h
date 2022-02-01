@@ -98,6 +98,17 @@ class STM32SPI : public codal::SPI {
     virtual int write(int data) override final;
 
     /**
+     * @brief Writes the given two bytes to the SPI bus.
+     * The CPU will busy wait until the transmission is complete.
+     *
+     * @deprecated Should not be used directly. Use (begin/write/end)Transaction instead.
+     *
+     * @param data The data to write.
+     * @return Response from the SPI slave or DEVICE_SPI_ERROR if the the write request failed.
+     */
+    virtual int write16(uint16_t data) final;
+
+    /**
      * @brief
      *
      */
@@ -118,6 +129,13 @@ class STM32SPI : public codal::SPI {
      * @param data
      */
     void writeTransaction(uint8_t data);
+
+    /**
+     * @brief
+     *
+     * @param data
+     */
+    void write16Transaction(uint8_t data);
 
   private:
     spi_t spi;
