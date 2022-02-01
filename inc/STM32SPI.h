@@ -56,6 +56,16 @@ class STM32SPI : public codal::SPI {
     STM32SPI(STM32Pin& miso, STM32Pin& mosi, STM32Pin& sclk, uint32_t freq = 14000000, int mode = 0,
              bool msbFirst = true);
 
+    /** @brief Set the bit order
+     *
+     * @param msbFirst the order of bits on the bus
+     */
+    virtual int setBitsOrder(bool msbFirst) final
+    {
+        isMsbFirst = msbFirst;
+        return DEVICE_OK;
+    }
+
     /** @brief Set the frequency of the SPI interface
      *
      * @param frequency The bus frequency in hertz
