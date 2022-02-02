@@ -13,7 +13,7 @@ STM32Serial* codal::default_serial_debug = nullptr;
 // that. Please don't judge me :)
 std::map<serial_t*, STM32Serial*> STM32Serial::mapSerialInstance __attribute__((init_priority(102)));
 
-STM32Serial::STM32Serial(STM32Pin& rxPin, STM32Pin& txPin)
+STM32Serial::STM32Serial(STM32Pin& txPin, STM32Pin& rxPin)
     : Serial(txPin, rxPin), rxPin(rxPin), txPin(txPin), serial(), baudrate(), databits(), parity(), stopBit()
 {
     mapSerialInstance.insert(pair<serial_t*, STM32Serial*>(&serial, this));

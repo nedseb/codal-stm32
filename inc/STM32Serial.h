@@ -43,7 +43,7 @@ class STM32Serial : public Serial {
     static void RxIRQ(serial_t* obj);
 
   public:
-    STM32Serial(STM32Pin& rxPin, STM32Pin& txPin);
+    STM32Serial(STM32Pin& txPin, STM32Pin& rxPin);
     ~STM32Serial();
 
     void init(uint32_t baudrate, LengthSerial databits = LengthSerial::SERIAL_8_BITS,
