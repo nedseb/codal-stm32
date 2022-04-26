@@ -5,8 +5,11 @@
 #include "STM32Pin.h"
 
 namespace codal {
+typedef void (*handler)();
+
 enum JoystickDirection { Left = 0, Top = 1, Right = 2, Bottom = 3 };
 enum JoystickAxis { Horizontal, Vertical };
+enum ButtonEvent { Click = 0, LongClick = 1, Up = 2, Down = 3, Hold = 4, DoubleClick = 5 };
 
 class Joystick {
   public:
@@ -65,11 +68,31 @@ class Joystick {
      */
     bool isButtonPressed() { return button->isPressed(); }
 
+    /**
+     * @brief Registers a new event that triggers when the joystick is pointed in a specified direction
+     *
+     * @param direction the direction that triggers the event
+     * @param handler the user function to execute when the event is triggered
+     */
+    void registerDirectionEvent(JoystickDirection direction, handler handler);
+
   private:
     codal::AnalogSensor* horizontalSensor;
     codal::AnalogSensor* verticalSensor;
     codal::Button* button;
     uint8_t deadzone;
+    handler directionHandlers[4];
+    handler buttonHandlers[6];
+
+    void onEvent(codal::Event event);
+
+    /** @brief Utility function used to factorize the joystick's axis registering method
+     *
+     * @param direction the type of event that will be registered
+     * @param listenValue the value parameter of the listen function
+     * @param handler the user function that will be executed when the event is triggered
+     */
+    void listenToAxisEvent(JoystickDirection direction, uint8_t listenValue, handler handler);
 
     /**
      * @brief Sets the Thresholds of the AnalogSensors
