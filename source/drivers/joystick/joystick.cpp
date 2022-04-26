@@ -2,6 +2,8 @@
 
 #include "AnalogSensor.h"
 #include "Button.h"
+#include "Event.h"
+#include "EventModel.h"
 #include "STM32Pin.h"
 
 using namespace codal;
@@ -64,6 +66,97 @@ bool Joystick::isJoystickPointingTo(const JoystickDirection direction)
             break;
     }
     return false;
+}
+
+void Joystick::onEvent(codal::Event event)
+{
+    if (event.source == horizontalSensor->id) {
+        switch (event.value) {
+            case ANALOG_THRESHOLD_LOW:
+                directionHandlers[JoystickDirection::Right]();
+                break;
+            case ANALOG_THRESHOLD_HIGH:
+                directionHandlers[JoystickDirection::Left]();
+            default:
+                break;
+        }
+    }
+    else if (event.source == verticalSensor->id) {
+        switch (event.value) {
+            case ANALOG_THRESHOLD_LOW:
+                directionHandlers[JoystickDirection::Top]();
+                break;
+            case ANALOG_THRESHOLD_HIGH:
+                directionHandlers[JoystickDirection::Bottom]();
+                break;
+            default:
+                break;
+        }
+    }
+    else if (event.source == button->id) {
+        switch (event.value) {
+            case DEVICE_BUTTON_EVT_CLICK:
+                buttonHandlers[ButtonEvent::Click]();
+                break;
+            case DEVICE_BUTTON_EVT_LONG_CLICK:
+                buttonHandlers[ButtonEvent::LongClick]();
+                break;
+            case DEVICE_BUTTON_EVT_UP:
+                buttonHandlers[ButtonEvent::Up]();
+                break;
+            case DEVICE_BUTTON_EVT_DOWN:
+                buttonHandlers[ButtonEvent::Down]();
+                break;
+            case DEVICE_BUTTON_EVT_HOLD:
+                buttonHandlers[ButtonEvent::Hold]();
+                break;
+            case DEVICE_BUTTON_EVT_DOUBLE_CLICK:
+                buttonHandlers[ButtonEvent::DoubleClick]();
+            default:
+                break;
+        }
+    }
+    else
+        return;
+}
+
+void Joystick::registerDirectionEvent(JoystickDirection direction, handler handler)
+{
+    switch (direction) {
+        case JoystickDirection::Left:
+            listenToAxisEvent(JoystickDirection::Left, ANALOG_THRESHOLD_LOW, handler);
+            break;
+        case JoystickDirection::Top:
+            listenToAxisEvent(JoystickDirection::Top, ANALOG_THRESHOLD_LOW, handler);
+            break;
+        case JoystickDirection::Right:
+            listenToAxisEvent(JoystickDirection::Right, ANALOG_THRESHOLD_HIGH, handler);
+            break;
+        case JoystickDirection::Bottom:
+            listenToAxisEvent(JoystickDirection::Bottom, ANALOG_THRESHOLD_HIGH, handler);
+            break;
+        default:
+            break;
+    }
+}
+
+void Joystick::listenToAxisEvent(JoystickDirection direction, uint8_t listenValue, handler handler)
+{
+    if (buttonHandlers[direction] == nullptr) {
+        switch (direction) {
+            case JoystickDirection::Left:
+            case JoystickDirection::Right:
+                codal::EventModel::defaultEventBus->listen(horizontalSensor->id, listenValue, this, &Joystick::onEvent);
+                break;
+            case JoystickDirection::Bottom:
+            case JoystickDirection::Top:
+                codal::EventModel::defaultEventBus->listen(verticalSensor->id, listenValue, this, &Joystick::onEvent);
+                break;
+            default:
+                break;
+        }
+    }
+    buttonHandlers[direction] = handler;
 }
 
 void Joystick::setThresholds()
