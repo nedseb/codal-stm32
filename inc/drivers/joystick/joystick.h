@@ -57,6 +57,14 @@ class Joystick {
      */
     bool isJoystickPointingTo(const JoystickDirection direction);
 
+    /**
+     * @brief checks if the joystick's button is pressed
+     *
+     * @return true
+     * @return false
+     */
+    bool isButtonPressed() { return button->isPressed(); };
+
   private:
     codal::AnalogSensor* horizontalSensor;
     codal::AnalogSensor* verticalSensor;
