@@ -159,6 +159,40 @@ void Joystick::listenToAxisEvent(JoystickDirection direction, uint8_t listenValu
     buttonHandlers[direction] = handler;
 }
 
+void Joystick::registerButtonEvent(ButtonEvent btnEvent, handler handler)
+{
+    switch (btnEvent) {
+        case ButtonEvent::Click:
+            listenToButtonEvent(ButtonEvent::Click, DEVICE_BUTTON_EVT_CLICK, handler);
+            break;
+        case ButtonEvent::LongClick:
+            listenToButtonEvent(ButtonEvent::LongClick, DEVICE_BUTTON_EVT_LONG_CLICK, handler);
+            break;
+        case ButtonEvent::Up:
+            listenToButtonEvent(ButtonEvent::Up, DEVICE_BUTTON_EVT_UP, handler);
+            break;
+        case ButtonEvent::Down:
+            listenToButtonEvent(ButtonEvent::Down, DEVICE_BUTTON_EVT_DOWN, handler);
+            break;
+        case ButtonEvent::Hold:
+            listenToButtonEvent(ButtonEvent::Hold, DEVICE_BUTTON_EVT_HOLD, handler);
+            break;
+        case ButtonEvent::DoubleClick:
+            listenToButtonEvent(ButtonEvent::DoubleClick, DEVICE_BUTTON_EVT_DOUBLE_CLICK, handler);
+            break;
+        default:
+            break;
+    }
+}
+
+void Joystick::listenToButtonEvent(ButtonEvent enumEvent, uint8_t listenValue, handler handler)
+{
+    if (buttonHandlers[enumEvent] == nullptr) {
+        codal::EventModel::defaultEventBus->listen(button->id, listenValue, this, &Joystick::onEvent);
+    }
+    buttonHandlers[enumEvent] = handler;
+}
+
 void Joystick::setThresholds()
 {
     this->horizontalSensor->setHighThreshold(512 + deadzone);

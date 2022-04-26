@@ -76,6 +76,13 @@ class Joystick {
      */
     void registerDirectionEvent(JoystickDirection direction, handler handler);
 
+    /**
+     * @brief Registers a new event that triggers when the joystick's button is pressed
+     *
+     * @param handler the user function to execute when the event is triggered
+     */
+    void registerButtonEvent(ButtonEvent btnEvent, handler handler);
+
   private:
     codal::AnalogSensor* horizontalSensor;
     codal::AnalogSensor* verticalSensor;
@@ -93,6 +100,15 @@ class Joystick {
      * @param handler the user function that will be executed when the event is triggered
      */
     void listenToAxisEvent(JoystickDirection direction, uint8_t listenValue, handler handler);
+
+    /**
+     * @brief Utility function used to factorize the joystick's button registering method
+     *
+     * @param enumEvent the type of event that will be registered
+     * @param listenValue the value parameter of the listen function
+     * @param handler the user function that will be executed when the event is triggered
+     */
+    void listenToButtonEvent(ButtonEvent enumEvent, uint8_t listenValue, handler handler);
 
     /**
      * @brief Sets the Thresholds of the AnalogSensors
