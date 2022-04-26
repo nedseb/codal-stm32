@@ -39,6 +39,24 @@ class Joystick {
      */
     uint8_t getDeadzone();
 
+    /**
+     * @brief Gets the analog value of the given sensor, in range [-100, 100]
+     *
+     * @param sensor the sensor to get value of
+     *
+     * @return int8_t
+     */
+    int8_t getAxis(codal::AnalogSensor* sensor);
+
+    /**
+     * @brief checks if the joystick is oriented in the given direction
+     *
+     * @param direction
+     * @return true
+     * @return false
+     */
+    bool isJoystickPointingTo(const JoystickDirection direction);
+
   private:
     codal::AnalogSensor* horizontalSensor;
     codal::AnalogSensor* verticalSensor;
