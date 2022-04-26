@@ -23,10 +23,32 @@ class Joystick {
 
     ~Joystick() {}
 
+    /**
+     * @brief Sets the deadzone of the joystick
+     *
+     * @param newDeadzone deadzone's new value in range [0, 100]
+     *
+     * @return void
+     */
+    void setDeadzone(uint8_t newDeadzone);
+
+    /**
+     * @brief Get the deadzone value in range [0, 100]
+     *
+     * @return uint8_t
+     */
+    uint8_t getDeadzone();
+
   private:
     codal::AnalogSensor* horizontalSensor;
     codal::AnalogSensor* verticalSensor;
     codal::Button* button;
     uint8_t deadzone;
+
+    /**
+     * @brief Sets the Thresholds of the AnalogSensors
+     *
+     */
+    void setThresholds();
 };
 }  // namespace codal
