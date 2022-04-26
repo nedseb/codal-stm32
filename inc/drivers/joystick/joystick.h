@@ -63,7 +63,7 @@ class Joystick {
      * @return true
      * @return false
      */
-    bool isButtonPressed() { return button->isPressed(); };
+    bool isButtonPressed() { return button->isPressed(); }
 
   private:
     codal::AnalogSensor* horizontalSensor;
