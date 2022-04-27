@@ -12,6 +12,7 @@ typedef void (*JoystickUserEvent)();
 enum class JoystickDirection : uint8_t { Left = 0, Top = 1, Right = 2, Bottom = 3 };
 enum class ButtonEvent : uint8_t { Click = 0, LongClick = 1, Up = 2, Down = 3, Hold = 4, DoubleClick = 5 };
 enum class JoystickAxis : uint8_t { Horizontal, Vertical };
+constexpr uint8_t JoystickAxisRange = 100;
 
 class Joystick {
   public:
@@ -48,7 +49,7 @@ class Joystick {
      *
      * @param axis the sensor to get value of
      *
-     * @return int8_t
+     * @return auto
      */
     int8_t getAxis(JoystickAxis axis);
 
