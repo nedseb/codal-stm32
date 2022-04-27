@@ -2,30 +2,18 @@
 
 #include "AnalogSensor.h"
 #include "Button.h"
+#include "Event.h"
+#include "EventModel.h"
 #include "STM32Pin.h"
 
 namespace codal {
 typedef void (*handler)();
 
 enum JoystickDirection { Left = 0, Top = 1, Right = 2, Bottom = 3 };
-enum JoystickAxis { Horizontal, Vertical };
 enum ButtonEvent { Click = 0, LongClick = 1, Up = 2, Down = 3, Hold = 4, DoubleClick = 5 };
-
+enum JoystickAxis { Horizontal, Vertical };
 class Joystick {
   public:
-    /**
-     * @brief Joystick object constructor
-     *
-     * @param horizontalAxisPin the pin connected to the horizontal axis of the joystick
-     * @param verticalAxisPin the pin connected to the horizontal axis of the joystick
-     * @param buttonPin the pin connected to the button of the joystick
-     * @param deadzone the joystick's deadzone, which is the amountthe joystick can move before an input is recognized
-     */
-    Joystick(codal::STM32Pin& horizontalAxisPin, codal::STM32Pin& verticalAxisPin, codal::STM32Pin& buttonPin,
-             uint8_t deadzone = 10);
-
-    ~Joystick() {}
-
     /**
      * @brief Sets the deadzone of the joystick
      *
@@ -43,13 +31,13 @@ class Joystick {
     uint8_t getDeadzone();
 
     /**
-     * @brief Gets the analog value of the given sensor, in range [-100, 100]
+     * @brief Gets the analog value of the given axis, in range [-100, 100]
      *
-     * @param sensor the sensor to get value of
+     * @param axis the sensor to get value of
      *
      * @return int8_t
      */
-    int8_t getAxis(codal::AnalogSensor* sensor);
+    int8_t getAxis(JoystickAxis axis);
 
     /**
      * @brief checks if the joystick is oriented in the given direction
@@ -66,7 +54,7 @@ class Joystick {
      * @return true
      * @return false
      */
-    bool isButtonPressed() { return button->isPressed(); }
+    bool isButtonPressed();
 
     /**
      * @brief Registers a new event that triggers when the joystick is pointed in a specified direction
@@ -83,6 +71,19 @@ class Joystick {
      */
     void registerButtonEvent(ButtonEvent btnEvent, handler handler);
 
+    /**
+     * @brief Joystick object constructor
+     *
+     * @param horizontalAxisPin the pin connected to the horizontal axis of the joystick
+     * @param verticalAxisPin the pin connected to the horizontal axis of the joystick
+     * @param buttonPin the pin connected to the button of the joystick
+     * @param deadzone the joystick's deadzone, which is the amountthe joystick can move before an input is recognized
+     */
+    Joystick(codal::STM32Pin& horizontalAxisPin, codal::STM32Pin& verticalAxisPin, codal::STM32Pin& buttonPin,
+             uint8_t deadzone = 10);
+
+    ~Joystick() {}
+
   private:
     codal::AnalogSensor* horizontalSensor;
     codal::AnalogSensor* verticalSensor;
@@ -91,15 +92,12 @@ class Joystick {
     handler directionHandlers[4];
     handler buttonHandlers[6];
 
-    void onEvent(codal::Event event);
-
-    /** @brief Utility function used to factorize the joystick's axis registering method
+    /**
+     * @brief The function events use to execute the right event function of the right event
      *
-     * @param direction the type of event that will be registered
-     * @param listenValue the value parameter of the listen function
-     * @param handler the user function that will be executed when the event is triggered
+     * @param event The event to execute
      */
-    void listenToAxisEvent(JoystickDirection direction, uint8_t listenValue, handler handler);
+    void onEvent(codal::Event event);
 
     /**
      * @brief Utility function used to factorize the joystick's button registering method
@@ -109,6 +107,14 @@ class Joystick {
      * @param handler the user function that will be executed when the event is triggered
      */
     void listenToButtonEvent(ButtonEvent enumEvent, uint8_t listenValue, handler handler);
+
+    /** @brief Utility function used to factorize the joystick's axis registering method
+     *
+     * @param direction the type of event that will be registered
+     * @param listenValue the value parameter of the listen function
+     * @param handler the user function that will be executed when the event is triggered
+     */
+    void listenToAxisEvent(JoystickDirection direction, uint8_t listenValue, handler handler);
 
     /**
      * @brief Sets the Thresholds of the AnalogSensors
