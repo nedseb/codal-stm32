@@ -57,23 +57,16 @@ int8_t Joystick::getAxis(JoystickAxis axis)
 
 bool Joystick::isJoystickPointingTo(const JoystickDirection direction)
 {
-    switch (direction) {
-        case JoystickDirection::Left:
-            if (getAxis(JoystickAxis::Horizontal) > 0) return true;
-            break;
-        case JoystickDirection::Top:
-            if (getAxis(JoystickAxis::Vertical) > 0) return true;
-            break;
-        case JoystickDirection::Right:
-            if (getAxis(JoystickAxis::Horizontal) < 0) return true;
-            break;
-        case JoystickDirection::Bottom:
-            if (getAxis(JoystickAxis::Vertical) < 0) return true;
-            break;
-        default:
-            break;
-    }
-    return false;
+    if (direction == JoystickDirection::Left && getAxis(JoystickAxis::Horizontal) > 0)
+        return true;
+    else if (direction == JoystickDirection::Top && getAxis(JoystickAxis::Vertical) > 0)
+        return true;
+    else if (direction == JoystickDirection::Right && getAxis(JoystickAxis::Horizontal) < 0)
+        return true;
+    else if (direction == JoystickDirection::Bottom && getAxis(JoystickAxis::Vertical) < 0)
+        return true;
+    else
+        return false;
 }
 
 bool Joystick::isButtonPressed()
