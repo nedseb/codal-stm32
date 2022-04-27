@@ -8,8 +8,7 @@
 
 using namespace codal;
 
-Joystick::Joystick(codal::STM32Pin& horizontalAxisPin, codal::STM32Pin& verticalAxisPin, codal::STM32Pin& buttonPin,
-                   uint8_t deadzone)
+Joystick::Joystick(STM32Pin& horizontalAxisPin, STM32Pin& verticalAxisPin, STM32Pin& buttonPin, uint8_t deadzone)
     : directionUserEvents({nullptr}), buttonUserEvents({nullptr})
 {
     horizontalSensor = new AnalogSensor(horizontalAxisPin, 6666);
@@ -128,7 +127,7 @@ void Joystick::registerButtonEvent(ButtonEvent btnEvent, JoystickUserEvent handl
     }
 }
 
-void Joystick::onEvent(codal::Event event)
+void Joystick::onEvent(Event event)
 {
     if (event.source == horizontalSensor->id) {
         switch (event.value) {
@@ -191,7 +190,7 @@ void Joystick::setThresholds()
 void Joystick::listenToButtonEvent(ButtonEvent enumEvent, uint8_t listenValue, JoystickUserEvent handler)
 {
     if (buttonUserEvents[static_cast<uint8_t>(enumEvent)] == nullptr) {
-        codal::EventModel::defaultEventBus->listen(button->id, listenValue, this, &Joystick::onEvent);
+        EventModel::defaultEventBus->listen(button->id, listenValue, this, &Joystick::onEvent);
     }
     buttonUserEvents[static_cast<uint8_t>(enumEvent)] = handler;
 }
@@ -202,11 +201,11 @@ void Joystick::listenToAxisEvent(JoystickDirection direction, uint8_t listenValu
         switch (direction) {
             case JoystickDirection::Left:
             case JoystickDirection::Right:
-                codal::EventModel::defaultEventBus->listen(horizontalSensor->id, listenValue, this, &Joystick::onEvent);
+                EventModel::defaultEventBus->listen(horizontalSensor->id, listenValue, this, &Joystick::onEvent);
                 break;
             case JoystickDirection::Bottom:
             case JoystickDirection::Top:
-                codal::EventModel::defaultEventBus->listen(verticalSensor->id, listenValue, this, &Joystick::onEvent);
+                EventModel::defaultEventBus->listen(verticalSensor->id, listenValue, this, &Joystick::onEvent);
                 break;
             default:
                 break;
