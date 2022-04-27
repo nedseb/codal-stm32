@@ -69,11 +69,6 @@ bool Joystick::isJoystickPointingTo(const JoystickDirection direction)
         return false;
 }
 
-bool Joystick::isButtonPressed()
-{
-    return button->isPressed();
-}
-
 void Joystick::registerDirectionEvent(JoystickDirection direction, JoystickUserEvent handler)
 {
     switch (direction) {
