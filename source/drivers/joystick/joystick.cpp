@@ -163,8 +163,6 @@ void Joystick::onEvent(Event event)
                 break;
         }
     }
-    else
-        return;
 }
 
 void Joystick::setThresholds()
