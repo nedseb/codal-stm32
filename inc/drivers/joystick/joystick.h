@@ -12,8 +12,21 @@ typedef void (*JoystickUserEvent)();
 enum class JoystickDirection : uint8_t { Left = 0, Top = 1, Right = 2, Bottom = 3 };
 enum class ButtonEvent : uint8_t { Click = 0, LongClick = 1, Up = 2, Down = 3, Hold = 4, DoubleClick = 5 };
 enum class JoystickAxis : uint8_t { Horizontal, Vertical };
+
 class Joystick {
   public:
+    /**
+     * @brief Joystick object constructor
+     *
+     * @param horizontalAxisPin the pin connected to the horizontal axis of the joystick
+     * @param verticalAxisPin the pin connected to the horizontal axis of the joystick
+     * @param buttonPin the pin connected to the button of the joystick
+     * @param deadzone the joystick's deadzone, which is the amountthe joystick can move before an input is recognized
+     */
+    Joystick(STM32Pin& horizontalAxisPin, STM32Pin& verticalAxisPin, STM32Pin& buttonPin, uint8_t deadzone = 10);
+
+    ~Joystick() {}
+
     /**
      * @brief Sets the deadzone of the joystick
      *
@@ -71,23 +84,10 @@ class Joystick {
      */
     void registerButtonEvent(ButtonEvent btnEvent, JoystickUserEvent handler);
 
-    /**
-     * @brief Joystick object constructor
-     *
-     * @param horizontalAxisPin the pin connected to the horizontal axis of the joystick
-     * @param verticalAxisPin the pin connected to the horizontal axis of the joystick
-     * @param buttonPin the pin connected to the button of the joystick
-     * @param deadzone the joystick's deadzone, which is the amountthe joystick can move before an input is recognized
-     */
-    Joystick(codal::STM32Pin& horizontalAxisPin, codal::STM32Pin& verticalAxisPin, codal::STM32Pin& buttonPin,
-             uint8_t deadzone = 10);
-
-    ~Joystick() {}
-
   private:
-    codal::AnalogSensor* horizontalSensor;
-    codal::AnalogSensor* verticalSensor;
-    codal::Button* button;
+    AnalogSensor* horizontalSensor;
+    AnalogSensor* verticalSensor;
+    Button* button;
     uint8_t deadzone;
     JoystickUserEvent directionUserEvents[4];
     JoystickUserEvent buttonUserEvents[6];
@@ -97,7 +97,7 @@ class Joystick {
      *
      * @param event The event to execute
      */
-    void onEvent(codal::Event event);
+    void onEvent(Event event);
 
     /**
      * @brief Utility function used to factorize the joystick's button registering method
