@@ -9,9 +9,9 @@
 namespace codal {
 typedef void (*JoystickUserEvent)();
 
-enum JoystickDirection { Left = 0, Top = 1, Right = 2, Bottom = 3 };
-enum ButtonEvent { Click = 0, LongClick = 1, Up = 2, Down = 3, Hold = 4, DoubleClick = 5 };
-enum JoystickAxis { Horizontal, Vertical };
+enum class JoystickDirection : uint8_t { Left = 0, Top = 1, Right = 2, Bottom = 3 };
+enum class ButtonEvent : uint8_t { Click = 0, LongClick = 1, Up = 2, Down = 3, Hold = 4, DoubleClick = 5 };
+enum class JoystickAxis : uint8_t { Horizontal, Vertical };
 class Joystick {
   public:
     /**
