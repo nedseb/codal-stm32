@@ -24,7 +24,6 @@ void Joystick::setDeadzone(uint8_t newDeadzone)
     }
     deadzone = round((float)newDeadzone / 100 * 512);
     setThresholds();
-    return;
 }
 
 uint8_t Joystick::getDeadzone()
@@ -49,9 +48,6 @@ int8_t Joystick::getAxis(JoystickAxis axis)
     else if (axisValue < 512 - deadzone) {
         axisValue = (axisValue - 0) * (0 - (-100)) / (512 - deadzone - 0) - 100;
         return axisValue;
-    }
-    else {
-        return 0;
     }
 }
 
