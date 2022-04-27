@@ -68,7 +68,7 @@ class Joystick {
      * @return true
      * @return false
      */
-    bool isButtonPressed();
+    bool isButtonPressed() { return button->isPressed(); }
 
     /**
      * @brief Registers a new event that triggers when the joystick is pointed in a specified direction
