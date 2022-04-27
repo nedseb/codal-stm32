@@ -10,7 +10,7 @@ using namespace codal;
 
 Joystick::Joystick(codal::STM32Pin& horizontalAxisPin, codal::STM32Pin& verticalAxisPin, codal::STM32Pin& buttonPin,
                    uint8_t deadzone)
-    : directionHandlers({nullptr}), buttonHandlers({nullptr})
+    : directionUserEvents({nullptr}), buttonUserEvents({nullptr})
 {
     horizontalSensor = new AnalogSensor(horizontalAxisPin, 6666);
     verticalSensor   = new AnalogSensor(verticalAxisPin, 9999);
@@ -82,7 +82,7 @@ bool Joystick::isButtonPressed()
     return button->isPressed();
 }
 
-void Joystick::registerDirectionEvent(JoystickDirection direction, handler handler)
+void Joystick::registerDirectionEvent(JoystickDirection direction, JoystickUserEvent handler)
 {
     switch (direction) {
         case JoystickDirection::Left:
@@ -102,7 +102,7 @@ void Joystick::registerDirectionEvent(JoystickDirection direction, handler handl
     }
 }
 
-void Joystick::registerButtonEvent(ButtonEvent btnEvent, handler handler)
+void Joystick::registerButtonEvent(ButtonEvent btnEvent, JoystickUserEvent handler)
 {
     switch (btnEvent) {
         case ButtonEvent::Click:
@@ -133,10 +133,10 @@ void Joystick::onEvent(codal::Event event)
     if (event.source == horizontalSensor->id) {
         switch (event.value) {
             case ANALOG_THRESHOLD_LOW:
-                directionHandlers[JoystickDirection::Right]();
+                directionUserEvents[JoystickDirection::Right]();
                 break;
             case ANALOG_THRESHOLD_HIGH:
-                directionHandlers[JoystickDirection::Left]();
+                directionUserEvents[JoystickDirection::Left]();
             default:
                 break;
         }
@@ -144,10 +144,10 @@ void Joystick::onEvent(codal::Event event)
     else if (event.source == verticalSensor->id) {
         switch (event.value) {
             case ANALOG_THRESHOLD_LOW:
-                directionHandlers[JoystickDirection::Top]();
+                directionUserEvents[JoystickDirection::Top]();
                 break;
             case ANALOG_THRESHOLD_HIGH:
-                directionHandlers[JoystickDirection::Bottom]();
+                directionUserEvents[JoystickDirection::Bottom]();
                 break;
             default:
                 break;
@@ -156,22 +156,22 @@ void Joystick::onEvent(codal::Event event)
     else if (event.source == button->id) {
         switch (event.value) {
             case DEVICE_BUTTON_EVT_CLICK:
-                buttonHandlers[ButtonEvent::Click]();
+                buttonUserEvents[ButtonEvent::Click]();
                 break;
             case DEVICE_BUTTON_EVT_LONG_CLICK:
-                buttonHandlers[ButtonEvent::LongClick]();
+                buttonUserEvents[ButtonEvent::LongClick]();
                 break;
             case DEVICE_BUTTON_EVT_UP:
-                buttonHandlers[ButtonEvent::Up]();
+                buttonUserEvents[ButtonEvent::Up]();
                 break;
             case DEVICE_BUTTON_EVT_DOWN:
-                buttonHandlers[ButtonEvent::Down]();
+                buttonUserEvents[ButtonEvent::Down]();
                 break;
             case DEVICE_BUTTON_EVT_HOLD:
-                buttonHandlers[ButtonEvent::Hold]();
+                buttonUserEvents[ButtonEvent::Hold]();
                 break;
             case DEVICE_BUTTON_EVT_DOUBLE_CLICK:
-                buttonHandlers[ButtonEvent::DoubleClick]();
+                buttonUserEvents[ButtonEvent::DoubleClick]();
             default:
                 break;
         }
@@ -188,17 +188,17 @@ void Joystick::setThresholds()
     verticalSensor->setLowThreshold(512 - deadzone);
 }
 
-void Joystick::listenToButtonEvent(ButtonEvent enumEvent, uint8_t listenValue, handler handler)
+void Joystick::listenToButtonEvent(ButtonEvent enumEvent, uint8_t listenValue, JoystickUserEvent handler)
 {
-    if (buttonHandlers[enumEvent] == nullptr) {
+    if (buttonUserEvents[enumEvent] == nullptr) {
         codal::EventModel::defaultEventBus->listen(button->id, listenValue, this, &Joystick::onEvent);
     }
-    buttonHandlers[enumEvent] = handler;
+    buttonUserEvents[enumEvent] = handler;
 }
 
-void Joystick::listenToAxisEvent(JoystickDirection direction, uint8_t listenValue, handler handler)
+void Joystick::listenToAxisEvent(JoystickDirection direction, uint8_t listenValue, JoystickUserEvent handler)
 {
-    if (buttonHandlers[direction] == nullptr) {
+    if (buttonUserEvents[direction] == nullptr) {
         switch (direction) {
             case JoystickDirection::Left:
             case JoystickDirection::Right:
@@ -212,5 +212,5 @@ void Joystick::listenToAxisEvent(JoystickDirection direction, uint8_t listenValu
                 break;
         }
     }
-    directionHandlers[direction] = handler;
+    directionUserEvents[direction] = handler;
 }

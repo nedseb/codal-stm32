@@ -7,7 +7,7 @@
 #include "STM32Pin.h"
 
 namespace codal {
-typedef void (*handler)();
+typedef void (*JoystickUserEvent)();
 
 enum JoystickDirection { Left = 0, Top = 1, Right = 2, Bottom = 3 };
 enum ButtonEvent { Click = 0, LongClick = 1, Up = 2, Down = 3, Hold = 4, DoubleClick = 5 };
@@ -62,14 +62,14 @@ class Joystick {
      * @param direction the direction that triggers the event
      * @param handler the user function to execute when the event is triggered
      */
-    void registerDirectionEvent(JoystickDirection direction, handler handler);
+    void registerDirectionEvent(JoystickDirection direction, JoystickUserEvent handler);
 
     /**
      * @brief Registers a new event that triggers when the joystick's button is pressed
      *
      * @param handler the user function to execute when the event is triggered
      */
-    void registerButtonEvent(ButtonEvent btnEvent, handler handler);
+    void registerButtonEvent(ButtonEvent btnEvent, JoystickUserEvent handler);
 
     /**
      * @brief Joystick object constructor
@@ -89,8 +89,8 @@ class Joystick {
     codal::AnalogSensor* verticalSensor;
     codal::Button* button;
     uint8_t deadzone;
-    handler directionHandlers[4];
-    handler buttonHandlers[6];
+    JoystickUserEvent directionUserEvents[4];
+    JoystickUserEvent buttonUserEvents[6];
 
     /**
      * @brief The function events use to execute the right event function of the right event
@@ -106,7 +106,7 @@ class Joystick {
      * @param listenValue the value parameter of the listen function
      * @param handler the user function that will be executed when the event is triggered
      */
-    void listenToButtonEvent(ButtonEvent enumEvent, uint8_t listenValue, handler handler);
+    void listenToButtonEvent(ButtonEvent enumEvent, uint8_t listenValue, JoystickUserEvent handler);
 
     /** @brief Utility function used to factorize the joystick's axis registering method
      *
@@ -114,7 +114,7 @@ class Joystick {
      * @param listenValue the value parameter of the listen function
      * @param handler the user function that will be executed when the event is triggered
      */
-    void listenToAxisEvent(JoystickDirection direction, uint8_t listenValue, handler handler);
+    void listenToAxisEvent(JoystickDirection direction, uint8_t listenValue, JoystickUserEvent handler);
 
     /**
      * @brief Sets the Thresholds of the AnalogSensors
