@@ -43,11 +43,13 @@ int8_t Joystick::getAxis(JoystickAxis axis)
         return 0;
 
     if (axisValue > 512 + deadzone) {
-        axisValue = (axisValue - 512 + deadzone) * (JoystickAxisRange - 0) / (1023 - 512 + deadzone) + 1;
+        // mapping of axis value between 0 and JoystickAxisRange
+        axisValue = mapAxis(axisValue, 512 + deadzone, 1023, 0, JoystickAxisRange) + 1;
         return axisValue;
     }
     else if (axisValue < 512 - deadzone) {
-        axisValue = (axisValue - 0) * (0 - (-JoystickAxisRange)) / (512 - deadzone - 0) - 100;
+        // mapping of axis value between -JoystickAxisRange and 0
+        axisValue = mapAxis(axisValue, 0, 512 - deadzone, -JoystickAxisRange, 0);
         return axisValue;
     }
     else {
@@ -198,4 +200,12 @@ void Joystick::listenToAxisEvent(JoystickDirection direction, uint8_t listenValu
         }
     }
     directionUserEvents[static_cast<uint8_t>(direction)] = handler;
+}
+
+int32_t Joystick::mapAxis(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min, int32_t out_max)
+{
+    if (x > in_max) return out_max;
+    if (x < in_min) return out_min;
+
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
 }
