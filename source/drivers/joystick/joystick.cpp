@@ -59,13 +59,13 @@ int8_t Joystick::getAxis(JoystickAxis axis)
 
 bool Joystick::isJoystickPointingTo(const JoystickDirection direction)
 {
-    if (direction == JoystickDirection::Left && getAxis(JoystickAxis::Horizontal) > 0)
+    if (direction == JoystickDirection::Left && getAxis(JoystickAxis::Horizontal) < 0)
         return true;
-    else if (direction == JoystickDirection::Top && getAxis(JoystickAxis::Vertical) > 0)
+    else if (direction == JoystickDirection::Top && getAxis(JoystickAxis::Vertical) < 0)
         return true;
-    else if (direction == JoystickDirection::Right && getAxis(JoystickAxis::Horizontal) < 0)
+    else if (direction == JoystickDirection::Right && getAxis(JoystickAxis::Horizontal) > 0)
         return true;
-    else if (direction == JoystickDirection::Bottom && getAxis(JoystickAxis::Vertical) < 0)
+    else if (direction == JoystickDirection::Bottom && getAxis(JoystickAxis::Vertical) > 0)
         return true;
     else
         return false;
@@ -122,10 +122,10 @@ void Joystick::onEvent(Event event)
     if (event.source == horizontalSensor->id) {
         switch (event.value) {
             case ANALOG_THRESHOLD_LOW:
-                directionUserEvents[static_cast<uint8_t>(JoystickDirection::Right)]();
+                directionUserEvents[static_cast<uint8_t>(JoystickDirection::Left)]();
                 break;
             case ANALOG_THRESHOLD_HIGH:
-                directionUserEvents[static_cast<uint8_t>(JoystickDirection::Left)]();
+                directionUserEvents[static_cast<uint8_t>(JoystickDirection::Right)]();
             default:
                 break;
         }
