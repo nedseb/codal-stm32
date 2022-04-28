@@ -91,26 +91,26 @@ void Joystick::registerDirectionEvent(JoystickDirection direction, JoystickUserE
     }
 }
 
-void Joystick::registerButtonEvent(ButtonEvent btnEvent, JoystickUserEvent handler)
+void Joystick::registerJoystickButtonEvent(JoystickButtonEvent btnEvent, JoystickUserEvent handler)
 {
     switch (btnEvent) {
-        case ButtonEvent::Click:
-            listenToButtonEvent(ButtonEvent::Click, DEVICE_BUTTON_EVT_CLICK, handler);
+        case JoystickButtonEvent::Click:
+            listenToJoystickButtonEvent(JoystickButtonEvent::Click, DEVICE_BUTTON_EVT_CLICK, handler);
             break;
-        case ButtonEvent::LongClick:
-            listenToButtonEvent(ButtonEvent::LongClick, DEVICE_BUTTON_EVT_LONG_CLICK, handler);
+        case JoystickButtonEvent::LongClick:
+            listenToJoystickButtonEvent(JoystickButtonEvent::LongClick, DEVICE_BUTTON_EVT_LONG_CLICK, handler);
             break;
-        case ButtonEvent::Up:
-            listenToButtonEvent(ButtonEvent::Up, DEVICE_BUTTON_EVT_UP, handler);
+        case JoystickButtonEvent::Up:
+            listenToJoystickButtonEvent(JoystickButtonEvent::Up, DEVICE_BUTTON_EVT_UP, handler);
             break;
-        case ButtonEvent::Down:
-            listenToButtonEvent(ButtonEvent::Down, DEVICE_BUTTON_EVT_DOWN, handler);
+        case JoystickButtonEvent::Down:
+            listenToJoystickButtonEvent(JoystickButtonEvent::Down, DEVICE_BUTTON_EVT_DOWN, handler);
             break;
-        case ButtonEvent::Hold:
-            listenToButtonEvent(ButtonEvent::Hold, DEVICE_BUTTON_EVT_HOLD, handler);
+        case JoystickButtonEvent::Hold:
+            listenToJoystickButtonEvent(JoystickButtonEvent::Hold, DEVICE_BUTTON_EVT_HOLD, handler);
             break;
-        case ButtonEvent::DoubleClick:
-            listenToButtonEvent(ButtonEvent::DoubleClick, DEVICE_BUTTON_EVT_DOUBLE_CLICK, handler);
+        case JoystickButtonEvent::DoubleClick:
+            listenToJoystickButtonEvent(JoystickButtonEvent::DoubleClick, DEVICE_BUTTON_EVT_DOUBLE_CLICK, handler);
             break;
         default:
             break;
@@ -145,22 +145,22 @@ void Joystick::onEvent(Event event)
     else if (event.source == button->id) {
         switch (event.value) {
             case DEVICE_BUTTON_EVT_CLICK:
-                buttonUserEvents[static_cast<uint8_t>(ButtonEvent::Click)]();
+                buttonUserEvents[static_cast<uint8_t>(JoystickButtonEvent::Click)]();
                 break;
             case DEVICE_BUTTON_EVT_LONG_CLICK:
-                buttonUserEvents[static_cast<uint8_t>(ButtonEvent::LongClick)]();
+                buttonUserEvents[static_cast<uint8_t>(JoystickButtonEvent::LongClick)]();
                 break;
             case DEVICE_BUTTON_EVT_UP:
-                buttonUserEvents[static_cast<uint8_t>(ButtonEvent::Up)]();
+                buttonUserEvents[static_cast<uint8_t>(JoystickButtonEvent::Up)]();
                 break;
             case DEVICE_BUTTON_EVT_DOWN:
-                buttonUserEvents[static_cast<uint8_t>(ButtonEvent::Down)]();
+                buttonUserEvents[static_cast<uint8_t>(JoystickButtonEvent::Down)]();
                 break;
             case DEVICE_BUTTON_EVT_HOLD:
-                buttonUserEvents[static_cast<uint8_t>(ButtonEvent::Hold)]();
+                buttonUserEvents[static_cast<uint8_t>(JoystickButtonEvent::Hold)]();
                 break;
             case DEVICE_BUTTON_EVT_DOUBLE_CLICK:
-                buttonUserEvents[static_cast<uint8_t>(ButtonEvent::DoubleClick)]();
+                buttonUserEvents[static_cast<uint8_t>(JoystickButtonEvent::DoubleClick)]();
             default:
                 break;
         }
@@ -175,7 +175,8 @@ void Joystick::setThresholds()
     verticalSensor->setLowThreshold(512 - deadzone);
 }
 
-void Joystick::listenToButtonEvent(ButtonEvent enumEvent, uint8_t listenValue, JoystickUserEvent handler)
+void Joystick::listenToJoystickButtonEvent(JoystickButtonEvent enumEvent, uint8_t listenValue,
+                                           JoystickUserEvent handler)
 {
     if (buttonUserEvents[static_cast<uint8_t>(enumEvent)] == nullptr) {
         EventModel::defaultEventBus->listen(button->id, listenValue, this, &Joystick::onEvent);
