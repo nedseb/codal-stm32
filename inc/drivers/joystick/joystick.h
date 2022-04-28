@@ -10,7 +10,7 @@ namespace codal {
 typedef void (*JoystickUserEvent)();
 
 enum class JoystickDirection : uint8_t { Left = 0, Top = 1, Right = 2, Bottom = 3 };
-enum class ButtonEvent : uint8_t { Click = 0, LongClick = 1, Up = 2, Down = 3, Hold = 4, DoubleClick = 5 };
+enum class JoystickButtonEvent : uint8_t { Click = 0, LongClick = 1, Up = 2, Down = 3, Hold = 4, DoubleClick = 5 };
 enum class JoystickAxis : uint8_t { Horizontal, Vertical };
 constexpr uint8_t JoystickAxisRange = 100;
 
@@ -83,7 +83,7 @@ class Joystick {
      *
      * @param handler the user function to execute when the event is triggered
      */
-    void registerButtonEvent(ButtonEvent btnEvent, JoystickUserEvent handler);
+    void registerJoystickButtonEvent(JoystickButtonEvent btnEvent, JoystickUserEvent handler);
 
   private:
     AnalogSensor* horizontalSensor;
@@ -107,7 +107,7 @@ class Joystick {
      * @param listenValue the value parameter of the listen function
      * @param handler the user function that will be executed when the event is triggered
      */
-    void listenToButtonEvent(ButtonEvent enumEvent, uint8_t listenValue, JoystickUserEvent handler);
+    void listenToJoystickButtonEvent(JoystickButtonEvent enumEvent, uint8_t listenValue, JoystickUserEvent handler);
 
     /** @brief Utility function used to factorize the joystick's axis registering method
      *
