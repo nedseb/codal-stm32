@@ -89,7 +89,7 @@ class Joystick {
     AnalogSensor* horizontalSensor;
     AnalogSensor* verticalSensor;
     Button* button;
-    uint8_t deadzone;
+    uint16_t deadzone;
     JoystickUserEvent directionUserEvents[4];
     JoystickUserEvent buttonUserEvents[6];
 
