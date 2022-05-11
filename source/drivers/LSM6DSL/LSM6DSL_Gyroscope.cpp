@@ -11,7 +11,6 @@ LSM6DSL_Gyroscope::LSM6DSL_Gyroscope(STM32I2C* i2c, uint8_t address, CoordinateS
 int LSM6DSL_Gyroscope::configure()
 {
     LSM6DSL::init();
-    disableAccelrometer();
 
     LSM6DSL_ACC_GYRO_ODR_G_t odr = getBestODR(samplePeriod);
     LSM6DSL_ACC_GYRO_FS_G_t fs   = getBestFullScale(sampleRange);
