@@ -26,7 +26,7 @@ void LSM6DSL::init(LSM6DSL_ACC_GYRO_ODR_G_t gyroscopeOutputDataRate,
     accelODR = accelerometerOutputDataRate;
 
     disableGyroscope();
-    disableAccelrometer();
+    disableAccelerometer();
 
     /* Enable register address automatically incremented during a multiple byte
     access with a serial interface. */
@@ -42,7 +42,7 @@ void LSM6DSL::init(LSM6DSL_ACC_GYRO_ODR_G_t gyroscopeOutputDataRate,
     setGyroscopeFullScale(gyroscopeFullscale);
 
     enableGyroscope();
-    enableAccelrometer();
+    enableAccelerometer();
 }
 
 void LSM6DSL::enableGyroscope()
@@ -57,13 +57,13 @@ void LSM6DSL::disableGyroscope()
     LSM6DSL_ACC_GYRO_W_ODR_G((void*)this, LSM6DSL_ACC_GYRO_ODR_G_POWER_DOWN);
 }
 
-void LSM6DSL::enableAccelrometer()
+void LSM6DSL::enableAccelerometer()
 {
     isAccelerometerEnable = true;
     setAccelerometerOutputDataRate(accelODR);
 }
 
-void LSM6DSL::disableAccelrometer()
+void LSM6DSL::disableAccelerometer()
 {
     isAccelerometerEnable = false;
     LSM6DSL_ACC_GYRO_W_ODR_XL((void*)this, LSM6DSL_ACC_GYRO_ODR_XL_POWER_DOWN);
