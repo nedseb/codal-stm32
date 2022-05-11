@@ -11,7 +11,6 @@ LSM6DSL_Accelerometer::LSM6DSL_Accelerometer(STM32I2C* i2c, uint8_t address, Coo
 int LSM6DSL_Accelerometer::configure()
 {
     LSM6DSL::init();
-    disableGyroscope();
 
     LSM6DSL_ACC_GYRO_ODR_XL_t odr = getBestODR(samplePeriod);
     LSM6DSL_ACC_GYRO_FS_XL_t fs   = getBestFullScale(sampleRange);
@@ -28,10 +27,10 @@ int LSM6DSL_Accelerometer::requestUpdate()
 {
     if (!isConfigured) configure();
 
-    auto result = getGyroscopeMeasure();
-    sampleENU.x = result[0];
-    sampleENU.y = result[1];
-    sampleENU.z = result[2];
+    auto result = getAccelerometerMeasure();
+    sampleENU.x = result[0] * 1000;
+    sampleENU.y = result[1] * 1000;
+    sampleENU.z = result[2] * 1000;
 
     return update();
 }
