@@ -33,14 +33,15 @@ void STM32I2C::beginTransmission(uint16_t address)
     dataToSent.clear();
 }
 
-void STM32I2C::endTransmission(bool sendStop)
+i2c_status_e STM32I2C::endTransmission(bool sendStop)
 {
-    if (!isOnTransmission) return;
+    if (!isOnTransmission) return i2c_status_e::I2C_ERROR;
 
     i2c_init(&i2c);
 
     setXferOptions(sendStop);
 
+    i2c_status_e lastStatus;
     unsigned packets = dataToSent.size() / getBufferSize();
 
     if (getBufferSize() * packets < dataToSent.size()) {
@@ -51,13 +52,16 @@ void STM32I2C::endTransmission(bool sendStop)
         auto offset = i * getBufferSize();
         auto length = min<unsigned>(dataToSent.size() - offset, getBufferSize());
 
-        i2c_master_write(&i2c, currentAddress, dataToSent.data() + offset, length);
+        lastStatus = i2c_master_write(&i2c, currentAddress, dataToSent.data() + offset, length);
+
+        if (lastStatus != i2c_status_e::I2C_OK) break;
     }
 
     i2c_deinit(&i2c);
     isOnTransmission = false;
     currentAddress   = 0;
 
+    return lastStatus;
     // target_enable_irq();
 }
 

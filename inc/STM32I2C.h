@@ -68,7 +68,7 @@ class STM32I2C : public codal::I2C {
      *
      * @param sendStop If True sending the STOP signal. (default: True)
      */
-    void endTransmission(bool sendStop = true);
+    i2c_status_e endTransmission(bool sendStop = true);
 
     /**
      * @brief Check if the device at address `address` is available
