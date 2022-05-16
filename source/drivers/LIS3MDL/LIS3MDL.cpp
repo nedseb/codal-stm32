@@ -1,5 +1,7 @@
 #include "LIS3MDL.h"
 
+#include "CodalFiber.h"
+
 using namespace codal;
 using namespace std;
 
@@ -7,6 +9,14 @@ LIS3MDL::LIS3MDL(STM32I2C* i2c, uint8_t address) : i2c(i2c), address(address) {}
 
 void LIS3MDL::init(LIS3MDL_MAG_FS_t fullscale, LIS3MDL_MAG_DO_t dataRate)
 {
+    this->fullscale = fullscale;
+    this->dataRate  = dataRate;
+
+    LIS3MDL_MAG_W_SoftRST((void*)this, LIS3MDL_MAG_SOFT_RST_YES);
+    fiber_sleep(50);
+    LIS3MDL_MAG_W_Reboot((void*)this, LIS3MDL_MAG_REBOOT_YES);
+    fiber_sleep(50);
+
     disable();
 
     LIS3MDL_MAG_W_BlockDataUpdate((void*)this, LIS3MDL_MAG_BDU_ENABLE);
@@ -18,9 +28,6 @@ void LIS3MDL::init(LIS3MDL_MAG_FS_t fullscale, LIS3MDL_MAG_DO_t dataRate)
     LIS3MDL_MAG_W_TemperatureSensor((void*)this, LIS3MDL_MAG_TEMP_EN_DISABLE);
 
     enable();
-
-    this->fullscale = fullscale;
-    this->dataRate  = dataRate;
 }
 
 void LIS3MDL::enable()
@@ -33,29 +40,29 @@ void LIS3MDL::disable()
     LIS3MDL_MAG_W_SystemOperatingMode((void*)this, LIS3MDL_MAG_MD_POWER_DOWN);
 }
 
-array<uint32_t, 3> LIS3MDL::getMeasure()
+array<int32_t, 3> LIS3MDL::getMeasure()
 {
-    array<uint32_t, 3> finalValues;
-    auto values  = getRawMeasure();
-    float factor = getSensitivity();
+    array<int32_t, 3> finalValues;
+    auto values       = getRawMeasure();
+    float sensitivity = getSensitivity();
 
-    finalValues[0] = (uint32_t)values[0] * factor;
-    finalValues[1] = (uint32_t)values[1] * factor;
-    finalValues[2] = (uint32_t)values[2] * factor;
+    finalValues[0] = (int32_t)((float)values[0] / sensitivity);
+    finalValues[1] = (int32_t)((float)values[1] / sensitivity);
+    finalValues[2] = (int32_t)((float)values[2] / sensitivity);
 
     return finalValues;
 }
 
-array<uint16_t, 3> LIS3MDL::getRawMeasure()
+array<int16_t, 3> LIS3MDL::getRawMeasure()
 {
     uint8_t rawValues[6] = {0};
-    array<uint16_t, 3> values;
+    array<int16_t, 3> values;
 
     LIS3MDL_MAG_Get_Magnetic((void*)this, rawValues);
 
-    values[0] = ((int16_t)rawValues[1] << 8) + rawValues[0];
-    values[1] = ((int16_t)rawValues[3] << 8) + rawValues[2];
-    values[2] = ((int16_t)rawValues[5] << 8) + rawValues[4];
+    values[0] = (int16_t)(rawValues[1] << 8) | rawValues[0];
+    values[1] = (int16_t)(rawValues[3] << 8) | rawValues[2];
+    values[2] = (int16_t)(rawValues[5] << 8) | rawValues[4];
 
     return values;
 }
@@ -68,19 +75,19 @@ float LIS3MDL::getSensitivity()
     // See page 8 of ST Datasheet "Sensitivity"
     switch (fullscale) {
         case LIS3MDL_MAG_FS_4Ga:
-            return 0.1462; /* 6842 [LSB/gauss] */
+            return 6.842;
 
         case LIS3MDL_MAG_FS_8Ga:
-            return 0.2923; /* 3421 [LSB/gauss] */
+            return 3.421;
 
         case LIS3MDL_MAG_FS_12Ga:
-            return 0.4384; /* 2281 [LSB/gauss] */
+            return 2.281;
 
         case LIS3MDL_MAG_FS_16Ga:
-            return 0.5845; /* 1711 [LSB/gauss] */
+            return 1.711;
 
         default:
-            return -1; /* error */
+            return 0; /* error */
     }
 }
 
