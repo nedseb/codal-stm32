@@ -44,14 +44,14 @@ class LIS3MDL {
      *
      * @return std::array<uint16_t, 3> The computed measures (mGauss) on 3 axis (x, y, z)
      */
-    std::array<uint32_t, 3> getMeasure();
+    std::array<int32_t, 3> getMeasure();
 
     /**
      * @brief Get the raw measure from the sensor
      *
      * @return std::array<uint16_t, 3> The raw measures on 3 axis (x, y, z)
      */
-    std::array<uint16_t, 3> getRawMeasure();
+    std::array<int16_t, 3> getRawMeasure();
 
     /**
      * @brief Get the Sensitivity value
