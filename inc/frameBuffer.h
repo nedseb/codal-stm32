@@ -15,7 +15,7 @@ namespace codal{
                 // MONO_HLSB,
                 // MONO_HMSB,
                 // RGB565,
-                // GS2_HMSB,
+                GS2_HMSB,
                 // GS4_HMSB,
                 // GS8
             };
@@ -29,13 +29,13 @@ namespace codal{
             void drawText(std::string str, unsigned x, unsigned y, uint16_t color);
             
             uint16_t getPixelColor( uint8_t x, uint8_t y);
-            void drawSegment(int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16_t size, bool invert, uint16_t color);
-            void drawLine(int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16_t size, bool invert, uint16_t color);
+            void drawSegment(int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16_t size, uint16_t color);
+            void drawLine(int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16_t size, uint16_t color);
             void drawBezierCurve(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t x3, uint8_t y3, uint16_t color);
-            void drawRectangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, bool fill, bool invert, uint16_t color);
-            void drawSquare(uint16_t x, uint16_t y, uint16_t lenght, bool fill, bool invert, uint16_t color);
-            void drawEllipse(int width, int height, int xc, int yc, bool fill, bool invert, uint16_t color);
-            void drawCircle(int x, int y, int radius, bool fill, bool invert, uint16_t color);
+            void drawRectangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, bool fill, uint16_t color);
+            void drawSquare(uint16_t x, uint16_t y, uint16_t lenght, bool fill, uint16_t color);
+            void drawEllipse(int width, int height, int xCenter, int yCenter, bool fill, uint16_t color);
+            void drawCircle(int x, int y, int radius, bool fill, uint16_t color);
             void drawPolygon(uint8_t x, uint8_t y, uint8_t line, uint8_t radius, uint8_t size, uint16_t color);
             void drawMatrix( std::vector<std::vector<unsigned>> matrix, unsigned x, unsigned y);
 

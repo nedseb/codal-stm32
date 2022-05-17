@@ -15,6 +15,7 @@ FrameBuffer::FrameBuffer( unsigned widthPixel, unsigned heightPixel, FrameBuffer
             pages = height / 8;
             bufferSize = pages * width;
             break;
+        default: break;
     }
 
 
@@ -34,6 +35,7 @@ void FrameBuffer::fill( uint16_t color ){
                 buffer[i] = color > 0 ? 0xFF : 0x00;
             }
             break;
+        default: break;
     }
 }
 
@@ -41,11 +43,13 @@ void FrameBuffer::drawPixel( unsigned x, unsigned y, uint16_t color){
 
     if( x >= width || y >= height ){ return; }
 
+    int shift, index;
+    uint8_t * data;
     switch( format ){
         case Format::MONO_VLSB:
-            int shift = y % 8;
-            int index = x + ( ( y / 8 ) * width );
-            uint8_t * data = &buffer[index];
+            shift = y % 8;
+            index = x + ( ( y / 8 ) * width );
+            data = &buffer[index];
 
             if(color > 0){
                 *data |= (0x01 << shift);
@@ -54,6 +58,7 @@ void FrameBuffer::drawPixel( unsigned x, unsigned y, uint16_t color){
                 *data &= ~(0x01 << shift);
             }
             break;
+        default: break;
     }
 }
 
@@ -79,13 +84,14 @@ void FrameBuffer::drawText(string str, unsigned x, unsigned y, uint16_t color){
 
 
 uint16_t FrameBuffer::getPixelColor( uint8_t x, uint8_t y ) {
+
     if( x >= width || y >= height ){ return 0; }
 
+    int shift, index;
     switch( format ){
         case Format::MONO_VLSB:
-            int shift = y % 8;
-            int index = x + ( ( y / 8 ) * width );
-
+            shift = y % 8;
+            index = x + ( ( y / 8 ) * width );
             if ((buffer[index] & (uint8_t) (0x01 << shift)) == 0) {
                 return 0;
             }
@@ -93,7 +99,10 @@ uint16_t FrameBuffer::getPixelColor( uint8_t x, uint8_t y ) {
                 return 1;
             }
             break;
+        default: break;
     }
+
+    return -1;
 }
 
 
@@ -107,7 +116,9 @@ void swapPoint(int16_t& x1, int16_t& y1, int16_t& x2, int16_t& y2) {
     y2 = tempo;
 }
 
-void FrameBuffer::drawSegment(int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16_t size, bool invert, uint16_t color) {
+void drawSegmentOrLine() {}
+
+void FrameBuffer::drawSegment(int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16_t size, uint16_t color) {
     int16_t dx = x2 - x1;
     int16_t dy = y2 - y1;
 
@@ -115,13 +126,9 @@ void FrameBuffer::drawSegment(int16_t x1, int16_t y1, int16_t x2, int16_t y2, in
         if ( x2 < x1 ) {
             swapPoint( x1, y1, x2, y2 );
         }
-        for ( unsigned s = 0; s < size; ++s ) {
+        for ( uint8_t s = 0; s < size; ++s ) {
             for ( int16_t x = x1; x <= x2; ++x ) {
                 int16_t y = y1 + dy * (x - x1) / dx + s;
-                if ( x > 128 || y > 64 ) continue;
-                if ( invert && getPixelColor( x, y ) == color ) {
-                    color = color ^ 1;
-                }
                 drawPixel( x, y, color );
             }        
         }
@@ -130,20 +137,16 @@ void FrameBuffer::drawSegment(int16_t x1, int16_t y1, int16_t x2, int16_t y2, in
         if ( y2 < y1 ) {
             swapPoint( x1, y1, x2, y2 );
         }
-        for ( unsigned s = 0; s < size; ++s ) {
+        for ( uint8_t s = 0; s < size; ++s ) {
             for ( int16_t y = y1; y <= y2; ++y ) {
                 int16_t x = x1 + dx * (y - y1) / dy + s;
-                if ( x > 128 || y > 64 ) continue;
-                if ( invert && getPixelColor( x, y ) == color ) {
-                    color = color ^ 1;
-                }
                 drawPixel( x, y, color );
             }
         }
     }
 }
 
-void FrameBuffer::drawLine(int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16_t size, bool invert, uint16_t color) {
+void FrameBuffer::drawLine(int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16_t size, uint16_t color) {
     int16_t dx = x2 - x1;
     int16_t dy = y2 - y1;
 
@@ -151,13 +154,9 @@ void FrameBuffer::drawLine(int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16
         if ( x2 < x1 ) {
             swapPoint( x1, y1, x2, y2 );
         }
-        for ( unsigned s = 0; s < size; ++s ) { 
+        for ( uint8_t s = 0; s < size; ++s ) { 
             for ( int16_t x = 0; x < 128; x++ ) {
                 int16_t y = y1 + std::ceil(dy * (x - x1)) / dx + s;
-                if ( y < 0 || x > 128 || y > 64 ) continue;
-                if ( invert && getPixelColor( x, y ) == color ) {
-                    color = color ^ 1;
-                }
                 drawPixel( x, y, color );
             }
         }
@@ -166,73 +165,69 @@ void FrameBuffer::drawLine(int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16
         if ( y2 < y1 ) {
             swapPoint( x1, y1, x2, y2 );
         }
-        for ( unsigned s = 0; s < size; ++s ) { 
+        for ( uint8_t s = 0; s < size; ++s ) { 
             for ( int16_t y = 0; y < 64; y++ ) {
                 int16_t x = x1 + std::ceil(dx * (y - y1)) / dy + s;
-                if ( x < 0 || x > 128 ||  y > 64 ) continue;
-                if ( invert && getPixelColor( x, y ) == color ) {
-                    color = color ^ 1;
-                }
                 drawPixel( x, y, color );
             }
         }
     }
 }
 
-int16_t getPt( int16_t n1 , int16_t n2 , float perc ) {
-    int16_t diff = n2 - n1;
-    return n1 + ( diff * perc );
+int16_t getPoint( int16_t pt1 , int16_t pt2 , float percentage ) {
+    int16_t diff = pt2 - pt1;
+    return pt1 + ( diff * percentage );
 }    
 
 // Pas sur de le garder car pas très utile
 void FrameBuffer::drawBezierCurve(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, uint8_t x3, uint8_t y3, uint16_t color) {
-    int16_t oui;
+    int16_t nbrPixel;
     if (x1 < x3 && y1 < y3) {
-        oui = abs(x3 - x1 + y3 - y1);
+        nbrPixel = abs(x3 - x1 + y3 - y1);
     }
     else if (x1 > x3 && y1 < y3) {
-        oui = abs(x1 - x3 + y3 - y1);
+        nbrPixel = abs(x1 - x3 + y3 - y1);
     }
     else {
-        oui = abs(x3 - x1 + y1 - y3);
+        nbrPixel = abs(x3 - x1 + y1 - y3);
     }
 
-    for( float i = 0 ; i < oui ; ++i ) {
-        uint16_t xa = getPt( x1 , x2 , i / oui );
-        uint16_t ya = getPt( y1 , y2 , i / oui );
-        uint16_t xb = getPt( x2 , x3 , i / oui );
-        uint16_t yb = getPt( y2 , y3 , i / oui );
+    for( float i = 0 ; i < nbrPixel ; ++i ) {
+        uint16_t xa = getPoint( x1 , x2 , i / nbrPixel );
+        uint16_t ya = getPoint( y1 , y2 , i / nbrPixel );
+        uint16_t xb = getPoint( x2 , x3 , i / nbrPixel );
+        uint16_t yb = getPoint( y2 , y3 , i / nbrPixel );
 
-        uint16_t x = getPt( xa , xb , i / oui );
-        uint16_t y = getPt( ya , yb , i / oui );
+        uint16_t x = getPoint( xa , xb , i / nbrPixel );
+        uint16_t y = getPoint( ya , yb , i / nbrPixel );
 
-        drawPixel( x , y , 1 );
+        drawPixel( x , y , color );
     }
 }
 
 
-void FrameBuffer::drawRectangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, bool fill, bool invert, uint16_t color) {
+void FrameBuffer::drawRectangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, bool fill, uint16_t color) {
     if (fill) {
         uint8_t x = x1;
         if (x2 < x1) {
             x = x2;
         }
-        drawSegment(x, y1, x, y2, abs(x2 - x1), invert, color);
+        drawSegment(x, y1, x, y2, abs(x2 - x1), color);
         return;
     }
 
-    drawSegment(x1, y1, x2, y1, 1, invert, color);
-    drawSegment(x1, y1, x1, y2, 1, invert, color);
-    drawSegment(x2, y2, x2, y1, 1, invert, color);
-    drawSegment(x2, y2, x1, y2, 1, invert, color);
+    drawSegment(x1, y1, x2, y1, 1, color);
+    drawSegment(x1, y1, x1, y2, 1, color);
+    drawSegment(x2, y2, x2, y1, 1, color);
+    drawSegment(x2, y2, x1, y2, 1, color);
 }
 
-void FrameBuffer::drawSquare(uint16_t x, uint16_t y, uint16_t lenght, bool fill, bool invert, uint16_t color) {
-    drawRectangle(x, y, (x + lenght), (y + lenght), fill, invert, color);
+void FrameBuffer::drawSquare(uint16_t x, uint16_t y, uint16_t lenght, bool fill, uint16_t color) {
+    drawRectangle(x, y, (x + lenght), (y + lenght), fill, color);
 }
 
 
-void FrameBuffer::drawEllipse( int width, int height, int xc, int yc, bool fill, bool invert, uint16_t color ) {
+void FrameBuffer::drawEllipse( int width, int height, int xCenter, int yCenter, bool fill, uint16_t color ) {
     int dx, dy, d1, d2, x, y;
     x = 0;
     y = height;
@@ -244,18 +239,18 @@ void FrameBuffer::drawEllipse( int width, int height, int xc, int yc, bool fill,
     while (dx < dy) {
         if (fill) {
             if (start) {
-                drawSegment(x + xc, y + yc, x + xc, -y + yc, 1, invert, color);
+                drawSegment(x + xCenter, y + yCenter, x + xCenter, -y + yCenter, 1, color);
                 start = false;
                 continue;
             }
-            drawSegment(x + xc, y + yc, x + xc, -y + yc, 1, invert, color);
-            drawSegment(-x + xc, y + yc, -x + xc, -y + yc, 1, invert, color);
+            drawSegment(x + xCenter, y + yCenter, x + xCenter, -y + yCenter, 1, color);
+            drawSegment(-x + xCenter, y + yCenter, -x + xCenter, -y + yCenter, 1, color);
         }
         else {
-            drawPixel(x + xc, y + yc, color);
-            drawPixel(-x + xc, y + yc, color);
-            drawPixel(x + xc, -y + yc, color);
-            drawPixel(-x + xc, -y + yc, color);
+            drawPixel(x + xCenter, y + yCenter, color);
+            drawPixel(-x + xCenter, y + yCenter, color);
+            drawPixel(x + xCenter, -y + yCenter, color);
+            drawPixel(-x + xCenter, -y + yCenter, color);
         }
 
         if (d1 < 0) {
@@ -276,17 +271,17 @@ void FrameBuffer::drawEllipse( int width, int height, int xc, int yc, bool fill,
     uint8_t lastX = 0;
     while (y >= 0) {
         if (fill) {
-            if (lastX != x + xc) {
-                lastX = x + xc;
-                drawSegment(x + xc, y + yc, x + xc, -y + yc, 1, invert, color);
-                drawSegment(-x + xc, y + yc, -x + xc, -y + yc, 1, invert, color);
+            if (lastX != x + xCenter) {
+                lastX = x + xCenter;
+                drawSegment(x + xCenter, y + yCenter, x + xCenter, -y + yCenter, 1, color);
+                drawSegment(-x + xCenter, y + yCenter, -x + xCenter, -y + yCenter, 1, color);
             }
         }
         else {
-            drawPixel(x + xc, y + yc, color);
-            drawPixel(-x + xc, y + yc, color);
-            drawPixel(x + xc, -y + yc, color);
-            drawPixel(-x + xc, -y + yc, color);
+            drawPixel(x + xCenter, y + yCenter, color);
+            drawPixel(-x + xCenter, y + yCenter, color);
+            drawPixel(x + xCenter, -y + yCenter, color);
+            drawPixel(-x + xCenter, -y + yCenter, color);
         }
         
         if (d2 > 0) {
@@ -304,8 +299,8 @@ void FrameBuffer::drawEllipse( int width, int height, int xc, int yc, bool fill,
     }
 }
 
-void FrameBuffer::drawCircle(int x, int y, int radius, bool fill, bool invert, uint16_t color) {
-    drawEllipse(radius * 2, radius * 2, x, y, fill, invert, color);
+void FrameBuffer::drawCircle(int x, int y, int radius, bool fill, uint16_t color) {
+    drawEllipse(radius * 2, radius * 2, x, y, fill, color);
 }
 
 
@@ -317,28 +312,28 @@ void FrameBuffer::drawPolygon(uint8_t x, uint8_t y, uint8_t line, uint8_t radius
     int angleEcart = 360 / line;
 
     for (unsigned i = angleEcart; i < 360; i = i + angleEcart) {
-        float radToDeg = i * 0.01745329251;
+        float radToDeg = i * M_PI / 180;
         int newX = (cos(radToDeg) * radius) + x;
         int newY = (sin(radToDeg) * radius) + y;
         
         drawPixel(newX, newY, color);
-        drawSegment(newX, newY, lastX, lastY, size, false, color);
+        drawSegment(newX, newY, lastX, lastY, size, color);
 
         lastX = newX;
         lastY = newY;
     }
-    drawSegment(lastX, lastY, x + radius - 1, y, size, false, color);
+    drawSegment(lastX, lastY, x + radius - 1, y, size, color);
 }
 
 
 void FrameBuffer::drawMatrix( std::vector<std::vector<unsigned>> matrix, unsigned x, unsigned y) {
     for (unsigned i = 0; i < matrix.size(); ++i) {
         for (unsigned j = 0; j < matrix[i].size(); ++j) {
-            if (matrix[i][j] == 1) {
-                drawPixel(j + x, i + y, 1);
-            }
-            else {
-                drawPixel(j + x, i + y, 0);
+            switch( format ){
+                case Format::MONO_VLSB:
+                    drawPixel(j + x, i + y, matrix[i][j]);
+                    break;
+                default: break;
             }
         }
     }
