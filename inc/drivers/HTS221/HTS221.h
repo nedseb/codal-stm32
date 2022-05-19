@@ -157,15 +157,23 @@ class HTS221 {
     float H0Rh;
     float H1Rh;
 
-    uint16_t T0Out;
-    uint16_t T1Out;
-    uint16_t H0Out;
-    uint16_t H1Out;
+    int16_t T0Out;
+    int16_t T1Out;
+    int16_t H0Out;
+    int16_t H1Out;
 
     uint8_t readRegister(uint8_t reg);
     void readCalibrationValue();
-    float interpolateTemperature(uint16_t raw) { return T0Deg + ((T1Deg - T0Deg) / (T1Out - T0Out)) * (raw - T0Out); }
-    float interpolateHumidity(uint16_t raw) { return H0Rh + ((H1Rh - H0Rh) / (H1Out - H0Out)) * (raw - H0Out); }
+
+    float interpolateTemperature(int16_t raw)
+    {
+        return (float)(raw - T0Out) * (T1Deg - T0Deg) / (float)(T1Out - T0Out) + T0Deg;
+    }
+
+    float interpolateHumidity(int16_t raw)
+    {
+        return (float)(raw - H0Out) * (H1Rh - H0Rh) / (float)(H1Out - H0Out) + H0Rh;
+    }
 };
 
 }  // namespace codal
