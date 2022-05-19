@@ -197,13 +197,13 @@ bool HTS221::isHumidityDataAvailable()
 
 float HTS221::getTemperature()
 {
-    uint16_t rawValue = (readRegister(TEMP_OUT_H) << 8) | readRegister(TEMP_OUT_L);
+    int16_t rawValue = (int16_t)(readRegister(TEMP_OUT_H) << 8) | readRegister(TEMP_OUT_L);
     return interpolateTemperature(rawValue);
 }
 
 float HTS221::getHumidity()
 {
-    uint16_t rawValue = (readRegister(HUMIDITY_OUT_H) << 8) | readRegister(HUMIDITY_OUT_L);
+    int16_t rawValue = (int16_t)(readRegister(HUMIDITY_OUT_H) << 8) | readRegister(HUMIDITY_OUT_L);
     return interpolateHumidity(rawValue);
 }
 
@@ -215,8 +215,8 @@ uint8_t HTS221::readRegister(uint8_t reg)
 void HTS221::readCalibrationValue()
 {
     uint8_t TMsb = readRegister(T0_T1_MSB);
-    uint16_t T0DegRaw;
-    uint16_t T1DegRaw;
+    int16_t T0DegRaw;
+    int16_t T1DegRaw;
 
     T0DegRaw = TMsb & MASK_T0_MSB;
     T0DegRaw <<= 8;
@@ -232,9 +232,9 @@ void HTS221::readCalibrationValue()
     H0Rh = readRegister(H0_RH_X2) >> 1;
     H1Rh = readRegister(H1_RH_X2) >> 1;
 
-    T0Out = (readRegister(T0_OUT_MSB) << 8) | readRegister(T0_OUT_LSB);
-    T1Out = (readRegister(T1_OUT_MSB) << 8) | readRegister(T1_OUT_LSB);
+    T0Out = (int16_t)(readRegister(T0_OUT_MSB) << 8) | readRegister(T0_OUT_LSB);
+    T1Out = (int16_t)(readRegister(T1_OUT_MSB) << 8) | readRegister(T1_OUT_LSB);
 
-    H0Out = (readRegister(H0_T0_OUT_MSB) << 8) | readRegister(H0_T0_OUT_LSB);
-    H1Out = (readRegister(H1_T0_OUT_MSB) << 8) | readRegister(H1_T0_OUT_LSB);
+    H0Out = (int16_t)(readRegister(H0_T0_OUT_MSB) << 8) | readRegister(H0_T0_OUT_LSB);
+    H1Out = (int16_t)(readRegister(H1_T0_OUT_MSB) << 8) | readRegister(H1_T0_OUT_LSB);
 }
