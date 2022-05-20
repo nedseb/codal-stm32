@@ -1,5 +1,4 @@
-#ifndef __VL53L0X_H__
-#define __VL53L0X_H__
+#pragma once
 
 #include "STM32I2C.h"
 #include "STM32Pin.h"
@@ -20,7 +19,7 @@ class VL53L0X {
      * @param pin the shut pin
      * @param address the sensor address
      */
-    VL53L0X(STM32I2C* i2c, STM32Pin* pin, uint8_t address);
+    VL53L0X(STM32I2C* i2c, STM32Pin* pin = nullptr, uint8_t address = VL53L0X10_DEFAULT_DEVICE_ADDRESS);
 
     /**
      * @brief Init the sensor (and enable it)
@@ -49,5 +48,3 @@ class VL53L0X {
 };
 
 }  // namespace codal
-
-#endif
