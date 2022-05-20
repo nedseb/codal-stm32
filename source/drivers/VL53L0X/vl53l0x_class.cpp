@@ -82,16 +82,18 @@ VL53L0X_base::VL53L0X_base(STM32I2C* i2c, STM32Pin* pin, uint8_t DevAddr) : dev_
     MyDevice.comms_type      = 1;  // VL53L0X_COMMS_I2C
     MyDevice.comms_speed_khz = 400;
     Device                   = &MyDevice;
-    shutPin->setDigitalValue(0);
+    VL53L0X_Off();
 }
 
 void VL53L0X_base::VL53L0X_On(void)
 {
+    if (shutPin == nullptr) return;
     shutPin->setDigitalValue(1);
 }
 
 void VL53L0X_base::VL53L0X_Off(void)
 {
+    if (shutPin == nullptr) return;
     shutPin->setDigitalValue(0);
 }
 
