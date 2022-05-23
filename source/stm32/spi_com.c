@@ -45,7 +45,6 @@
 extern "C" {
 #endif
 
-/* Private Functions */
 /**
   * @brief  return clock freq of an SPI instance
   * @param  spi_inst : SPI instance
@@ -169,9 +168,8 @@ void spi_init(spi_t *obj, uint32_t speed, spi_mode_e mode, uint8_t msb)
   SPI_TypeDef *spi_sclk = pinmap_peripheral(obj->pin_sclk, PinMap_SPI_SCLK);
   SPI_TypeDef *spi_ssel = pinmap_peripheral(obj->pin_ssel, PinMap_SPI_SSEL);
 
-  /* Pins MOSI/MISO/SCLK must not be NP. ssel can be NP. */
+  //if ((spi_mosi == NP && spi_miso == NP) || spi_sclk == NP) {
   if (spi_mosi == NP || spi_miso == NP || spi_sclk == NP) {
-    core_debug("ERROR: at least one SPI pin has no peripheral\n");
     return;
   }
 
