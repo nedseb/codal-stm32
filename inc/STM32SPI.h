@@ -56,6 +56,8 @@ class STM32SPI : public codal::SPI {
     STM32SPI(STM32Pin& miso, STM32Pin& mosi, STM32Pin& sclk, uint32_t freq = 14000000, int mode = 0,
              bool msbFirst = true);
 
+    ~STM32SPI();
+
     /** @brief Set the bit order
      *
      * @param msbFirst the order of bits on the bus
@@ -147,13 +149,20 @@ class STM32SPI : public codal::SPI {
      */
     void write16Transaction(uint8_t data);
 
+    void disableMISO() { isMISODisabled = true; }
+    void enableMISO() { isMISODisabled = false; }
+
   private:
-    spi_t spi;
+    SPI_HandleTypeDef hspi;
     uint32_t frequency;
     spi_mode_e mode;
     bool isMsbFirst;
     bool isOnTransaction;
     std::vector<uint8_t> buffer;
+    PinName pin_miso;
+    PinName pin_mosi;
+    PinName pin_sclk;
+    bool isMISODisabled;
 
     spi_mode_e modeToSpiMode(int mode);
 
@@ -167,6 +176,136 @@ class STM32SPI : public codal::SPI {
      * @return
      */
     uint8_t* write(uint8_t* tx_buffer, uint8_t* rx_buffer, uint16_t len);
+
+    uint8_t getClockPhase()
+    {
+        if ((mode == SPI_MODE_0) || (mode == SPI_MODE_2)) {
+            return SPI_PHASE_1EDGE;
+        }
+        else {
+            return SPI_PHASE_2EDGE;
+        }
+    }
+
+    uint8_t getClockPolarity()
+    {
+        if ((mode == SPI_MODE_0) || (mode == SPI_MODE_1)) {
+            return SPI_POLARITY_LOW;
+        }
+        else {
+            return SPI_POLARITY_HIGH;
+        }
+    }
+
+    uint8_t getPrescaler()
+    {
+        uint32_t spi_freq = spi_getClkFreqInst(hspi.Instance);
+
+        if (frequency >= (spi_freq / SPI_SPEED_CLOCK_DIV2_MHZ)) {
+            return SPI_BAUDRATEPRESCALER_2;
+        }
+        else if (frequency >= (spi_freq / SPI_SPEED_CLOCK_DIV4_MHZ)) {
+            return SPI_BAUDRATEPRESCALER_4;
+        }
+        else if (frequency >= (spi_freq / SPI_SPEED_CLOCK_DIV8_MHZ)) {
+            return SPI_BAUDRATEPRESCALER_8;
+        }
+        else if (frequency >= (spi_freq / SPI_SPEED_CLOCK_DIV16_MHZ)) {
+            return SPI_BAUDRATEPRESCALER_16;
+        }
+        else if (frequency >= (spi_freq / SPI_SPEED_CLOCK_DIV32_MHZ)) {
+            return SPI_BAUDRATEPRESCALER_32;
+        }
+        else if (frequency >= (spi_freq / SPI_SPEED_CLOCK_DIV64_MHZ)) {
+            return SPI_BAUDRATEPRESCALER_64;
+        }
+        else if (frequency >= (spi_freq / SPI_SPEED_CLOCK_DIV128_MHZ)) {
+            return SPI_BAUDRATEPRESCALER_128;
+        }
+        else {
+            return SPI_BAUDRATEPRESCALER_256;
+        }
+    }
+
+    void enableSPIClock()
+    {
+#if defined SPI1_BASE
+        // Enable SPI clock
+        if (hspi.Instance == SPI1) {
+            __HAL_RCC_SPI1_CLK_ENABLE();
+        }
+#endif
+
+#if defined SPI2_BASE
+        if (hspi.Instance == SPI2) {
+            __HAL_RCC_SPI2_CLK_ENABLE();
+        }
+#endif
+
+#if defined SPI3_BASE
+        if (hspi.Instance == SPI3) {
+            __HAL_RCC_SPI3_CLK_ENABLE();
+        }
+#endif
+
+#if defined SPI4_BASE
+        if (hspi.Instance == SPI4) {
+            __HAL_RCC_SPI4_CLK_ENABLE();
+        }
+#endif
+
+#if defined SPI5_BASE
+        if (hspi.Instance == SPI5) {
+            __HAL_RCC_SPI5_CLK_ENABLE();
+        }
+#endif
+
+#if defined SPI6_BASE
+        if (hspi.Instance == SPI6) {
+            __HAL_RCC_SPI6_CLK_ENABLE();
+        }
+#endif
+    }
+
+    void disableSPIClock()
+    {
+#if defined SPI1_BASE
+        // Enable SPI clock
+        if (hspi.Instance == SPI1) {
+            __HAL_RCC_SPI1_CLK_DISABLE();
+        }
+#endif
+
+#if defined SPI2_BASE
+        if (hspi.Instance == SPI2) {
+            __HAL_RCC_SPI2_CLK_DISABLE();
+        }
+#endif
+
+#if defined SPI3_BASE
+        if (hspi.Instance == SPI3) {
+            __HAL_RCC_SPI3_CLK_DISABLE();
+        }
+#endif
+
+#if defined SPI4_BASE
+        if (hspi.Instance == SPI4) {
+            __HAL_RCC_SPI4_CLK_DISABLE();
+        }
+#endif
+
+#if defined SPI5_BASE
+        if (hspi.Instance == SPI5) {
+            __HAL_RCC_SPI5_CLK_DISABLE();
+        }
+#endif
+
+#if defined SPI6_BASE
+        if (hspi.Instance == SPI6) {
+            __HAL_RCC_SPI6_CLK_DISABLE();
+        }
+#endif
+    }
 };
 
 }  // namespace codal
