@@ -18,6 +18,12 @@ FrameBuffer::FrameBuffer(unsigned widthPixel, unsigned heightPixel, FrameBuffer:
             pages      = height / 8;
             bufferSize = pages * width;
             break;
+
+        case Format::GS4_HMSB:
+            pages      = 0;
+            bufferSize = height * (width / 2);
+            break;
+
         default:
             break;
     }
@@ -34,6 +40,12 @@ void FrameBuffer::fill(uint16_t color)
 {
     switch (format) {
         case Format::MONO_VLSB:
+            for (unsigned i = 0; i < bufferSize; ++i) {
+                buffer[i] = color > 0 ? 0xFF : 0x00;
+            }
+            break;
+
+        case Format::GS4_HMSB:
             for (unsigned i = 0; i < bufferSize; ++i) {
                 buffer[i] = color > 0 ? 0xFF : 0x00;
             }
@@ -64,6 +76,23 @@ void FrameBuffer::drawPixel(unsigned x, unsigned y, uint16_t color)
                 *data &= ~(0x01 << shift);
             }
             break;
+
+        case Format::GS4_HMSB: {
+            uint8_t value = color & 0x000F;
+            uint8_t* data = &buffer[y * (width / 2) + (x / 2)];
+
+            if ((x & 0x01) == 1) {
+                *data &= 0xF0;
+                *data |= value;
+            }
+            else {
+                *data &= 0x0F;
+                *data |= (value << 4);
+            }
+
+            break;
+        }
+
         default:
             break;
     }
