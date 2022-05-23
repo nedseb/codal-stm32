@@ -101,6 +101,7 @@ spi_status_e spi_send(spi_t *obj, uint8_t *Data, uint16_t len, uint32_t Timeout)
 spi_status_e spi_transfer(spi_t *obj, uint8_t *tx_buffer,
                           uint8_t *rx_buffer, uint16_t len, uint32_t Timeout, bool skipReceive);
 uint32_t spi_getClkFreq(spi_t *obj);
+uint32_t spi_getClkFreqInst(SPI_TypeDef *spi_inst);
 
 #ifdef __cplusplus
 }
