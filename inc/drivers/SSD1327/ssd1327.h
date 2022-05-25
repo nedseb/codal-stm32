@@ -26,16 +26,18 @@ class SSD1327 : public FrameBuffer {
 
 class SSD1327_SPI : public SSD1327 {
   public:
-    SSD1327_SPI(STM32SPI* spi, STM32Pin* chipSelect, STM32Pin* dataCommand, unsigned width, unsigned height);
+    SSD1327_SPI(STM32SPI& spi, STM32Pin& chipSelect, STM32Pin& dataCommand, STM32Pin& reset, unsigned width,
+                unsigned height);
     ~SSD1327_SPI();
 
     void writeCommand(uint8_t cmd);
     void writeData(uint8_t* buf, unsigned len);
 
   private:
-    STM32SPI* spi;
-    STM32Pin* cs;
-    STM32Pin* dc;
+    STM32SPI& spi;
+    STM32Pin& cs;
+    STM32Pin& dc;
+    STM32Pin& reset;
 };
 
 }  // namespace codal
