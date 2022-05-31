@@ -37,7 +37,7 @@ class FrameBuffer {
     void drawEllipse(int width, int height, int xCenter, int yCenter, bool fill, uint16_t color);
     void drawCircle(int x, int y, int radius, bool fill, uint16_t color);
     void drawPolygon(uint8_t x, uint8_t y, uint8_t line, uint8_t radius, uint8_t size, uint16_t color);
-    void drawMatrix(std::vector<std::vector<unsigned>> matrix, unsigned x, unsigned y);
+    void drawMatrix(std::vector<std::vector<uint16_t>> matrix, unsigned x, unsigned y);
 
   protected:
     unsigned width;

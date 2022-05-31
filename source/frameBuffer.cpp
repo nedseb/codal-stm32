@@ -136,6 +136,19 @@ uint16_t FrameBuffer::getPixelColor(uint8_t x, uint8_t y)
                 return 1;
             }
             break;
+
+        case Format::GS4_HMSB: {
+            uint8_t data = buffer[y * (width / 2) + (x / 2)];
+
+            if ((x & 0x01) == 1) {
+                return data & 0x0F;
+            }
+            else {
+                return (data & 0xF0) >> 4;
+            }
+            break;
+        }
+
         default:
             break;
     }
@@ -371,17 +384,11 @@ void FrameBuffer::drawPolygon(uint8_t x, uint8_t y, uint8_t line, uint8_t radius
     drawSegment(lastX, lastY, x + radius - 1, y, size, color);
 }
 
-void FrameBuffer::drawMatrix(std::vector<std::vector<unsigned>> matrix, unsigned x, unsigned y)
+void FrameBuffer::drawMatrix(std::vector<std::vector<uint16_t>> matrix, unsigned x, unsigned y)
 {
     for (unsigned i = 0; i < matrix.size(); ++i) {
         for (unsigned j = 0; j < matrix[i].size(); ++j) {
-            switch (format) {
-                case Format::MONO_VLSB:
-                    drawPixel(j + x, i + y, matrix[i][j]);
-                    break;
-                default:
-                    break;
-            }
+            drawPixel(j + x, i + y, matrix[i][j]);
         }
     }
 }
