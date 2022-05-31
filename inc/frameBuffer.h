@@ -1,5 +1,4 @@
-#ifndef __FRAMEBUFFER_H__
-#define __FRAMEBUFFER_H__
+#pragma once
 
 #include <cstdint>
 #include <cstring>
@@ -49,5 +48,3 @@ class FrameBuffer {
     uint8_t* buffer;
 };
 }  // namespace codal
-
-#endif
