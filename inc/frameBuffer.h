@@ -2,6 +2,7 @@
 #define __FRAMEBUFFER_H__
 
 #include <cstdint>
+#include <cstring>
 #include <string>
 #include <vector>
 
@@ -26,6 +27,7 @@ class FrameBuffer {
     void drawPixel(unsigned x, unsigned y, uint16_t color);
     void drawChar(char c, unsigned x, unsigned y, uint16_t color);
     void drawText(std::string str, unsigned x, unsigned y, uint16_t color);
+    void setData(uint8_t* data, size_t len) { memcpy(buffer, data, len); }
 
     uint16_t getPixelColor(uint8_t x, uint8_t y);
     void drawSegment(int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint8_t size, uint16_t color);
