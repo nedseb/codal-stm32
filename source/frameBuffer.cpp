@@ -118,7 +118,7 @@ void swapPoint(int16_t& x1, int16_t& y1, int16_t& x2, int16_t& y2) {
 
 void drawSegmentOrLine() {}
 
-void FrameBuffer::drawSegment(int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16_t size, uint16_t color) {
+void FrameBuffer::drawSegment(int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint8_t size, uint16_t color) {
     int16_t dx = x2 - x1;
     int16_t dy = y2 - y1;
 
@@ -146,7 +146,7 @@ void FrameBuffer::drawSegment(int16_t x1, int16_t y1, int16_t x2, int16_t y2, in
     }
 }
 
-void FrameBuffer::drawLine(int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16_t size, uint16_t color) {
+void FrameBuffer::drawLine(int16_t x1, int16_t y1, int16_t x2, int16_t y2, uint8_t size, uint16_t color) {
     int16_t dx = x2 - x1;
     int16_t dy = y2 - y1;
 
@@ -155,7 +155,7 @@ void FrameBuffer::drawLine(int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16
             swapPoint( x1, y1, x2, y2 );
         }
         for ( uint8_t s = 0; s < size; ++s ) { 
-            for ( int16_t x = 0; x < 128; x++ ) {
+            for ( uint8_t x = 0; x < width; x++ ) {
                 int16_t y = y1 + std::ceil(dy * (x - x1)) / dx + s;
                 drawPixel( x, y, color );
             }
@@ -166,7 +166,7 @@ void FrameBuffer::drawLine(int16_t x1, int16_t y1, int16_t x2, int16_t y2, int16
             swapPoint( x1, y1, x2, y2 );
         }
         for ( uint8_t s = 0; s < size; ++s ) { 
-            for ( int16_t y = 0; y < 64; y++ ) {
+            for ( uint8_t y = 0; y < height; y++ ) {
                 int16_t x = x1 + std::ceil(dx * (y - y1)) / dy + s;
                 drawPixel( x, y, color );
             }
