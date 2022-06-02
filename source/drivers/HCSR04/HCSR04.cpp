@@ -5,11 +5,7 @@
 
 using namespace codal;
 
-HCSR04::HCSR04(STM32Pin& trig, STM32Pin& echo) : trig(trig), echo(echo) {}
-
-HCSR04::~HCSR04(){}
-
-int HCSR04::getDistance(HCSR04Unit type) {
+uint16_t HCSR04::getDistance(HCSR04Unit type) {
     switch (type)
     {
     case HCSR04Unit::Mm :
@@ -26,7 +22,7 @@ int HCSR04::getDistance(HCSR04Unit type) {
     return 0;
 }
 
-int HCSR04::getDistanceMilli() { 
+uint16_t HCSR04::getDistanceMilli() { 
     trig.setDigitalValue(1);
     delay(2);
     trig.setDigitalValue(0);
@@ -45,7 +41,7 @@ int HCSR04::getDistanceMilli() {
     }
     uint32_t end = micros();
 
-    // Return the distance in centimeter
+    // Return the distance in millimeter
     return (343000 * (end - start) / 1000000) / 2;
 }
 
