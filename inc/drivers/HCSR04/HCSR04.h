@@ -4,23 +4,22 @@
 
 
 namespace codal {
-using namespace codal;
-enum class HCSR04Unit : uint8_t {M = 0, Dm = 1, Cm = 2, Mm = 3};
 
+enum class HCSR04Unit : uint8_t {M = 0, Dm = 1, Cm = 2, Mm = 3};
 
 class HCSR04 {
   public:
-    HCSR04(STM32Pin& trig, STM32Pin& echo);
-    ~HCSR04();
+    HCSR04(STM32Pin& trig, STM32Pin& echo) : trig(trig), echo(echo) {};
+    ~HCSR04() {};
 
-    int getDistance(HCSR04Unit type);
+    uint16_t getDistance(HCSR04Unit type);
 
 
   private:
     STM32Pin& trig;
     STM32Pin& echo;
 
-    int getDistanceMilli();
+    uint16_t getDistanceMilli();
 };
 
 }  // namespace codal
