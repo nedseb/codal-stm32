@@ -2,6 +2,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <deque>
 #include <map>
 
 #include "CodalComponent.h"
@@ -12,9 +13,20 @@ namespace codal {
 
 enum AdvertisingState { OFF, SCAN, EMIT };
 
-struct DeviceScanResult {
-    BLEDevice device;
-    uint32_t time;
+struct ReceivedMessage {
+    std::string address;
+    std::string name;
+    std::string uuid;
+    std::vector<uint8_t> message;
+    int rssi;
+    bool isRead;
+
+    ReceivedMessage(std::string address, std::string name, const char* uuid, std::vector<uint8_t> message, int rssi)
+        : address(address), name(name), uuid(uuid), message(message), rssi(rssi), isRead(false)
+    {
+    }
+
+    ReceivedMessage() : address(""), name(""), uuid(""), rssi(0), isRead(false) {}
 };
 
 class STM32AdvertisingBLE {
@@ -37,28 +49,11 @@ class STM32AdvertisingBLE {
      * @brief Set the Service Data to send over advertising. Due to the limit of the advertising frame, the message will
      * be truncated if has a length greater than MAX_ADVERTISING_DATA_LENGTH bytes.
      *
-     * Note : Both types of data (Service or Manufacturer) cannot be sent at the same time. The last one to be set will
-     * be sent.
-     *
      * @param uuidService The service UUID to use (see: https://www.bluetooth.com/specifications/assigned-numbers/)
      * @param data The data to be sent
      * @param length The length of data to send
      */
     void setServiceData(uint16_t uuidService, uint8_t* data, size_t length);
-
-    /**
-     * @brief Set the Manufacturer Data to send over advertising. Due to the limit of the advertising frame, the message
-     * will be truncated if has a length greater than MAX_ADVERTISING_DATA_LENGTH bytes.
-     *
-     * Note : Both types of data (Service or Manufacturer) cannot be sent at the same time. The last one to be set will
-     * be sent.
-     *
-     * @param uuidService The company UUID to use (see:
-     * https://www.bluetooth.com/specifications/assigned-numbers/company-identifiers/)
-     * @param data The data to be sent
-     * @param length The length of data to send
-     */
-    void setManufacturerData(uint16_t companyUUID, uint8_t* data, size_t length);
 
     /**
      * @brief Clear all data, and stop emitting
@@ -107,58 +102,50 @@ class STM32AdvertisingBLE {
     void setLocalName(const char* localName) { this->localName = localName; }
 
     /**
-     * @brief Know if there is result with manufacturer data
+     * @brief Know if there is new messages
      *
-     * @return true is there are data, false otherwise
+     * @return true is there are new messages, false otherwise
      */
-    bool hasResultWithManufacturerData();
+    bool hasReceivedMessage();
 
     /**
-     * @brief Get all Device with Manufacturer data
+     * @brief Know if there is new messages from name device
      *
-     * @param output The array will contains results
-     * @param maxLength The maximum result to retrieve (e.g. the size of ouput array)
-     * @return uint8_t The number of results
+     * @param name The name of the device
+     * @return true is there are new messages, false otherwise
      */
-    size_t getResultWithManufacturerData(BLEDevice output[], size_t maxLength);
+    bool hasReceivedMessageFrom(std::string name);
 
     /**
-     * @brief Know if there is result with advertising data
+     * @brief Know if there is new message from name device on the spécific UUID
      *
-     * @return true is there are data, false otherwise
+     * @param name The name of the device
+     * @return true is there are new messages, false otherwise
      */
-    bool hasResultWithAdvertisingData();
+    bool hasReceivedMessageFrom(std::string name, std::string uuid);
 
     /**
-     * @brief Get all Device with advertising data
+     * @brief Get all new messages. The reading is destructive, a message read cannot be read a second time.
      *
-     * @param output The array will contains results
-     * @param maxLength The maximum result to retrieve (e.g. the size of ouput array)
-     * @return uint8_t The number of results
+     * @return std::list<ReceivedMessage> The new messages
      */
-    size_t getResultWithAdvertisingData(BLEDevice output[], size_t maxLength);
+    std::deque<ReceivedMessage> getAllReceivedMessage();
 
     /**
-     * @brief Know if there is result
+     * @brief Get all new messages. The reading is destructive, a message read cannot be read a second time.
      *
-     * @return true is there are results, false otherwise
+     * @param name The name of the device
+     * @return std::list<ReceivedMessage> The new messages
      */
-    bool hasResults();
+    std::deque<ReceivedMessage> getAllReceivedMessageFrom(std::string name);
 
     /**
-     * @brief Get all device
+     * @brief Know if there is new message from name device on the spécific UUID
      *
-     * @param output The array will contains results
-     * @param maxLength The maximum result to retrieve (e.g. the size of ouput array)
-     * @return size_t The number of result
+     * @param name The name of the device
+     * @return The new message (all field have default value if no new message)
      */
-    size_t getAllResults(BLEDevice output[], size_t maxLength);
-
-    /**
-     * @brief Clear all scan result
-     *
-     */
-    void clearResult() { scanResults.clear(); }
+    ReceivedMessage getReceivedMessageFrom(std::string name, std::string uuid);
 
     /**
      * @brief Get if the current status is EMITTING
@@ -188,7 +175,6 @@ class STM32AdvertisingBLE {
     void enableAdvertising();
     void disableAdvertising();
     void saveScanResult();
-    void reduceScanTime();
 
     AdvertisingState state;
     BLEAdvertisingData advData;
@@ -200,7 +186,7 @@ class STM32AdvertisingBLE {
     uint32_t retainingTime;
     uint32_t lastStateChange;
     const char* localName;
-    std::map<std::string, DeviceScanResult> scanResults;
+    std::deque<ReceivedMessage> messages;
 
     static bool isTimerSet;
 };
