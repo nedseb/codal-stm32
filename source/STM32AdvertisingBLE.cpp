@@ -1,5 +1,7 @@
 #include "STM32AdvertisingBLE.h"
 
+#include <vector>
+
 #include "EventModel.h"
 #include "Timer.h"
 #include "clock.h"
@@ -24,10 +26,10 @@ STM32AdvertisingBLE::STM32AdvertisingBLE(uint8_t channel)
       lastStateChange(0),
       localName("Default Name")
 {
-    scanResults.clear();
+    messages.clear();
 
     if (!isTimerSet) {
-        system_timer_event_every_us(1000, DEVICE_ID_RADIO, TIMER_EVENT_VALUE);
+        system_timer_event_every(250, DEVICE_ID_RADIO, TIMER_EVENT_VALUE);
     }
 
     EventModel::defaultEventBus->listen(DEVICE_ID_RADIO, TIMER_EVENT_VALUE, this, &STM32AdvertisingBLE::state_update);
@@ -59,98 +61,77 @@ void STM32AdvertisingBLE::setServiceData(uint16_t uuidService, uint8_t* data, si
     setData(uuidService, data, length, true);
 }
 
-void STM32AdvertisingBLE::setManufacturerData(uint16_t companyUUID, uint8_t* data, size_t length)
-{
-    setData(companyUUID, data, length, false);
-}
-
 void STM32AdvertisingBLE::clearData()
 {
     advData.clear();
     hasData = false;
 }
 
-bool STM32AdvertisingBLE::hasResultWithManufacturerData()
+bool STM32AdvertisingBLE::hasReceivedMessage()
 {
-    for (auto& device : scanResults) {
-        if (device.second.device.manufacturerDataCount() > 0) {
-            return true;
-        }
+    for (auto it = messages.begin(); it != messages.end(); it++) {
+        if (!it->isRead) return true;
     }
 
     return false;
 }
 
-size_t STM32AdvertisingBLE::getResultWithManufacturerData(BLEDevice output[], size_t maxLength)
+bool STM32AdvertisingBLE::hasReceivedMessageFrom(std::string name)
 {
-    size_t length = 0;
-
-    for (auto& device : scanResults) {
-        if (length >= maxLength) {
-            break;
-        }
-
-        if (device.second.device.manufacturerDataCount() == 0) {
-            continue;
-        }
-
-        output[length] = device.second.device;
-        length++;
-    }
-
-    return length;
-}
-
-bool STM32AdvertisingBLE::hasResultWithAdvertisingData()
-{
-    for (auto& device : scanResults) {
-        if (device.second.device.advertisingDataCount() > 0) {
-            return true;
-        }
+    for (auto msg : messages) {
+        if (msg.name == name && !msg.isRead) return true;
     }
 
     return false;
 }
 
-size_t STM32AdvertisingBLE::getResultWithAdvertisingData(BLEDevice output[], size_t maxLength)
+bool STM32AdvertisingBLE::hasReceivedMessageFrom(std::string name, std::string uuid)
 {
-    size_t length = 0;
-
-    for (auto& device : scanResults) {
-        if (length >= maxLength) {
-            break;
-        }
-
-        if (device.second.device.advertisingDataCount() == 0) {
-            continue;
-        }
-
-        output[length] = device.second.device;
-        length++;
+    for (auto msg : messages) {
+        if (msg.name == name && msg.uuid == uuid && !msg.isRead) return true;
     }
 
-    return length;
+    return false;
 }
 
-bool STM32AdvertisingBLE::hasResults()
+std::deque<ReceivedMessage> STM32AdvertisingBLE::getAllReceivedMessage()
 {
-    return scanResults.size() > 0;
-}
+    std::deque<ReceivedMessage> result;
 
-size_t STM32AdvertisingBLE::getAllResults(BLEDevice output[], size_t maxLength)
-{
-    size_t length = 0;
-
-    for (auto& device : scanResults) {
-        if (length >= maxLength) {
-            break;
+    for (auto it = messages.begin(); it != messages.end(); it++) {
+        if (!it->isRead) {
+            result.push_back(ReceivedMessage(*it));
+            it->isRead = true;
         }
-
-        output[length] = device.second.device;
-        length++;
     }
 
-    return length;
+    return result;
+}
+
+std::deque<ReceivedMessage> STM32AdvertisingBLE::getAllReceivedMessageFrom(std::string name)
+{
+    std::deque<ReceivedMessage> result;
+
+    for (auto it = messages.begin(); it != messages.end(); it++) {
+        if (it->name == name && !it->isRead) {
+            result.push_back(ReceivedMessage(*it));
+            it->isRead = true;
+        }
+    }
+
+    return result;
+}
+
+ReceivedMessage STM32AdvertisingBLE::getReceivedMessageFrom(std::string name, std::string uuid)
+{
+    for (auto it = messages.begin(); it != messages.end(); it++) {
+        if (it->name == name && it->uuid == uuid && !it->isRead) {
+            return ReceivedMessage(*it);
+            it->isRead = true;
+        }
+    }
+
+    return ReceivedMessage();
 }
 
 void STM32AdvertisingBLE::state_update(Event)
@@ -164,7 +145,6 @@ void STM32AdvertisingBLE::state_update(Event)
     switch (state) {
         case EMIT:
             if (delta >= durationEmit && durationScan > 0) {
-                reduceScanTime();
                 enableScan();
             }
             break;
@@ -245,29 +225,35 @@ void STM32AdvertisingBLE::disableAdvertising()
 
 void STM32AdvertisingBLE::saveScanResult()
 {
+    bool addMessage = true;
+    std::string tmpUuid;
+    std::vector<uint8_t> tmpMsg;
+
     for (BLEDevice device = BLE.available(); device; device = BLE.available()) {
-        if (scanResults.count(device.address()) > 0) {
-            scanResults[device.address()].device = device;
-            scanResults[device.address()].time   = getCurrentMillis();
-        }
-        else {
-            scanResults.insert(
-                std::pair<string, DeviceScanResult>(device.address(), DeviceScanResult{device, getCurrentMillis()}));
-        }
-    }
+        for (auto i = 0; i < device.advertisingDataCount(); i++) {
+            addMessage = true;
+            tmpUuid    = device.getAdvertisingDataUuid(i);
 
-    uint32_t currentTime = getCurrentMillis();
+            for (auto it = messages.begin(); it != messages.end(); it++) {
+                if (it->address == device.address() && it->uuid == tmpUuid) {
+                    tmpMsg = device.getAdvertisingData(i);
 
-    for (auto it = scanResults.rbegin(); it != scanResults.rend(); ++it) {
-        if (currentTime - it->second.time >= retainingTime) {
-            scanResults.erase(it->first);
+                    if (it->message != tmpMsg) {
+                        it->name    = device.hasLocalName() ? device.localName() : "N/A";
+                        it->rssi    = device.rssi();
+                        it->message = tmpMsg;
+                        it->isRead  = false;
+                    }
+
+                    addMessage = false;
+                    break;
+                }
+            }
+
+            if (addMessage) {
+                messages.push_back(ReceivedMessage(device.address(), device.hasLocalName() ? device.localName() : "N/A",
+                                                   tmpUuid.c_str(), device.getAdvertisingData(i), device.rssi()));
+            }
         }
-    }
-}
-
-void STM32AdvertisingBLE::reduceScanTime()
-{
-    for (auto& device : scanResults) {
-        device.second.time += durationEmit;
     }
 }
