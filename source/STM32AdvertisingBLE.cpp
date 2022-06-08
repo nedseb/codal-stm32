@@ -173,6 +173,7 @@ void STM32AdvertisingBLE::setData(uint16_t uuid, uint8_t* data, size_t length, b
         BLE.stopAdvertise();
     }
 
+    advData.clear();
     if (isService) {
         advData.setManufacturerData(NULL, 0);
         advData.setAdvertisedServiceData(uuid, data, dataLength);
