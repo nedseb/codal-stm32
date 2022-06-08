@@ -566,7 +566,6 @@ const std::vector<uint8_t> BLEDevice::getAdvertisingData(uint8_t index) const
 
         if (type == 0x16) {
             if (currentIndex == index) {
-                pos += 1;
                 break;
             }
 
@@ -579,7 +578,38 @@ const std::vector<uint8_t> BLEDevice::getAdvertisingData(uint8_t index) const
         return std::vector<uint8_t>();
     }
 
-    return std::vector<uint8_t>(_eirData + pos, _eirData + pos + length);
+    return std::vector<uint8_t>(_eirData + pos + 3,  // + 3 : skip type field (1 byte) + UUID field (2 bytes)
+                                _eirData + pos + length);
+}
+
+std::string BLEDevice::getAdvertisingDataUuid(uint8_t index) const
+{
+    uint8_t currentIndex = 0;
+    uint8_t pos          = 0;
+    uint8_t length       = 0;
+    uint8_t type         = 0;
+
+    while (pos < _eirDataLength) {
+        length = _eirData[pos];
+        pos += 1;
+        type = _eirData[pos];
+
+        if (type == 0x16) {
+            if (currentIndex == index) {
+                pos += 1;
+                break;
+            }
+
+            currentIndex++;
+            pos += length;
+        }
+    }
+
+    if (pos == _eirDataLength) {
+        return "";
+    }
+
+    return std::string(BLEUuid::uuidToString(_eirData + pos, 2));
 }
 
 bool BLEDevice::hasAddress(uint8_t addressType, uint8_t address[6])

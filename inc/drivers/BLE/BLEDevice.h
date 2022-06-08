@@ -96,6 +96,7 @@ class BLEDevice {
     ManufacturerData getManufacturerData(uint8_t index = 0) const;
     uint8_t advertisingDataCount() const;
     const std::vector<uint8_t> getAdvertisingData(uint8_t index = 0) const;
+    std::string getAdvertisingDataUuid(uint8_t index = 0) const;
 
   protected:
     friend class ATTClass;
