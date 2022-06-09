@@ -8,9 +8,12 @@
 #include "CodalComponent.h"
 #include "Event.h"
 #include "STM32duinoBLE.h"
+#include "clock.h"
 
 namespace codal {
 
+constexpr uint32_t BLE_MIN_RETENTION_TIME     = 30000;
+constexpr uint32_t BLE_DEFAULT_RETENTION_TIME = 300000;
 enum AdvertisingState { OFF, SCAN, EMIT };
 
 struct ReceivedMessage {
@@ -20,13 +23,21 @@ struct ReceivedMessage {
     std::vector<uint8_t> message;
     int rssi;
     bool isRead;
+    uint32_t expirationTime;
 
-    ReceivedMessage(std::string address, std::string name, const char* uuid, std::vector<uint8_t> message, int rssi)
-        : address(address), name(name), uuid(uuid), message(message), rssi(rssi), isRead(false)
+    ReceivedMessage(std::string address, std::string name, const char* uuid, std::vector<uint8_t> message, int rssi,
+                    uint32_t retentionTime = BLE_DEFAULT_RETENTION_TIME)
+        : address(address),
+          name(name),
+          uuid(uuid),
+          message(message),
+          rssi(rssi),
+          isRead(false),
+          expirationTime(getCurrentMillis() + retentionTime)
     {
     }
 
-    ReceivedMessage() : address(""), name(""), uuid(""), rssi(0), isRead(false) {}
+    ReceivedMessage() : address(""), name(""), uuid(""), rssi(0), isRead(false), expirationTime(getCurrentMillis()) {}
 };
 
 class STM32AdvertisingBLE {
@@ -76,11 +87,11 @@ class STM32AdvertisingBLE {
     void setDurationEmitting(uint16_t ms) { durationEmit = ms; }
 
     /**
-     * @brief Retaining time of scan result, after this delay the result will be delete
+     * @brief Retaining time result, after this delay the result will be delete
      *
-     * @param t The retaining time in milliseconds (default: 60000 ms)
+     * @param t The retaining time in milliseconds (default: BLE_DEFAULT_RETENTION_TIME). Min : BLE_MIN_RETENTION_TIME
      */
-    void setRetainingTimeResult(uint32_t t) { retainingTime = t; }
+    void setRetainingTime(uint32_t t) { retainingTime = (t < BLE_MIN_RETENTION_TIME) ? BLE_MIN_RETENTION_TIME : t; }
 
     /**
      * @brief Start Advertising and Scanning
@@ -168,7 +179,8 @@ class STM32AdvertisingBLE {
     static constexpr size_t MAX_ADVERTISING_DATA_LENGTH = 27;
 
   private:
-    void state_update(Event);
+    void stateUpdate(Event);
+    void cleanMessages(Event);
     void setData(uint16_t uuid, uint8_t* data, size_t length, bool isService);
     void enableScan();
     void disableScan();
