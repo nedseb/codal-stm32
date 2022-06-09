@@ -4,14 +4,13 @@
 
 #include "EventModel.h"
 #include "Timer.h"
-#include "clock.h"
 #include "codal_target_hal.h"
 
 using namespace std;
 using namespace codal;
 
-// 0x1415 because 0x1415 = 5141 in decimal...\o/
-#define TIMER_EVENT_VALUE 0x1415
+constexpr uint16_t EVENT_STATE_UPDATE   = 0x1415;  // 0x1415 = 5141 in decimal...\o/
+constexpr uint16_t EVENT_CLEAN_MESSAGES = 0x1135;  // Fibonacci time !
 
 bool STM32AdvertisingBLE::isTimerSet = false;
 
@@ -22,17 +21,24 @@ STM32AdvertisingBLE::STM32AdvertisingBLE(uint8_t channel)
       channel(channel),
       durationScan(5000),
       durationEmit(5000),
-      retainingTime(60000),
+      retainingTime(BLE_DEFAULT_RETENTION_TIME),
       lastStateChange(0),
       localName("Default Name")
 {
     messages.clear();
 
-    if (!isTimerSet) {
-        system_timer_event_every(250, DEVICE_ID_RADIO, TIMER_EVENT_VALUE);
-    }
+    if (EventModel::defaultEventBus) {
+        if (!isTimerSet) {
+            system_timer_event_every(250, DEVICE_ID_RADIO, EVENT_STATE_UPDATE);
+            system_timer_event_every(BLE_MIN_RETENTION_TIME, DEVICE_ID_RADIO, EVENT_CLEAN_MESSAGES);
+            isTimerSet = true;
+        }
 
-    EventModel::defaultEventBus->listen(DEVICE_ID_RADIO, TIMER_EVENT_VALUE, this, &STM32AdvertisingBLE::state_update);
+        EventModel::defaultEventBus->listen(DEVICE_ID_RADIO, EVENT_STATE_UPDATE, this,
+                                            &STM32AdvertisingBLE::stateUpdate);
+        EventModel::defaultEventBus->listen(DEVICE_ID_RADIO, EVENT_CLEAN_MESSAGES, this,
+                                            &STM32AdvertisingBLE::cleanMessages);
+    }
 }
 
 void STM32AdvertisingBLE::begin()
@@ -134,7 +140,7 @@ ReceivedMessage STM32AdvertisingBLE::getReceivedMessageFrom(std::string name, st
     return ReceivedMessage();
 }
 
-void STM32AdvertisingBLE::state_update(Event)
+void STM32AdvertisingBLE::stateUpdate(Event)
 {
     if (!isRunning) {
         return;
@@ -162,6 +168,17 @@ void STM32AdvertisingBLE::state_update(Event)
         case OFF:
         default:
             break;
+    }
+}
+
+void STM32AdvertisingBLE::cleanMessages(Event)
+{
+    uint32_t currentTime = getCurrentMillis();
+
+    for (auto it = messages.begin(); it != messages.end(); it++) {
+        if (it->expirationTime <= currentTime) {
+            it = messages.erase(it);
+        }
     }
 }
 
@@ -198,7 +215,7 @@ void STM32AdvertisingBLE::enableScan()
     BLE.scan(true);
 
     state           = SCAN;
-    lastStateChange = getCurrentMillis();
+    lastStateChange = getCurrentMillis() + (target_random(101) - 50);  // Add random to avoid synchronous symptoms
 }
 
 void STM32AdvertisingBLE::disableScan()
@@ -216,7 +233,7 @@ void STM32AdvertisingBLE::enableAdvertising()
     BLE.advertise(channel);
 
     state           = EMIT;
-    lastStateChange = getCurrentMillis();
+    lastStateChange = getCurrentMillis() + (target_random(101) - 50);  // Add random to avoid synchronous symptoms
 }
 
 void STM32AdvertisingBLE::disableAdvertising()
@@ -240,10 +257,11 @@ void STM32AdvertisingBLE::saveScanResult()
                     tmpMsg = device.getAdvertisingData(i);
 
                     if (it->message != tmpMsg) {
-                        it->name    = device.hasLocalName() ? device.localName() : "N/A";
-                        it->rssi    = device.rssi();
-                        it->message = tmpMsg;
-                        it->isRead  = false;
+                        it->name           = device.hasLocalName() ? device.localName() : "N/A";
+                        it->rssi           = device.rssi();
+                        it->message        = tmpMsg;
+                        it->isRead         = false;
+                        it->expirationTime = getCurrentMillis() + retainingTime;
                     }
 
                     addMessage = false;
@@ -253,7 +271,8 @@ void STM32AdvertisingBLE::saveScanResult()
 
             if (addMessage) {
                 messages.push_back(ReceivedMessage(device.address(), device.hasLocalName() ? device.localName() : "N/A",
-                                                   tmpUuid.c_str(), device.getAdvertisingData(i), device.rssi()));
+                                                   tmpUuid.c_str(), device.getAdvertisingData(i), device.rssi(),
+                                                   retainingTime));
             }
         }
     }
