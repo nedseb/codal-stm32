@@ -10,6 +10,7 @@ VL53L0X::VL53L0X(STM32I2C* i2c, STM32Pin* shutPin, uint8_t address)
 void VL53L0X::init()
 {
     baseDriver.InitSensor(address);
+    baseDriver.StartMeasurementSimplified(range_continuous_polling, NULL);
 }
 
 void VL53L0X::enable()
@@ -24,7 +25,7 @@ void VL53L0X::disable()
 
 uint32_t VL53L0X::getDistance()
 {
-    uint32_t distance;
-    baseDriver.GetDistance(&distance);
-    return distance;
+    VL53L0X_RangingMeasurementData_t pRangingMeasurementData;
+    baseDriver.GetMeasurementSimplified(range_continuous_polling, &pRangingMeasurementData);
+    return pRangingMeasurementData.RangeMilliMeter;
 }
