@@ -23,7 +23,7 @@ void VL53L0X::disable()
     baseDriver.VL53L0X_Off();
 }
 
-uint32_t VL53L0X::getDistance()
+uint16_t VL53L0X::getDistance()
 {
     VL53L0X_RangingMeasurementData_t pRangingMeasurementData;
     baseDriver.GetMeasurementSimplified(range_continuous_polling, &pRangingMeasurementData);
