@@ -21,12 +21,12 @@ class VL53L0X_Distance : public VL53L0X, public Sensor {
     /**
      * Read the value from underlying hardware.
      */
-    virtual int readValue()
+    virtual int readValue() override final
     {
         if (!isInitialized) {
             configure();
         }
-        return getDistance();
+        return (int)getDistance();
     };
 
   private:

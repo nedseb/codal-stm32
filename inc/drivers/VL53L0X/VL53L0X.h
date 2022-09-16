@@ -43,9 +43,9 @@ class VL53L0X {
     /**
      * @brief Get the measured distance (in mm)
      *
-     * @return uint32_t the measure
+     * @return uint16_t the measure
      */
-    uint32_t getDistance();
+    uint16_t getDistance();
 };
 
 }  // namespace codal
