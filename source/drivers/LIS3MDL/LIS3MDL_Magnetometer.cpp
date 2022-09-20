@@ -10,7 +10,7 @@ LIS3MDL_Magnetometer::LIS3MDL_Magnetometer(STM32I2C* i2c, uint8_t address, Coord
 
 int LIS3MDL_Magnetometer::configure()
 {
-    LIS3MDL::init(fullscale, dataRate);
+    LIS3MDL::init();
 
     // set freq mHz
     float freq = 1.0 / (samplePeriod / 1000.0);
