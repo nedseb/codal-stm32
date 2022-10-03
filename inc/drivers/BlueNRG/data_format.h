@@ -3,14 +3,16 @@
 #include <vector>
 
 #include "events_code.h"
+#include "opcode.h"
 
-struct EventPacket {
+class EventPacket {
+  public:
     uint8_t eventCode;
     uint8_t length;
     std::vector<uint8_t> params;
     uint32_t time;
 
-    EventPacket() : eventCode(0), length(0), time(0){};
+    EventPacket() : eventCode(0), length(0), time(0) {}
 
     bool isFromCommand(OpCodeCommand command)
     {
@@ -19,7 +21,8 @@ struct EventPacket {
     }
 };
 
-struct AsyncDataPacket {
+class AsyncDataPacket {
+  public:
     uint16_t handle;
     uint8_t flags;
     uint16_t length;
@@ -27,4 +30,11 @@ struct AsyncDataPacket {
     uint32_t time;
 
     AsyncDataPacket() : handle(0), flags(0), length(0), time(0){};
+};
+
+class AdvertiseScanData {
+  public:
+    uint8_t length;
+    uint8_t adType;
+    uint8_t* data;
 };
