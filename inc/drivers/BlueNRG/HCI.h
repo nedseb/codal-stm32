@@ -5,8 +5,8 @@
 #include <list>
 #include <string>
 
+#include "data_format.h"
 #include "opcode.h"
-#include "packets.h"
 
 enum class AdvertisingType : uint8_t {
     ADV_IND             = 0x00,
@@ -62,9 +62,9 @@ class HCI {
         PeerAddressType peerAddressType = PeerAddressType::PUBLIC, uint64_t peerAddress = 0x0000000000000000,
         uint8_t advertisingChannelMap = ADVERTISING_CHANNEL_37 | ADVERTISING_CHANNEL_38 | ADVERTISING_CHANNEL_39,
         AdvertisingFilterPolicy advertisingFilterPolicy = AdvertisingFilterPolicy::ALL_DEVICE);
-    uint8_t leReadAdvertisingPhysicalChannelTxPower();
-    bool leSetAdvertisingData(uint8_t length, uint8_t* data);
-    bool leSetScanResponseData(uint8_t length, uint8_t* data);
+    int8_t leReadAdvertisingPhysicalChannelTxPower();
+    bool leSetAdvertisingData(uint8_t significantSize, uint8_t* data);
+    bool leSetScanResponseData(uint8_t significantSize, uint8_t* data);
     bool leSetAdvertisingEnable(bool enable);
 
   protected:
@@ -77,7 +77,7 @@ class HCI {
     virtual uint8_t available()                          = 0;
     virtual uint8_t readByte()                           = 0;
     virtual void readBytes(uint8_t* data, uint8_t size)  = 0;
-    virtual void writeBytes(uint8_t* data, uint8_t size) = 0;
+    virtual bool writeBytes(uint8_t* data, uint8_t size) = 0;
 
   private:
     void cleanPackets();
