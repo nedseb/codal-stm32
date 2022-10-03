@@ -1,9 +1,11 @@
 #include "HCI_SPI.h"
 
+#include "ble_utils.h"
+
 using namespace codal;
 
 constexpr uint32_t EXPIRATION_PACKETS_MS = 10000;
-constexpr uint32_t TIMEOUT_COMMAND_MS    = 1000;
+constexpr uint32_t TIMEOUT_COMMAND_MS    = 5000;
 
 /*  BLUENRG SPI OPERATION */
 constexpr uint8_t BLUENRG_WRITE_OP = 0x0A;
@@ -25,7 +27,9 @@ void HCI_SPI::init()
 {
     disableCS();
 
+    irq.setDigitalValue(0);
     irq.setPull(PullMode::Down);
+    target_wait(500);
     irq.getDigitalValue();
 
     resetHardware();
@@ -42,25 +46,24 @@ void HCI_SPI::resetHardware()
 
 void HCI_SPI::poll()
 {
-    if (irq.getDigitalValue() == 0) return;
+    if (irq.getDigitalValue() == 0) {
+        if (isDebug) printf("[poll HCI_SPI] IRQ low, no data available...\r\n");
+        return;
+    }
 
-    enableCS();
     HCI::poll();
-    disableCS();
 }
 
 void HCI_SPI::waitForInit()
 {
     bool wait = true;
 
-    if (isDebug) printf("Start initialization...\r\n");
+    if (isDebug) printf("[waitForInit] Start initialization...\r\n");
 
     while (irq.getDigitalValue() == 0)
         ;
 
     while (wait) {
-        enableCS();
-
         uint8_t bytesToRead = available();
 
         if (bytesToRead > 0) {
@@ -77,40 +80,34 @@ void HCI_SPI::waitForInit()
                 readBytes(NULL, bytesToRead);
             }
         }
-
-        disableCS();
     }
 
-    if (isDebug) printf("Initialization done...\r\n");
+    if (isDebug) printf("[waitForInit] Initialization done...\r\n");
 }
 
 std::vector<uint8_t> HCI_SPI::sendCommand(OpCodeCommand command, uint8_t nbArgs, const uint8_t* args)
 {
-    uint8_t opcodeHigh           = ((uint16_t)command & 0xFF00) >> 8;
-    uint8_t opcodeLow            = ((uint16_t)command & 0x00FF);
+    uint8_t opcodeHigh           = BLE_Utils::getMsb((uint16_t)command);
+    uint8_t opcodeLow            = BLE_Utils::getLsb((uint16_t)command);
     uint8_t payloadSize          = 4 + nbArgs;
     uint8_t payload[payloadSize] = {HCI_COMMAND_PKT, opcodeLow, opcodeHigh, nbArgs};
     auto result                  = std::vector<uint8_t>();
 
     memcpy(&payload[4], args, nbArgs);
 
-    enableCS();
-
-    // Wait device ready to send data
-    for (uint32_t start = getCurrentMillis(); !isReadyToWrite(payloadSize);) {
-        disableCS();
-        if (getCurrentMillis() - start > TIMEOUT_COMMAND_MS) {
-            return result;
-        }
-
-        target_wait(2);
-        enableCS();
+    if (isDebug) {
+        printf("[sendCommand] Send command 0x%0.4X\r\n", (uint16_t)command);
     }
 
-    // Send data
-    writeBytes(payload, payloadSize);
-    disableCS();
-
+    // Wait device ready to send data
+    for (uint32_t start = getCurrentMillis(); !writeBytes(payload, payloadSize);) {
+        if (getCurrentMillis() - start > TIMEOUT_COMMAND_MS) {
+            if (isDebug) {
+                printf("[sendCommand] Command (0x%0.4X) timeout (write timeout)...\r\n", (uint16_t)command);
+            }
+            return result;
+        }
+    }
     // Test command received
     uint32_t start = getCurrentMillis();
 
@@ -123,6 +120,10 @@ std::vector<uint8_t> HCI_SPI::sendCommand(OpCodeCommand command, uint8_t nbArgs,
                     for (uint8_t i = 3; i < it->length; i++) {
                         result.push_back(it->params[i]);
                     }
+
+                    if (isDebug) {
+                        printf("[sendCommand] Command (0x%0.4X) success\r\n", (uint16_t)command);
+                    }
                 }
 
                 it = eventPackets.erase(it);
@@ -133,80 +134,106 @@ std::vector<uint8_t> HCI_SPI::sendCommand(OpCodeCommand command, uint8_t nbArgs,
         target_wait(5);
     }
 
+    if (isDebug) {
+        printf("[sendCommand] Command (0x%0.4X) timeout (read timout)...\r\n", (uint16_t)command);
+    }
+
     return result;
 }
 
 uint8_t HCI_SPI::available()
 {
-    spi.beginTransaction();
-    spi.writeTransaction(BLUENRG_READ_OP);
-    spi.writeTransaction(0x00);
-    spi.writeTransaction(0x00);
-    spi.writeTransaction(0x00);
-    spi.writeTransaction(0x00);
-    auto result = spi.endTransaction();
+    uint8_t availableData = 0;
+    for (uint8_t i = 0; i < 5; ++i) {
+        uint8_t header[5] = {BLUENRG_READ_OP, 0x00, 0x00, 0x00, 0x00};
 
-    if (isDebug) {
-        printf("[available] ");
-        for (auto e : result) {
-            printf("0x%02x ", e);
+        enableCS();
+        spi.transfer(header, 5, header, 5);
+        disableCS();
+
+        if (header[0] == 0x02) {
+            availableData = header[3];
+            break;
         }
-
-        printf("\r\n");
     }
 
-    if (result[0] != 0x02) {
-        return 0;
-    }
-
-    return result[3];
+    return availableData;
 }
 
 uint8_t HCI_SPI::readByte()
 {
     uint8_t b = 0xff;
-    spi.transfer(&b, 1, &b, 1);
+    enableCS();
+    uint8_t header[5] = {BLUENRG_READ_OP, 0x00, 0x00, 0x00, 0x00};
+    spi.transfer(header, 5, header, 5);
+
+    if (header[0] != 0x02) {
+        if (isDebug) printf("[readByte] Device is not ready !\r\n");
+    }
+    else if (header[3] < 1) {
+        if (isDebug) printf("[readByte] Notyhing to read...\r\n");
+    }
+    else {
+        spi.transfer(&b, 1, &b, 1);
+    }
+
+    disableCS();
 
     return b;
 }
 
 void HCI_SPI::readBytes(uint8_t* data, uint8_t size)
 {
-    uint8_t t[size] = {0xff};
-    spi.transfer(t, size, data, size);
-}
+    uint8_t t[size]   = {0xff};
+    uint8_t header[5] = {BLUENRG_READ_OP, 0x00, 0x00, 0x00, 0x00};
 
-void HCI_SPI::writeBytes(uint8_t* data, uint8_t size)
-{
-    spi.transfer(data, size, NULL, 0);
-}
-
-bool HCI_SPI::isReadyToWrite(uint8_t nbByteToWrite)
-{
-    /*
-        The SPI is not officialy supported for BLE HCI, to understand the SPI protocol of BlueNRG
-        read the ST document UM1865, page 111 "SPI Interface"
-    */
-    spi.beginTransaction();
-    spi.writeTransaction(BLUENRG_WRITE_OP);
-    spi.writeTransaction(0x00);
-    spi.writeTransaction(0x00);
-    spi.writeTransaction(0x00);
-    spi.writeTransaction(0x00);
-    auto result = spi.endTransaction();
+    enableCS();
+    spi.transfer(header, 5, header, 5);
 
     if (isDebug) {
-        printf("[isReadyToWrite] ");
-        for (auto e : result) {
+        printf("[readBytes (%d)] ", size);
+        for (auto e : header) {
             printf("0x%02x ", e);
         }
 
         printf("\r\n");
     }
 
-    if (result[0] != 0x02 || result[1] < nbByteToWrite) {
-        return false;
+    if (header[0] != 0x02) {
+        if (isDebug) printf("[readBytes] Device is not ready !\r\n");
+        codal::fiber_sleep(5);
+    }
+    else if (header[3] < size) {
+        if (isDebug) printf("[readBytes] Read buffer smaller than the asked size. Available: %d\r\n", header[3]);
+        codal::fiber_sleep(5);
+    }
+    else {
+        spi.transfer(t, size, data, size);
     }
 
-    return true;
+    disableCS();
+}
+
+bool HCI_SPI::writeBytes(uint8_t* data, uint8_t size)
+{
+    bool result = false;
+    enableCS();
+
+    uint8_t header[5] = {BLUENRG_WRITE_OP, 0x00, 0x00, 0x00, 0x00};
+    spi.transfer(header, 5, header, 5);
+
+    if (header[0] != 0x02) {
+        result = false;
+    }
+    else if (header[1] < size) {
+        result = false;
+    }
+    else {
+        spi.transfer(data, size, NULL, 0);
+        result = true;
+    }
+
+    disableCS();
+
+    return result;
 }
