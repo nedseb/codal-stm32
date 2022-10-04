@@ -20,6 +20,12 @@ constexpr uint8_t HCI_COMMAND_PKT   = 0x01;
 constexpr uint8_t HCI_ASYNCDATA_PKT = 0x02;
 constexpr uint8_t HCI_EVENT_PKT     = 0x04;
 
+template <class T>
+constexpr const T& constrain(const T& value, const T& min, const T& max)
+{
+    return std::min(std::max(value, max), min);
+}
+
 void HCI::poll()
 {
     std::queue<uint8_t> buffer;
@@ -83,11 +89,6 @@ bool HCI::resetSoftware()
     return result.size() > 0 && result.front() > 0;
 }
 
-bool HCI::setEventMask(uint64_t mask)
-{
-    return false;
-}
-
 std::array<uint32_t, 2> HCI::readBD_ADDR()
 {
     auto result                    = sendCommand(OpCodeCommand::READ_BD_ADDR);
@@ -108,11 +109,6 @@ std::array<uint32_t, 2> HCI::readBD_ADDR()
     return values;
 }
 
-bool HCI::leSetEventMask(uint64_t mask)
-{
-    return false;
-}
-
 std::array<uint32_t, 2> HCI::leRand()
 {
     auto result                    = sendCommand(OpCodeCommand::LE_RAND);
@@ -130,17 +126,24 @@ std::array<uint32_t, 2> HCI::leRand()
     return values;
 }
 
-bool HCI::leSetAdvertisingParameters(uint16_t advertisingIntervalMin, uint16_t advertisingIntervalMax,
+bool HCI::leSetAdvertisingParameters(float advertisingIntervalMin, float advertisingIntervalMax,
                                      AdvertisingType advertisingType, OwnAddressType ownAddressType,
                                      PeerAddressType peerAddressType, uint64_t peerAddress,
                                      uint8_t advertisingChannelMap, AdvertisingFilterPolicy advertisingFilterPolicy)
 {
-    uint8_t data[15] = {
-        BLE_Utils::getLsb(advertisingIntervalMin),
-        BLE_Utils::getMsb(advertisingIntervalMin),
+    uint16_t advIntervalMin = constrain(advertisingIntervalMin, 20.0f, 10240.0f) / 0.625f;
+    uint16_t advIntervalMax = constrain(advertisingIntervalMax, 20.0f, 10240.0f) / 0.625f;
 
-        BLE_Utils::getLsb(advertisingIntervalMax),
-        BLE_Utils::getMsb(advertisingIntervalMax),
+    if (advIntervalMin > advIntervalMax) {
+        advIntervalMax = advIntervalMin;
+    }
+
+    uint8_t data[15] = {
+        BLE_Utils::getLsb(advIntervalMin),
+        BLE_Utils::getMsb(advIntervalMin),
+
+        BLE_Utils::getLsb(advIntervalMax),
+        BLE_Utils::getMsb(advIntervalMax),
 
         (uint8_t)advertisingType,
         (uint8_t)ownAddressType,
