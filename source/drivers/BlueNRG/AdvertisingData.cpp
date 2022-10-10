@@ -24,7 +24,7 @@ std::array<uint8_t, 31> AdvertisingData::toData()
     // local name (short)
     if (!localName.empty()) {
         result[index++] = localName.size() + 1;
-        result[index++] = (uint8_t)GAP_DataType::SHORT_LOCAL_NAME;
+        result[index++] = (uint8_t)GAP_DataType::COMPLETE_LOCAL_NAME;
 
         for (auto it = localName.begin(); it != localName.end() && index < 31; it++) {
             result[index++] = (uint8_t)*it;
