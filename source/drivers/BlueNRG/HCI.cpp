@@ -10,6 +10,7 @@
 constexpr uint16_t MAX_BUFFER_POLL_SIZE  = 256;
 constexpr uint32_t EXPIRATION_PACKETS_MS = 10000;
 constexpr uint32_t TIMEOUT_COMMAND_MS    = 1000;
+constexpr size_t ADVERTISING_QUEUE_SIZE  = 32;
 
 /*  BLUENRG SPI OPERATION */
 constexpr uint8_t BLUENRG_WRITE_OP = 0x0A;
@@ -23,7 +24,7 @@ constexpr uint8_t HCI_EVENT_PKT     = 0x04;
 template <class T>
 constexpr const T& constrain(const T& value, const T& min, const T& max)
 {
-    return std::min(std::max(value, max), min);
+    return std::max(std::min(value, max), min);
 }
 
 void HCI::poll()
@@ -109,19 +110,50 @@ std::array<uint32_t, 2> HCI::readBD_ADDR()
     return values;
 }
 
-std::array<uint32_t, 2> HCI::leRand()
+bool HCI::setEventMask(uint32_t msbMask, uint32_t lsbMask)
 {
-    auto result                    = sendCommand(OpCodeCommand::LE_RAND);
-    std::array<uint32_t, 2> values = {0x00, 0x00};
+    uint8_t data[8] = {
+        BLE_Utils::getByte(lsbMask, 0), BLE_Utils::getByte(lsbMask, 1),
+        BLE_Utils::getByte(lsbMask, 2), BLE_Utils::getByte(lsbMask, 3),
 
-    if (result.empty() || result.size() != 9 || result[0] != 0x00) {
+        BLE_Utils::getByte(msbMask, 0), BLE_Utils::getByte(msbMask, 1),
+        BLE_Utils::getByte(msbMask, 2), BLE_Utils::getByte(msbMask, 3),
+    };
+
+    auto result = sendCommand(OpCodeCommand::SET_EVENT_MASK, 8, data);
+
+    return !result.empty() && result.size() == 1 && result[0] == 0x00;
+}
+
+bool HCI::leSetEventMask(uint32_t msbMask, uint32_t lsbMask)
+{
+    uint8_t data[8] = {
+        BLE_Utils::getByte(lsbMask, 0), BLE_Utils::getByte(lsbMask, 1),
+        BLE_Utils::getByte(lsbMask, 2), BLE_Utils::getByte(lsbMask, 3),
+
+        BLE_Utils::getByte(msbMask, 0), BLE_Utils::getByte(msbMask, 1),
+        BLE_Utils::getByte(msbMask, 2), BLE_Utils::getByte(msbMask, 3),
+    };
+
+    auto result = sendCommand(OpCodeCommand::LE_SET_EVENT_MASK, 8, data);
+
+    return !result.empty() && result.size() == 1 && result[0] == 0x00;
+}
+
+LeReadBufferSizeResult HCI::leReadBufferSize()
+{
+    auto result = sendCommand(OpCodeCommand::LE_READ_BUFFER_SIZE);
+    LeReadBufferSizeResult values;
+
+    if (result.empty() || result.size() != 4 || result[0] != 0x00) {
+        values.success = false;
         return values;
     }
 
-    for (uint8_t i = 0; i < 4; ++i) {
-        values[0] |= (uint32_t)result[5 + i] << (8 * i);
-        values[1] |= (uint32_t)result[1 + i] << (8 * i);
-    }
+    values.success = true;
+
+    values.leAclDataPacketLength   = ((uint16_t)result[2] << 8) | result[1];
+    values.totalNumLEAclDataPacket = result[3];
 
     return values;
 }
@@ -201,6 +233,56 @@ bool HCI::leSetAdvertisingEnable(bool enable)
     uint8_t data[1] = {enable ? (uint8_t)0x01 : (uint8_t)0x00};
     auto result     = sendCommand(OpCodeCommand::LE_SET_ADV_ENABLE, 1, data);
     return !result.empty() && result.front() == 0x00;
+}
+
+bool HCI::leSetScanParameters(ScanType scanType, float scanInterval, float scanWindow, OwnAddressType addressType,
+                              ScanningFilterPolicy filterPolicy)
+{
+    uint16_t interval = constrain(scanInterval, 2.5f, 10240.0f) / 0.625f;
+    uint16_t window   = constrain(scanWindow, 2.5f, 10240.0f) / 0.625f;
+
+    if (window > interval) {
+        window = interval;
+    }
+
+    uint8_t data[7] = {
+        (uint8_t)scanType,
+
+        BLE_Utils::getLsb(interval), BLE_Utils::getMsb(interval),
+
+        BLE_Utils::getLsb(window),   BLE_Utils::getMsb(window),
+
+        (uint8_t)addressType,
+
+        (uint8_t)filterPolicy,
+    };
+    auto result = sendCommand(OpCodeCommand::LE_SET_SCAN_PARAM, 7, data);
+
+    return !result.empty() && result.size() == 1 && result[0] == 0x00;
+}
+
+bool HCI::leSetScanEnable(bool enable, bool filterDuplicate)
+{
+    uint8_t data[2] = {enable ? (uint8_t)0x01 : (uint8_t)0x00, filterDuplicate ? (uint8_t)0x01 : (uint8_t)0x00};
+    auto result     = sendCommand(OpCodeCommand::LE_SET_SCAN_ENABLE, 2, data);
+    return !result.empty() && result.front() == 0x00;
+}
+
+std::array<uint32_t, 2> HCI::leRand()
+{
+    auto result                    = sendCommand(OpCodeCommand::LE_RAND);
+    std::array<uint32_t, 2> values = {0x00, 0x00};
+
+    if (result.empty() || result.size() != 9 || result[0] != 0x00) {
+        return values;
+    }
+
+    for (uint8_t i = 0; i < 4; ++i) {
+        values[0] |= (uint32_t)result[5 + i] << (8 * i);
+        values[1] |= (uint32_t)result[1 + i] << (8 * i);
+    }
+
+    return values;
 }
 
 void HCI::cleanPackets()
