@@ -23,7 +23,7 @@ HCI_SPI::HCI_SPI(STM32SPI& spi, STM32Pin& cs, STM32Pin& irq, STM32Pin& rst, uint
     spi.setMode(0);
 }
 
-void HCI_SPI::init()
+bool HCI_SPI::init()
 {
     disableCS();
 
@@ -34,6 +34,26 @@ void HCI_SPI::init()
 
     resetHardware();
     waitForInit();
+
+    if (isDebug) printf("[init] Enable LL only\r\n");
+    if (!aciEnableLLOnly()) {
+        if (isDebug) printf("[init] enable LL only FAILED\r\n");
+        return false;
+    }
+
+    if (isDebug) printf("[init] ACI GATT Init\r\n");
+    if (!aciGattInit()) {
+        if (isDebug) printf("[init] ACI GATT Init FAILED\r\n");
+        return false;
+    }
+
+    if (isDebug) printf("[init] ACI GAP Init\r\n");
+    if (!aciGapInit()) {
+        if (isDebug) printf("[init] ACI GAP Init FAILEDr\n");
+        return false;
+    }
+
+    return true;
 }
 
 void HCI_SPI::resetHardware()
@@ -151,7 +171,10 @@ uint8_t HCI_SPI::available()
         spi.transfer(header, 5, header, 5);
         disableCS();
 
-        if (header[0] == 0x02) {
+        if (header[0] != 0x02) {
+            if (isDebug) printf("[available] Device is not ready !\r\n");
+        }
+        else {
             availableData = header[3];
             break;
         }
@@ -236,4 +259,24 @@ bool HCI_SPI::writeBytes(uint8_t* data, uint8_t size)
     disableCS();
 
     return result;
+}
+
+bool HCI_SPI::aciEnableLLOnly()
+{
+    uint8_t params[3] = {0x2C, 0x01, 0x01};
+    auto result       = sendCommand(OpCodeCommand::ACI_HAL_WRITE_CONFIG_DATA, 3, params);
+    return !result.empty() && result.size() == 1 && result[0] == 0x00;
+}
+
+bool HCI_SPI::aciGattInit()
+{
+    auto result = HCI::sendCommand(OpCodeCommand::ACI_GATT_INIT);
+    return !result.empty() && result.size() == 1 && result[0] == 0x00;
+}
+
+bool HCI_SPI::aciGapInit()
+{
+    uint8_t params[3] = {0x0F, 0x00, 0x00};
+    auto result       = sendCommand(OpCodeCommand::ACI_GAP_INIT, 3, params);
+    return !result.empty() && result.size() == 7 && result[0] == 0x00;
 }

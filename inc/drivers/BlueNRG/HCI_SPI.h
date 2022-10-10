@@ -14,7 +14,7 @@ class HCI_SPI : public HCI {
 
     virtual ~HCI_SPI() {}
 
-    virtual void init() override final;
+    virtual bool init() override final;
     virtual void resetHardware() override final;
     void poll();
 
@@ -24,6 +24,10 @@ class HCI_SPI : public HCI {
     virtual uint8_t readByte() override final;
     virtual void readBytes(uint8_t* data, uint8_t size) override final;
     virtual bool writeBytes(uint8_t* data, uint8_t size) override final;
+
+    bool aciEnableLLOnly();
+    bool aciGattInit();
+    bool aciGapInit();
 
   private:
     codal::STM32SPI& spi;
