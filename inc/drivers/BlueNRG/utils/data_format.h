@@ -1,5 +1,6 @@
 #pragma once
 
+#include <queue>
 #include <vector>
 
 #include "events_code.h"
@@ -32,9 +33,7 @@ class AsyncDataPacket {
     AsyncDataPacket() : handle(0), flags(0), length(0), time(0){};
 };
 
-class AdvertiseScanData {
-  public:
-    uint8_t length;
-    uint8_t adType;
-    uint8_t* data;
+struct ADStructureData{
+  uint8_t adType;
+  std::vector<uint8_t> adData;
 };
