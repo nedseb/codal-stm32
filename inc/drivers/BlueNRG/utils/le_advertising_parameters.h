@@ -62,7 +62,7 @@ enum class OwnAddressType : uint8_t {
     CONTROLLER_OR_RANDOM = 0x03
 };
 
-enum class PeerAddressType : uint8_t {
+enum class AdvertisingPeerAddressType : uint8_t {
     /**
      * @brief Public Device Address (default) or Public Identity Address
      *
