@@ -21,7 +21,7 @@ std::array<uint8_t, 31> AdvertisingData::toData()
         result[index++] = flags;
     }
 
-    // local name (short)
+    // local name (complete)
     if (!localName.empty()) {
         result[index++] = localName.size() + 1;
         result[index++] = (uint8_t)GAP_DataType::COMPLETE_LOCAL_NAME;
