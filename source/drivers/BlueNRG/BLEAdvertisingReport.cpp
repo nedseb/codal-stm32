@@ -4,7 +4,9 @@
 
 #include "ble_utils.h"
 
-BLEAdvertisingReport::BLEAdvertisingReport(std::vector<uint8_t>& eventData)
+using namespace std;
+
+BLEAdvertisingReport::BLEAdvertisingReport(vector<uint8_t>& eventData)
     : rssi(0x7B), address(0, 0), flags(0xFF), name("")
 {
     /**
