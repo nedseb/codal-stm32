@@ -1,5 +1,7 @@
 #include "BLEDevice.h"
 
+using namespace std;
+
 BLEDevice::BLEDevice(HCI* hci)
     : hci(hci), advData(nullptr), advScanData(nullptr), isAdvertising(false), isScanning(false)
 {
@@ -122,7 +124,7 @@ BLEDeviceError BLEDevice::stopScanning()
     return BLEDeviceError::SUCCESS;
 }
 
-void BLEDevice::handleAdvReport(std::deque<BLEAdvertisingReport> reports)
+void BLEDevice::handleAdvReport(deque<BLEAdvertisingReport> reports)
 {
     auto devices = BLERemoteDevice::buildFromAdvertisingReports(reports);
 
@@ -138,7 +140,7 @@ void BLEDevice::handleAdvReport(std::deque<BLEAdvertisingReport> reports)
     }
 }
 
-size_t BLEDevice::availableScan(std::string deviceName)
+size_t BLEDevice::availableScan(string deviceName)
 {
     size_t result = 0;
 
@@ -149,16 +151,16 @@ size_t BLEDevice::availableScan(std::string deviceName)
     return result;
 }
 
-std::vector<BLERemoteDevice> BLEDevice::getScanResult()
+vector<BLERemoteDevice> BLEDevice::getScanResult()
 {
-    auto result = std::vector<BLERemoteDevice>(remoteDevice.begin(), remoteDevice.end());
+    auto result = vector<BLERemoteDevice>(remoteDevice.begin(), remoteDevice.end());
     remoteDevice.clear();
     return result;
 }
 
-std::vector<BLERemoteDevice> BLEDevice::getScanResult(std::string deviceName)
+vector<BLERemoteDevice> BLEDevice::getScanResult(string deviceName)
 {
-    std::vector<BLERemoteDevice> result;
+    vector<BLERemoteDevice> result;
     auto it = remoteDevice.begin();
 
     while (it != remoteDevice.end()) {

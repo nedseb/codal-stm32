@@ -1,8 +1,10 @@
 #include "BLERemoteDevice.h"
 
-std::vector<BLERemoteDevice> BLERemoteDevice::buildFromAdvertisingReports(std::deque<BLEAdvertisingReport> reports)
+using namespace std;
+
+vector<BLERemoteDevice> BLERemoteDevice::buildFromAdvertisingReports(deque<BLEAdvertisingReport> reports)
 {
-    std::vector<BLERemoteDevice> devices;
+    vector<BLERemoteDevice> devices;
     size_t idx;
 
     for (BLEAdvertisingReport report : reports) {
@@ -31,7 +33,7 @@ std::vector<BLERemoteDevice> BLERemoteDevice::buildFromAdvertisingReports(std::d
     return devices;
 }
 
-size_t BLERemoteDevice::isReportInVector(std::vector<BLERemoteDevice>& devices, BLEAdvertisingReport& report)
+size_t BLERemoteDevice::isReportInVector(vector<BLERemoteDevice>& devices, BLEAdvertisingReport& report)
 {
     for (size_t i = 0; i < devices.size(); ++i) {
         if (devices[i].address == report.address) {

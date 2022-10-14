@@ -3,6 +3,7 @@
 #include "ble_utils.h"
 
 using namespace codal;
+using namespace std;
 
 constexpr uint32_t EXPIRATION_PACKETS_MS = 10000;
 constexpr uint32_t TIMEOUT_COMMAND_MS    = 5000;
@@ -105,13 +106,13 @@ void HCI_SPI::waitForInit()
     if (isDebug) printf("[waitForInit] Initialization done...\r\n");
 }
 
-std::vector<uint8_t> HCI_SPI::sendCommand(OpCodeCommand command, uint8_t nbArgs, const uint8_t* args)
+vector<uint8_t> HCI_SPI::sendCommand(OpCodeCommand command, uint8_t nbArgs, const uint8_t* args)
 {
     uint8_t opcodeHigh           = BLE_Utils::getMsb((uint16_t)command);
     uint8_t opcodeLow            = BLE_Utils::getLsb((uint16_t)command);
     uint8_t payloadSize          = 4 + nbArgs;
     uint8_t payload[payloadSize] = {HCI_COMMAND_PKT, opcodeLow, opcodeHigh, nbArgs};
-    auto result                  = std::vector<uint8_t>();
+    auto result                  = vector<uint8_t>();
 
     memcpy(&payload[4], args, nbArgs);
 
