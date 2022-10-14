@@ -2,12 +2,14 @@
 
 #include <array>
 #include <cstdint>
+#include <deque>
 #include <list>
-#include <queue>
-#include <string>
 
+#include "BLEAdvertisingReport.h"
+#include "EventMaskBuilder.h"
+#include "LeEventMaskBuilder.h"
 #include "data_format.h"
-#include "le_parameters.h"
+#include "le_advertising_parameters.h"
 #include "opcode.h"
 #include "result_types.h"
 
@@ -112,9 +114,10 @@ class HCI {
      */
     bool leSetAdvertisingParameters(
         float advertisingIntervalMin = 1280, float advertisingIntervalMax = 1280,
-        AdvertisingType advertisingType = AdvertisingType::ADV_IND,
-        OwnAddressType ownAddressType   = OwnAddressType::PUBLIC,
-        PeerAddressType peerAddressType = PeerAddressType::PUBLIC, uint64_t peerAddress = 0x0000000000000000,
+        AdvertisingType advertisingType            = AdvertisingType::ADV_IND,
+        OwnAddressType ownAddressType              = OwnAddressType::PUBLIC,
+        AdvertisingPeerAddressType peerAddressType = AdvertisingPeerAddressType::PUBLIC,
+        uint64_t peerAddress                       = 0x0000000000000000,
         uint8_t advertisingChannelMap = ADVERTISING_CHANNEL_37 | ADVERTISING_CHANNEL_38 | ADVERTISING_CHANNEL_39,
         AdvertisingFilterPolicy advertisingFilterPolicy = AdvertisingFilterPolicy::ALL_DEVICE);
 
@@ -191,10 +194,32 @@ class HCI {
      */
     std::array<uint32_t, 2> leRand();
 
+    /**
+     * @brief Get the number of available advertising report
+     *
+     * @return uint8_t
+     */
+    uint8_t availableAdvReport() { return advertisingReports.size(); }
+
+    /**
+     * @brief Return all the report, and remove then form the HCI
+     *
+     * @return std::deque<BLEAdvertisingReport>
+     */
+    std::deque<BLEAdvertisingReport> getAdvReports()
+    {
+        auto reports = advertisingReports;
+        advertisingReports.clear();
+        return reports;
+    }
+
+    bool isDebugEnable() { return isDebug; }
+
   protected:
     bool isDebug;
     std::list<EventPacket> eventPackets;
     std::list<AsyncDataPacket> asyncDataPackets;
+    std::deque<BLEAdvertisingReport> advertisingReports;
 
     virtual std::vector<uint8_t> sendCommand(OpCodeCommand command, uint8_t nbArgs, const uint8_t* args) = 0;
     virtual std::vector<uint8_t> sendCommand(OpCodeCommand command) { return sendCommand(command, 0, NULL); }
@@ -202,6 +227,8 @@ class HCI {
     virtual uint8_t readByte()                           = 0;
     virtual void readBytes(uint8_t* data, uint8_t size)  = 0;
     virtual bool writeBytes(uint8_t* data, uint8_t size) = 0;
+
+    void handleLeEvent(EventPacket pkt);
 
   private:
     void cleanPackets();

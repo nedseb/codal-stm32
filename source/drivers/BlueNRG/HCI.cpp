@@ -7,10 +7,10 @@
 #include "ble_utils.h"
 #include "clock.h"
 
-constexpr uint16_t MAX_BUFFER_POLL_SIZE  = 256;
-constexpr uint32_t EXPIRATION_PACKETS_MS = 10000;
-constexpr uint32_t TIMEOUT_COMMAND_MS    = 1000;
-constexpr size_t ADVERTISING_QUEUE_SIZE  = 32;
+constexpr uint16_t MAX_BUFFER_POLL_SIZE    = 256;
+constexpr uint32_t EXPIRATION_PACKETS_MS   = 10000;
+constexpr uint32_t TIMEOUT_COMMAND_MS      = 1000;
+constexpr size_t MAX_ADV_REPORT_DEQUE_SIZE = 32;
 
 /*  BLUENRG SPI OPERATION */
 constexpr uint8_t BLUENRG_WRITE_OP = 0x0A;
@@ -59,7 +59,13 @@ void HCI::poll()
                 }
 
                 pkt.time = getCurrentMillis();
-                eventPackets.push_front(pkt);
+
+                if (pkt.eventCode == LE_EVENT_CODE) {
+                    handleLeEvent(pkt);
+                }
+                else {
+                    eventPackets.push_front(pkt);
+                }
 
                 if (isDebug) {
                     printf("[poll] received event : [0x%0.2x] - %d bytes\r\n", pkt.eventCode, pkt.params.size());
@@ -160,7 +166,7 @@ LeReadBufferSizeResult HCI::leReadBufferSize()
 
 bool HCI::leSetAdvertisingParameters(float advertisingIntervalMin, float advertisingIntervalMax,
                                      AdvertisingType advertisingType, OwnAddressType ownAddressType,
-                                     PeerAddressType peerAddressType, uint64_t peerAddress,
+                                     AdvertisingPeerAddressType peerAddressType, uint64_t peerAddress,
                                      uint8_t advertisingChannelMap, AdvertisingFilterPolicy advertisingFilterPolicy)
 {
     uint16_t advIntervalMin = constrain(advertisingIntervalMin, 20.0f, 10240.0f) / 0.625f;
@@ -291,4 +297,24 @@ void HCI::cleanPackets()
 
     asyncDataPackets.remove_if(
         [](AsyncDataPacket e) -> bool { return getCurrentMillis() - e.time >= EXPIRATION_PACKETS_MS; });
+}
+
+void HCI::handleLeEvent(EventPacket pkt)
+{
+    if (pkt.length == 0) {
+        return;
+    }
+
+    switch (pkt.params[0]) {
+        case LE_EVENT_ADVERTISING_REPORT: {
+            if (advertisingReports.size() > MAX_ADV_REPORT_DEQUE_SIZE) {
+                advertisingReports.pop_front();
+            }
+
+            advertisingReports.push_back(BLEAdvertisingReport(pkt.params));
+        } break;
+
+        default:
+            break;
+    }
 }
