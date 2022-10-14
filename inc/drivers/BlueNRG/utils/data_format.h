@@ -3,6 +3,7 @@
 #include <queue>
 #include <vector>
 
+#include "GAP_const.h"
 #include "events_code.h"
 #include "opcode.h"
 
@@ -33,7 +34,18 @@ class AsyncDataPacket {
     AsyncDataPacket() : handle(0), flags(0), length(0), time(0){};
 };
 
-struct ADStructureData{
-  uint8_t adType;
-  std::vector<uint8_t> adData;
+class ADStructureData {
+  public:
+    GAP_DataType adType;
+    std::vector<uint8_t> adData;
+
+    ADStructureData(size_t dataLength = 0) : adType(GAP_DataType::MANUFACTURER_DATA), adData(dataLength, 0x00) {}
+};
+
+class GAPServiceData {
+  public:
+    uint16_t uuid;
+    std::vector<uint8_t> data;
+
+    GAPServiceData(size_t dataLength = 0) : uuid(0x0000), data(dataLength, 0x00) {}
 };
