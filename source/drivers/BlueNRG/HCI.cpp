@@ -29,6 +29,11 @@ constexpr const T& constrain(const T& value, const T& min, const T& max)
 
 void HCI::poll()
 {
+    if (isPollLocked) {
+        return;
+    }
+
+    isPollLocked = true;
     std::queue<uint8_t> buffer;
 
     for (uint8_t nbBytes = available(); nbBytes > 0 && buffer.size() < MAX_BUFFER_POLL_SIZE; nbBytes = available()) {
@@ -88,6 +93,7 @@ void HCI::poll()
     if (isDebug) printf("[poll] No data availables....\r\n\r\n");
 
     cleanPackets();
+    isPollLocked = false;
 }
 
 bool HCI::resetSoftware()

@@ -19,7 +19,7 @@ constexpr uint8_t ADVERTISING_CHANNEL_39 = 0x04;
 
 class HCI {
   public:
-    HCI() : isDebug(false) {}
+    HCI() : isDebug(false), isPollLocked(false) {}
     virtual ~HCI() {}
 
     void enableDebug() { isDebug = true; }
@@ -231,5 +231,7 @@ class HCI {
     void handleLeEvent(EventPacket pkt);
 
   private:
+    bool isPollLocked;
+
     void cleanPackets();
 };
