@@ -7,10 +7,11 @@
 #include "ble_utils.h"
 #include "clock.h"
 
-constexpr uint16_t MAX_BUFFER_POLL_SIZE    = 256;
+constexpr uint16_t MAX_BUFFER_POLL_SIZE    = 64;
 constexpr uint32_t EXPIRATION_PACKETS_MS   = 10000;
 constexpr uint32_t TIMEOUT_COMMAND_MS      = 1000;
 constexpr size_t MAX_ADV_REPORT_DEQUE_SIZE = 32;
+constexpr size_t MAX_EVENT_LIST_SIZE       = 32;
 
 /*  BLUENRG SPI OPERATION */
 constexpr uint8_t BLUENRG_WRITE_OP = 0x0A;
@@ -69,6 +70,10 @@ void HCI::poll()
                     handleLeEvent(pkt);
                 }
                 else {
+                    if (eventPackets.size() >= MAX_EVENT_LIST_SIZE) {
+                        eventPackets.pop_front();
+                    }
+
                     eventPackets.push_front(pkt);
                 }
 
@@ -80,9 +85,21 @@ void HCI::poll()
                 }
             } break;
 
-            case HCI_ASYNCDATA_PKT:
-                if (isDebug) printf("[poll] received data : not implemented\r\n");
-                break;
+            case HCI_ASYNCDATA_PKT: {  // HANDLE (12 bits) + PB Flag (2bits) + BC Flag (2 bits) = 16 bits (2 bytes)
+                buffer.pop();
+                buffer.pop();
+                uint8_t lengthLSB = buffer.front();
+                buffer.pop();
+                uint8_t lengthMSB = buffer.front();
+                buffer.pop();
+                uint16_t length = (((uint16_t)lengthMSB) << 8) | lengthLSB;
+
+                if (isDebug)
+                    printf("[poll] received data : not implemented (%d bytes length / %d bytes remaining)\r\n", length,
+                           buffer.size());
+
+                for (uint16_t i = 0; i < length && !buffer.empty(); ++i) buffer.pop();
+            } break;
 
             default:
                 if (isDebug) printf("[poll] unknown message type : 0x%0.2X\r\n", typeByte);
