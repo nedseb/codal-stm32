@@ -7,6 +7,8 @@
 using namespace codal;
 using namespace std;
 
+constexpr uint8_t STM32SERIAL_RX_BUFFER_SIZE = 128;
+
 STM32Serial* codal::default_serial_debug = nullptr;
 
 // We need to be sure that this object should be constructed before any static STM32Serial object. I'm so sorry for
@@ -14,7 +16,14 @@ STM32Serial* codal::default_serial_debug = nullptr;
 std::map<serial_t*, STM32Serial*> STM32Serial::mapSerialInstance __attribute__((init_priority(102)));
 
 STM32Serial::STM32Serial(STM32Pin& txPin, STM32Pin& rxPin)
-    : Serial(txPin, rxPin, 128), rxPin(rxPin), txPin(txPin), serial(), baudrate(), databits(), parity(), stopBit()
+    : Serial(txPin, rxPin, STM32SERIAL_RX_BUFFER_SIZE),
+      rxPin(rxPin),
+      txPin(txPin),
+      serial(),
+      baudrate(),
+      databits(),
+      parity(),
+      stopBit()
 {
     mapSerialInstance.insert(pair<serial_t*, STM32Serial*>(&serial, this));
 }
