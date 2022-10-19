@@ -5,10 +5,6 @@
 
 constexpr uint16_t SERVICEDTA_UUID = 0x181C;
 
-AdvertisingData::AdvertisingData() : significantPartSize(0), isFlagsSet(false), flags(0), localName("") {}
-
-AdvertisingData::~AdvertisingData() {}
-
 std::array<uint8_t, 31> AdvertisingData::toData()
 {
     std::array<uint8_t, 31> result = {0x00};

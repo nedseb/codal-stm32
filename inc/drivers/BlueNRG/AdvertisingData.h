@@ -7,8 +7,8 @@
 
 class AdvertisingData {
   public:
-    AdvertisingData();
-    ~AdvertisingData();
+    AdvertisingData() : significantPartSize(0), isFlagsSet(false), flags(0), localName("") {}
+    ~AdvertisingData(){};
 
     void setFlags(uint8_t flags)
     {
