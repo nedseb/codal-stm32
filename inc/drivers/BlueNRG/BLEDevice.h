@@ -47,14 +47,14 @@ class BLEDevice {
      *
      * @param data
      */
-    BLEDeviceError setAdvertisingData(AdvertisingData& data);
+    BLEDeviceError setAdvertisingData(AdvertisingData data);
 
     /**
      * @brief Set the Scan Response Data object
      *
      * @param scan
      */
-    BLEDeviceError setScanResponseData(AdvertisingData& data);
+    BLEDeviceError setScanResponseData(AdvertisingData data);
 
     /**
      * @brief Swap between Advertising and Scanning mode (if needed)
@@ -69,11 +69,7 @@ class BLEDevice {
      *
      * @return BLEDeviceError
      */
-    BLEDeviceError startAdvertising(AdvertisingData& advData);
-    BLEDeviceError startAdvertising(AdvertisingData& advData, AdvertisingData& scanData);
-
-    // BLEDeviceError updateAdvertisingData();
-    // BLEDeviceError updateScanResponseData();
+    BLEDeviceError startAdvertising();
 
     /**
      * @brief Stop the advertsing mode, and disable it for `swapMode()`
@@ -109,6 +105,8 @@ class BLEDevice {
 
     ModeState advertisingState;
     ModeState scanningState;
+    AdvertisingData advData;
+    AdvertisingData advScanData;
 
     void handleAdvReport(std::deque<BLEAdvertisingReport> reports);
 };
