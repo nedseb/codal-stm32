@@ -26,11 +26,11 @@ float HCSR04::getTime(HCSR04TimeUnit type) {
     switch (type)
     {
     case HCSR04TimeUnit::Us :
-        return doublegetTimeMicroSeconds();
+        return getTimeMicroSeconds();
     case HCSR04TimeUnit::Ms :
-        return doublegetTimeMicroSeconds() / 1000.0;
+        return getTimeMicroSeconds() / 1000.0;
     case HCSR04TimeUnit::S :
-        return doublegetTimeMicroSeconds() / 1000000.0;
+        return getTimeMicroSeconds() / 1000000.0;
     default:
         break;
     }
@@ -38,7 +38,7 @@ float HCSR04::getTime(HCSR04TimeUnit type) {
 }
 
 float HCSR04::getDistanceMilli() { 
-    return static_cast<float>((343000.0 * getTimeMicroseconds() / 1000000.0) / 2.0);
+    return static_cast<float>((343000.0 * getTimeMicroSeconds() / 1000000.0) / 2.0);
 }
 
 float HCSR04::getTimeMicroSeconds() { 
