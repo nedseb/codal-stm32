@@ -38,7 +38,7 @@ float HCSR04::getTime(HCSR04TimeUnit type) {
 }
 
 float HCSR04::getDistanceMilli() { 
-    return static_cast<float>((343000.0 * getTimeMicroSeconds() / 1000000.0) / 2.0);
+    return (343000.0 * getTimeMicroseconds() / 1000000.0) / 2.0;
 }
 
 float HCSR04::getTimeMicroSeconds() { 
@@ -60,6 +60,5 @@ float HCSR04::getTimeMicroSeconds() {
     }
     uint32_t end = micros();
 
-    // Return the time in microsecond
     return static_cast<float>(end - start);
 }
