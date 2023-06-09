@@ -3,13 +3,6 @@
 #include <cmath>
 #include <list>
 
-// TO REMOVE
-#include <string>
-
-constexpr uint32_t rightShiftBit = 8;
-// constexpr uint32_t maxPCMValue   = 1 << (24 - rightShiftBit);
-constexpr double averageRMS = 1.0 / (double)MP34DT01_AUDIO_BUFFER;
-
 using namespace codal;
 
 struct MP34DT01HandlerMapping {
@@ -19,6 +12,7 @@ struct MP34DT01HandlerMapping {
     DMA_HandleTypeDef* dma;
 };
 
+constexpr uint32_t rightShiftBit                  = 8;
 std::list<MP34DT01HandlerMapping>* handlerMapping = nullptr;
 
 void MSP_ChannelInit_callback(DFSDM_Channel_HandleTypeDef* hdfsdm_channel);
@@ -170,9 +164,9 @@ void MP34DT01::mspFilterConversionComplete(DFSDM_Filter_HandleTypeDef* hdfsdm_fi
     uint64_t sum = 0;
 
     for (auto v : audioBuffer) {
-        int32_t tmp = abs(v);
+        uint64_t tmp = abs(v);
         tmp >>= 8;
-        sum += ((uint64_t)tmp * (uint64_t)tmp);
+        sum += tmp * tmp;
     }
 
     measuredSquaredRMS = sum / (uint64_t)MP34DT01_AUDIO_BUFFER;
