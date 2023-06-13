@@ -29,9 +29,9 @@ MP34DT01::MP34DT01()
     }
 
     measuredSquaredRMS = 0;
-    hdfsdm_channel     = (DFSDM_Channel_HandleTypeDef*)malloc(sizeof(DFSDM_Channel_HandleTypeDef));
-    hdfsdm_filter      = (DFSDM_Filter_HandleTypeDef*)malloc(sizeof(DFSDM_Filter_HandleTypeDef));
-    hdma_dfsdm         = (DMA_HandleTypeDef*)malloc(sizeof(DMA_HandleTypeDef));
+    hdfsdm_channel     = new DFSDM_Channel_HandleTypeDef();
+    hdfsdm_filter      = new DFSDM_Filter_HandleTypeDef();
+    hdma_dfsdm         = new DMA_HandleTypeDef();
 
     hdfsdm_channel->Instance                      = DFSDM1_Channel2;
     hdfsdm_channel->Init.OutputClock.Activation   = ENABLE;
@@ -164,7 +164,8 @@ void MP34DT01::mspFilterConversionComplete(DFSDM_Filter_HandleTypeDef* hdfsdm_fi
     uint64_t sum = 0;
 
     for (auto v : audioBuffer) {
-        uint64_t tmp = abs(v);
+        uint64_t tmp = std::abs(v);
+
         tmp >>= 8;
         sum += tmp * tmp;
     }
