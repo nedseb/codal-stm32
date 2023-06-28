@@ -1,7 +1,7 @@
 #include "BLEDevice_Component.h"
 
 #include "CodalFiber.h"
-#include "Timer.h"
+#include "codal-core/inc/driver-models/Timer.h"
 
 using namespace codal;
 

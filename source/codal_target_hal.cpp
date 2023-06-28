@@ -3,7 +3,7 @@
 #include "CodalCompat.h"
 #include "CodalDmesg.h"
 #include "STM32InterruptHandlers.h"
-#include "Timer.h"
+#include "codal-core/inc/driver-models/Timer.h"
 #include "board.h"
 #include "stm32yyxx_ll_pwr.h"
 #include "stm32yyxx_ll_rcc.h"
