@@ -38,6 +38,7 @@
 #include "interrupt.h"
 
 #include "lock_resource.h"
+
 #if !defined(HAL_EXTI_MODULE_DISABLED)
 
 /* Private Types */
