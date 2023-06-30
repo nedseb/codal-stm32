@@ -1,11 +1,12 @@
 #include "STM32Pin.h"
 
+#include "EventModel.h"
 #include "PeripheralPins.h"
 #include "PinConfigured.h"
 #include "analog.h"
 #include "digital_io.h"
+#include "interrupt.h"
 #include "pins_arduino.h"
-
 using namespace codal;
 
 #ifndef DEFAULT_PWM_FREQ
@@ -271,9 +272,38 @@ int STM32Pin::eventOn(int eventType)
     return DEVICE_OK;
 }
 
+void STM32Pin::eventRiseAndFall()
+{
+    GPIO_PinState state = HAL_GPIO_ReadPin(get_GPIO_Port(STM_PORT(this->name)), STM_LL_GPIO_PIN(this->name));
+
+    if (state == GPIO_PIN_RESET) {
+        Event(this->id, DEVICE_PIN_EVT_FALL, CREATE_AND_FIRE);
+    }
+    else {
+        Event(this->id, DEVICE_PIN_EVT_RISE, CREATE_AND_FIRE);
+    }
+}
+
+/**
+ * Enables interrupts at the hardware level and generates Codal Events when an interruption occurs
+ * @param eventType The type of event to generate
+ * @return DEVICE_OK if method is supported, DEVICE_NOT_SUPPORTED otherwise
+ */
 int STM32Pin::enableRiseFallEvents(int eventType)
 {
-    return DEVICE_NOT_IMPLEMENTED;
+    set_GPIO_Port_Clock(STM_PORT(this->name));
+
+    switch (eventType) {
+        case DEVICE_PIN_INTERRUPT_ON_EDGE:
+            return DEVICE_NOT_IMPLEMENTED;
+        case DEVICE_PIN_EVENT_ON_EDGE:
+        case DEVICE_PIN_EVENT_ON_PULSE:
+            stm32_interrupt_enable(get_GPIO_Port(STM_PORT(this->name)), STM_LL_GPIO_PIN(this->name),
+                                   std::bind(&STM32Pin::eventRiseAndFall, this), GPIO_MODE_IT_RISING_FALLING);
+            break;
+    }
+
+    return DEVICE_OK;
 }
 
 int STM32Pin::disableEvents()
@@ -284,4 +314,5 @@ int STM32Pin::disableEvents()
     }
 
     return DEVICE_OK;
+    ;
 }
