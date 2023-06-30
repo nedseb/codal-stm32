@@ -32,6 +32,9 @@ using namespace codal;
 #endif
 
 extern uint32_t g_anOutputPinConfigured[MAX_NB_PORT];
+constexpr uint8_t INTERRUPT_ON_EDGE = 0x01;
+constexpr uint8_t EVT_ON_EDGE       = 0x02;
+constexpr uint8_t EVT_ON_PULSE      = 0x04;
 
 static inline uint32_t mapResolution(uint32_t value, uint32_t from, uint32_t to)
 {
@@ -57,6 +60,7 @@ STM32Pin::STM32Pin(int id, PinNumber name, PinCapability capability)
     // If we're unused, this is how it will stay...
     this->status                = 0x00;
     this->pulseInitialTimestamp = 0;
+    this->eventFlags            = 0x0;
 
     if ((PIN_CAPABILITY_ANALOG & capability) && pin_in_pinmap((PinName)name, PinMap_PWM)) {
         pwm = new STM32PWM((PinName)name, analogFrequency);
@@ -279,24 +283,32 @@ void STM32Pin::eventRiseAndFall()
 {
     GPIO_PinState state = HAL_GPIO_ReadPin(get_GPIO_Port(STM_PORT(this->name)), STM_LL_GPIO_PIN(this->name));
 
-    if (state == GPIO_PIN_RESET) {
-        Event(this->id, DEVICE_PIN_EVT_FALL, CREATE_AND_FIRE);
+    if (this->eventFlags & INTERRUPT_ON_EDGE && this->gpio_irq != NULL) this->gpio_irq(state);
 
-        if (getPolarity() > 0) {
-            Event(this->id, DEVICE_PIN_EVT_PULSE_HI, getCurrentMicros() - this->pulseInitialTimestamp, CREATE_AND_FIRE);
-        }
-        else {
-            this->pulseInitialTimestamp = getCurrentMicros();
+    if (state == GPIO_PIN_RESET) {
+        if (this->eventFlags & EVT_ON_EDGE) Event(this->id, DEVICE_PIN_EVT_FALL, CREATE_AND_FIRE);
+
+        if (this->eventFlags & EVT_ON_PULSE) {
+            if (getPolarity() > 0) {
+                Event(this->id, DEVICE_PIN_EVT_PULSE_HI, getCurrentMicros() - this->pulseInitialTimestamp,
+                      CREATE_AND_FIRE);
+            }
+            else {
+                this->pulseInitialTimestamp = getCurrentMicros();
+            }
         }
     }
     else {
-        Event(this->id, DEVICE_PIN_EVT_RISE, CREATE_AND_FIRE);
+        if (this->eventFlags & EVT_ON_EDGE) Event(this->id, DEVICE_PIN_EVT_RISE, CREATE_AND_FIRE);
 
-        if (getPolarity() > 0) {
-            this->pulseInitialTimestamp = getCurrentMicros();
-        }
-        else {
-            Event(this->id, DEVICE_PIN_EVT_PULSE_LO, getCurrentMicros() - this->pulseInitialTimestamp, CREATE_AND_FIRE);
+        if (this->eventFlags & EVT_ON_PULSE) {
+            if (getPolarity() > 0) {
+                this->pulseInitialTimestamp = getCurrentMicros();
+            }
+            else {
+                Event(this->id, DEVICE_PIN_EVT_PULSE_LO, getCurrentMicros() - this->pulseInitialTimestamp,
+                      CREATE_AND_FIRE);
+            }
         }
     }
 }
@@ -312,20 +324,24 @@ int STM32Pin::enableRiseFallEvents(int eventType)
 
     switch (eventType) {
         case DEVICE_PIN_INTERRUPT_ON_EDGE:
-            return DEVICE_NOT_IMPLEMENTED;
+            this->eventFlags = eventFlags | INTERRUPT_ON_EDGE;
+            break;
         case DEVICE_PIN_EVENT_ON_EDGE:
+            this->eventFlags = eventFlags | EVT_ON_EDGE;
+            break;
         case DEVICE_PIN_EVENT_ON_PULSE:
-            stm32_interrupt_enable(get_GPIO_Port(STM_PORT(this->name)), STM_LL_GPIO_PIN(this->name),
-                                   std::bind(&STM32Pin::eventRiseAndFall, this), GPIO_MODE_IT_RISING_FALLING);
+            this->eventFlags = eventFlags | EVT_ON_PULSE;
             break;
     }
-
+    stm32_interrupt_enable(get_GPIO_Port(STM_PORT(this->name)), STM_LL_GPIO_PIN(this->name),
+                           std::bind(&STM32Pin::eventRiseAndFall, this), GPIO_MODE_IT_RISING_FALLING);
     return DEVICE_OK;
 }
 
 int STM32Pin::disableEvents()
 {
     if (status & (IO_STATUS_EVENT_ON_EDGE | IO_STATUS_EVENT_PULSE_ON_EDGE | IO_STATUS_TOUCH_IN)) {
+        this->eventFlags = 0x0;
         disconnect();
         getDigitalValue();
     }

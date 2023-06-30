@@ -281,6 +281,7 @@ class STM32Pin : public Pin {
     codal::STM32PWM* pwm;
     uint32_t analogFrequency;
     uint32_t pulseInitialTimestamp;
+    uint8_t eventFlags;
 };
 
 }  // namespace codal
