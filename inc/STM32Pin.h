@@ -253,6 +253,8 @@ class STM32Pin : public Pin {
      */
     int eventOn(int eventType) final override;
 
+    void eventRiseAndFall();
+
   private:
     void disconnect();
 
