@@ -4,9 +4,11 @@
 #include "PeripheralPins.h"
 #include "PinConfigured.h"
 #include "analog.h"
+#include "clock.h"
 #include "digital_io.h"
 #include "interrupt.h"
 #include "pins_arduino.h"
+
 using namespace codal;
 
 #ifndef DEFAULT_PWM_FREQ
@@ -53,7 +55,8 @@ STM32Pin::STM32Pin(int id, PinNumber name, PinCapability capability)
 
     // Power up in a disconnected, low power state.
     // If we're unused, this is how it will stay...
-    this->status = 0x00;
+    this->status                = 0x00;
+    this->pulseInitialTimestamp = 0;
 
     if ((PIN_CAPABILITY_ANALOG & capability) && pin_in_pinmap((PinName)name, PinMap_PWM)) {
         pwm = new STM32PWM((PinName)name, analogFrequency);
@@ -278,9 +281,23 @@ void STM32Pin::eventRiseAndFall()
 
     if (state == GPIO_PIN_RESET) {
         Event(this->id, DEVICE_PIN_EVT_FALL, CREATE_AND_FIRE);
+
+        if (getPolarity() > 0) {
+            Event(this->id, DEVICE_PIN_EVT_PULSE_HI, getCurrentMicros() - this->pulseInitialTimestamp, CREATE_AND_FIRE);
+        }
+        else {
+            this->pulseInitialTimestamp = getCurrentMicros();
+        }
     }
     else {
         Event(this->id, DEVICE_PIN_EVT_RISE, CREATE_AND_FIRE);
+
+        if (getPolarity() > 0) {
+            this->pulseInitialTimestamp = getCurrentMicros();
+        }
+        else {
+            Event(this->id, DEVICE_PIN_EVT_PULSE_LO, getCurrentMicros() - this->pulseInitialTimestamp, CREATE_AND_FIRE);
+        }
     }
 }
 
