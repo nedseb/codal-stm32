@@ -71,7 +71,7 @@ class STM32I2C : public codal::I2C {
     void endTransmission(bool sendStop = true);
 
     /**
-     * @brief Check if the deveice at address `address` is available
+     * @brief Check if the device at address `address` is available
      *
      * @param address the address to test
      * @return boolean
