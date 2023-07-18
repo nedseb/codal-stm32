@@ -61,6 +61,16 @@ void STM32I2C::endTransmission(bool sendStop)
     // target_enable_irq();
 }
 
+bool STM32I2C::isDeviceAvailable(uint8_t address)
+{
+    bool result = false;
+    i2c_init(&i2c);
+    result = i2c_IsDeviceReady(&i2c, address, 3) == i2c_status_e::I2C_OK;
+    i2c_deinit(&i2c);
+
+    return result;
+}
+
 int STM32I2C::write(uint8_t data)
 {
     if (!isOnTransmission) {
