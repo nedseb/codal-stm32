@@ -1,5 +1,6 @@
 #pragma once
 
+#ifdef STM32L4xx
 #include <cstdint>
 
 #include "stm32l4xx_hal.h"
@@ -84,3 +85,6 @@ class MP34DT01 {
 };
 
 }  // namespace codal
+#else
+#warning "MP34DT01 is not supported by your target !"
+#endif

@@ -1,5 +1,6 @@
 #pragma once
 
+#ifdef STM32L4xx
 #include "MP34DT01.h"
 #include "Sensor.h"
 
@@ -43,3 +44,7 @@ class MP34DT01_dBMeter : public MP34DT01, public Sensor {
 };
 
 }  // namespace codal
+
+#else
+#warning "MP34DT01 is not supported by your target !"
+#endif

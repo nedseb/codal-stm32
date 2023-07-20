@@ -1,5 +1,6 @@
 #include "MP34DT01.h"
 
+#ifdef STM32L4xx
 #include <cmath>
 #include <list>
 
@@ -257,4 +258,5 @@ void DMA1_Channel4_IRQHandler(void)
 
 #ifdef __cplusplus
 }
+#endif
 #endif
