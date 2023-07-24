@@ -82,7 +82,7 @@ void MCP23009E::setLevel(uint8_t gpx, MCP_LOGIC_LEVEL level)
 
 MCP_LOGIC_LEVEL MCP23009E::getLevel(uint8_t gpx)
 {
-    if (gpx > 7) return;
+    if (gpx > 7) return MCP_LOGIC_LEVEL::LOW;
 
     uint8_t gpio = getGPIO();
 
