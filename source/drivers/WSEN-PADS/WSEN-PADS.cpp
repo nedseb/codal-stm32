@@ -36,9 +36,10 @@ void WSEN_PADS::init()
     off();
     setLowNoiseMode(true);
     setLowPassFilter(true);
+    setLowPassFilterConfig(true);
     setBDU(true);
 
-    setODR(WSEN_PADS_ODR::RATE_10_HZ);
+    setODR(WSEN_PADS_ODR::RATE_50_HZ);
 }
 
 uint8_t WSEN_PADS::whoAmI()
@@ -55,6 +56,14 @@ void WSEN_PADS::setLowNoiseMode(bool enable)
 }
 
 void WSEN_PADS::setLowPassFilter(bool enable)
+{
+    if (enable)
+        setBitRegister(CTRL_1, 3);
+    else
+        clearBitRegister(CTRL_1, 3);
+}
+
+void WSEN_PADS::setLowPassFilterConfig(bool enable)
 {
     if (enable)
         setBitRegister(CTRL_1, 2);
@@ -96,8 +105,8 @@ float WSEN_PADS::getPressure()
     uint8_t l      = getRegister(DATA_P_L);
     uint8_t h      = getRegister(DATA_P_H);
     int32_t result = (int32_t)xl;
-    result |= (int32_t)(l << 8);
-    result |= (int32_t)(h << 16);
+    result |= ((int32_t)l) << 8;
+    result |= ((int32_t)h) << 16;
 
     return (float)result / 40960.0f;
 }
@@ -107,7 +116,7 @@ float WSEN_PADS::getTemperature()
     uint8_t l      = getRegister(DATA_T_L);
     uint8_t h      = getRegister(DATA_T_H);
     int16_t result = (int16_t)l;
-    result |= (int16_t)(h << 8);
+    result |= ((int16_t)h) << 8;
 
     return (float)result / 100.0f;
 }
@@ -124,7 +133,7 @@ void WSEN_PADS::setBitRegister(uint8_t regAddr, uint8_t bit)
     if (bit > 15) return;
 
     uint8_t reg = getRegister(regAddr);
-    reg &= 1 << bit;
+    reg |= 1 << bit;
     setRegister(regAddr, reg);
 }
 

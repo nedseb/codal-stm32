@@ -63,6 +63,13 @@ class WSEN_PADS {
     void setLowPassFilter(bool enable);
 
     /**
+     * @brief Set the configuration Low Pass Filter
+     *
+     * @param enable if TRUE the second lowpass filter will be enable, otherwise FALSE will disable it.
+     */
+    void setLowPassFilterConfig(bool enable);
+
+    /**
      * @brief Set the Block data update feature. The BDU blocks the data register to be updated until the register are
      * readed.
      *
