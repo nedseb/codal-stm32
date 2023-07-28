@@ -151,7 +151,7 @@ void ISM330DL::setAccelerometerFullScale(ISM_XL_FS fs)
 
 ISM_Data ISM330DL::readGyroscopeData()
 {
-    float ratio = fsGyro / 32768.0;
+    float sensitivity = fsGyro / 32768.0;
     vector<uint8_t> raw({0, 0, 0, 0, 0, 0});
 
     for (uint8_t i = 0; i < 6; ++i) {
@@ -162,12 +162,12 @@ ISM_Data ISM330DL::readGyroscopeData()
     int16_t rawY = (int16_t(raw[3]) << 8) | int16_t(raw[2]);
     int16_t rawZ = (int16_t(raw[5]) << 8) | int16_t(raw[4]);
 
-    return ISM_Data{x : float(rawX) * ratio, y : float(rawY) * ratio, z : float(rawZ) * ratio};
+    return ISM_Data{x : float(rawX) * sensitivity, y : float(rawY) * sensitivity, z : float(rawZ) * sensitivity};
 }
 
 ISM_Data ISM330DL::readAccelerometerData()
 {
-    float ratio = fsAccel / 32768.0;
+    float sensitivity = fsAccel / 32768.0;
     vector<uint8_t> raw({0, 0, 0, 0, 0, 0});
 
     for (uint8_t i = 0; i < 6; ++i) {
@@ -178,7 +178,7 @@ ISM_Data ISM330DL::readAccelerometerData()
     int16_t rawY = (int16_t(raw[3]) << 8) | int16_t(raw[2]);
     int16_t rawZ = (int16_t(raw[5]) << 8) | int16_t(raw[4]);
 
-    return ISM_Data{x : float(rawX) * ratio, y : float(rawY) * ratio, z : float(rawZ) * ratio};
+    return ISM_Data{x : float(rawX) * sensitivity, y : float(rawY) * sensitivity, z : float(rawZ) * sensitivity};
 }
 
 void ISM330DL::writeRegister(uint8_t reg, uint8_t value)
