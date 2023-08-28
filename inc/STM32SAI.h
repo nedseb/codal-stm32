@@ -1,5 +1,7 @@
 #pragma once
 
+#if defined(STM32WBxx)
+
 #include <functional>
 #include <vector>
 
@@ -115,3 +117,7 @@ class STM32SAI {
     void disableClock();
 };
 }  // namespace codal
+
+#else
+#warning "STM32SAI is not supported by your target !"
+#endif

@@ -1,5 +1,6 @@
 #pragma once
 
+#if defined(STM32WBxx)
 #include <cstdint>
 
 #include "stm32_def.h"
@@ -159,3 +160,6 @@ class STM32DMA {
     IRQn_Type getIRQn(DMA_Channel_TypeDef* channel);
 };
 }  // namespace codal
+#else
+#warning "STM32DMA is not supported by your target !"
+#endif
