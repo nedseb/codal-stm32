@@ -1,5 +1,6 @@
 #include "STM32SAI.h"
 
+#if defined(STM32WBxx)
 #include "PortNames.h"
 
 using namespace std;
@@ -237,3 +238,4 @@ void HAL_SAI_ErrorCallback(SAI_HandleTypeDef* obj)
         inst->errorCallback();
     }
 }
+#endif

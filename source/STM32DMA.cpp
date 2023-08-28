@@ -1,5 +1,7 @@
 #include "STM32DMA.h"
 
+#if defined(STM32WBxx)
+
 #include <cstdio>
 #include <unordered_map>
 #include <vector>
@@ -258,4 +260,6 @@ void DMA2_Channel5_IRQHandler(void)
 
 #ifdef __cplusplus
 }
+#endif
+
 #endif
