@@ -1,5 +1,4 @@
 #include "ism330dl.h"
-#include "../registerBit_utils.cpp"
 
 using namespace codal;
 using namespace std;
