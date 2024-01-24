@@ -1,5 +1,4 @@
 #include "lis2mdl.h"
-#include "../registerBit_utils.cpp"
 
 using namespace std;
 using namespace codal;
