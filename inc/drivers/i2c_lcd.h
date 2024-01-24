@@ -3,14 +3,13 @@
 #include <string>
 
 #include "STM32I2C.h"
+#include "lcd_utils.h"
 
 #define LCD_ADDRESS_DEFAULT (0x4E)
 #define LCD_COLS_DEFAULT    16
 #define LCD_ROWS_DEFAULT    2
 
 namespace codal {
-
-enum class PrintRadix : uint8_t { HEX = 16, DEC = 10, OCT = 8, BIN = 2 };
 
 class I2C_LCD {
   public:
@@ -88,5 +87,5 @@ class I2C_LCD {
 
         print(tmp);
     }
-};  // namespace codal
+};  // namespace lcd
 }  // namespace codal
