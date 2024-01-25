@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-
+#include "lcd_utils.h"
 #include "STM32I2C.h"
 
 #define LCD_ADDRESS_DEFAULT (0x4E)
@@ -9,7 +9,7 @@
 #define LCD_ROWS_DEFAULT    2
 
 namespace codal {
-    #include "lcd_utils.h"
+    
 class I2C_LCD {
   public:
     I2C_LCD(STM32I2C& i2c, uint16_t address = LCD_ADDRESS_DEFAULT, uint8_t cols = LCD_COLS_DEFAULT,

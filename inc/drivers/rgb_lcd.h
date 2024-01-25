@@ -3,6 +3,7 @@
 
 #include <inttypes.h>
 #include "STM32I2C.h"
+#include "lcd_utils.h"
 
 // Device I2C Adress
 #define LCD_ADDRESS     (0x7c)
@@ -62,7 +63,7 @@
 #define LCD_5x8DOTS 0x00
 
 namespace codal {
-  #include "lcd_utils.h"
+
 class rgb_lcd 
 {
 private:
@@ -163,22 +164,13 @@ public:
     return write((const uint8_t *)buffer, size);
   }
 
-  // size_t print(const char[]);
-  // size_t print(char);
-  // size_t print(unsigned char, int = static_cast<int>(PrintRadix::DEC));
-  // size_t print(int, int = static_cast<int>(PrintRadix::DEC));
-  // size_t print(unsigned int, int = static_cast<int>(PrintRadix::DEC));
-  // size_t print(long, int = static_cast<int>(PrintRadix::DEC));
-  // size_t print(unsigned long, int = static_cast<int>(PrintRadix::DEC));
-  // size_t print(double, int = 2);
-
   size_t print(const char[]);
   size_t print(char);
-  size_t print(unsigned char, codal::PrintRadix = codal::PrintRadix::DEC);
-  size_t print(int,codal::PrintRadix = codal::PrintRadix::DEC);
-  size_t print(unsigned int,codal::PrintRadix = codal::PrintRadix::DEC);
-  size_t print(long,codal::PrintRadix = codal::PrintRadix::DEC);
-  size_t print(unsigned long,codal::PrintRadix = codal::PrintRadix::DEC);
+  size_t print(unsigned char, PrintRadix = PrintRadix::DEC);
+  size_t print(int, PrintRadix = PrintRadix::DEC);
+  size_t print(unsigned int, PrintRadix = PrintRadix::DEC);
+  size_t print(long, PrintRadix = PrintRadix::DEC);
+  size_t print(unsigned long, PrintRadix = PrintRadix::DEC);
   size_t print(double, int = 2);
 };
 }
