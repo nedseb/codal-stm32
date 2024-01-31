@@ -1,5 +1,5 @@
 #include "STM32RTC.h"
-
+#if defined(STM32WBxx)
 using namespace codal;
 
 STM32RTC::STM32RTC() : hrtc{new RTC_HandleTypeDef()}, isHourMode12{true}, daySaving{RTC_Day_Saving::DISABLE} {}
@@ -124,3 +124,4 @@ void STM32RTC::configureClock()
     HAL_RCCEx_PeriphCLKConfig(&rtcClk);
     __HAL_RCC_RTC_ENABLE();
 }
+#endif
