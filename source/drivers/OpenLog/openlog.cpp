@@ -84,6 +84,6 @@ void OpenLog::waitUntilReady(char waitChar)
     if (!(waitChar == '>' || waitChar == '<')) return;
     do {
         fiber_sleep(10);
-        unsigned i = this->serial->read(this->buffer, BUFFER_SIZE, ASYNC);
+        this->serial->read(this->buffer, BUFFER_SIZE, ASYNC);
     } while (strchr((char*)this->buffer, waitChar) == NULL);
 }
