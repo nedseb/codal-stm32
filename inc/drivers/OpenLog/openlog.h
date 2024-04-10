@@ -38,5 +38,41 @@ class OpenLog {
   private:
     STM32Serial* serial;
     STM32Pin& resetPin;
+    uint8_t* buffer;
+
+    /**
+     * @brief an utility function to send the data via serial in fixed sized buffers
+     *
+     * @param data the data to send
+     * @param dataSize the size of the data to send
+     *
+     * @return an int representing the number of transmited bytes (should be equal to dataSize), or an error code
+     * (DEVICE_INVALID_PARAMETER or DEVICE_SERIAL_IN_USE)
+     */
+    int sendData(const uint8_t* data, unsigned dataSize);
+
+    /**
+     * @brief Sets the command mode on the OpenLog, enabling file operations on the micro-sd card
+     * @note Can also be used to end some of the openlog commands (e.g the append command)
+     */
+    void goToCommandMode();
+
+    /**
+     * @brief hard resets the OpenLog via `resetPin`
+     *
+     * @note this function is used to restart the OpenLog after this class' serial is initialized, in order to ensure
+     * later that the OpenLog is responding well to the send commands / text
+     */
+    void reset();
+
+    /**
+     * @brief listens to the OpenLog's serial output until the character `waitchar`
+     *
+     * @param waitChar the char to wait for (must be `>` or `<`)
+     * @note this function is used to wait until the Openlog is ready to accept commands / text
+     * @see
+     * https://github.com/sparkfun/OpenLog/blob/master/firmware/Arduino_Examples/Example3_ReadFile/Example3_ReadFile.ino
+     */
+    void waitUntilReady(char waitChar);
 };
 }  // namespace codal
