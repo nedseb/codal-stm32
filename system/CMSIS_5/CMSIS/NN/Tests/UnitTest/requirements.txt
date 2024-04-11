@@ -14,7 +14,7 @@ google-auth-oauthlib==0.4.1
 google-pasta==0.1.8
 grpcio==1.27.2
 h5py==2.10.0
-idna==2.9
+idna==3.7
 intelhex==2.2.1
 junit-xml==1.9
 Keras-Applications==1.0.8
