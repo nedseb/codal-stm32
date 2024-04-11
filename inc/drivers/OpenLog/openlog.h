@@ -33,7 +33,7 @@ class OpenLog {
      * @note As the OpenLog is implemented in order to allow offline sensor data logging,
      * being able to set a file name has not been implemented (as not needed at the moment)
      */
-    bool write(char* data, unsigned dataSize);
+    bool write(const char* data, unsigned dataSize);
 
   private:
     STM32Serial* serial;
@@ -73,6 +73,6 @@ class OpenLog {
      * @see
      * https://github.com/sparkfun/OpenLog/blob/master/firmware/Arduino_Examples/Example3_ReadFile/Example3_ReadFile.ino
      */
-    void waitUntilReady(char waitChar);
+    void waitUntilReady(const char waitChar);
 };
 }  // namespace codal

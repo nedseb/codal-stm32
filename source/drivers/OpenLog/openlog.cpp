@@ -27,7 +27,7 @@ OpenLog::~OpenLog()
     free(this->buffer);
 }
 
-bool OpenLog::write(char* data, unsigned dataSize)
+bool OpenLog::write(const char* data, unsigned dataSize)
 {
     int sendResult;
     const unsigned commandLength = strlen(APPEND) + 1 + strlen(FILE_NAME) + 1;
@@ -79,7 +79,7 @@ void OpenLog::reset()
     this->resetPin.setDigitalValue(1);
 }
 
-void OpenLog::waitUntilReady(char waitChar)
+void OpenLog::waitUntilReady(const char waitChar)
 {
     if (!(waitChar == '>' || waitChar == '<')) return;
     do {
