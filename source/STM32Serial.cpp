@@ -19,11 +19,11 @@ STM32Serial::STM32Serial(STM32Pin& txPin, STM32Pin& rxPin)
     : Serial(txPin, rxPin, STM32SERIAL_RX_BUFFER_SIZE),
       rxPin(rxPin),
       txPin(txPin),
-      serial(),
-      baudrate(),
       databits(),
       parity(),
-      stopBit()
+      stopBit(),
+      serial(),
+      baudrate()
 {
     mapSerialInstance.insert(pair<serial_t*, STM32Serial*>(&serial, this));
 }
@@ -40,8 +40,14 @@ void STM32Serial::init(uint32_t baudrate, LengthSerial databits, ParitySerial pa
     this->parity   = parity;
     this->stopBit  = stopBit;
 
-    serial.pin_rx = (PinName)rxPin.name;
     serial.pin_tx = (PinName)txPin.name;
+
+    if (rxPin.name == PinNumber::NC) {
+        serial.pin_rx = PinName::NC;
+    }
+    else {
+        serial.pin_rx = (PinName)rxPin.name;
+    }
 
     uart_init(&serial, baudrate, (uint32_t)databits, (uint32_t)parity, (uint32_t)stopBit);
     uart_attach_rx_callback(&serial, RxIRQ);
@@ -114,6 +120,16 @@ void STM32Serial::RxIRQ(serial_t* obj)
             ser->rxBuffHead              = i;
         }
     }
+}
+
+void STM32Serial::enableHalfDuplexTransmitter()
+{
+    uart_enable_tx(&serial);
+}
+
+void STM32Serial::enableHalfDuplexReceiver()
+{
+    uart_enable_rx(&serial);
 }
 
 #ifdef __GNUC__
