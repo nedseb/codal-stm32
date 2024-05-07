@@ -28,13 +28,14 @@ class STM32Serial : public Serial {
 
     STM32Pin& rxPin;
     STM32Pin& txPin;
-    serial_t serial;
-    uint32_t baudrate;
     LengthSerial databits;
     ParitySerial parity;
     StopBitSerial stopBit;
 
   protected:
+    serial_t serial;
+    uint32_t baudrate;
+
     int enableInterrupt(SerialInterruptType t) final override;
     int disableInterrupt(SerialInterruptType t) final override;
     int setBaudrate(uint32_t baudrate) final override;
@@ -52,6 +53,11 @@ class STM32Serial : public Serial {
 
     int putc(char c) final override;
     int getc() final override;
+
+    uint32_t getBaud() { return baudrate; }
+
+    void enableHalfDuplexTransmitter();
+    void enableHalfDuplexReceiver();
 };
 
 extern STM32Serial* default_serial_debug;
