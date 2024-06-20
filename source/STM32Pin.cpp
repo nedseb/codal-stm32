@@ -88,6 +88,7 @@ inline PinName to_pinName(PinNumber pin)
 
 void STM32Pin::disconnect()
 {
+    this->status = 0x00;
     if (!(PIN_CAPABILITY_ANALOG & capability)) return;
 
     if (pwm != nullptr) {
