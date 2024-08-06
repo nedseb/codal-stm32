@@ -29,6 +29,7 @@ class APDS9960 {
     APDS9960Gain gain;
 
     uint8_t readRegister(uint8_t reg);
+    uint16_t read16BitRegister(uint8_t reg);
     void setRegister(uint8_t reg, uint8_t value);
     uint8_t getBit(uint8_t reg, uint8_t bit) { return (readRegister(reg) >> bit) & 0x01; }
     void setBit(uint8_t reg, uint8_t bit)
