@@ -775,7 +775,8 @@ VL53L1X_ERROR VL53L1X_base::VL53L1X_StartTemperatureUpdate()
 
 int8_t VL53L1X_base::VL53L1X_CalibrateOffset(uint16_t TargetDistInMm, int16_t* offset)
 {
-    uint8_t i               = 0, tmp;
+    uint8_t i               = 0;
+    uint8_t tmp             = 0;
     int16_t AverageDistance = 0;
     uint16_t distance;
     VL53L1X_ERROR status = 0;

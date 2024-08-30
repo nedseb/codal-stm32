@@ -102,6 +102,7 @@ class STM32I2C : public codal::I2C {
      * @param value byte to send
      */
     void writeRegister(uint8_t reg, uint8_t value);
+    using I2C::writeRegister;
 
     /**
      * @brief Read data from slave
@@ -123,6 +124,7 @@ class STM32I2C : public codal::I2C {
      * @return bytes received from slave
      */
     std::vector<uint8_t> readRegister(uint8_t address, uint8_t reg, size_t len, bool sendStop = true);
+    using I2C::readRegister;
 
     /**
      * Issues a standard, I2C command write to the I2C bus.
@@ -142,6 +144,7 @@ class STM32I2C : public codal::I2C {
      * @return DEVICE_OK on success, DEVICE_I2C_ERROR if the the write request failed.
      */
     virtual int write(uint16_t address, uint8_t* data, int len, bool repeated = false) override final;
+    using I2C::write;
 
     /**
      * Issues a standard, 2 byte I2C command read to the I2C bus.
@@ -161,6 +164,8 @@ class STM32I2C : public codal::I2C {
      * @return DEVICE_OK on success, DEVICE_I2C_ERROR if the the read request failed.
      */
     virtual int read(uint16_t address, uint8_t* data, int len, bool repeated = false) override final;
+
+    using I2C::read;
 
   private:
     /**
