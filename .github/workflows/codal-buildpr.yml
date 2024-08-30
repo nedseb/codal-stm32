@@ -7,7 +7,7 @@ jobs:
   buildpr:
     runs-on: ubuntu-latest
     container:
-      image: letssteam/arm-gcc-none-eabi-toolchain:latest
+      image: letssteam/makecode-toolchain:latest
       options: --user 1001 --security-opt no-new-privileges
     env:
       REPO_NAME: ${{ github.event.repository.name }}
@@ -37,13 +37,13 @@ jobs:
       #   with:
       #     repository: letssteam/codal-stm32-NUCLEO_F4x1RE
       #     path: codal/libraries/codal-stm32-NUCLEO_F4x1RE
-      
+
       - name: checkout codal-stm32-PNUCLEO_WB55RG
         uses: actions/checkout@v2
         with:
           repository: letssteam/codal-stm32-PNUCLEO_WB55RG
           path: codal/libraries/codal-stm32-PNUCLEO_WB55RG
-      
+
       - name: checkout codal-stm32-STEAM32_WB55RG
         uses: actions/checkout@v2
         with:
@@ -80,13 +80,13 @@ jobs:
       - name: clean codal-stm32-DISCO_L475VG_IOT
         run: |
           cd codal
-          rm -Rf samples source codal.json 
+          rm -Rf samples source codal.json
       # - name: create codal.json for codal-stm32-NUCLEO_F4x1RE
       #   run: |
       #     echo \
       #       "{
       #         \"target\": {
-      #         \"name\": \"$REPO_NAME\", 
+      #         \"name\": \"$REPO_NAME\",
       #         \"url\": \"$REPO_URL\",
       #         \"branch\": \"main\",
       #         \"type\": \"git\",
@@ -105,9 +105,8 @@ jobs:
       # - name: clean codal-stm32-NUCLEO_F4x1RE
       #   run: |
       #     cd codal
-      #     rm -Rf samples source codal.json 
-      
-      
+      #     rm -Rf samples source codal.json
+
       - name: create codal.json for codal-stm32-PNUCLEO_WB55RG
         run: |
           echo \
@@ -132,9 +131,8 @@ jobs:
       - name: clean codal-stm32-PNUCLEO_WB55RG
         run: |
           cd codal
-          rm -Rf samples source codal.json 
-      
-      
+          rm -Rf samples source codal.json
+
       - name: create codal.json for codal-stm32-STEAM32_WB55RG
         run: |
           echo \
@@ -159,4 +157,4 @@ jobs:
       - name: clean codal-stm32-STEAM32_WB55RG
         run: |
           cd codal
-          rm -Rf samples source codal.json 
+          rm -Rf samples source codal.json
