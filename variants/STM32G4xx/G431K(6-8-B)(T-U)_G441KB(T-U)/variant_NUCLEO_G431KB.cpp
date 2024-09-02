@@ -37,7 +37,10 @@ const PinName digitalPin[] = {
   PA_5,  // D18/A4 - SB3 ON also connected to PB7
   PA_6,  // D19/A5 - SB2 ON also connected to PA15
   PA_7,  // D20/A6
-  PA_2   // D21/A7 - SB1 ON VCP TX
+  PA_2,  // D21/A7 - SB1 ON VCP TX
+  PB_3,  // D22 - D13 if SB7 OFF SB6 ON
+  PA_13, // D23 - SWDIO
+  PA_15  // D24 - SWCLK
 };
 
 // Analog (Ax) pin number array
@@ -49,7 +52,8 @@ const uint32_t analogInputPin[] = {
   18, // A4
   19, // A5
   20, // A6
-  21  // A7
+  21, // A7
+  3   // A8
 };
 
 // ----------------------------------------------------------------------------
@@ -66,13 +70,15 @@ WEAK void SystemClock_Config(void)
   /* HSE is available but SB9 and SB10 OFF so not usable per default */
   RCC_OscInitTypeDef RCC_OscInitStruct = {};
   RCC_ClkInitTypeDef RCC_ClkInitStruct = {};
+  RCC_PeriphCLKInitTypeDef PeriphClkInit = {};
 
   /* Configure the main internal regulator output voltage */
   HAL_PWREx_ControlVoltageScaling(PWR_REGULATOR_VOLTAGE_SCALE1_BOOST);
   /* Initializes the CPU, AHB and APB busses clocks */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI | RCC_OSCILLATORTYPE_HSI48;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.HSI48State = RCC_HSI48_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSI;
   RCC_OscInitStruct.PLL.PLLM = RCC_PLLM_DIV4;
@@ -92,6 +98,13 @@ WEAK void SystemClock_Config(void)
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 
   if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_8) != HAL_OK) {
+    Error_Handler();
+  }
+  /* Initializes the peripherals clocks */
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_LPUART1 | RCC_PERIPHCLK_USB;
+  PeriphClkInit.Lpuart1ClockSelection = RCC_LPUART1CLKSOURCE_HSI;
+  PeriphClkInit.UsbClockSelection = RCC_USBCLKSOURCE_HSI48;
+  if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK) {
     Error_Handler();
   }
 }
