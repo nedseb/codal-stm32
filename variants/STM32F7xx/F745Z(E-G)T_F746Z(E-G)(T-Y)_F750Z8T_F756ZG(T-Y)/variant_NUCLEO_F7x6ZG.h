@@ -223,13 +223,20 @@
 // Value of the External oscillator in Hz
 #define HSE_VALUE               8000000U
 
-/* Extra HAL modules */
+// SDMMC signals not available
+#define SDMMC_CKIN_NA
+#define SDMMC_CDIR_NA
+#define SDMMC_D0DIR_NA
+#define SDMMC_D123DIR_NA
+
 // Extra HAL modules
 #if !defined(HAL_DAC_MODULE_DISABLED)
   #define HAL_DAC_MODULE_ENABLED
 #endif
 #if !defined(HAL_ETH_MODULE_DISABLED)
-  #define HAL_ETH_MODULE_ENABLED
+  /* for compatibility until STMEthernet library is updated */
+  /* #define HAL_ETH_MODULE_ENABLED */
+  #define HAL_ETH_LEGACY_MODULE_ENABLED
 #endif
 #if !defined(HAL_QSPI_MODULE_DISABLED)
   #define HAL_QSPI_MODULE_ENABLED
