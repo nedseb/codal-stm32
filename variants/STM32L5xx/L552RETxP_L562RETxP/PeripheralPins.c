@@ -1,6 +1,6 @@
 /*
  *******************************************************************************
- * Copyright (c) 2020-2021, STMicroelectronics
+ * Copyright (c) 2020, STMicroelectronics
  * All rights reserved.
  *
  * This software component is licensed by ST under BSD 3-Clause license,
@@ -12,7 +12,7 @@
  */
 /*
  * Automatically generated from STM32L552RETxP.xml, STM32L562RETxP.xml
- * CubeMX DB release 6.0.21
+ * CubeMX DB release 6.0.110
  */
 #if !defined(CUSTOM_PERIPHERAL_PINS)
 #include "Arduino.h"
@@ -106,6 +106,8 @@ WEAK const PinMap PinMap_I2C_SCL[] = {
   {NC,         NP,   0}
 };
 #endif
+
+//*** No I3C ***
 
 //*** TIM ***
 
@@ -344,6 +346,35 @@ WEAK const PinMap PinMap_OCTOSPI_DATA2[] = {
 #ifdef HAL_OSPI_MODULE_ENABLED
 WEAK const PinMap PinMap_OCTOSPI_DATA3[] = {
   {PA_6, OCTOSPI1, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF10_OCTOSPI1)}, // OCTOSPI1_IO3
+  {NC,   NP,       0}
+};
+#endif
+
+#ifdef HAL_OSPI_MODULE_ENABLED
+WEAK const PinMap PinMap_OCTOSPI_DATA4[] = {
+  {PC_1, OCTOSPI1, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF10_OCTOSPI1)}, // OCTOSPI1_IO4
+  {NC,   NP,       0}
+};
+#endif
+
+#ifdef HAL_OSPI_MODULE_ENABLED
+WEAK const PinMap PinMap_OCTOSPI_DATA5[] = {
+  {PC_2, OCTOSPI1, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF10_OCTOSPI1)}, // OCTOSPI1_IO5
+  {NC,   NP,       0}
+};
+#endif
+
+#ifdef HAL_OSPI_MODULE_ENABLED
+WEAK const PinMap PinMap_OCTOSPI_DATA6[] = {
+  {PC_3, OCTOSPI1, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF10_OCTOSPI1)}, // OCTOSPI1_IO6
+  {NC,   NP,       0}
+};
+#endif
+
+#ifdef HAL_OSPI_MODULE_ENABLED
+WEAK const PinMap PinMap_OCTOSPI_DATA7[] = {
+  {PC_0, OCTOSPI1, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF3_OCTOSPI1)}, // OCTOSPI1_IO7
+  {PC_4, OCTOSPI1, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF10_OCTOSPI1)}, // OCTOSPI1_IO7
   {NC,   NP,       0}
 };
 #endif
