@@ -1,6 +1,6 @@
 /*
  *******************************************************************************
- * Copyright (c) 2020-2021, STMicroelectronics
+ * Copyright (c) 2020, STMicroelectronics
  * All rights reserved.
  *
  * This software component is licensed by ST under BSD 3-Clause license,
@@ -25,27 +25,40 @@
 #define PA7                     7
 #define PA8                     8
 #define PA9                     9
-#define PA10                    PIN_A0
-#define PA11                    PIN_A1
-#define PA12                    PIN_A2
-#define PA13                    PIN_A3
-#define PA14                    PIN_A4
-#define PA15                    PIN_A5
-#define PB0                     16
-#define PB3                     PIN_A6
-#define PB4                     PIN_A7
-#define PC14                    19
-#define PC15                    20
-#define PH3                     21
+#define PA10                    PIN_A3
+#define PA11                    PIN_A7
+#define PA12                    PIN_A8
+#define PA13                    PIN_A5
+#define PA14                    PIN_A6
+#define PA15                    PIN_A4
+#define PB2                     PIN_A2
+#define PB3                     PIN_A0
+#define PB4                     PIN_A1
+#define PB5                     19
+#define PB6                     20
+#define PB7                     21
+#define PB8                     22
+#define PB12                    23
+#define PC13                    24
+#define PH3                     25
+
+// Not available
+// PB0
+// PC14
+// PC15
 
 // Alternate pins number
 #define PA1_ALT1                (PA1 | ALT1)
 #define PA2_ALT1                (PA2 | ALT1)
 #define PA3_ALT1                (PA3 | ALT1)
+#define PA4_ALT1                (PA4 | ALT1)
+#define PA5_ALT1                (PA5 | ALT1)
+#define PA6_ALT1                (PA6 | ALT1)
 #define PA7_ALT1                (PA7 | ALT1)
+#define PB8_ALT1                (PB8 | ALT1)
 
-#define NUM_DIGITAL_PINS        22
-#define NUM_ANALOG_INPUTS       8
+#define NUM_DIGITAL_PINS        26
+#define NUM_ANALOG_INPUTS       9
 
 // On-board LED pin number
 #ifndef LED_BUILTIN
@@ -62,7 +75,7 @@
   #define PIN_SPI_SS            PA4
 #endif
 #ifndef PIN_SPI_SS1
-  #define PIN_SPI_SS1           PA15
+  #define PIN_SPI_SS1           PB2
 #endif
 #ifndef PIN_SPI_SS2
   #define PIN_SPI_SS2           PNUM_NOT_DEFINED
@@ -73,19 +86,19 @@
 #ifndef PIN_SPI_MOSI
   #define PIN_SPI_MOSI          PA7
 #endif
-#ifndef PIN_SPI_MISO
+#ifndef PIN_SPI_MISOSPI1_SCK
   #define PIN_SPI_MISO          PA6
 #endif
 #ifndef PIN_SPI_SCK
-  #define PIN_SPI_SCK           PA1
+  #define PIN_SPI_SCK           PA5
 #endif
 
 // I2C definitions
 #ifndef PIN_WIRE_SDA
-  #define PIN_WIRE_SDA          PA10
+  #define PIN_WIRE_SDA          PA11
 #endif
 #ifndef PIN_WIRE_SCL
-  #define PIN_WIRE_SCL          PA9
+  #define PIN_WIRE_SCL          PA12
 #endif
 
 // Timer Definitions
@@ -111,10 +124,41 @@
   #define PIN_SERIAL_TX         PA2
 #endif
 
+// Alias
+#ifndef DEBUG_SUBGHZSPI_MOSI
+  #define DEBUG_SUBGHZSPI_MOSI  PA7_ALT1
+#endif
+#ifndef DEBUG_SUBGHZSPI_MISO
+  #define DEBUG_SUBGHZSPI_MISO  PA6_ALT1
+#endif
+#ifndef DEBUG_SUBGHZSPI_SCLK
+  #define DEBUG_SUBGHZSPI_SCLK  PA5_ALT1
+#endif
+#ifndef DEBUG_SUBGHZSPI_SS
+  #define DEBUG_SUBGHZSPI_SS    PA4_ALT1
+#endif
+
 // Extra HAL modules
 #if !defined(HAL_DAC_MODULE_DISABLED)
   #define HAL_DAC_MODULE_ENABLED
 #endif
+
+// LoRaWAN definitions
+
+#if defined(ARDUINO_RAK3172T_MODULE)
+  #define LORAWAN_BOARD_HAS_TCXO        1U
+#else
+  #define LORAWAN_BOARD_HAS_TCXO        0U
+#endif
+#define LORAWAN_BOARD_HAS_DCDC          1U
+#define LORAWAN_TX_CONFIG               RBI_CONF_RFO_HP
+
+#define LORAWAN_RFSWITCH_PINS           PB8, PC13
+#define LORAWAN_RFSWITCH_PIN_COUNT      2
+#define LORAWAN_RFSWITCH_OFF_VALUES     LOW, LOW
+#define LORAWAN_RFSWITCH_RX_VALUES      HIGH, LOW
+#define LORAWAN_RFSWITCH_RFO_LP_VALUES  LOW, HIGH
+#define LORAWAN_RFSWITCH_RFO_HP_VALUES  LOW, HIGH
 
 /*----------------------------------------------------------------------------
  *        Arduino objects - C++ only
