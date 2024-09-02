@@ -1,6 +1,6 @@
 /*
  *******************************************************************************
- * Copyright (c) 2020-2021, STMicroelectronics
+ * Copyright (c) 2020, STMicroelectronics
  * All rights reserved.
  *
  * This software component is licensed by ST under BSD 3-Clause license,
@@ -248,6 +248,12 @@
 #ifndef PIN_SERIAL_TX
   #define PIN_SERIAL_TX         PA0
 #endif
+
+// SDMMC signals not available
+#define SDMMC_CKIN_NA
+#define SDMMC_CDIR_NA
+#define SDMMC_D0DIR_NA
+#define SDMMC_D123DIR_NA
 
 // Extra HAL modules
 #if !defined(HAL_DAC_MODULE_DISABLED)
