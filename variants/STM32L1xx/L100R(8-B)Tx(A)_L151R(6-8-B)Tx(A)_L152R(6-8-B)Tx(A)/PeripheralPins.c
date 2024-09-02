@@ -1,6 +1,6 @@
 /*
  *******************************************************************************
- * Copyright (c) 2020-2021, STMicroelectronics
+ * Copyright (c) 2020, STMicroelectronics
  * All rights reserved.
  *
  * This software component is licensed by ST under BSD 3-Clause license,
@@ -14,7 +14,7 @@
  * Automatically generated from STM32L100R(8-B)Tx.xml, STM32L100R(8-B)TxA.xml
  * STM32L151R(6-8-B)Tx.xml, STM32L151R(6-8-B)TxA.xml
  * STM32L152R(6-8-B)Tx.xml, STM32L152R(6-8-B)TxA.xml
- * CubeMX DB release 6.0.21
+ * CubeMX DB release 6.0.110
  */
 #if !defined(CUSTOM_PERIPHERAL_PINS)
 #include "Arduino.h"
@@ -88,6 +88,8 @@ WEAK const PinMap PinMap_I2C_SCL[] = {
   {NC,    NP,   0}
 };
 #endif
+
+//*** No I3C ***
 
 //*** TIM ***
 
@@ -222,8 +224,8 @@ WEAK const PinMap PinMap_SPI_SSEL[] = {
 
 #if defined(HAL_PCD_MODULE_ENABLED) || defined(HAL_HCD_MODULE_ENABLED)
 WEAK const PinMap PinMap_USB[] = {
-  {PA_11, USB, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_NOPULL, GPIO_AF10_USB)}, // USB_DM
-  {PA_12, USB, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_NOPULL, GPIO_AF10_USB)}, // USB_DP
+  {PA_11, USB, STM_PIN_DATA(STM_MODE_INPUT, GPIO_NOPULL, GPIO_AF_NONE)}, // USB_DM
+  {PA_12, USB, STM_PIN_DATA(STM_MODE_INPUT, GPIO_NOPULL, GPIO_AF_NONE)}, // USB_DP
   {NC,    NP,  0}
 };
 #endif
