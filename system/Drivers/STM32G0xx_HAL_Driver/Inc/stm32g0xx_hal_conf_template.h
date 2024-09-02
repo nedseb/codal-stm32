@@ -8,13 +8,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2018 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2018 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -127,7 +126,7 @@ extern "C" {
   #define HSI48_VALUE   48000000U             /*!< Value of the Internal High Speed oscillator for USB FS/SDMMC/RNG in Hz.
                                                The real value my vary depending on manufacturing process variations.*/
 #endif /* HSI48_VALUE */
-#endif
+#endif /* STM32G0C1xx || STM32G0B1xx || STM32G0B0xx */
 
 /**
   * @brief Internal Low Speed oscillator (LSI) value.
@@ -167,7 +166,7 @@ in voltage and temperature.*/
 #if !defined  (EXTERNAL_I2S2_CLOCK_VALUE)
   #define EXTERNAL_I2S2_CLOCK_VALUE    48000U /*!< Value of the I2S2 External clock source in Hz*/
 #endif /* EXTERNAL_I2S2_CLOCK_VALUE */
-#endif
+#endif /* STM32G0C1xx || STM32G0B1xx || STM32G0B0xx */
 
 /* Tip: To avoid modifying this file each time you need to use different HSE,
    ===  you can define the HSE value in your toolchain compiler preprocessor. */
@@ -353,4 +352,3 @@ void assert_failed(uint8_t *file, uint32_t line);
 #endif /* STM32G0xx_HAL_CONF_H */
 
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

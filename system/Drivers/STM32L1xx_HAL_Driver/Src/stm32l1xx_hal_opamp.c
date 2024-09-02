@@ -5,14 +5,22 @@
   * @brief   OPAMP HAL module driver.
   *          This file provides firmware functions to manage the following
   *          functionalities of the operational amplifier(s) peripheral:
-  *           + OPAMP configuration
-  *           + OPAMP calibration
-  *          Thanks to
   *           + Initialization and de-initialization functions
   *           + IO operation functions
   *           + Peripheral Control functions
   *           + Peripheral State functions
   *
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2017 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
   @verbatim
 ================================================================================
           ##### OPAMP Peripheral Features #####
@@ -98,15 +106,15 @@
       (++) The compilation define  USE_HAL_OPAMP_REGISTER_CALLBACKS when set to 1
            allows the user to configure dynamically the driver callbacks.
 
-      (++) Use Functions @ref HAL_OPAMP_RegisterCallback() to register a user callback,
+      (++) Use Functions HAL_OPAMP_RegisterCallback() to register a user callback,
            it allows to register following callbacks:
       (+++) MspInitCallback         : OPAMP MspInit.
       (+++) MspDeInitCallback       : OPAMP MspFeInit.
            This function takes as parameters the HAL peripheral handle, the Callback ID
            and a pointer to the user callback function.
 
-      (++) Use function @ref HAL_OPAMP_UnRegisterCallback() to reset a callback to the default
-           weak (surcharged) function. It allows to reset following callbacks:
+      (++) Use function HAL_OPAMP_UnRegisterCallback() to reset a callback to the default
+           weak (overridden) function. It allows to reset following callbacks:
       (+++) MspInitCallback         : OPAMP MspInit.
       (+++) MspDeInitCallback       : OPAMP MspdeInit.
       (+++) All Callbacks
@@ -145,21 +153,10 @@
 
   @endverbatim
   ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
-  *
-  ******************************************************************************
   */
 
 /*
-  Additionnal remark:
+  Additional remark:
     The OPAMPs inverting input can be selected among the list shown by table below.
     The OPAMPs non inverting input can be selected among the list shown by table below.
 
@@ -273,16 +270,15 @@ HAL_StatusTypeDef HAL_OPAMP_Init(OPAMP_HandleTypeDef* hopamp)
     assert_param(IS_OPAMP_NONINVERTING_INPUT_CHECK_INSTANCE(hopamp, hopamp->Init.NonInvertingInput));
     assert_param(IS_OPAMP_TRIMMING(hopamp->Init.UserTrimming));
 
+#if (USE_HAL_OPAMP_REGISTER_CALLBACKS == 1)
     if(hopamp->State == HAL_OPAMP_STATE_RESET)
     {
-#if (USE_HAL_OPAMP_REGISTER_CALLBACKS == 1)
-    if(hopamp->MspInitCallback == NULL)
-    {
-      hopamp->MspInitCallback               = HAL_OPAMP_MspInit;
+      if(hopamp->MspInitCallback == NULL)
+      {
+        hopamp->MspInitCallback               = HAL_OPAMP_MspInit;
+      }
     }
 #endif /* USE_HAL_OPAMP_REGISTER_CALLBACKS */
-    }
-
 
     if (hopamp->Init.Mode != OPAMP_FOLLOWER_MODE)
     {
@@ -710,7 +706,7 @@ HAL_StatusTypeDef HAL_OPAMP_Stop(OPAMP_HandleTypeDef* hopamp)
 /**
   * @brief  Run the self calibration of one OPAMP.
   * @note   Trimming values (PMOS & NMOS) are updated and user trimming is
-  *         enabled if calibration is succesful.
+  *         enabled if calibration is successful.
   * @note   Calibration is performed in the mode specified in OPAMP init
   *         structure (mode normal or low-power). To perform calibration for
   *         both modes, repeat this function twice after OPAMP init structure
@@ -908,6 +904,17 @@ HAL_StatusTypeDef HAL_OPAMP_SelfCalibrate(OPAMP_HandleTypeDef* hopamp)
       /* Set user trimming mode */
       hopamp->Init.UserTrimming = OPAMP_TRIMMING_USER;
 
+      /* Check on unsupported value */
+      if(opamp_trimmingvaluep == 0x1FU)  /* 0x1F is not functional */
+      {
+        opamp_trimmingvaluep = 30U;
+      }
+
+      if(opamp_trimmingvaluen == 0x1FU)  /* 0x1F is not functional */
+      {
+        opamp_trimmingvaluen = 30U;
+      }
+
       /* Affect calibration parameters depending on mode normal/low power */
       if (hopamp->Init.PowerMode != OPAMP_POWERMODE_LOWPOWER)
       {
@@ -937,6 +944,7 @@ HAL_StatusTypeDef HAL_OPAMP_SelfCalibrate(OPAMP_HandleTypeDef* hopamp)
   }
 
   return status;
+
 }
 
 /**
@@ -1002,11 +1010,11 @@ HAL_StatusTypeDef HAL_OPAMP_Lock(OPAMP_HandleTypeDef* hopamp)
   * @brief  Return the OPAMP factory trimming value
   *         Caution: On STM32L1 OPAMP, user can retrieve factory trimming if
   *                  OPAMP has never been set to user trimming before.
-  *                  Therefore, this fonction must be called when OPAMP init
+  *                  Therefore, this function must be called when OPAMP init
   *                  parameter "UserTrimming" is set to trimming factory,
   *                  and before OPAMP  calibration (function
   *                  "HAL_OPAMP_SelfCalibrate()").
-  *                  Otherwise, factory triming value cannot be retrieved and
+  *                  Otherwise, factory trimming value cannot be retrieved and
   *                  error status is returned.
   * @param  hopamp  OPAMP handle
   * @param  trimmingoffset  Trimming offset (P or N)
@@ -1043,10 +1051,10 @@ HAL_OPAMP_TrimmingValueTypeDef HAL_OPAMP_GetTrimOffset (OPAMP_HandleTypeDef *hop
     /* Check the trimming mode */
     if (hopamp->Init.UserTrimming == OPAMP_TRIMMING_USER)
     {
-      /* This fonction must called when OPAMP init parameter "UserTrimming"   */
+      /* This function must called when OPAMP init parameter "UserTrimming"   */
       /* is set to trimming factory, and before OPAMP calibration (function   */
       /* "HAL_OPAMP_SelfCalibrate()").                                        */
-      /* Otherwise, factory triming value cannot be retrieved and error       */
+      /* Otherwise, factory trimming value cannot be retrieved and error       */
       /* status is returned.                                                  */
       trimmingvalue = OPAMP_FACTORYTRIMMING_DUMMY;
     }
@@ -1114,7 +1122,7 @@ HAL_OPAMP_StateTypeDef HAL_OPAMP_GetState(OPAMP_HandleTypeDef* hopamp)
 #if (USE_HAL_OPAMP_REGISTER_CALLBACKS == 1)
 /**
   * @brief  Register a User OPAMP Callback
-  *         To be used instead of the weak (surcharged) predefined callback
+  *         To be used instead of the weak (overridden) predefined callback
   * @param hopamp OPAMP handle
   * @param CallbackID ID of the callback to be registered
   *        This parameter can be one of the following values:
@@ -1184,7 +1192,7 @@ HAL_StatusTypeDef HAL_OPAMP_RegisterCallback (OPAMP_HandleTypeDef *hopamp, HAL_O
 
 /**
   * @brief  Unregister a User OPAMP Callback
-  *         OPAMP Callback is redirected to the weak (surcharged) predefined callback
+  *         OPAMP Callback is redirected to the weak (overridden) predefined callback
   * @param hopamp OPAMP handle
   * @param CallbackID ID of the callback to be unregistered
   *        This parameter can be one of the following values:
@@ -1268,4 +1276,3 @@ HAL_StatusTypeDef HAL_OPAMP_UnRegisterCallback (OPAMP_HandleTypeDef *hopamp, HAL
   * @}
   */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -10,6 +10,17 @@
   *           + Peripheral Control functions
   *           + Peripheral State functions
   *
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2016 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
   @verbatim
   ==============================================================================
                         ##### FMC peripheral features #####
@@ -40,17 +51,6 @@
 
   @endverbatim
   ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                       opensource.org/licenses/BSD-3-Clause
-  *
-  ******************************************************************************
   */
 
 /* Includes ------------------------------------------------------------------*/
@@ -59,7 +59,8 @@
 /** @addtogroup STM32F3xx_HAL_Driver
   * @{
   */
-#if (((defined HAL_NOR_MODULE_ENABLED || defined HAL_SRAM_MODULE_ENABLED)) || defined HAL_NAND_MODULE_ENABLED || defined HAL_PCCARD_MODULE_ENABLED )
+#if defined(HAL_NOR_MODULE_ENABLED) || defined(HAL_NAND_MODULE_ENABLED) || defined(HAL_PCCARD_MODULE_ENABLED) \
+ || defined(HAL_SRAM_MODULE_ENABLED)
 
 /** @defgroup FMC_LL  FMC Low Layer
   * @brief FMC driver modules
@@ -75,7 +76,7 @@
 
 /* ----------------------- FMC registers bit mask --------------------------- */
 
-#if defined FMC_BANK1
+#if defined(FMC_BANK1)
 /* --- BCR Register ---*/
 /* BCR register clear mask */
 
@@ -88,14 +89,8 @@
 
 /* --- BWTR Register ---*/
 /* BWTR register clear mask */
-#if defined(FMC_BWTRx_BUSTURN)
-#define BWTR_CLEAR_MASK   ((uint32_t)(FMC_BWTRx_ADDSET | FMC_BWTRx_ADDHLD  |\
-                                      FMC_BWTRx_DATAST | FMC_BWTRx_BUSTURN |\
-                                      FMC_BWTRx_ACCMOD))
-#else
 #define BWTR_CLEAR_MASK   ((uint32_t)(FMC_BWTRx_ADDSET | FMC_BWTRx_ADDHLD  |\
                                       FMC_BWTRx_DATAST | FMC_BWTRx_ACCMOD))
-#endif /* FMC_BWTRx_BUSTURN */
 #endif /* FMC_BANK1 */
 #if defined(FMC_BANK3)
 
@@ -153,7 +148,7 @@
   * @{
   */
 
-#if defined FMC_BANK1
+#if defined(FMC_BANK1)
 
 /** @defgroup FMC_LL_Exported_Functions_NORSRAM FMC Low Layer NOR SRAM Exported Functions
   * @brief  NORSRAM Controller functions
@@ -345,13 +340,14 @@ HAL_StatusTypeDef FMC_NORSRAM_Timing_Init(FMC_NORSRAM_TypeDef *Device,
   assert_param(IS_FMC_NORSRAM_BANK(Bank));
 
   /* Set FMC_NORSRAM device timing parameters */
-  MODIFY_REG(Device->BTCR[Bank + 1U], BTR_CLEAR_MASK, (Timing->AddressSetupTime                                  |
-                                                       ((Timing->AddressHoldTime)        << FMC_BTRx_ADDHLD_Pos)  |
-                                                       ((Timing->DataSetupTime)          << FMC_BTRx_DATAST_Pos)  |
-                                                       ((Timing->BusTurnAroundDuration)  << FMC_BTRx_BUSTURN_Pos) |
-                                                       (((Timing->CLKDivision) - 1U)     << FMC_BTRx_CLKDIV_Pos)  |
-                                                       (((Timing->DataLatency) - 2U)     << FMC_BTRx_DATLAT_Pos)  |
-                                                       (Timing->AccessMode)));
+  Device->BTCR[Bank + 1U] =
+    (Timing->AddressSetupTime << FMC_BTRx_ADDSET_Pos) |
+    (Timing->AddressHoldTime << FMC_BTRx_ADDHLD_Pos) |
+    (Timing->DataSetupTime << FMC_BTRx_DATAST_Pos) |
+    (Timing->BusTurnAroundDuration << FMC_BTRx_BUSTURN_Pos) |
+    ((Timing->CLKDivision - 1U) << FMC_BTRx_CLKDIV_Pos) |
+    ((Timing->DataLatency - 2U) << FMC_BTRx_DATLAT_Pos) |
+    Timing->AccessMode;
 
   /* Configure Clock division value (in NORSRAM bank 1) when continuous clock is enabled */
   if (HAL_IS_BIT_SET(Device->BTCR[FMC_NORSRAM_BANK1], FMC_BCR1_CCLKEN))
@@ -377,7 +373,8 @@ HAL_StatusTypeDef FMC_NORSRAM_Timing_Init(FMC_NORSRAM_TypeDef *Device,
   * @retval HAL status
   */
 HAL_StatusTypeDef FMC_NORSRAM_Extended_Timing_Init(FMC_NORSRAM_EXTENDED_TypeDef *Device,
-                                                   FMC_NORSRAM_TimingTypeDef *Timing, uint32_t Bank, uint32_t ExtendedMode)
+                                                   FMC_NORSRAM_TimingTypeDef *Timing, uint32_t Bank,
+                                                   uint32_t ExtendedMode)
 {
   /* Check the parameters */
   assert_param(IS_FMC_EXTENDED_MODE(ExtendedMode));
@@ -390,9 +387,6 @@ HAL_StatusTypeDef FMC_NORSRAM_Extended_Timing_Init(FMC_NORSRAM_EXTENDED_TypeDef 
     assert_param(IS_FMC_ADDRESS_SETUP_TIME(Timing->AddressSetupTime));
     assert_param(IS_FMC_ADDRESS_HOLD_TIME(Timing->AddressHoldTime));
     assert_param(IS_FMC_DATASETUP_TIME(Timing->DataSetupTime));
-#if defined(FMC_BWTRx_BUSTURN)
-    assert_param(IS_FMC_TURNAROUND_TIME(Timing->BusTurnAroundDuration));
-#endif /* FMC_BWTRx_BUSTURN */
     assert_param(IS_FMC_ACCESS_MODE(Timing->AccessMode));
     assert_param(IS_FMC_NORSRAM_BANK(Bank));
 
@@ -400,12 +394,7 @@ HAL_StatusTypeDef FMC_NORSRAM_Extended_Timing_Init(FMC_NORSRAM_EXTENDED_TypeDef 
     MODIFY_REG(Device->BWTR[Bank], BWTR_CLEAR_MASK, (Timing->AddressSetupTime                                    |
                                                      ((Timing->AddressHoldTime)        << FMC_BWTRx_ADDHLD_Pos)  |
                                                      ((Timing->DataSetupTime)          << FMC_BWTRx_DATAST_Pos)  |
-#if defined(FMC_BWTRx_BUSTURN)
-                                                     Timing->AccessMode                                          |
-                                                     ((Timing->BusTurnAroundDuration)  << FMC_BWTRx_BUSTURN_Pos)));
-#else
                                                      Timing->AccessMode));
-#endif /* FMC_BWTRx_BUSTURN */
   }
   else
   {
@@ -1014,5 +1003,3 @@ HAL_StatusTypeDef FMC_PCCARD_DeInit(FMC_PCCARD_TypeDef *Device)
 /**
   * @}
   */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

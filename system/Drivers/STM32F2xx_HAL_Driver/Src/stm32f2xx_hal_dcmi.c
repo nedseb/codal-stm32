@@ -10,6 +10,17 @@
   *           + Peripheral Control functions
   *           + Peripheral State and Error functions
   *
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2016 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
   @verbatim
   ==============================================================================
                         ##### How to use this driver #####
@@ -26,7 +37,7 @@
         Synchronization Mode, code of the frame delimiter and data width
         using HAL_DCMI_Init() function.
 
-    (#) Configure the DMA2_Stream1 channel1 to transfer Data from DCMI DR
+    (#) Configure the selected DMA stream to transfer Data from DCMI DR
         register to the destination memory buffer.
 
     (#) Program the required configuration through following parameters:
@@ -35,7 +46,7 @@
 
     (#) Optionally, configure and Enable the CROP feature to select a rectangular
         window from the received image using HAL_DCMI_ConfigCrop()
-        and HAL_DCMI_EnableCROP() functions
+        and HAL_DCMI_EnableCrop() functions
 
     (#) The capture can be stopped using HAL_DCMI_Stop() function.
 
@@ -62,37 +73,37 @@
 
     The compilation define USE_HAL_DCMI_REGISTER_CALLBACKS when set to 1
     allows the user to configure dynamically the driver callbacks.
-    Use functions @ref HAL_DCMI_RegisterCallback() to register a user callback.
+    Use functions HAL_DCMI_RegisterCallback() to register a user callback.
 
-    Function @ref HAL_DCMI_RegisterCallback() allows to register following callbacks:
-      (+) FrameEventCallback : DCMI Frame Event.
-      (+) VsyncEventCallback : DCMI Vsync Event.
-      (+) LineEventCallback  : DCMI Line Event.
-      (+) ErrorCallback      : DCMI error.
-      (+) MspInitCallback    : DCMI MspInit.
-      (+) MspDeInitCallback  : DCMI MspDeInit.
-    This function takes as parameters the HAL peripheral handle, the callback ID
+    Function HAL_DCMI_RegisterCallback() allows to register following callbacks:
+      (+) FrameEventCallback : callback for DCMI Frame Event.
+      (+) VsyncEventCallback : callback for DCMI Vsync Event.
+      (+) LineEventCallback  : callback for DCMI Line Event.
+      (+) ErrorCallback      : callback for DCMI error detection.
+      (+) MspInitCallback    : callback for DCMI MspInit.
+      (+) MspDeInitCallback  : callback for DCMI MspDeInit.
+    This function takes as parameters the HAL peripheral handle, the Callback ID
     and a pointer to the user callback function.
 
-    Use function @ref HAL_DCMI_UnRegisterCallback() to reset a callback to the default
-    weak (surcharged) function.
-    @ref HAL_DCMI_UnRegisterCallback() takes as parameters the HAL peripheral handle,
+    Use function HAL_DCMI_UnRegisterCallback() to reset a callback to the default
+    weak (overridden) function.
+    HAL_DCMI_UnRegisterCallback() takes as parameters the HAL peripheral handle,
     and the callback ID.
     This function allows to reset following callbacks:
-      (+) FrameEventCallback : DCMI Frame Event.
-      (+) VsyncEventCallback : DCMI Vsync Event.
-      (+) LineEventCallback  : DCMI Line Event.
-      (+) ErrorCallback      : DCMI error.
-      (+) MspInitCallback    : DCMI MspInit.
-      (+) MspDeInitCallback  : DCMI MspDeInit.
+      (+) FrameEventCallback : callback for DCMI Frame Event.
+      (+) VsyncEventCallback : callback for DCMI Vsync Event.
+      (+) LineEventCallback  : callback for DCMI Line Event.
+      (+) ErrorCallback      : callback for DCMI error.
+      (+) MspInitCallback    : callback for DCMI MspInit.
+      (+) MspDeInitCallback  : callback for DCMI MspDeInit.
 
-    By default, after the @ref HAL_DCMI_Init and if the state is HAL_DCMI_STATE_RESET
-    all callbacks are reset to the corresponding legacy weak (surcharged) functions:
-    examples @ref FrameEventCallback(), @ref HAL_DCMI_ErrorCallback().
+    By default, after the HAL_DCMI_Init and if the state is HAL_DCMI_STATE_RESET
+    all callbacks are reset to the corresponding legacy weak (overridden) functions:
+    examples FrameEventCallback(), HAL_DCMI_ErrorCallback().
     Exception done for MspInit and MspDeInit callbacks that are respectively
-    reset to the legacy weak (surcharged) functions in the @ref HAL_DCMI_Init
-    and @ref  HAL_DCMI_DeInit only when these callbacks are null (not registered beforehand).
-    If not, MspInit or MspDeInit are not null, the @ref HAL_DCMI_Init and @ref HAL_DCMI_DeInit
+    reset to the legacy weak (overridden) functions in the HAL_DCMI_Init
+    and HAL_DCMI_DeInit only when these callbacks are null (not registered beforehand).
+    If not, MspInit or MspDeInit are not null, the HAL_DCMI_Init and HAL_DCMI_DeInit
     keep and use the user MspInit/MspDeInit callbacks (registered beforehand).
 
     Callbacks can be registered/unregistered in READY state only.
@@ -100,30 +111,21 @@
     in READY or RESET state, thus registered (user) MspInit/DeInit callbacks can be used
     during the Init/DeInit.
     In that case first register the MspInit/MspDeInit user callbacks
-    using @ref HAL_DCMI_RegisterCallback before calling @ref HAL_DCMI_DeInit
-    or @ref HAL_DCMI_Init function.
+    using HAL_DCMI_RegisterCallback before calling HAL_DCMI_DeInit
+    or HAL_DCMI_Init function.
 
     When the compilation define USE_HAL_DCMI_REGISTER_CALLBACKS is set to 0 or
     not defined, the callback registering feature is not available
-    and weak (surcharged) callbacks are used.
+    and weak (overridden) callbacks are used.
 
   @endverbatim
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
-  *
   ******************************************************************************
   */
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f2xx_hal.h"
+#ifdef HAL_DCMI_MODULE_ENABLED
+#if defined (DCMI)
 
 /** @addtogroup STM32F2xx_HAL_Driver
   * @{
@@ -133,19 +135,35 @@
   * @{
   */
 
-#ifdef HAL_DCMI_MODULE_ENABLED
-#if defined (DCMI)
-
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-#define HAL_TIMEOUT_DCMI_STOP    ((uint32_t)1000) /* Set timeout to 1s  */
+/** @defgroup DCMI_Private_Constants DCMI Private Constants
+  * @{
+  */
 
+/** @defgroup DCMI_Stop_TimeOut DCMI Stop Time Out
+  * @{
+  */
+#define HAL_TIMEOUT_DCMI_STOP    ((uint32_t)1000) /* Set timeout to 1s  */
+/**
+  * @}
+  */
+
+/**
+  * @}
+  */
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
+/** @addtogroup DCMI_Private_Functions DCMI Private Functions
+  * @{
+  */
 static void       DCMI_DMAXferCplt(DMA_HandleTypeDef *hdma);
 static void       DCMI_DMAError(DMA_HandleTypeDef *hdma);
 
+/**
+  * @}
+  */
 /* Exported functions --------------------------------------------------------*/
 
 /** @defgroup DCMI_Exported_Functions DCMI Exported Functions
@@ -153,8 +171,8 @@ static void       DCMI_DMAError(DMA_HandleTypeDef *hdma);
   */
 
 /** @defgroup DCMI_Exported_Functions_Group1 Initialization and Configuration functions
- *  @brief   Initialization and Configuration functions
- *
+  *  @brief   Initialization and Configuration functions
+  *
 @verbatim
  ===============================================================================
                 ##### Initialization and Configuration functions #####
@@ -196,6 +214,7 @@ HAL_StatusTypeDef HAL_DCMI_Init(DCMI_HandleTypeDef *hdcmi)
   {
     /* Init the DCMI Callback settings */
 #if (USE_HAL_DCMI_REGISTER_CALLBACKS == 1)
+    /* Reset callback pointers to the weak predefined callbacks */
     hdcmi->FrameEventCallback = HAL_DCMI_FrameEventCallback; /* Legacy weak FrameEventCallback  */
     hdcmi->VsyncEventCallback = HAL_DCMI_VsyncEventCallback; /* Legacy weak VsyncEventCallback  */
     hdcmi->LineEventCallback  = HAL_DCMI_LineEventCallback;  /* Legacy weak LineEventCallback   */
@@ -318,8 +337,8 @@ __weak void HAL_DCMI_MspDeInit(DCMI_HandleTypeDef *hdcmi)
   * @}
   */
 /** @defgroup DCMI_Exported_Functions_Group2 IO operation functions
- *  @brief   IO operation functions
- *
+  *  @brief   IO operation functions
+  *
 @verbatim
  ===============================================================================
                       #####  IO operation functions  #####
@@ -345,8 +364,9 @@ __weak void HAL_DCMI_MspDeInit(DCMI_HandleTypeDef *hdcmi)
   */
 HAL_StatusTypeDef HAL_DCMI_Start_DMA(DCMI_HandleTypeDef *hdcmi, uint32_t DCMI_Mode, uint32_t pData, uint32_t Length)
 {
+  uint32_t tmp_length = Length;
   /* Initialize the second memory address */
-  uint32_t SecondMemAddress = 0;
+  uint32_t SecondMemAddress;
 
   /* Check function parameters */
   assert_param(IS_DCMI_CAPTURE_MODE(DCMI_Mode));
@@ -379,11 +399,18 @@ HAL_StatusTypeDef HAL_DCMI_Start_DMA(DCMI_HandleTypeDef *hdcmi, uint32_t DCMI_Mo
   hdcmi->XferSize = 0;
   hdcmi->pBuffPtr = 0;
 
-  if (Length <= 0xFFFFU)
+  if (tmp_length <= 0xFFFFU)
   {
     /* Enable the DMA Stream */
-    if (HAL_DMA_Start_IT(hdcmi->DMA_Handle, (uint32_t)&hdcmi->Instance->DR, (uint32_t)pData, Length) != HAL_OK)
+    if (HAL_DMA_Start_IT(hdcmi->DMA_Handle, (uint32_t)&hdcmi->Instance->DR, (uint32_t)pData, tmp_length) != HAL_OK)
     {
+      /* Set Error Code */
+      hdcmi->ErrorCode = HAL_DCMI_ERROR_DMA;
+      /* Change DCMI state */
+      hdcmi->State = HAL_DCMI_STATE_READY;
+      /* Release Lock */
+      __HAL_UNLOCK(hdcmi);
+      /* Return function status */
       return HAL_ERROR;
     }
   }
@@ -394,7 +421,7 @@ HAL_StatusTypeDef HAL_DCMI_Start_DMA(DCMI_HandleTypeDef *hdcmi, uint32_t DCMI_Mo
 
     /* Initialize transfer parameters */
     hdcmi->XferCount = 1;
-    hdcmi->XferSize = Length;
+    hdcmi->XferSize = tmp_length;
     hdcmi->pBuffPtr = pData;
 
     /* Get the number of buffer */
@@ -409,11 +436,18 @@ HAL_StatusTypeDef HAL_DCMI_Start_DMA(DCMI_HandleTypeDef *hdcmi, uint32_t DCMI_Mo
     hdcmi->XferTransferNumber = hdcmi->XferCount;
 
     /* Update second memory address */
-    SecondMemAddress = (uint32_t)(pData + (4 * hdcmi->XferSize));
+    SecondMemAddress = (uint32_t)(pData + (4U * hdcmi->XferSize));
 
     /* Start DMA multi buffer transfer */
     if (HAL_DMAEx_MultiBufferStart_IT(hdcmi->DMA_Handle, (uint32_t)&hdcmi->Instance->DR, (uint32_t)pData, SecondMemAddress, hdcmi->XferSize) != HAL_OK)
     {
+      /* Set Error Code */
+      hdcmi->ErrorCode = HAL_DCMI_ERROR_DMA;
+      /* Change DCMI state */
+      hdcmi->State = HAL_DCMI_STATE_READY;
+      /* Release Lock */
+      __HAL_UNLOCK(hdcmi);
+      /* Return function status */
       return HAL_ERROR;
     }
   }
@@ -436,7 +470,7 @@ HAL_StatusTypeDef HAL_DCMI_Start_DMA(DCMI_HandleTypeDef *hdcmi, uint32_t DCMI_Mo
   */
 HAL_StatusTypeDef HAL_DCMI_Stop(DCMI_HandleTypeDef *hdcmi)
 {
-  register uint32_t count = HAL_TIMEOUT_DCMI_STOP * (SystemCoreClock / 8U / 1000U);
+  uint32_t count = HAL_TIMEOUT_DCMI_STOP * (SystemCoreClock / 8U / 1000U);
   HAL_StatusTypeDef status = HAL_OK;
 
   /* Process locked */
@@ -451,7 +485,8 @@ HAL_StatusTypeDef HAL_DCMI_Stop(DCMI_HandleTypeDef *hdcmi)
   /* Check if the DCMI capture effectively disabled */
   do
   {
-    if (count-- == 0U)
+    count-- ;
+    if (count == 0U)
     {
       /* Update error code */
       hdcmi->ErrorCode |= HAL_DCMI_ERROR_TIMEOUT;
@@ -459,8 +494,7 @@ HAL_StatusTypeDef HAL_DCMI_Stop(DCMI_HandleTypeDef *hdcmi)
       status = HAL_TIMEOUT;
       break;
     }
-  }
-  while ((hdcmi->Instance->CR & DCMI_CR_CAPTURE) != 0U);
+  } while ((hdcmi->Instance->CR & DCMI_CR_CAPTURE) != 0U);
 
   /* Disable the DCMI */
   __HAL_DCMI_DISABLE(hdcmi);
@@ -489,7 +523,7 @@ HAL_StatusTypeDef HAL_DCMI_Stop(DCMI_HandleTypeDef *hdcmi)
   */
 HAL_StatusTypeDef HAL_DCMI_Suspend(DCMI_HandleTypeDef *hdcmi)
 {
-  register uint32_t count = HAL_TIMEOUT_DCMI_STOP * (SystemCoreClock / 8U / 1000U);
+  uint32_t count = HAL_TIMEOUT_DCMI_STOP * (SystemCoreClock / 8U / 1000U);
   HAL_StatusTypeDef status = HAL_OK;
 
   /* Process locked */
@@ -506,7 +540,8 @@ HAL_StatusTypeDef HAL_DCMI_Suspend(DCMI_HandleTypeDef *hdcmi)
     /* Check if the DCMI capture effectively disabled */
     do
     {
-      if (count-- == 0U)
+      count-- ;
+      if (count == 0U)
       {
         /* Update error code */
         hdcmi->ErrorCode |= HAL_DCMI_ERROR_TIMEOUT;
@@ -517,8 +552,7 @@ HAL_StatusTypeDef HAL_DCMI_Suspend(DCMI_HandleTypeDef *hdcmi)
         status = HAL_TIMEOUT;
         break;
       }
-    }
-    while ((hdcmi->Instance->CR & DCMI_CR_CAPTURE) != 0U);
+    } while ((hdcmi->Instance->CR & DCMI_CR_CAPTURE) != 0U);
   }
   /* Process Unlocked */
   __HAL_UNLOCK(hdcmi);
@@ -543,7 +577,7 @@ HAL_StatusTypeDef HAL_DCMI_Resume(DCMI_HandleTypeDef *hdcmi)
     /* Change DCMI state */
     hdcmi->State = HAL_DCMI_STATE_BUSY;
 
-    /* Disable Capture */
+    /* Enable Capture */
     hdcmi->Instance->CR |= DCMI_CR_CAPTURE;
   }
   /* Process Unlocked */
@@ -579,7 +613,10 @@ void HAL_DCMI_IRQHandler(DCMI_HandleTypeDef *hdcmi)
     hdcmi->DMA_Handle->XferAbortCallback = DCMI_DMAError;
 
     /* Abort the DMA Transfer */
-    (void)HAL_DMA_Abort_IT(hdcmi->DMA_Handle);
+    if (HAL_DMA_Abort_IT(hdcmi->DMA_Handle) != HAL_OK)
+    {
+      DCMI_DMAError(hdcmi->DMA_Handle);
+    }
   }
   /* Overflow interrupt management ********************************************/
   if ((isr_value & DCMI_FLAG_OVRRI) == DCMI_FLAG_OVRRI)
@@ -680,6 +717,8 @@ __weak void HAL_DCMI_ErrorCallback(DCMI_HandleTypeDef *hdcmi)
   */
 __weak void HAL_DCMI_LineEventCallback(DCMI_HandleTypeDef *hdcmi)
 {
+  /* Prevent unused argument(s) compilation warning */
+  UNUSED(hdcmi);
   /* NOTE : This function Should not be modified, when the callback is needed,
             the HAL_DCMI_LineEventCallback could be implemented in the user file
    */
@@ -722,8 +761,8 @@ __weak void HAL_DCMI_FrameEventCallback(DCMI_HandleTypeDef *hdcmi)
   */
 
 /** @defgroup DCMI_Exported_Functions_Group3 Peripheral Control functions
- *  @brief    Peripheral Control functions
- *
+  *  @brief    Peripheral Control functions
+  *
 @verbatim
  ===============================================================================
                     ##### Peripheral Control functions #####
@@ -747,7 +786,8 @@ __weak void HAL_DCMI_FrameEventCallback(DCMI_HandleTypeDef *hdcmi)
   * @param  Y0    DCMI window Y offset
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_DCMI_ConfigCrop(DCMI_HandleTypeDef *hdcmi, uint32_t X0, uint32_t Y0, uint32_t XSize, uint32_t YSize)
+HAL_StatusTypeDef HAL_DCMI_ConfigCrop(DCMI_HandleTypeDef *hdcmi, uint32_t X0, uint32_t Y0, uint32_t XSize,
+                                      uint32_t YSize)
 {
   /* Process Locked */
   __HAL_LOCK(hdcmi);
@@ -834,7 +874,7 @@ HAL_StatusTypeDef HAL_DCMI_EnableCrop(DCMI_HandleTypeDef *hdcmi)
   *                    the embedded synchronization delimiters unmasks.
   * @retval HAL status
   */
-HAL_StatusTypeDef  HAL_DCMI_ConfigSyncUnmask(DCMI_HandleTypeDef *hdcmi, DCMI_SyncUnmaskTypeDef *SyncUnmask)
+HAL_StatusTypeDef  HAL_DCMI_ConfigSyncUnmask(DCMI_HandleTypeDef *hdcmi, const DCMI_SyncUnmaskTypeDef *SyncUnmask)
 {
   /* Process Locked */
   __HAL_LOCK(hdcmi);
@@ -862,8 +902,8 @@ HAL_StatusTypeDef  HAL_DCMI_ConfigSyncUnmask(DCMI_HandleTypeDef *hdcmi, DCMI_Syn
   */
 
 /** @defgroup DCMI_Exported_Functions_Group4 Peripheral State functions
- *  @brief    Peripheral State functions
- *
+  *  @brief    Peripheral State functions
+  *
 @verbatim
  ===============================================================================
                ##### Peripheral State and Errors functions #####
@@ -883,32 +923,40 @@ HAL_StatusTypeDef  HAL_DCMI_ConfigSyncUnmask(DCMI_HandleTypeDef *hdcmi, DCMI_Syn
   *                the configuration information for DCMI.
   * @retval HAL state
   */
-HAL_DCMI_StateTypeDef HAL_DCMI_GetState(DCMI_HandleTypeDef *hdcmi)
+HAL_DCMI_StateTypeDef HAL_DCMI_GetState(const DCMI_HandleTypeDef *hdcmi)
 {
   return hdcmi->State;
 }
 
 /**
-* @brief  Return the DCMI error code
-* @param  hdcmi  pointer to a DCMI_HandleTypeDef structure that contains
+  * @brief  Return the DCMI error code
+  * @param  hdcmi  pointer to a DCMI_HandleTypeDef structure that contains
   *               the configuration information for DCMI.
-* @retval DCMI Error Code
-*/
-uint32_t HAL_DCMI_GetError(DCMI_HandleTypeDef *hdcmi)
+  * @retval DCMI Error Code
+  */
+uint32_t HAL_DCMI_GetError(const DCMI_HandleTypeDef *hdcmi)
 {
   return hdcmi->ErrorCode;
 }
 
 #if (USE_HAL_DCMI_REGISTER_CALLBACKS == 1)
 /**
-  * @brief DCMI Callback registering
-  * @param hdcmi        pointer to a DCMI_HandleTypeDef structure that contains
-  *                     the configuration information for DCMI.
-  * @param CallbackID   dcmi Callback ID
-  * @param pCallback    pointer to DCMI_CallbackTypeDef structure
-  * @retval status
+  * @brief  Register a User DCMI Callback
+  *         To be used instead of the weak predefined callback
+  * @param  hdcmi DCMI handle
+  * @param  CallbackID ID of the callback to be registered
+  *         This parameter can be one of the following values:
+  *          @arg @ref HAL_DCMI_LINE_EVENT_CB_ID Line Event callback ID
+  *          @arg @ref HAL_DCMI_FRAME_EVENT_CB_ID Frame Event callback ID
+  *          @arg @ref HAL_DCMI_VSYNC_EVENT_CB_ID Vsync Event callback ID
+  *          @arg @ref HAL_DCMI_ERROR_CB_ID Error callback ID
+  *          @arg @ref HAL_DCMI_MSPINIT_CB_ID MspInit callback ID
+  *          @arg @ref HAL_DCMI_MSPDEINIT_CB_ID MspDeInit callback ID
+  * @param  pCallback pointer to the Callback function
+  * @retval HAL status
   */
-HAL_StatusTypeDef HAL_DCMI_RegisterCallback(DCMI_HandleTypeDef *hdcmi, HAL_DCMI_CallbackIDTypeDef CallbackID, pDCMI_CallbackTypeDef pCallback)
+HAL_StatusTypeDef HAL_DCMI_RegisterCallback(DCMI_HandleTypeDef *hdcmi, HAL_DCMI_CallbackIDTypeDef CallbackID,
+                                            pDCMI_CallbackTypeDef pCallback)
 {
   HAL_StatusTypeDef status = HAL_OK;
 
@@ -988,10 +1036,18 @@ HAL_StatusTypeDef HAL_DCMI_RegisterCallback(DCMI_HandleTypeDef *hdcmi, HAL_DCMI_
 }
 
 /**
-  * @brief DCMI Callback Unregistering
-  * @param hdcmi       dcmi handle
-  * @param CallbackID  dcmi Callback ID
-  * @retval status
+  * @brief  Unregister a DCMI Callback
+  *         DCMI callback is redirected to the weak predefined callback
+  * @param  hdcmi DCMI handle
+  * @param  CallbackID ID of the callback to be registered
+  *         This parameter can be one of the following values:
+  *          @arg @ref HAL_DCMI_LINE_EVENT_CB_ID Line Event callback ID
+  *          @arg @ref HAL_DCMI_FRAME_EVENT_CB_ID Frame Event callback ID
+  *          @arg @ref HAL_DCMI_VSYNC_EVENT_CB_ID Vsync Event callback ID
+  *          @arg @ref HAL_DCMI_ERROR_CB_ID Error callback ID
+  *          @arg @ref HAL_DCMI_MSPINIT_CB_ID MspInit callback ID
+  *          @arg @ref HAL_DCMI_MSPDEINIT_CB_ID MspDeInit callback ID
+  * @retval HAL status
   */
 HAL_StatusTypeDef HAL_DCMI_UnRegisterCallback(DCMI_HandleTypeDef *hdcmi, HAL_DCMI_CallbackIDTypeDef CallbackID)
 {
@@ -1006,15 +1062,15 @@ HAL_StatusTypeDef HAL_DCMI_UnRegisterCallback(DCMI_HandleTypeDef *hdcmi, HAL_DCM
         break;
 
       case HAL_DCMI_VSYNC_EVENT_CB_ID :
-        hdcmi->VsyncEventCallback = HAL_DCMI_VsyncEventCallback;  /* Legacy weak VsyncEventCallback       */
+        hdcmi->VsyncEventCallback = HAL_DCMI_VsyncEventCallback;  /* Legacy weak VsyncEventCallback   */
         break;
 
       case HAL_DCMI_LINE_EVENT_CB_ID :
-        hdcmi->LineEventCallback = HAL_DCMI_LineEventCallback;    /* Legacy weak LineEventCallback   */
+        hdcmi->LineEventCallback = HAL_DCMI_LineEventCallback;    /* Legacy weak LineEventCallback    */
         break;
 
       case HAL_DCMI_ERROR_CB_ID :
-        hdcmi->ErrorCallback = HAL_DCMI_ErrorCallback;           /* Legacy weak ErrorCallback        */
+        hdcmi->ErrorCallback = HAL_DCMI_ErrorCallback;           /* Legacy weak ErrorCallback         */
         break;
 
       case HAL_DCMI_MSPINIT_CB_ID :
@@ -1068,51 +1124,64 @@ HAL_StatusTypeDef HAL_DCMI_UnRegisterCallback(DCMI_HandleTypeDef *hdcmi, HAL_DCM
 /**
   * @}
   */
+
+/**
+  * @}
+  */
+
 /* Private functions ---------------------------------------------------------*/
 /** @defgroup DCMI_Private_Functions DCMI Private Functions
   * @{
   */
 /**
-* @brief  DMA conversion complete callback.
-* @param  hdma pointer to a DMA_HandleTypeDef structure that contains
-*                the configuration information for the specified DMA module.
-* @retval None
-*/
+  * @brief  DMA conversion complete callback.
+  * @param  hdma pointer to a DMA_HandleTypeDef structure that contains
+  *                the configuration information for the specified DMA module.
+  * @retval None
+  */
 static void DCMI_DMAXferCplt(DMA_HandleTypeDef *hdma)
 {
-  uint32_t tmp = 0;
+  uint32_t tmp ;
 
   DCMI_HandleTypeDef *hdcmi = (DCMI_HandleTypeDef *)((DMA_HandleTypeDef *)hdma)->Parent;
 
-  if (hdcmi->XferCount != 0)
+  if (hdcmi->XferCount != 0U)
   {
     /* Update memory 0 address location */
-    tmp = ((hdcmi->DMA_Handle->Instance->CR) & DMA_SxCR_CT);
-    if (((hdcmi->XferCount % 2) == 0) && (tmp != 0))
+    tmp = ((((DMA_Stream_TypeDef *)(hdcmi->DMA_Handle->Instance))->CR) & DMA_SxCR_CT);
+    if (((hdcmi->XferCount % 2U) == 0U) && (tmp != 0U))
     {
-      tmp = hdcmi->DMA_Handle->Instance->M0AR;
-      HAL_DMAEx_ChangeMemory(hdcmi->DMA_Handle, (tmp + (8 * hdcmi->XferSize)), MEMORY0);
+      tmp = ((DMA_Stream_TypeDef *)(hdcmi->DMA_Handle->Instance))->M0AR;
+      (void)HAL_DMAEx_ChangeMemory(hdcmi->DMA_Handle, (tmp + (8U * hdcmi->XferSize)), MEMORY0);
       hdcmi->XferCount--;
     }
     /* Update memory 1 address location */
-    else if ((hdcmi->DMA_Handle->Instance->CR & DMA_SxCR_CT) == 0)
+    else if ((((DMA_Stream_TypeDef *)(hdcmi->DMA_Handle->Instance))->CR & DMA_SxCR_CT) == 0U)
     {
-      tmp = hdcmi->DMA_Handle->Instance->M1AR;
-      HAL_DMAEx_ChangeMemory(hdcmi->DMA_Handle, (tmp + (8 * hdcmi->XferSize)), MEMORY1);
+      tmp = ((DMA_Stream_TypeDef *)(hdcmi->DMA_Handle->Instance))->M1AR;
+      (void)HAL_DMAEx_ChangeMemory(hdcmi->DMA_Handle, (tmp + (8U * hdcmi->XferSize)), MEMORY1);
       hdcmi->XferCount--;
+    }
+    else
+    {
+      /* Nothing to do */
     }
   }
   /* Update memory 0 address location */
-  else if ((hdcmi->DMA_Handle->Instance->CR & DMA_SxCR_CT) != 0)
+  else if ((((DMA_Stream_TypeDef *)(hdcmi->DMA_Handle->Instance))->CR & DMA_SxCR_CT) != 0U)
   {
-    hdcmi->DMA_Handle->Instance->M0AR = hdcmi->pBuffPtr;
+    ((DMA_Stream_TypeDef *)(hdcmi->DMA_Handle->Instance))->M0AR = hdcmi->pBuffPtr;
   }
   /* Update memory 1 address location */
-  else if ((hdcmi->DMA_Handle->Instance->CR & DMA_SxCR_CT) == 0)
+  else if ((((DMA_Stream_TypeDef *)(hdcmi->DMA_Handle->Instance))->CR & DMA_SxCR_CT) == 0U)
   {
     tmp = hdcmi->pBuffPtr;
-    hdcmi->DMA_Handle->Instance->M1AR = (tmp + (4 * hdcmi->XferSize));
+    ((DMA_Stream_TypeDef *)(hdcmi->DMA_Handle->Instance))->M1AR = (tmp + (4U * hdcmi->XferSize));
     hdcmi->XferCount = hdcmi->XferTransferNumber;
+  }
+  else
+  {
+    /* Nothing to do */
   }
 
   /* Check if the frame is transferred */
@@ -1161,10 +1230,6 @@ static void DCMI_DMAError(DMA_HandleTypeDef *hdma)
 /**
   * @}
   */
-
-/**
-  * @}
-  */
 #endif /* DCMI */
 #endif /* HAL_DCMI_MODULE_ENABLED */
 /**
@@ -1174,5 +1239,3 @@ static void DCMI_DMAError(DMA_HandleTypeDef *hdma)
 /**
   * @}
   */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

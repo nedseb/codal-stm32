@@ -44,8 +44,9 @@ _Min_Stack_Size = 0x400;	/* required amount of stack */
 /* Memories definition */
 MEMORY
 {
-  RAM	(xrw)	: ORIGIN = 0x30000000,	LENGTH = 96K - 256    /* Memory is divided. Actual start is 0x30000000 and actual length is 256K */
+  RAM	(xrw)	: ORIGIN = 0x30000000,	LENGTH = 96K - 256    /* Memory is divided. Actual start is 0x30000000 and actual length is 192K */
   RAM_NSC	(xrw)	: ORIGIN = 0x30017F00,	LENGTH = 256    /* Non-Secure Call-able region */
+  RAM2	(xrw)	: ORIGIN = 0x30030000,	LENGTH = 64K        /* SRAM2 region */
 }
 
 /* Sections */
@@ -85,13 +86,15 @@ SECTIONS
     . = ALIGN(8);
   } >RAM
 
-  .ARM.extab   : {
+  .ARM.extab (READONLY) : /* The READONLY keyword is only supported in GCC11 and later, remove it if using GCC10 or earlier. */
+  {
     . = ALIGN(8);
     *(.ARM.extab* .gnu.linkonce.armextab.*)
     . = ALIGN(8);
   } >RAM
 
-  .ARM : {
+  .ARM (READONLY) : /* The READONLY keyword is only supported in GCC11 and later, remove it if using GCC10 or earlier. */
+  {
     . = ALIGN(8);
     __exidx_start = .;
     *(.ARM.exidx*)
@@ -99,7 +102,7 @@ SECTIONS
     . = ALIGN(8);
   } >RAM
 
-  .preinit_array     :
+  .preinit_array (READONLY) : /* The READONLY keyword is only supported in GCC11 and later, remove it if using GCC10 or earlier. */
   {
     . = ALIGN(8);
     PROVIDE_HIDDEN (__preinit_array_start = .);
@@ -108,7 +111,7 @@ SECTIONS
     . = ALIGN(8);
   } >RAM
 
-  .init_array :
+  .init_array (READONLY) : /* The READONLY keyword is only supported in GCC11 and later, remove it if using GCC10 or earlier. */
   {
     . = ALIGN(8);
     PROVIDE_HIDDEN (__init_array_start = .);
@@ -118,7 +121,7 @@ SECTIONS
     . = ALIGN(8);
   } >RAM
 
-  .fini_array :
+  .fini_array (READONLY) : /* The READONLY keyword is only supported in GCC11 and later, remove it if using GCC10 or earlier. */
   {
     . = ALIGN(8);
     PROVIDE_HIDDEN (__fini_array_start = .);

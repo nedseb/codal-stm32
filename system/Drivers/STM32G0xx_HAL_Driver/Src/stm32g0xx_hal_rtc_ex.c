@@ -11,6 +11,17 @@
   *           + Extended Control functions
   *           + Extended RTC features functions
   *
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2018 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
   @verbatim
   ==============================================================================
                   ##### How to use this driver #####
@@ -95,17 +106,6 @@
 
    @endverbatim
   ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2018 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
-  *
-  ******************************************************************************
   */
 
 /* Includes ------------------------------------------------------------------*/
@@ -174,6 +174,9 @@ HAL_StatusTypeDef HAL_RTCEx_SetTimeStamp(RTC_HandleTypeDef *hrtc, uint32_t TimeS
   assert_param(IS_TIMESTAMP_EDGE(TimeStampEdge));
   assert_param(IS_RTC_TIMESTAMP_PIN(RTC_TimeStampPin));
 
+  /* Prevent unused argument(s) compilation warning if no assert_param check */
+  UNUSED(RTC_TimeStampPin);
+
   /* Process Locked */
   __HAL_LOCK(hrtc);
 
@@ -230,6 +233,9 @@ HAL_StatusTypeDef HAL_RTCEx_SetTimeStamp_IT(RTC_HandleTypeDef *hrtc, uint32_t Ti
   assert_param(IS_TIMESTAMP_EDGE(TimeStampEdge));
   assert_param(IS_RTC_TIMESTAMP_PIN(RTC_TimeStampPin));
 
+  /* Prevent unused argument(s) compilation warning if no assert_param check */
+  UNUSED(RTC_TimeStampPin);
+
   /* Process Locked */
   __HAL_LOCK(hrtc);
 
@@ -251,11 +257,11 @@ HAL_StatusTypeDef HAL_RTCEx_SetTimeStamp_IT(RTC_HandleTypeDef *hrtc, uint32_t Ti
   /* Enable IT timestamp */
   __HAL_RTC_TIMESTAMP_ENABLE_IT(hrtc,RTC_IT_TS);
 
-  /* RTC timestamp Interrupt Configuration: EXTI configuration */
-  __HAL_RTC_TIMESTAMP_EXTI_ENABLE_IT();
-
   /* Enable the write protection for RTC registers */
   __HAL_RTC_WRITEPROTECTION_ENABLE(hrtc);
+
+  /* RTC timestamp Interrupt Configuration: EXTI configuration */
+  __HAL_RTC_TIMESTAMP_EXTI_ENABLE_IT();
 
   hrtc->State = HAL_RTC_STATE_READY;
 
@@ -1712,7 +1718,7 @@ void HAL_RTCEx_TamperIRQHandler(RTC_HandleTypeDef *hrtc)
     HAL_RTCEx_Tamper3EventCallback(hrtc);
 #endif /* USE_HAL_RTC_REGISTER_CALLBACKS */
   }
-#endif
+#endif /* TAMP_CR1_TAMP3E */
 
   /* Check Internal Tamper3 status */
   if((tmp & RTC_INT_TAMPER_3) == RTC_INT_TAMPER_3)
@@ -1811,7 +1817,7 @@ __weak void HAL_RTCEx_Tamper3EventCallback(RTC_HandleTypeDef *hrtc)
             the HAL_RTCEx_Tamper2EventCallback could be implemented in the user file
    */
 }
-#endif
+#endif /* TAMP_CR1_TAMP3E */
 
 /**
   * @brief  Internal Tamper 3 callback.
@@ -1972,5 +1978,4 @@ uint32_t HAL_RTCEx_BKUPRead(RTC_HandleTypeDef *hrtc, uint32_t BackupRegister)
   * @}
   */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
 

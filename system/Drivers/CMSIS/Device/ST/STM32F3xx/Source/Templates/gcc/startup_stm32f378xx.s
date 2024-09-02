@@ -15,13 +15,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2016 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -62,6 +61,9 @@ defined in linker script */
 Reset_Handler:
   ldr   sp, =_estack    /* Atollic update: set stack pointer */
 
+/* Call the clock system initialization function.*/
+    bl  SystemInit
+
 /* Copy the data segment initializers from flash to SRAM */
   ldr r0, =_sdata
   ldr r1, =_edata
@@ -93,8 +95,6 @@ LoopFillZerobss:
   cmp r2, r4
   bcc FillZerobss
 
-/* Call the clock system intitialization function.*/
-    bl  SystemInit
 /* Call static constructors */
     bl __libc_init_array
 /* Call the application's entry point.*/
@@ -211,7 +211,7 @@ g_pfnVectors:
 	.word	SDADC1_IRQHandler
 	.word	SDADC2_IRQHandler
 	.word	SDADC3_IRQHandler
-	.word	COMP1_2_IRQHandler
+	.word	COMP_IRQHandler
 	.word	0
 	.word	0
 	.word	0
@@ -436,8 +436,8 @@ g_pfnVectors:
 	.weak	SDADC3_IRQHandler
 	.thumb_set SDADC3_IRQHandler,Default_Handler	
 
-	.weak	COMP1_2_IRQHandler
-	.thumb_set COMP1_2_IRQHandler,Default_Handler	
+	.weak	COMP_IRQHandler
+	.thumb_set COMP_IRQHandler,Default_Handler
 
 	.weak	TIM19_IRQHandler
 	.thumb_set TIM19_IRQHandler,Default_Handler

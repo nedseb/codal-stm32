@@ -6,13 +6,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2016 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -24,7 +23,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#if !defined(STM32F030x6) && !defined(STM32F030x8) && !defined(STM32F070x6) && !defined(STM32F070xB) && !defined(STM32F030xC)
+#if !defined(STM32F030x6) && !defined(STM32F030x8) && !defined(STM32F070x6) \
+ && !defined(STM32F070xB) && !defined(STM32F030xC)
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f0xx_hal_def.h"
 
@@ -199,7 +199,7 @@ typedef struct __SMARTCARD_HandleTypeDef
 
   SMARTCARD_AdvFeatureInitTypeDef   AdvancedInit;          /*!< SmartCard advanced features initialization parameters */
 
-  uint8_t                           *pTxBuffPtr;           /*!< Pointer to SmartCard Tx transfer Buffer               */
+  const uint8_t                     *pTxBuffPtr;           /*!< Pointer to SmartCard Tx transfer Buffer               */
 
   uint16_t                          TxXferSize;            /*!< SmartCard Tx Transfer size                            */
 
@@ -697,9 +697,9 @@ typedef enum
   *            @arg @ref SMARTCARD_IT_ERR    Error interrupt(frame error, noise error, overrun error)
   * @retval The new state of __INTERRUPT__ (SET or RESET).
   */
-#define __HAL_SMARTCARD_GET_IT(__HANDLE__, __INTERRUPT__) ((((__HANDLE__)->Instance->ISR\
-                                                             & (0x01UL << (((__INTERRUPT__)\
-                                                                 & SMARTCARD_ISR_MASK)>> SMARTCARD_ISR_POS))) != 0U)\
+#define __HAL_SMARTCARD_GET_IT(__HANDLE__, __INTERRUPT__) (\
+                                                           (((__HANDLE__)->Instance->ISR & (0x01UL << (((__INTERRUPT__)\
+                                                               & SMARTCARD_ISR_MASK)>> SMARTCARD_ISR_POS)))!= 0U)\
                                                            ? SET : RESET)
 
 /** @brief  Check whether the specified SmartCard interrupt source is enabled or not.
@@ -726,7 +726,8 @@ typedef enum
                                                                       (__HANDLE__)->Instance->CR2 : \
                                                                       (__HANDLE__)->Instance->CR3)) &\
                                                                     (0x01UL << (((uint16_t)(__INTERRUPT__))\
-                                                                        & SMARTCARD_IT_MASK)))  != 0U) ? SET : RESET)
+                                                                                & SMARTCARD_IT_MASK)))  != 0U)\
+                                                                  ? SET : RESET)
 
 /** @brief  Clear the specified SMARTCARD ISR flag, in setting the proper ICR register flag.
   * @param  __HANDLE__ specifies the SMARTCARD Handle.
@@ -996,13 +997,13 @@ HAL_StatusTypeDef HAL_SMARTCARD_UnRegisterCallback(SMARTCARD_HandleTypeDef *hsma
   * @{
   */
 
-HAL_StatusTypeDef HAL_SMARTCARD_Transmit(SMARTCARD_HandleTypeDef *hsmartcard, uint8_t *pData, uint16_t Size,
+HAL_StatusTypeDef HAL_SMARTCARD_Transmit(SMARTCARD_HandleTypeDef *hsmartcard, const uint8_t *pData, uint16_t Size,
                                          uint32_t Timeout);
 HAL_StatusTypeDef HAL_SMARTCARD_Receive(SMARTCARD_HandleTypeDef *hsmartcard, uint8_t *pData, uint16_t Size,
                                         uint32_t Timeout);
-HAL_StatusTypeDef HAL_SMARTCARD_Transmit_IT(SMARTCARD_HandleTypeDef *hsmartcard, uint8_t *pData, uint16_t Size);
+HAL_StatusTypeDef HAL_SMARTCARD_Transmit_IT(SMARTCARD_HandleTypeDef *hsmartcard, const uint8_t *pData, uint16_t Size);
 HAL_StatusTypeDef HAL_SMARTCARD_Receive_IT(SMARTCARD_HandleTypeDef *hsmartcard, uint8_t *pData, uint16_t Size);
-HAL_StatusTypeDef HAL_SMARTCARD_Transmit_DMA(SMARTCARD_HandleTypeDef *hsmartcard, uint8_t *pData, uint16_t Size);
+HAL_StatusTypeDef HAL_SMARTCARD_Transmit_DMA(SMARTCARD_HandleTypeDef *hsmartcard, const uint8_t *pData, uint16_t Size);
 HAL_StatusTypeDef HAL_SMARTCARD_Receive_DMA(SMARTCARD_HandleTypeDef *hsmartcard, uint8_t *pData, uint16_t Size);
 /* Transfer Abort functions */
 HAL_StatusTypeDef HAL_SMARTCARD_Abort(SMARTCARD_HandleTypeDef *hsmartcard);
@@ -1029,8 +1030,8 @@ void HAL_SMARTCARD_AbortReceiveCpltCallback(SMARTCARD_HandleTypeDef *hsmartcard)
   * @{
   */
 
-HAL_SMARTCARD_StateTypeDef HAL_SMARTCARD_GetState(SMARTCARD_HandleTypeDef *hsmartcard);
-uint32_t                   HAL_SMARTCARD_GetError(SMARTCARD_HandleTypeDef *hsmartcard);
+HAL_SMARTCARD_StateTypeDef HAL_SMARTCARD_GetState(const SMARTCARD_HandleTypeDef *hsmartcard);
+uint32_t                   HAL_SMARTCARD_GetError(const SMARTCARD_HandleTypeDef *hsmartcard);
 
 /**
   * @}
@@ -1047,11 +1048,10 @@ uint32_t                   HAL_SMARTCARD_GetError(SMARTCARD_HandleTypeDef *hsmar
 /**
   * @}
   */
-#endif /* !defined(STM32F030x6) && !defined(STM32F030x8) && !defined(STM32F070x6) && !defined(STM32F070xB) && !defined(STM32F030xC)  */
+#endif /* !STM32F030x6 && !STM32F030x8 && !STM32F070x6 && !STM32F070xB && !STM32F030xC */
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* STM32F0xx_HAL_SMARTCARD_H */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

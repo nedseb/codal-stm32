@@ -7,18 +7,17 @@
   *          This file contains:
   *           - Data structures and the address mapping for all peripherals
   *           - peripherals registers declarations and bits definition
-  *           - Macros to access peripheral’s registers hardware
+  *           - Macros to access peripheral's registers hardware
   *
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2017 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -35,7 +34,7 @@
 #define __STM32F412Zx_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif /* __cplusplus */
 
 /** @addtogroup Configuration_section_for_CMSIS
@@ -65,7 +64,7 @@
  */
 typedef enum
 {
-/******  Cortex-M4 Processor Exceptions Numbers ****************************************************************/
+  /******  Cortex-M4 Processor Exceptions Numbers ****************************************************************/
   NonMaskableInt_IRQn         = -14,    /*!< 2 Non Maskable Interrupt                                          */
   MemoryManagement_IRQn       = -12,    /*!< 4 Cortex-M4 Memory Management Interrupt                           */
   BusFault_IRQn               = -11,    /*!< 5 Cortex-M4 Bus Fault Interrupt                                   */
@@ -74,7 +73,7 @@ typedef enum
   DebugMonitor_IRQn           = -4,     /*!< 12 Cortex-M4 Debug Monitor Interrupt                              */
   PendSV_IRQn                 = -2,     /*!< 14 Cortex-M4 Pend SV Interrupt                                    */
   SysTick_IRQn                = -1,     /*!< 15 Cortex-M4 System Tick Interrupt                                */
-/******  STM32 specific Interrupt Numbers **********************************************************************/
+  /******  STM32 specific Interrupt Numbers **********************************************************************/
   WWDG_IRQn                   = 0,      /*!< Window WatchDog Interrupt                                         */
   PVD_IRQn                    = 1,      /*!< PVD through EXTI Line detection Interrupt                         */
   TAMP_STAMP_IRQn             = 2,      /*!< Tamper and TimeStamp interrupts through the EXTI line             */
@@ -148,11 +147,11 @@ typedef enum
   I2C3_ER_IRQn                = 73,     /*!< I2C3 error interrupt                                              */
   RNG_IRQn                    = 80,     /*!< RNG global Interrupt                                              */
   FPU_IRQn                    = 81,     /*!< FPU global interrupt                                              */
-  SPI4_IRQn                   = 84,     /*!< SPI4 global Interrupt                                             */
-  SPI5_IRQn                   = 85,     /*!< SPI5 global Interrupt                                             */
-  QUADSPI_IRQn                = 92,     /*!< QuadSPI global Interrupt                                          */
-  FMPI2C1_EV_IRQn             = 95,     /*!< FMPI2C1 Event Interrupt                                           */
-  FMPI2C1_ER_IRQn             = 96      /*!< FMPI2C1 Error Interrupt                                           */
+                                SPI4_IRQn                   = 84,     /*!< SPI4 global Interrupt                                             */
+                                                              SPI5_IRQn                   = 85,     /*!< SPI5 global Interrupt                                             */
+                                                                                  QUADSPI_IRQn                = 92,     /*!< QuadSPI global Interrupt                                          */
+                                                                                  FMPI2C1_EV_IRQn             = 95,     /*!< FMPI2C1 Event Interrupt                                           */
+                                                                                  FMPI2C1_ER_IRQn             = 96      /*!< FMPI2C1 Error Interrupt                                           */
 } IRQn_Type;
 
 /**
@@ -326,7 +325,7 @@ typedef struct
   __IO uint32_t CR;      /*!< Debug MCU configuration register, Address offset: 0x04 */
   __IO uint32_t APB1FZ;  /*!< Debug MCU APB1 freeze register,   Address offset: 0x08 */
   __IO uint32_t APB2FZ;  /*!< Debug MCU APB2 freeze register,   Address offset: 0x0C */
-}DBGMCU_TypeDef;
+} DBGMCU_TypeDef;
 
 
 /**
@@ -1068,9 +1067,17 @@ typedef struct
   * @{
   */
 
-  /** @addtogroup Peripheral_Registers_Bits_Definition
+/** @addtogroup Hardware_Constant_Definition
   * @{
   */
+#define LSI_STARTUP_TIME                40U /*!< LSI Maximum startup time in us */
+/**
+  * @}
+  */
+
+/** @addtogroup Peripheral_Registers_Bits_Definition
+* @{
+*/
 
 /******************************************************************************/
 /*                         Peripheral Registers_Bits_Definition               */
@@ -5301,7 +5308,7 @@ typedef struct
 
 /*******************  Bit definition for CRC_IDR register  ********************/
 #define CRC_IDR_IDR_Pos     (0U)
-#define CRC_IDR_IDR_Msk     (0xFFUL << CRC_IDR_IDR_Pos)                         /*!< 0x000000FF */
+#define CRC_IDR_IDR_Msk     (0xFFUL << CRC_IDR_IDR_Pos)                        /*!< 0x000000FF */
 #define CRC_IDR_IDR         CRC_IDR_IDR_Msk                                    /*!< General-purpose 8-bit data register bits */
 
 
@@ -6584,6 +6591,9 @@ typedef struct
 #define FLASH_CR_EOPIE_Pos             (24U)
 #define FLASH_CR_EOPIE_Msk             (0x1UL << FLASH_CR_EOPIE_Pos)            /*!< 0x01000000 */
 #define FLASH_CR_EOPIE                 FLASH_CR_EOPIE_Msk
+#define FLASH_CR_ERRIE_Pos             (25U)
+#define FLASH_CR_ERRIE_Msk             (0x1UL << FLASH_CR_ERRIE_Pos)
+#define FLASH_CR_ERRIE                 FLASH_CR_ERRIE_Msk
 #define FLASH_CR_LOCK_Pos              (31U)
 #define FLASH_CR_LOCK_Msk              (0x1UL << FLASH_CR_LOCK_Pos)             /*!< 0x80000000 */
 #define FLASH_CR_LOCK                  FLASH_CR_LOCK_Msk
@@ -6714,7 +6724,7 @@ typedef struct
 #define FSMC_BCR1_CBURSTRW           FSMC_BCR1_CBURSTRW_Msk                    /*!<Write burst enable                     */
 #define FSMC_BCR1_CCLKEN_Pos         (20U)
 #define FSMC_BCR1_CCLKEN_Msk         (0x1UL << FSMC_BCR1_CCLKEN_Pos)            /*!< 0x00100000 */
-#define FSMC_BCR1_CCLKEN             FSMC_BCR1_CCLKEN_Msk                      /*!<Continous clock enable     */
+#define FSMC_BCR1_CCLKEN             FSMC_BCR1_CCLKEN_Msk                      /*!<Continuous clock enable     */
 #define FSMC_BCR1_WFDIS_Pos          (21U)
 #define FSMC_BCR1_WFDIS_Msk          (0x1UL << FSMC_BCR1_WFDIS_Pos)             /*!< 0x00200000 */
 #define FSMC_BCR1_WFDIS              FSMC_BCR1_WFDIS_Msk                       /*!<Write FIFO Disable         */
@@ -8950,7 +8960,7 @@ typedef struct
 #define PWR_CSR_BRR_Msk        (0x1UL << PWR_CSR_BRR_Pos)                       /*!< 0x00000008 */
 #define PWR_CSR_BRR            PWR_CSR_BRR_Msk                                 /*!< Backup regulator ready                           */
 #define PWR_CSR_EWUP3_Pos      (6U)
-#define PWR_CSR_EWUP3_Msk      (0x1UL << PWR_CSR_EWUP1_Pos)                     /*!< 0x00000040 */
+#define PWR_CSR_EWUP3_Msk      (0x1UL << PWR_CSR_EWUP3_Pos)                     /*!< 0x00000040 */
 #define PWR_CSR_EWUP3          PWR_CSR_EWUP3_Msk                               /*!< Enable WKUP pin 3                                */
 #define PWR_CSR_EWUP2_Pos      (7U)
 #define PWR_CSR_EWUP2_Msk      (0x1UL << PWR_CSR_EWUP2_Pos)                     /*!< 0x00000080 */
@@ -8972,7 +8982,7 @@ typedef struct
 /*                                                                            */
 /******************************************************************************/
 /*
- * @brief Specific device feature definitions (not present on all devices in the STM32F4 serie)
+ * @brief Specific device feature definitions (not present on all devices in the STM32F4 series)
  */
 #define  QSPI1_V2_1L                                                           /*!< QSPI Virtual Version             */
 
@@ -9258,7 +9268,7 @@ typedef struct
 #define RCC_CR_PLLRDY_Msk                  (0x1UL << RCC_CR_PLLRDY_Pos)         /*!< 0x02000000 */
 #define RCC_CR_PLLRDY                      RCC_CR_PLLRDY_Msk
 /*
- * @brief Specific device feature definitions (not present on all devices in the STM32F4 serie)
+ * @brief Specific device feature definitions (not present on all devices in the STM32F4 series)
  */
 #define RCC_PLLI2S_SUPPORT                                                     /*!< Support PLLI2S oscillator */
 
@@ -9315,7 +9325,7 @@ typedef struct
 #define RCC_PLLCFGR_PLLQ_2                 (0x4UL << RCC_PLLCFGR_PLLQ_Pos)      /*!< 0x04000000 */
 #define RCC_PLLCFGR_PLLQ_3                 (0x8UL << RCC_PLLCFGR_PLLQ_Pos)      /*!< 0x08000000 */
 /*
- * @brief Specific device feature definitions (not present on all devices in the STM32F4 serie)
+ * @brief Specific device feature definitions (not present on all devices in the STM32F4 series)
  */
 #define RCC_PLLR_I2S_CLKSOURCE_SUPPORT     /*!< Support PLLR clock as I2S clock source */
 
@@ -9695,7 +9705,7 @@ typedef struct
 #define RCC_AHB1ENR_DMA2EN                 RCC_AHB1ENR_DMA2EN_Msk
 /********************  Bit definition for RCC_AHB2ENR register  ***************/
 /*
- * @brief Specific device feature definitions (not present on all devices in the STM32F4 serie)
+ * @brief Specific device feature definitions (not present on all devices in the STM32F4 series)
  */
 #define RCC_AHB2_SUPPORT                   /*!< AHB2 Bus is supported */
 
@@ -9708,7 +9718,7 @@ typedef struct
 
 /********************  Bit definition for RCC_AHB3ENR register  ***************/
 /*
- * @brief Specific device feature definitions (not present on all devices in the STM32F4 serie)
+ * @brief Specific device feature definitions (not present on all devices in the STM32F4 series)
  */
 #define RCC_AHB3_SUPPORT                   /*!< AHB3 Bus is supported */
 
@@ -14224,7 +14234,7 @@ typedef struct
 #define IS_TIM_32B_COUNTER_INSTANCE(INSTANCE)(((INSTANCE) == TIM2) || \
                                               ((INSTANCE) == TIM5))
 
-/***************** TIM Instances : external trigger input availabe ************/
+/***************** TIM Instances : external trigger input available ************/
 #define IS_TIM_ETR_INSTANCE(INSTANCE)  (((INSTANCE) == TIM1) || \
                                         ((INSTANCE) == TIM2) || \
                                         ((INSTANCE) == TIM3) || \
@@ -14525,7 +14535,3 @@ typedef struct
 #endif /* __cplusplus */
 
 #endif /* __STM32F412Zx_H */
-
-
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

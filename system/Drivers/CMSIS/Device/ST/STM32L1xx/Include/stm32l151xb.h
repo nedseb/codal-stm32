@@ -9,18 +9,17 @@
   *          This file contains:
   *           - Data structures and the address mapping for all peripherals
   *           - Peripheral's registers declarations and bits definition
-  *           - Macros to access peripheral’s registers hardware
+  *           - Macros to access peripheral's registers hardware
   *
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2017-2021 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -710,6 +709,15 @@ typedef struct
   * @{
   */
 
+  /** @addtogroup Hardware_Constant_Definition
+    * @{
+    */
+#define LSI_STARTUP_TIME 200U /*!< LSI Maximum startup time in us */
+
+  /**
+    * @}
+    */
+
 /** @addtogroup Peripheral_Registers_Bits_Definition
   * @{
   */
@@ -855,7 +863,7 @@ typedef struct
 #define ADC_CR2_EOCS                         ADC_CR2_EOCS_Msk                  /*!< ADC end of unitary or end of sequence conversions selection */
 #define ADC_CR2_ALIGN_Pos                    (11U)
 #define ADC_CR2_ALIGN_Msk                    (0x1UL << ADC_CR2_ALIGN_Pos)       /*!< 0x00000800 */
-#define ADC_CR2_ALIGN                        ADC_CR2_ALIGN_Msk                 /*!< ADC data alignement */
+#define ADC_CR2_ALIGN                        ADC_CR2_ALIGN_Msk                 /*!< ADC data alignment */
 
 #define ADC_CR2_JEXTSEL_Pos                  (16U)
 #define ADC_CR2_JEXTSEL_Msk                  (0xFUL << ADC_CR2_JEXTSEL_Pos)     /*!< 0x000F0000 */
@@ -2742,6 +2750,10 @@ typedef struct
 /*                        (FLASH, DATA_EEPROM, OB)                            */
 /*                                                                            */
 /******************************************************************************/
+/*
+ * @brief Specific device feature definitions (not present on all devices in the STM32L1 series)
+ */
+#define FLASH_CUT1
 
 /*******************  Bit definition for FLASH_ACR register  ******************/
 #define FLASH_ACR_LATENCY_Pos                (0U)
@@ -4337,7 +4349,7 @@ typedef struct
 #define RCC_CSR_RTCSEL_0                    (0x1UL << RCC_CSR_RTCSEL_Pos)       /*!< 0x00010000 */
 #define RCC_CSR_RTCSEL_1                    (0x2UL << RCC_CSR_RTCSEL_Pos)       /*!< 0x00020000 */
 
-/*!< RTC congiguration */
+/*!< RTC configuration */
 #define RCC_CSR_RTCSEL_NOCLOCK              (0x00000000U)                      /*!< No clock */
 #define RCC_CSR_RTCSEL_LSE_Pos              (16U)
 #define RCC_CSR_RTCSEL_LSE_Msk              (0x1UL << RCC_CSR_RTCSEL_LSE_Pos)   /*!< 0x00010000 */
@@ -4387,7 +4399,7 @@ typedef struct
 /*                                                                            */
 /******************************************************************************/
 /*
-* @brief Specific device feature definitions  (not present on all devices in the STM32F0 serie)
+* @brief Specific device feature definitions  (not present on all devices in the STM32F0 series)
 */
 #define RTC_TAMPER1_SUPPORT       /*!< TAMPER 1 feature support */
 #define RTC_BACKUP_SUPPORT        /*!< BACKUP register feature support */
@@ -4953,7 +4965,7 @@ typedef struct
 /******************************************************************************/
 
 /*
- * @brief Specific device feature definitions (not present on all devices in the STM32F3 serie)
+ * @brief Specific device feature definitions (not present on all devices in the STM32F3 series)
  */
 
 /*******************  Bit definition for SPI_CR1 register  ********************/
@@ -5119,8 +5131,6 @@ typedef struct
 #define SYSCFG_EXTICR1_EXTI0_PD         (0x00000003U)                          /*!< PD[0] pin */
 #define SYSCFG_EXTICR1_EXTI0_PE         (0x00000004U)                          /*!< PE[0] pin */
 #define SYSCFG_EXTICR1_EXTI0_PH         (0x00000005U)                          /*!< PH[0] pin */
-#define SYSCFG_EXTICR1_EXTI0_PF         (0x00000006U)                          /*!< PF[0] pin */
-#define SYSCFG_EXTICR1_EXTI0_PG         (0x00000007U)                          /*!< PG[0] pin */
 
 /**
   * @brief  EXTI1 configuration
@@ -5131,8 +5141,6 @@ typedef struct
 #define SYSCFG_EXTICR1_EXTI1_PD         (0x00000030U)                          /*!< PD[1] pin */
 #define SYSCFG_EXTICR1_EXTI1_PE         (0x00000040U)                          /*!< PE[1] pin */
 #define SYSCFG_EXTICR1_EXTI1_PH         (0x00000050U)                          /*!< PH[1] pin */
-#define SYSCFG_EXTICR1_EXTI1_PF         (0x00000060U)                          /*!< PF[1] pin */
-#define SYSCFG_EXTICR1_EXTI1_PG         (0x00000070U)                          /*!< PG[1] pin */
 
 /**
   * @brief  EXTI2 configuration
@@ -5143,8 +5151,6 @@ typedef struct
 #define SYSCFG_EXTICR1_EXTI2_PD         (0x00000300U)                          /*!< PD[2] pin */
 #define SYSCFG_EXTICR1_EXTI2_PE         (0x00000400U)                          /*!< PE[2] pin */
 #define SYSCFG_EXTICR1_EXTI2_PH         (0x00000500U)                          /*!< PH[2] pin */
-#define SYSCFG_EXTICR1_EXTI2_PF         (0x00000600U)                          /*!< PF[2] pin */
-#define SYSCFG_EXTICR1_EXTI2_PG         (0x00000700U)                          /*!< PG[2] pin */
 
 /**
   * @brief  EXTI3 configuration
@@ -5154,8 +5160,6 @@ typedef struct
 #define SYSCFG_EXTICR1_EXTI3_PC         (0x00002000U)                          /*!< PC[3] pin */
 #define SYSCFG_EXTICR1_EXTI3_PD         (0x00003000U)                          /*!< PD[3] pin */
 #define SYSCFG_EXTICR1_EXTI3_PE         (0x00004000U)                          /*!< PE[3] pin */
-#define SYSCFG_EXTICR1_EXTI3_PF         (0x00003000U)                          /*!< PF[3] pin */
-#define SYSCFG_EXTICR1_EXTI3_PG         (0x00004000U)                          /*!< PG[3] pin */
 
 /*****************  Bit definition for SYSCFG_EXTICR2 register  *****************/
 #define SYSCFG_EXTICR2_EXTI4_Pos        (0U)
@@ -5179,8 +5183,6 @@ typedef struct
 #define SYSCFG_EXTICR2_EXTI4_PC         (0x00000002U)                          /*!< PC[4] pin */
 #define SYSCFG_EXTICR2_EXTI4_PD         (0x00000003U)                          /*!< PD[4] pin */
 #define SYSCFG_EXTICR2_EXTI4_PE         (0x00000004U)                          /*!< PE[4] pin */
-#define SYSCFG_EXTICR2_EXTI4_PF         (0x00000006U)                          /*!< PF[4] pin */
-#define SYSCFG_EXTICR2_EXTI4_PG         (0x00000007U)                          /*!< PG[4] pin */
 
 /**
   * @brief  EXTI5 configuration
@@ -5190,8 +5192,6 @@ typedef struct
 #define SYSCFG_EXTICR2_EXTI5_PC         (0x00000020U)                          /*!< PC[5] pin */
 #define SYSCFG_EXTICR2_EXTI5_PD         (0x00000030U)                          /*!< PD[5] pin */
 #define SYSCFG_EXTICR2_EXTI5_PE         (0x00000040U)                          /*!< PE[5] pin */
-#define SYSCFG_EXTICR2_EXTI5_PF         (0x00000060U)                          /*!< PF[5] pin */
-#define SYSCFG_EXTICR2_EXTI5_PG         (0x00000070U)                          /*!< PG[5] pin */
 
 /**
   * @brief  EXTI6 configuration
@@ -5201,8 +5201,6 @@ typedef struct
 #define SYSCFG_EXTICR2_EXTI6_PC         (0x00000200U)                          /*!< PC[6] pin */
 #define SYSCFG_EXTICR2_EXTI6_PD         (0x00000300U)                          /*!< PD[6] pin */
 #define SYSCFG_EXTICR2_EXTI6_PE         (0x00000400U)                          /*!< PE[6] pin */
-#define SYSCFG_EXTICR2_EXTI6_PF         (0x00000600U)                          /*!< PF[6] pin */
-#define SYSCFG_EXTICR2_EXTI6_PG         (0x00000700U)                          /*!< PG[6] pin */
 
 /**
   * @brief  EXTI7 configuration
@@ -5212,8 +5210,6 @@ typedef struct
 #define SYSCFG_EXTICR2_EXTI7_PC         (0x00002000U)                          /*!< PC[7] pin */
 #define SYSCFG_EXTICR2_EXTI7_PD         (0x00003000U)                          /*!< PD[7] pin */
 #define SYSCFG_EXTICR2_EXTI7_PE         (0x00004000U)                          /*!< PE[7] pin */
-#define SYSCFG_EXTICR2_EXTI7_PF         (0x00006000U)                          /*!< PF[7] pin */
-#define SYSCFG_EXTICR2_EXTI7_PG         (0x00007000U)                          /*!< PG[7] pin */
 
 /*****************  Bit definition for SYSCFG_EXTICR3 register  *****************/
 #define SYSCFG_EXTICR3_EXTI8_Pos        (0U)
@@ -5237,8 +5233,6 @@ typedef struct
 #define SYSCFG_EXTICR3_EXTI8_PC         (0x00000002U)                          /*!< PC[8] pin */
 #define SYSCFG_EXTICR3_EXTI8_PD         (0x00000003U)                          /*!< PD[8] pin */
 #define SYSCFG_EXTICR3_EXTI8_PE         (0x00000004U)                          /*!< PE[8] pin */
-#define SYSCFG_EXTICR3_EXTI8_PF         (0x00000006U)                          /*!< PF[8] pin */
-#define SYSCFG_EXTICR3_EXTI8_PG         (0x00000007U)                          /*!< PG[8] pin */
 
 /**
   * @brief  EXTI9 configuration
@@ -5248,8 +5242,6 @@ typedef struct
 #define SYSCFG_EXTICR3_EXTI9_PC         (0x00000020U)                          /*!< PC[9] pin */
 #define SYSCFG_EXTICR3_EXTI9_PD         (0x00000030U)                          /*!< PD[9] pin */
 #define SYSCFG_EXTICR3_EXTI9_PE         (0x00000040U)                          /*!< PE[9] pin */
-#define SYSCFG_EXTICR3_EXTI9_PF         (0x00000060U)                          /*!< PF[9] pin */
-#define SYSCFG_EXTICR3_EXTI9_PG         (0x00000070U)                          /*!< PG[9] pin */
 
 /**
   * @brief  EXTI10 configuration
@@ -5259,8 +5251,6 @@ typedef struct
 #define SYSCFG_EXTICR3_EXTI10_PC        (0x00000200U)                          /*!< PC[10] pin */
 #define SYSCFG_EXTICR3_EXTI10_PD        (0x00000300U)                          /*!< PD[10] pin */
 #define SYSCFG_EXTICR3_EXTI10_PE        (0x00000400U)                          /*!< PE[10] pin */
-#define SYSCFG_EXTICR3_EXTI10_PF        (0x00000600U)                          /*!< PF[10] pin */
-#define SYSCFG_EXTICR3_EXTI10_PG        (0x00000700U)                          /*!< PG[10] pin */
 
 /**
   * @brief  EXTI11 configuration
@@ -5270,8 +5260,6 @@ typedef struct
 #define SYSCFG_EXTICR3_EXTI11_PC        (0x00002000U)                          /*!< PC[11] pin */
 #define SYSCFG_EXTICR3_EXTI11_PD        (0x00003000U)                          /*!< PD[11] pin */
 #define SYSCFG_EXTICR3_EXTI11_PE        (0x00004000U)                          /*!< PE[11] pin */
-#define SYSCFG_EXTICR3_EXTI11_PF        (0x00006000U)                          /*!< PF[11] pin */
-#define SYSCFG_EXTICR3_EXTI11_PG        (0x00007000U)                          /*!< PG[11] pin */
 
 /*****************  Bit definition for SYSCFG_EXTICR4 register  *****************/
 #define SYSCFG_EXTICR4_EXTI12_Pos       (0U)
@@ -5295,8 +5283,6 @@ typedef struct
 #define SYSCFG_EXTICR4_EXTI12_PC        (0x00000002U)                          /*!< PC[12] pin */
 #define SYSCFG_EXTICR4_EXTI12_PD        (0x00000003U)                          /*!< PD[12] pin */
 #define SYSCFG_EXTICR4_EXTI12_PE        (0x00000004U)                          /*!< PE[12] pin */
-#define SYSCFG_EXTICR4_EXTI12_PF        (0x00000006U)                          /*!< PF[12] pin */
-#define SYSCFG_EXTICR4_EXTI12_PG        (0x00000007U)                          /*!< PG[12] pin */
 
 /**
   * @brief  EXTI13 configuration
@@ -5306,8 +5292,6 @@ typedef struct
 #define SYSCFG_EXTICR4_EXTI13_PC        (0x00000020U)                          /*!< PC[13] pin */
 #define SYSCFG_EXTICR4_EXTI13_PD        (0x00000030U)                          /*!< PD[13] pin */
 #define SYSCFG_EXTICR4_EXTI13_PE        (0x00000040U)                          /*!< PE[13] pin */
-#define SYSCFG_EXTICR4_EXTI13_PF        (0x00000060U)                          /*!< PF[13] pin */
-#define SYSCFG_EXTICR4_EXTI13_PG        (0x00000070U)                          /*!< PG[13] pin */
 
 /**
   * @brief  EXTI14 configuration
@@ -5317,8 +5301,6 @@ typedef struct
 #define SYSCFG_EXTICR4_EXTI14_PC        (0x00000200U)                          /*!< PC[14] pin */
 #define SYSCFG_EXTICR4_EXTI14_PD        (0x00000300U)                          /*!< PD[14] pin */
 #define SYSCFG_EXTICR4_EXTI14_PE        (0x00000400U)                          /*!< PE[14] pin */
-#define SYSCFG_EXTICR4_EXTI14_PF        (0x00000600U)                          /*!< PF[14] pin */
-#define SYSCFG_EXTICR4_EXTI14_PG        (0x00000700U)                          /*!< PG[14] pin */
 
 /**
   * @brief  EXTI15 configuration
@@ -5328,8 +5310,6 @@ typedef struct
 #define SYSCFG_EXTICR4_EXTI15_PC        (0x00002000U)                          /*!< PC[15] pin */
 #define SYSCFG_EXTICR4_EXTI15_PD        (0x00003000U)                          /*!< PD[15] pin */
 #define SYSCFG_EXTICR4_EXTI15_PE        (0x00004000U)                          /*!< PE[15] pin */
-#define SYSCFG_EXTICR4_EXTI15_PF        (0x00006000U)                          /*!< PF[15] pin */
-#define SYSCFG_EXTICR4_EXTI15_PG        (0x00007000U)                          /*!< PG[15] pin */
 
 /******************************************************************************/
 /*                                                                            */
@@ -6049,12 +6029,21 @@ typedef struct
 #define USART_DR_DR                         USART_DR_DR_Msk                    /*!< Data value */
 
 /******************  Bit definition for USART_BRR register  *******************/
-#define USART_BRR_DIV_FRACTION_Pos          (0U)
-#define USART_BRR_DIV_FRACTION_Msk          (0xFUL << USART_BRR_DIV_FRACTION_Pos) /*!< 0x0000000F */
-#define USART_BRR_DIV_FRACTION              USART_BRR_DIV_FRACTION_Msk         /*!< Fraction of USARTDIV */
-#define USART_BRR_DIV_MANTISSA_Pos          (4U)
-#define USART_BRR_DIV_MANTISSA_Msk          (0xFFFUL << USART_BRR_DIV_MANTISSA_Pos) /*!< 0x0000FFF0 */
-#define USART_BRR_DIV_MANTISSA              USART_BRR_DIV_MANTISSA_Msk         /*!< Mantissa of USARTDIV */
+#define USART_BRR_DIV_Fraction_Pos    (0U)
+#define USART_BRR_DIV_Fraction_Msk    (0xFUL << USART_BRR_DIV_Fraction_Pos)     /*!< 0x0000000F */
+#define USART_BRR_DIV_Fraction        USART_BRR_DIV_Fraction_Msk               /*!<Fraction of USARTDIV */
+#define USART_BRR_DIV_Mantissa_Pos    (4U)
+#define USART_BRR_DIV_Mantissa_Msk    (0xFFFUL << USART_BRR_DIV_Mantissa_Pos)   /*!< 0x0000FFF0 */
+#define USART_BRR_DIV_Mantissa        USART_BRR_DIV_Mantissa_Msk               /*!<Mantissa of USARTDIV */
+
+/* Legacy aliases */
+#define  USART_BRR_DIV_FRACTION_Pos              USART_BRR_DIV_Fraction_Pos
+#define  USART_BRR_DIV_FRACTION_Msk              USART_BRR_DIV_Fraction_Msk
+#define  USART_BRR_DIV_FRACTION                  USART_BRR_DIV_Fraction
+
+#define  USART_BRR_DIV_MANTISSA_Pos              USART_BRR_DIV_Mantissa_Pos
+#define  USART_BRR_DIV_MANTISSA_Msk              USART_BRR_DIV_Mantissa_Msk
+#define  USART_BRR_DIV_MANTISSA                  USART_BRR_DIV_Mantissa
 
 /******************  Bit definition for USART_CR1 register  *******************/
 #define USART_CR1_SBK_Pos                   (0U)
@@ -7634,4 +7623,3 @@ typedef struct
 
 
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

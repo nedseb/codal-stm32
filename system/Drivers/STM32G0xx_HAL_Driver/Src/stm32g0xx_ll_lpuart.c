@@ -6,13 +6,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2018 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2018 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -44,6 +43,9 @@
 /** @addtogroup LPUART_LL_Private_Constants
   * @{
   */
+
+/* Definition of default baudrate value used for LPUART initialisation */
+#define LPUART_DEFAULT_BAUDRATE          (9600U)
 
 /**
   * @}
@@ -127,7 +129,7 @@
   *          - SUCCESS: LPUART registers are de-initialized
   *          - ERROR: not applicable
   */
-ErrorStatus LL_LPUART_DeInit(USART_TypeDef *LPUARTx)
+ErrorStatus LL_LPUART_DeInit(const USART_TypeDef *LPUARTx)
 {
   ErrorStatus status = SUCCESS;
 
@@ -151,7 +153,7 @@ ErrorStatus LL_LPUART_DeInit(USART_TypeDef *LPUARTx)
     /* Release reset of LPUART peripheral */
     LL_APB1_GRP1_ReleaseReset(LL_APB1_GRP1_PERIPH_LPUART2);
   }
-#endif
+#endif /* LPUART2 */
   else
   {
     status = ERROR;
@@ -175,14 +177,14 @@ ErrorStatus LL_LPUART_DeInit(USART_TypeDef *LPUARTx)
   *          - SUCCESS: LPUART registers are initialized according to LPUART_InitStruct content
   *          - ERROR: Problem occurred during LPUART Registers initialization
   */
-ErrorStatus LL_LPUART_Init(USART_TypeDef *LPUARTx, LL_LPUART_InitTypeDef *LPUART_InitStruct)
+ErrorStatus LL_LPUART_Init(USART_TypeDef *LPUARTx, const LL_LPUART_InitTypeDef *LPUART_InitStruct)
 {
   ErrorStatus status = ERROR;
 #if defined(LPUART2)
   uint32_t periphclk = LL_RCC_PERIPH_FREQUENCY_NO;
 #else
   uint32_t periphclk;
-#endif
+#endif /* LPUART2 */
 
   /* Check the parameters */
   assert_param(IS_LPUART_INSTANCE(LPUARTx));
@@ -239,7 +241,7 @@ ErrorStatus LL_LPUART_Init(USART_TypeDef *LPUARTx, LL_LPUART_InitTypeDef *LPUART
     }
 #else
     periphclk = LL_RCC_GetLPUARTClockFreq(LL_RCC_LPUART1_CLKSOURCE);
-#endif
+#endif /* LPUART2 */
 
     /* Configure the LPUART Baud Rate :
        - prescaler value is required
@@ -283,7 +285,7 @@ void LL_LPUART_StructInit(LL_LPUART_InitTypeDef *LPUART_InitStruct)
 {
   /* Set LPUART_InitStruct fields to default values */
   LPUART_InitStruct->PrescalerValue      = LL_LPUART_PRESCALER_DIV1;
-  LPUART_InitStruct->BaudRate            = 9600U;
+  LPUART_InitStruct->BaudRate            = LPUART_DEFAULT_BAUDRATE;
   LPUART_InitStruct->DataWidth           = LL_LPUART_DATAWIDTH_8B;
   LPUART_InitStruct->StopBits            = LL_LPUART_STOPBITS_1;
   LPUART_InitStruct->Parity              = LL_LPUART_PARITY_NONE ;
@@ -310,6 +312,3 @@ void LL_LPUART_StructInit(LL_LPUART_InitTypeDef *LPUART_InitStruct)
   */
 
 #endif /* USE_FULL_LL_DRIVER */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-

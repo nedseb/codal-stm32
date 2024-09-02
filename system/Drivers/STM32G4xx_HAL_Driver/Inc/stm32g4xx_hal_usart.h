@@ -6,13 +6,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2019 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -125,7 +124,7 @@ typedef struct __USART_HandleTypeDef
 
   USART_InitTypeDef             Init;                    /*!< USART communication parameters      */
 
-  uint8_t                       *pTxBuffPtr;             /*!< Pointer to USART Tx transfer Buffer */
+  const uint8_t                 *pTxBuffPtr;             /*!< Pointer to USART Tx transfer Buffer */
 
   uint16_t                      TxXferSize;              /*!< USART Tx Transfer size              */
 
@@ -143,7 +142,7 @@ typedef struct __USART_HandleTypeDef
 
   uint16_t                      NbTxDataToProcess;       /*!< Number of data to process during TX ISR execution */
 
-  uint32_t                      SlaveMode;               /*!< Enable/Disable UART SPI Slave Mode. This parameter can be a value
+  uint32_t                      SlaveMode;               /*!< Enable/Disable USART SPI Slave Mode. This parameter can be a value
                                                               of @ref USARTEx_Slave_Mode */
 
   uint32_t                      FifoMode;                /*!< Specifies if the FIFO mode will be used. This parameter can be a value
@@ -599,7 +598,7 @@ typedef  void (*pUSART_CallbackTypeDef)(USART_HandleTypeDef *husart);  /*!< poin
   */
 #define __HAL_USART_GET_IT(__HANDLE__, __INTERRUPT__) ((((__HANDLE__)->Instance->ISR\
                                                          & (0x01U << (((__INTERRUPT__) & USART_ISR_MASK)>>\
-                                                                                USART_ISR_POS))) != 0U) ? SET : RESET)
+                                                                      USART_ISR_POS))) != 0U) ? SET : RESET)
 
 /** @brief  Check whether the specified USART interrupt source is enabled or not.
   * @param  __HANDLE__ specifies the USART Handle.
@@ -705,8 +704,7 @@ typedef  void (*pUSART_CallbackTypeDef)(USART_HandleTypeDef *husart);  /*!< poin
    ((__CLOCKPRESCALER__) == USART_PRESCALER_DIV16)  ? 16U :      \
    ((__CLOCKPRESCALER__) == USART_PRESCALER_DIV32)  ? 32U :      \
    ((__CLOCKPRESCALER__) == USART_PRESCALER_DIV64)  ? 64U :      \
-   ((__CLOCKPRESCALER__) == USART_PRESCALER_DIV128) ? 128U :     \
-   ((__CLOCKPRESCALER__) == USART_PRESCALER_DIV256) ? 256U : 1U)
+   ((__CLOCKPRESCALER__) == USART_PRESCALER_DIV128) ? 128U : 256U)
 
 /** @brief  BRR division operation to set BRR register in 8-bit oversampling mode.
   * @param  __PCLK__ USART clock.
@@ -723,6 +721,7 @@ typedef  void (*pUSART_CallbackTypeDef)(USART_HandleTypeDef *husart);  /*!< poin
   * @param  __CLOCKSOURCE__ output variable.
   * @retval the USART clocking source, written in __CLOCKSOURCE__.
   */
+#if defined(USART3)
 #define USART_GETCLOCKSOURCE(__HANDLE__,__CLOCKSOURCE__)       \
   do {                                                         \
     if((__HANDLE__)->Instance == USART1)                       \
@@ -793,6 +792,57 @@ typedef  void (*pUSART_CallbackTypeDef)(USART_HandleTypeDef *husart);  /*!< poin
       (__CLOCKSOURCE__) = USART_CLOCKSOURCE_UNDEFINED;         \
     }                                                          \
   } while(0)
+#else
+#define USART_GETCLOCKSOURCE(__HANDLE__,__CLOCKSOURCE__)       \
+  do {                                                         \
+    if((__HANDLE__)->Instance == USART1)                       \
+    {                                                          \
+      switch(__HAL_RCC_GET_USART1_SOURCE())                    \
+      {                                                        \
+        case RCC_USART1CLKSOURCE_PCLK2:                        \
+          (__CLOCKSOURCE__) = USART_CLOCKSOURCE_PCLK2;         \
+          break;                                               \
+        case RCC_USART1CLKSOURCE_HSI:                          \
+          (__CLOCKSOURCE__) = USART_CLOCKSOURCE_HSI;           \
+          break;                                               \
+        case RCC_USART1CLKSOURCE_SYSCLK:                       \
+          (__CLOCKSOURCE__) = USART_CLOCKSOURCE_SYSCLK;        \
+          break;                                               \
+        case RCC_USART1CLKSOURCE_LSE:                          \
+          (__CLOCKSOURCE__) = USART_CLOCKSOURCE_LSE;           \
+          break;                                               \
+        default:                                               \
+          (__CLOCKSOURCE__) = USART_CLOCKSOURCE_UNDEFINED;     \
+          break;                                               \
+      }                                                        \
+    }                                                          \
+    else if((__HANDLE__)->Instance == USART2)                  \
+    {                                                          \
+      switch(__HAL_RCC_GET_USART2_SOURCE())                    \
+      {                                                        \
+        case RCC_USART2CLKSOURCE_PCLK1:                        \
+          (__CLOCKSOURCE__) = USART_CLOCKSOURCE_PCLK1;         \
+          break;                                               \
+        case RCC_USART2CLKSOURCE_HSI:                          \
+          (__CLOCKSOURCE__) = USART_CLOCKSOURCE_HSI;           \
+          break;                                               \
+        case RCC_USART2CLKSOURCE_SYSCLK:                       \
+          (__CLOCKSOURCE__) = USART_CLOCKSOURCE_SYSCLK;        \
+          break;                                               \
+        case RCC_USART2CLKSOURCE_LSE:                          \
+          (__CLOCKSOURCE__) = USART_CLOCKSOURCE_LSE;           \
+          break;                                               \
+        default:                                               \
+          (__CLOCKSOURCE__) = USART_CLOCKSOURCE_UNDEFINED;     \
+          break;                                               \
+      }                                                        \
+    }                                                          \
+    else                                                       \
+    {                                                          \
+      (__CLOCKSOURCE__) = USART_CLOCKSOURCE_UNDEFINED;         \
+    }                                                          \
+  } while(0)
+#endif /* USART3 */
 
 /** @brief  Check USART Baud rate.
   * @param  __BAUDRATE__ Baudrate specified by the user.
@@ -921,17 +971,18 @@ HAL_StatusTypeDef HAL_USART_UnRegisterCallback(USART_HandleTypeDef *husart, HAL_
   */
 
 /* IO operation functions *****************************************************/
-HAL_StatusTypeDef HAL_USART_Transmit(USART_HandleTypeDef *husart, uint8_t *pTxData, uint16_t Size, uint32_t Timeout);
+HAL_StatusTypeDef HAL_USART_Transmit(USART_HandleTypeDef *husart, const uint8_t *pTxData, uint16_t Size,
+                                     uint32_t Timeout);
 HAL_StatusTypeDef HAL_USART_Receive(USART_HandleTypeDef *husart, uint8_t *pRxData, uint16_t Size, uint32_t Timeout);
-HAL_StatusTypeDef HAL_USART_TransmitReceive(USART_HandleTypeDef *husart, uint8_t *pTxData, uint8_t *pRxData,
+HAL_StatusTypeDef HAL_USART_TransmitReceive(USART_HandleTypeDef *husart, const uint8_t *pTxData, uint8_t *pRxData,
                                             uint16_t Size, uint32_t Timeout);
-HAL_StatusTypeDef HAL_USART_Transmit_IT(USART_HandleTypeDef *husart, uint8_t *pTxData, uint16_t Size);
+HAL_StatusTypeDef HAL_USART_Transmit_IT(USART_HandleTypeDef *husart, const uint8_t *pTxData, uint16_t Size);
 HAL_StatusTypeDef HAL_USART_Receive_IT(USART_HandleTypeDef *husart, uint8_t *pRxData, uint16_t Size);
-HAL_StatusTypeDef HAL_USART_TransmitReceive_IT(USART_HandleTypeDef *husart, uint8_t *pTxData, uint8_t *pRxData,
+HAL_StatusTypeDef HAL_USART_TransmitReceive_IT(USART_HandleTypeDef *husart, const uint8_t *pTxData, uint8_t *pRxData,
                                                uint16_t Size);
-HAL_StatusTypeDef HAL_USART_Transmit_DMA(USART_HandleTypeDef *husart, uint8_t *pTxData, uint16_t Size);
+HAL_StatusTypeDef HAL_USART_Transmit_DMA(USART_HandleTypeDef *husart, const uint8_t *pTxData, uint16_t Size);
 HAL_StatusTypeDef HAL_USART_Receive_DMA(USART_HandleTypeDef *husart, uint8_t *pRxData, uint16_t Size);
-HAL_StatusTypeDef HAL_USART_TransmitReceive_DMA(USART_HandleTypeDef *husart, uint8_t *pTxData, uint8_t *pRxData,
+HAL_StatusTypeDef HAL_USART_TransmitReceive_DMA(USART_HandleTypeDef *husart, const uint8_t *pTxData, uint8_t *pRxData,
                                                 uint16_t Size);
 HAL_StatusTypeDef HAL_USART_DMAPause(USART_HandleTypeDef *husart);
 HAL_StatusTypeDef HAL_USART_DMAResume(USART_HandleTypeDef *husart);
@@ -958,8 +1009,8 @@ void HAL_USART_AbortCpltCallback(USART_HandleTypeDef *husart);
   */
 
 /* Peripheral State and Error functions ***************************************/
-HAL_USART_StateTypeDef HAL_USART_GetState(USART_HandleTypeDef *husart);
-uint32_t               HAL_USART_GetError(USART_HandleTypeDef *husart);
+HAL_USART_StateTypeDef HAL_USART_GetState(const USART_HandleTypeDef *husart);
+uint32_t               HAL_USART_GetError(const USART_HandleTypeDef *husart);
 
 /**
   * @}
@@ -983,4 +1034,3 @@ uint32_t               HAL_USART_GetError(USART_HandleTypeDef *husart);
 
 #endif /* STM32G4xx_HAL_USART_H */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

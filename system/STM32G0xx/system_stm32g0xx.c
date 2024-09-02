@@ -53,17 +53,15 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2018 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2018-2021 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under Apache License, Version 2.0,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/Apache-2.0
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
-
 /** @addtogroup CMSIS
   * @{
   */
@@ -95,13 +93,33 @@
   */
 
 /************************* Miscellaneous Configuration ************************/
-/*!< Uncomment the following line if you need to relocate your vector Table in
-     Internal SRAM. */
+/* Note: Following vector table addresses must be defined in line with linker
+         configuration. */
+
+/*!< Uncomment the following line and change the address
+     if you need to relocate your vector Table at a custom base address (+ VECT_TAB_OFFSET) */
+/* #define VECT_TAB_BASE_ADDRESS 0x08000000 */
+
+/*!< Uncomment the following line if you need to relocate your vector Table
+     in Sram else user remap will be done by default in Flash. */
 /* #define VECT_TAB_SRAM */
+
 #ifndef VECT_TAB_OFFSET
-#define VECT_TAB_OFFSET  0x0U /*!< Vector Table base offset field.
-                                   This value must be a multiple of 0x100. */
+#define VECT_TAB_OFFSET         0x00000000U     /*!< Vector Table base offset field.
+                                                     This value must be a multiple of 0x100. */
 #endif
+
+#ifndef VECT_TAB_BASE_ADDRESS
+#if defined(VECT_TAB_SRAM)
+#define VECT_TAB_BASE_ADDRESS   SRAM_BASE       /*!< Vector Table base address field.
+                                                     This value must be a multiple of 0x100. */
+#else
+#define VECT_TAB_BASE_ADDRESS   FLASH_BASE      /*!< Vector Table base address field.
+                                                     This value must be a multiple of 0x100. */
+#endif /* VECT_TAB_SRAM */
+#endif /* VECT_TAB_BASE_ADDRESS */
+
+
 /******************************************************************************/
 /**
   * @}
@@ -154,12 +172,33 @@
   */
 void SystemInit(void)
 {
-  /* Configure the Vector Table location add offset address ------------------*/
-#ifdef VECT_TAB_SRAM
-  SCB->VTOR = SRAM_BASE | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal SRAM */
+  /* Reset the RCC clock configuration to the default reset state ------------*/
+  /* Set HSION bit */
+  RCC->CR |= 0x00000500U;
+
+  /* Reset CFGR register */
+  RCC->CFGR = 0x00000000U;
+
+  /* Reset HSEON, CSSON and PLLON bits */
+  RCC->CR &= 0xFEF6FFFFU;
+
+  /* Reset PLLCFGR register */
+  RCC->PLLCFGR = 0x00001000U;
+
+  /* Reset HSEBYP bit */
+  RCC->CR &= 0xFFFBFFFFU;
+
+  /* Disable all interrupts and clar flags */
+  RCC->CIER = 0x00000000U;
+
+#if defined(RCC_CICR_HSI48RDYC)
+  RCC->CICR = 0x0000033FU;
 #else
-  SCB->VTOR = FLASH_BASE | VECT_TAB_OFFSET; /* Vector Table Relocation in Internal FLASH */
+  RCC->CICR = 0x0000033BU;
 #endif
+
+  /* Configure the Vector Table location -------------------------------------*/
+  SCB->VTOR = VECT_TAB_BASE_ADDRESS | VECT_TAB_OFFSET;
 }
 
 /**

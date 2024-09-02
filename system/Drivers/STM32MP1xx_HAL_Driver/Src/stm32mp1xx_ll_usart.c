@@ -6,13 +6,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2019 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -65,9 +64,6 @@
 
 /* __VALUE__ In case of oversampling by 16 and 8, BRR content must be greater than or equal to 16d. */
 #define IS_LL_USART_BRR_MIN(__VALUE__) ((__VALUE__) >= 16U)
-
-/* __VALUE__ BRR content must be lower than or equal to 0xFFFF. */
-#define IS_LL_USART_BRR_MAX(__VALUE__) ((__VALUE__) <= 0x0000FFFFU)
 
 #define IS_LL_USART_DIRECTION(__VALUE__) (((__VALUE__) == LL_USART_DIRECTION_NONE) \
                                           || ((__VALUE__) == LL_USART_DIRECTION_RX) \
@@ -326,9 +322,6 @@ ErrorStatus LL_USART_Init(USART_TypeDef *USARTx, LL_USART_InitTypeDef *USART_Ini
 
       /* Check BRR is greater than or equal to 16d */
       assert_param(IS_LL_USART_BRR_MIN(USARTx->BRR));
-
-      /* Check BRR is lower than or equal to 0xFFFF */
-      assert_param(IS_LL_USART_BRR_MAX(USARTx->BRR));
     }
 
     /*---------------------------- USART PRESC Configuration -----------------------
@@ -454,6 +447,3 @@ void LL_USART_ClockStructInit(LL_USART_ClockInitTypeDef *USART_ClockInitStruct)
   */
 
 #endif /* USE_FULL_LL_DRIVER */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-

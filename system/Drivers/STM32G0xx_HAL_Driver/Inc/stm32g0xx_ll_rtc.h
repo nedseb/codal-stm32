@@ -6,13 +6,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2018 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2018 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -424,7 +423,7 @@ typedef struct
 #define LL_RTC_TAMPER_2                    TAMP_CR1_TAMP2E /*!< Tamper 2 input detection */
 #if defined (TAMP_CR1_TAMP3E)
 #define LL_RTC_TAMPER_3                    TAMP_CR1_TAMP3E /*!< Tamper 3 input detection */
-#endif
+#endif /* TAMP_CR1_TAMP3E */
 /**
   * @}
   */
@@ -436,7 +435,7 @@ typedef struct
 #define LL_RTC_TAMPER_MASK_TAMPER2         TAMP_CR2_TAMP2MSK /*!< Tamper 2 event generates a trigger event. TAMP2F is masked and internally cleared by hardware. The backup registers are not erased. */
 #if defined (TAMP_CR1_TAMP3E)
 #define LL_RTC_TAMPER_MASK_TAMPER3         TAMP_CR2_TAMP3MSK /*!< Tamper 3 event generates a trigger event. TAMP3F is masked and internally cleared by hardware. The backup registers are not erased. */
-#endif
+#endif /* TAMP_CR1_TAMP3E */
 /**
   * @}
   */
@@ -448,7 +447,7 @@ typedef struct
 #define LL_RTC_TAMPER_NOERASE_TAMPER2      TAMP_CR2_TAMP2NOERASE /*!< Tamper 2 event does not erase the backup registers. */
 #if defined (TAMP_CR1_TAMP3E)
 #define LL_RTC_TAMPER_NOERASE_TAMPER3      TAMP_CR2_TAMP3NOERASE /*!< Tamper 3 event does not erase the backup registers. */
-#endif
+#endif /* TAMP_CR1_TAMP3E */
 /**
   * @}
   */
@@ -497,7 +496,7 @@ typedef struct
 #define LL_RTC_TAMPER_ACTIVELEVEL_TAMP2    TAMP_CR2_TAMP2TRG /*!< Tamper 2 input falling edge (if TAMPFLT = 00) or staying high (if TAMPFLT != 00) triggers a tamper detection event */
 #if defined (TAMP_CR1_TAMP3E)
 #define LL_RTC_TAMPER_ACTIVELEVEL_TAMP3    TAMP_CR2_TAMP3TRG /*!< Tamper 3 input falling edge (if TAMPFLT = 00) or staying high (if TAMPFLT != 00) triggers a tamper detection event */
-#endif
+#endif /* TAMP_CR1_TAMP3E */
 /**
   * @}
   */
@@ -1122,7 +1121,7 @@ __STATIC_INLINE void LL_RTC_TIME_SetFormat(RTC_TypeDef *RTCx, uint32_t TimeForma
 
 /**
   * @brief  Get time format (AM or PM notation)
-  * @note if shadow mode is disabled (BYPSHAD=0), need to check if RSF flag is set
+  * @note if RTC shadow registers are not bypassed (BYPSHAD=0), need to check if RSF flag is set
   *       before reading this bit
   * @note Read either RTC_SSR or RTC_TR locks the values in the higher-order calendar
   *       shadow registers until RTC_DR is read (LL_RTC_ReadReg(RTC, DR)).
@@ -1156,7 +1155,7 @@ __STATIC_INLINE void LL_RTC_TIME_SetHour(RTC_TypeDef *RTCx, uint32_t Hours)
 
 /**
   * @brief  Get Hours in BCD format
-  * @note if shadow mode is disabled (BYPSHAD=0), need to check if RSF flag is set
+  * @note if RTC shadow registers are not bypassed (BYPSHAD=0), need to check if RSF flag is set
   *       before reading this bit
   * @note Read either RTC_SSR or RTC_TR locks the values in the higher-order calendar
   *       shadow registers until RTC_DR is read (LL_RTC_ReadReg(RTC, DR)).
@@ -1191,7 +1190,7 @@ __STATIC_INLINE void LL_RTC_TIME_SetMinute(RTC_TypeDef *RTCx, uint32_t Minutes)
 
 /**
   * @brief  Get Minutes in BCD format
-  * @note if shadow mode is disabled (BYPSHAD=0), need to check if RSF flag is set
+  * @note if RTC shadow registers are not bypassed (BYPSHAD=0), need to check if RSF flag is set
   *       before reading this bit
   * @note Read either RTC_SSR or RTC_TR locks the values in the higher-order calendar
   *       shadow registers until RTC_DR is read (LL_RTC_ReadReg(RTC, DR)).
@@ -1226,7 +1225,7 @@ __STATIC_INLINE void LL_RTC_TIME_SetSecond(RTC_TypeDef *RTCx, uint32_t Seconds)
 
 /**
   * @brief  Get Seconds in BCD format
-  * @note if shadow mode is disabled (BYPSHAD=0), need to check if RSF flag is set
+  * @note if RTC shadow registers are not bypassed (BYPSHAD=0), need to check if RSF flag is set
   *       before reading this bit
   * @note Read either RTC_SSR or RTC_TR locks the values in the higher-order calendar
   *       shadow registers until RTC_DR is read (LL_RTC_ReadReg(RTC, DR)).
@@ -1276,7 +1275,7 @@ __STATIC_INLINE void LL_RTC_TIME_Config(RTC_TypeDef *RTCx, uint32_t Format12_24,
 
 /**
   * @brief  Get time (hour, minute and second) in BCD format
-  * @note if shadow mode is disabled (BYPSHAD=0), need to check if RSF flag is set
+  * @note if RTC shadow registers are not bypassed (BYPSHAD=0), need to check if RSF flag is set
   *       before reading this bit
   * @note Read either RTC_SSR or RTC_TR locks the values in the higher-order calendar
   *       shadow registers until RTC_DR is read (LL_RTC_ReadReg(RTC, DR)).
@@ -1422,7 +1421,7 @@ __STATIC_INLINE void LL_RTC_DATE_SetYear(RTC_TypeDef *RTCx, uint32_t Year)
 
 /**
   * @brief  Get Year in BCD format
-  * @note if shadow mode is disabled (BYPSHAD=0), need to check if RSF flag is set
+  * @note if RTC shadow registers are not bypassed (BYPSHAD=0), need to check if RSF flag is set
   *       before reading this bit
   * @note helper macro __LL_RTC_CONVERT_BCD2BIN is available to convert Year from BCD to Binary format
   * @rmtoll RTC_DR           YT            LL_RTC_DATE_GetYear\n
@@ -1456,7 +1455,7 @@ __STATIC_INLINE void LL_RTC_DATE_SetWeekDay(RTC_TypeDef *RTCx, uint32_t WeekDay)
 
 /**
   * @brief  Get Week day
-  * @note if shadow mode is disabled (BYPSHAD=0), need to check if RSF flag is set
+  * @note if RTC shadow registers are not bypassed (BYPSHAD=0), need to check if RSF flag is set
   *       before reading this bit
   * @rmtoll RTC_DR           WDU           LL_RTC_DATE_GetWeekDay
   * @param  RTCx RTC Instance
@@ -1503,7 +1502,7 @@ __STATIC_INLINE void LL_RTC_DATE_SetMonth(RTC_TypeDef *RTCx, uint32_t Month)
 
 /**
   * @brief  Get Month in BCD format
-  * @note if shadow mode is disabled (BYPSHAD=0), need to check if RSF flag is set
+  * @note if RTC shadow registers are not bypassed (BYPSHAD=0), need to check if RSF flag is set
   *       before reading this bit
   * @note helper macro __LL_RTC_CONVERT_BCD2BIN is available to convert Month from BCD to Binary format
   * @rmtoll RTC_DR           MT            LL_RTC_DATE_GetMonth\n
@@ -1545,7 +1544,7 @@ __STATIC_INLINE void LL_RTC_DATE_SetDay(RTC_TypeDef *RTCx, uint32_t Day)
 
 /**
   * @brief  Get Day in BCD format
-  * @note if shadow mode is disabled (BYPSHAD=0), need to check if RSF flag is set
+  * @note if RTC shadow registers are not bypassed (BYPSHAD=0), need to check if RSF flag is set
   *       before reading this bit
   * @note helper macro __LL_RTC_CONVERT_BCD2BIN is available to convert Day from BCD to Binary format
   * @rmtoll RTC_DR           DT            LL_RTC_DATE_GetDay\n
@@ -1607,7 +1606,7 @@ __STATIC_INLINE void LL_RTC_DATE_Config(RTC_TypeDef *RTCx, uint32_t WeekDay, uin
 
 /**
   * @brief  Get date (WeekDay, Day, Month and Year) in BCD format
-  * @note if shadow mode is disabled (BYPSHAD=0), need to check if RSF flag is set
+  * @note if RTC shadow registers are not bypassed (BYPSHAD=0), need to check if RSF flag is set
   *       before reading this bit
   * @note helper macros __LL_RTC_GET_WEEKDAY, __LL_RTC_GET_YEAR, __LL_RTC_GET_MONTH,
   * and __LL_RTC_GET_DAY are available to get independently each parameter.
@@ -3573,7 +3572,7 @@ __STATIC_INLINE uint32_t LL_RTC_IsActiveFlag_TAMP3(TAMP_TypeDef *TAMPx)
 {
   return ((READ_BIT(TAMPx->SR, TAMP_SR_TAMP3F) == (TAMP_SR_TAMP3F)) ? 1UL : 0UL);
 }
-#endif
+#endif /* TAMP_CR1_TAMP3E */
 /**
   * @brief  Get internal tamper 3 detection flag.
   * @rmtoll TAMP_SR          ITAMP3F        LL_RTC_IsActiveFlag_ITAMP3
@@ -3652,7 +3651,7 @@ __STATIC_INLINE uint32_t LL_RTC_IsActiveFlag_TAMP3M(TAMP_TypeDef *TAMPx)
 {
   return ((READ_BIT(TAMPx->MISR, TAMP_MISR_TAMP3MF) == (TAMP_MISR_TAMP3MF)) ? 1UL : 0UL);
 }
-#endif
+#endif /* TAMP_CR1_TAMP3E */
 
 /**
   * @brief  Get internal tamper 3 interrupt masked flag.
@@ -3732,7 +3731,7 @@ __STATIC_INLINE void LL_RTC_ClearFlag_TAMP3(TAMP_TypeDef *TAMPx)
 {
   SET_BIT(TAMPx->SCR, TAMP_SCR_CTAMP3F);
 }
-#endif
+#endif /* TAMP_CR1_TAMP3E */
 
 /**
   * @brief  Clear internal tamper 3 detection flag.
@@ -3993,7 +3992,7 @@ __STATIC_INLINE void LL_RTC_DisableIT_TAMP3(TAMP_TypeDef *TAMPx)
 {
   CLEAR_BIT(TAMPx->IER, TAMP_IER_TAMP3IE);
 }
-#endif
+#endif /* TAMP_CR1_TAMP3E */
 
 /**
   * @brief  Enable internal tamper 3 interrupt.
@@ -4117,7 +4116,7 @@ __STATIC_INLINE uint32_t LL_RTC_IsEnabledIT_TAMP3(TAMP_TypeDef *TAMPx)
 {
   return ((READ_BIT(TAMPx->IER, TAMP_IER_TAMP3IE) == (TAMP_IER_TAMP3IE)) ? 1UL : 0UL);
 }
-#endif
+#endif /* TAMP_CR1_TAMP3E */
 
 /**
   * @brief  Check if internal tamper 3 interrupt is enabled or not.
@@ -4213,4 +4212,3 @@ ErrorStatus LL_RTC_WaitForSynchro(RTC_TypeDef *RTCx);
 
 #endif /* STM32G0xx_LL_RTC_H */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

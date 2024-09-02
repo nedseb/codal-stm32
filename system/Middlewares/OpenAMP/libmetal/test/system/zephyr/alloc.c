@@ -7,9 +7,10 @@
 #include <stdlib.h>
 
 #include <metal/alloc.h>
+#include <metal/errno.h>
 #include <metal/log.h>
 #include <metal/sys.h>
-#include <misc/printk.h>
+#include <sys/printk.h>
 #include "metal-test-internal.h"
 
 static int alloc(void)
@@ -19,7 +20,7 @@ static int alloc(void)
 	ptr = metal_allocate_memory(1000);
 	if (!ptr) {
 		metal_log(METAL_LOG_DEBUG, "failed to allocate memmory\n");
-		return errno;
+		return -errno;
 	}
 
 	metal_free_memory(ptr);

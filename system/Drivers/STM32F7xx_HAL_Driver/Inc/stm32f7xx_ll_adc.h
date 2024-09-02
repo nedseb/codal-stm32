@@ -6,13 +6,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2017 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -3971,7 +3970,7 @@ __STATIC_INLINE uint16_t LL_ADC_REG_ReadConversionData10(ADC_TypeDef *ADCx)
   */
 __STATIC_INLINE uint8_t LL_ADC_REG_ReadConversionData8(ADC_TypeDef *ADCx)
 {
-  return (uint16_t)(READ_BIT(ADCx->DR, ADC_DR_DATA));
+  return (uint8_t)(READ_BIT(ADCx->DR, ADC_DR_DATA) & 0x000000FFUL);
 }
 
 /**
@@ -3986,7 +3985,7 @@ __STATIC_INLINE uint8_t LL_ADC_REG_ReadConversionData8(ADC_TypeDef *ADCx)
   */
 __STATIC_INLINE uint8_t LL_ADC_REG_ReadConversionData6(ADC_TypeDef *ADCx)
 {
-  return (uint16_t)(READ_BIT(ADCx->DR, ADC_DR_DATA));
+  return (uint8_t)(READ_BIT(ADCx->DR, ADC_DR_DATA) & 0x000000FFUL);
 }
 
 /**
@@ -4189,7 +4188,7 @@ __STATIC_INLINE uint8_t LL_ADC_INJ_ReadConversionData8(ADC_TypeDef *ADCx, uint32
   __IO uint32_t *preg = __ADC_PTR_REG_OFFSET(ADCx->JDR1, __ADC_MASK_SHIFT(Rank, ADC_INJ_JDRX_REGOFFSET_MASK));
 
   return (uint8_t)(READ_BIT(*preg,
-                            ADC_JDR1_JDATA)
+                            ADC_JDR1_JDATA) & 0x000000FFUL
                   );
 }
 
@@ -4216,7 +4215,7 @@ __STATIC_INLINE uint8_t LL_ADC_INJ_ReadConversionData6(ADC_TypeDef *ADCx, uint32
   __IO uint32_t *preg = __ADC_PTR_REG_OFFSET(ADCx->JDR1, __ADC_MASK_SHIFT(Rank, ADC_INJ_JDRX_REGOFFSET_MASK));
 
   return (uint8_t)(READ_BIT(*preg,
-                            ADC_JDR1_JDATA)
+                            ADC_JDR1_JDATA) & 0x000000FFUL
                   );
 }
 
@@ -4729,4 +4728,3 @@ void        LL_ADC_INJ_StructInit(LL_ADC_INJ_InitTypeDef *ADC_INJ_InitStruct);
 
 #endif /* __STM32F7xx_LL_ADC_H */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
