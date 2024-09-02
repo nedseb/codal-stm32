@@ -1,11 +1,8 @@
 /* Alternate pin name */
 PA_0_ALT1  = PA_0  | ALT1,
 PA_1_ALT1  = PA_1  | ALT1,
-PA_1_ALT2  = PA_1  | ALT2,
 PA_2_ALT1  = PA_2  | ALT1,
-PA_2_ALT2  = PA_2  | ALT2,
 PA_3_ALT1  = PA_3  | ALT1,
-PA_3_ALT2  = PA_3  | ALT2,
 PA_4_ALT1  = PA_4  | ALT1,
 PA_6_ALT1  = PA_6  | ALT1,
 PA_7_ALT1  = PA_7  | ALT1,
@@ -43,6 +40,8 @@ PB_14_ALT1 = PB_14 | ALT1,
 PB_15_ALT1 = PB_15 | ALT1,
 PB_15_ALT2 = PB_15 | ALT2,
 PC_6_ALT1  = PC_6  | ALT1,
+PC_10_ALT1 = PC_10 | ALT1,
+PC_11_ALT1 = PC_11 | ALT1,
 PC_13_ALT1 = PC_13 | ALT1,
 
 /* SYS_WKUP */
