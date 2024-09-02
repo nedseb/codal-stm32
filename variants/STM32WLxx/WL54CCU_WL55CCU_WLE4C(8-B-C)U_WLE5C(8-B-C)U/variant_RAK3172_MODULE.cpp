@@ -1,6 +1,6 @@
 /*
  *******************************************************************************
- * Copyright (c) 2020-2021, STMicroelectronics
+ * Copyright (c) 2020, STMicroelectronics
  * All rights reserved.
  *
  * This software component is licensed by ST under BSD 3-Clause license,
@@ -10,11 +10,56 @@
  *
  *******************************************************************************
  */
-#if defined(ARDUINO_GENERIC_WL54CCUX) || defined(ARDUINO_GENERIC_WL55CCUX) ||\
-    defined(ARDUINO_GENERIC_WLE4C8UX) || defined(ARDUINO_GENERIC_WLE4CBUX) ||\
-    defined(ARDUINO_GENERIC_WLE4CCUX) || defined(ARDUINO_GENERIC_WLE5C8UX) ||\
-    defined(ARDUINO_GENERIC_WLE5CBUX) || defined(ARDUINO_GENERIC_WLE5CCUX)
+#if defined(ARDUINO_RAK3172_MODULE) || defined(ARDUINO_RAK3172T_MODULE)
 #include "pins_arduino.h"
+
+// Digital PinName array
+const PinName digitalPin[] = {
+  PA_0,   // D0
+  PA_1,   // D1
+  PA_2,   // D2     - USART2/LPUART1 TX
+  PA_3,   // D3     - USART2/LPUART1 RX
+  PA_4,   // D4     - SPI_NSS
+  PA_5,   // D5     - SPI_SCK
+  PA_6,   // D6     - SPI_MISO
+  PA_7,   // D7     - SPI_MOSI
+  PA_8,   // D8
+  PA_9,   // D9
+  PA_10,  // D10/A3
+  PA_11,  // D11/A7 - I2C_SDA
+  PA_12,  // D12/A8 - I2C_SCL
+  PA_13,  // D13/A5 - SWDIO
+  PA_14,  // D14/A6 - SWCLK
+  PA_15,  // D15/A4
+  PB_2,   // D16/A2
+  PB_3,   // D17/A0
+  PB_4,   // D18/A1
+  PB_5,   // D19
+  PB_6,   // D20    - USART1_TX
+  PB_7,   // D21    - USAR1_RX
+  PB_8,   // D22
+  PB_12,  // D23
+  PC_13,  // D24
+  PH_3    // D25    - BOOT0
+};
+
+// Analog (Ax) pin number array
+const uint32_t analogInputPin[] = {
+  17, // A0,  PB3
+  18, // A1,  PB4
+  16, // A2,  PB2
+  10, // A3,  PA10
+  15, // A4,  PA15
+  13, // A5,  PA13
+  14, // A6,  PA14
+  11, // A7,  PA11
+  12  // A8,  PA12
+};
+
+// ----------------------------------------------------------------------------
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /**
   * @brief  System Clock Configuration
@@ -55,4 +100,8 @@ WEAK void SystemClock_Config(void)
   }
 }
 
-#endif /* ARDUINO_GENERIC_* */
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* ARDUINO_RAK3172_MODULE || ARDUINO_RAK3172T_MODULE */
