@@ -19,6 +19,9 @@
 #ifndef _WIRING_ANALOG_
 #define _WIRING_ANALOG_
 
+#include <stdint.h>
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
