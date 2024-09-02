@@ -1,6 +1,6 @@
 /*
  *******************************************************************************
- * Copyright (c) 2020-2021, STMicroelectronics
+ * Copyright (c) 2020, STMicroelectronics
  * All rights reserved.
  *
  * This software component is licensed by ST under BSD 3-Clause license,
@@ -12,7 +12,7 @@
  */
 /*
  * Automatically generated from STM32WB5MMGHx.xml
- * CubeMX DB release 6.0.21
+ * CubeMX DB release 6.0.120
  */
 #if !defined(CUSTOM_PERIPHERAL_PINS)
 #include "Arduino.h"
@@ -83,6 +83,8 @@ WEAK const PinMap PinMap_I2C_SCL[] = {
 };
 #endif
 
+//*** No I3C ***
+
 //*** TIM ***
 
 #ifdef HAL_TIM_MODULE_ENABLED
@@ -149,6 +151,7 @@ WEAK const PinMap PinMap_UART_RX[] = {
 #ifdef HAL_UART_MODULE_ENABLED
 WEAK const PinMap PinMap_UART_RTS[] = {
   {PA_12, USART1,  STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF7_USART1)},
+  {PB_1,  LPUART1, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF8_LPUART1)},
   {PB_3,  USART1,  STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF7_USART1)},
   {PB_12, LPUART1, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF8_LPUART1)},
   {NC,    NP,      0}
