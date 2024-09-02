@@ -26,7 +26,7 @@ After Verify and Upload, you will see a message similar to the following in Ardu
     This file should be uploaded manually by SCP, SFTP, Kermit, or etc.
     Then run "sh ./run_arduino_<sketch name>.sh start" command in the board's console.
     For detailed instructions, please visit:
-        https://github.com/stm32duino/Arduino_Core_STM32/tree/master/variants/STM32MP157_DK/README.md
+        https://github.com/stm32duino/Arduino_Core_STM32/tree/main/variants/STM32MP1xx/MP153AAC_MP153CAC_MP153DAC_MP153FAC_MP157AAC_MP157CAC_MP157DAC_MP157FAC
 
 `<Arduino build output path>/run_arduino_<sketch name>.sh` looks like this for *Blink* example:
 
@@ -38,7 +38,7 @@ After Verify and Upload, you will see a message similar to the following in Ardu
 
   `/tmp/arduino_build_668148/run_arduino_Blink.sh`
 
-In this example, the user **must** upload `<Arduino build output path>/run_arduino_<sketch name>.sh` file manually. Uploading instruction is described later in the [Uploading](#Uploading) section. 
+In this example, the user **must** upload `<Arduino build output path>/run_arduino_<sketch name>.sh` file manually. Uploading instruction is described later in the [Uploading](#Uploading) section.
 
 After uploading the user can use `sh run_arduino_<sketch name>.sh start` in the console of host Linux via either SSH or Serial Console, to run the Arduino firmware.
 
@@ -103,11 +103,15 @@ See [OpenAMP] and [Linux RPMsg] to learn more.
 
 To increase the performance of SerialVirtIO you can resize the related buffer configurations. There are three definitions you can use:
 
-* [`VRING_NUM_BUFFS`](/cores/arduino/stm32/OpenAMP/virtio_config.h)
-* [`RPMSG_BUFFER_SIZE`](/cores/arduino/stm32/OpenAMP/virtio_config.h)
-* [`VIRTIO_BUFFER_SIZE`](/cores/arduino/stm32/OpenAMP/virtio_buffer.h)
+* [`VRING_NUM_BUFFS`](/libraries/VirtIO/inc/virtio_config.h)
+* [`RPMSG_BUFFER_SIZE`](/libraries/VirtIO/inc/virtio_config.h)
+* [`VIRTIO_BUFFER_SIZE`](/libraries/VirtIO/inc/virtio_buffer.h)
 
 The recommended option is to resize `VRING_NUM_BUFFS`. Be very cautious when resizing `RPMSG_BUFFER_SIZE`, which must be matched with the Linux kernel definition. Also `VIRTIO_BUFFER_SIZE` has the minimum required size depending on the other two. See their links above for further descriptions.
+
+#### Note
+
+* Since openSTLinux distribution 4.0 with Linux 5.15, `RPMSG_SERVICE_NAME` has been renamed from `rpmsg-tty-channel` to `rpmsg-tty`, if older distribution is used, it is required to redefine it to  `rpmsg-tty-channel`
 
 To redefine these definitions, see how to create `build_opt.h` described in Debugging section below.
 
@@ -118,7 +122,7 @@ Here is a basic echo example:
 int available;
 char buffer[1024];
 
-unsigned long time = 0;
+unsigned long start_time = 0;
 
 void setup() {
   // You can SerialVirtIO.begin() and use SerialVirtIO later instead.
@@ -136,8 +140,8 @@ void loop() {
   }
 
   // Heartbeat. If Arduino stops the LED won't flash anymore.
-  if ((millis() - time) > 1000) {
-    time = millis();
+  if ((millis() - start_time) > 1000) {
+    start_time = millis();
     digitalWrite(LED_BUILTIN, !digitalRead(LED_BUILTIN));
   }
 }
@@ -157,17 +161,18 @@ After loading Arduino, You can use SerialVirtIO in two ways in this example:
 
 For printf-style debugging, `core_debug()` is highly recommended instead of using Arduino Serial. In STM32MP1, `core_debug()` utilizes OpenAMP trace buffer and it has a minimal real-time impact (other than the overhead of printf) because it is not bound to the speed of a hardware IO peripheral while printing it.
 
-Create [build_opt.h] in the sketch directory and simply put `-DCORE_DEBUG`. Additionally you can resize the buffer size of logging by redefining `VIRTIO_LOG_BUFFER_SIZE` (2kb by default). As an example you can create a file like the following:
+Select `Core logs Enabled` in `Tools->Debug symbols and core logs`.
+Additionally you can resize the buffer size of logging by redefining `VIRTIO_LOG_BUFFER_SIZE` (2kb by default).
+Create [build_opt.h] in the sketch directory and simply put `-DVIRTIO_LOG_BUFFER_SIZE=xxxx`. As an example you can create a file like the following:
 
 ```
 build_opt.h (in the same directory of your Sketch)
 -----------------------------
 
--DCORE_DEBUG
 -DVIRTIO_LOG_BUFFER_SIZE=4086
 ```
 
-Don't forget to change any of Arduino IDE option to reflect this as in the warning section in [build_opt.h description in wiki]. This is important because if `-DCORE_DEBUG` is not configured correctly `core_debug()` silently becomes an empty function without triggering any build error. Don't forget to add `#include "core_debug.h"` in your code in order to use `core_debug()`.
+Don't forget to add `#include "core_debug.h"` in your code in order to use `core_debug()`.
 
 Also, you must enable the Virtual Serial (described in the above section) and include `SerialVirtIO.begin();` in your Arduino sketch, because this logging feature is tightly coupled to OpenAMP virtio.
 
@@ -201,7 +206,7 @@ void loop() {
 }
 ```
 
-Don't forget to add [build_opt.h] described above.
+Don't forget to select `Core logs Enabled` in `Tools->Debug symbols and core logs` as described above.
 
 After loading Arduino, you can simply `sh run_arduino_<sketch name>.sh log` to print the current `core_debug()` logs.
 
@@ -240,7 +245,7 @@ There are additional pins for LEDs and buttons.
 | PA_13 | 17 / LED_RED                  | USER2_BTN            | Active Low, LED LD6, also connected to B4 button |
 | PH_7  | 18 / LED_ORANGE / LED_BUILTIN |                      | Active High, LED LD7                             |
 
-[`variant.h` of the board] has the complete information about the pinouts.
+[`variant_STM32MP157_DK.h` of the board] has the complete information about the pinouts.
 
 ## Uploading
 
@@ -249,7 +254,7 @@ As mentioned above `run_arduino_<sketch name>.sh` file have to be uploaded manua
 ### Over Network
 
 * **SCP** and **SFTP** are good options to upload the file, since STM32MP1 board runs SSH server by default. There are a lot of online resources on how to use them on the internet. Here is the default SSH access information:
-``` 
+```
 host: (Varies. Search online to learn how to figure it out.)
 username: root
 password: (none by default)
@@ -279,7 +284,7 @@ And then the Device Tree should enable TIM1 for the coprocessor, although this d
 };
 ```
 
-[stm32mp157c-dk2-m4-examples.dts] is a great example to begin with. For the full list of peripherals used by the Arduino firmware, see [PeripheralPins.c](/variants/STM32MP157_DK/PeripheralPins.c) of the board.
+[stm32mp157c-dk2-m4-examples.dts] is a great example to begin with. For the full list of peripherals used by the Arduino firmware, see [PeripheralPins_STM32MP157_DK.c](/variants/STM32MP1xx/MP153AAC_MP153CAC_MP153DAC_MP153FAC_MP157AAC_MP157CAC_MP157DAC_MP157FAC/PeripheralPins_STM32MP157_DK.c) of the board.
 
 ## Limitations
 
@@ -293,23 +298,23 @@ And then the Device Tree should enable TIM1 for the coprocessor, although this d
 [STM32MP157A-DK1]: https://www.st.com/en/evaluation-tools/stm32mp157a-dk1.html
 [STM32MP157C-DK2]: https://www.st.com/en/evaluation-tools/stm32mp157c-dk2.html
 
-[Cortex-M4 Engineering mode]: https://wiki.st.com/stm32mpu/wiki/STM32CubeMP1_development_guidelines
+[Cortex-M4 Engineering mode]: https://wiki.st.com/stm32mpu/wiki/How_to_use_engineering_and_production_modes
 [STM32MP15 Starter Package]: https://wiki.st.com/stm32mpu/wiki/STM32MP15_Discovery_kits_-_Starter_Package
 [STM32 MPU OpenSTLinux Distribution]: https://wiki.st.com/stm32mpu/wiki/STM32MP1_Distribution_Package
 [Balena OS]: https://github.com/kbumsik/balena-st-stm32mp
 [ST Wiki page on boot mode]: https://wiki.st.com/stm32mpu/wiki/STM32CubeMP1_Package#Getting_started_with_STM32CubeMP1_Package
 
-[run_arduino_gen.sh]: https://github.com/stm32duino/Arduino_Tools/blob/master/run_arduino_gen.sh
+[run_arduino_gen.sh]: https://github.com/stm32duino/Arduino_Tools/blob/main/run_arduino_gen.sh
 
 [OpenAMP]: https://github.com/OpenAMP/open-amp/wiki/OpenAMP-Overview
 [Linux RPMsg]: https://wiki.st.com/stm32mpu/wiki/Linux_RPMsg_framework_overview
-[a hard restriction of the write size]: /cores/arduino/VirtIOSerial.cpp#L148
+[a hard restriction of the write size]: /libraries/VirtIO/src/VirtIOSerial.cpp#L148
 
-[build_opt.h]: https://github.com/stm32duino/wiki/wiki/Customize-build-options-using-build_opt.h
-[build_opt.h description in wiki]: https://github.com/stm32duino/wiki/wiki/Customize-build-options-using-build_opt.h
-[virtio_log.h]: /cores/arduino/stm32/OpenAMP/virtio_log.h
+[build_opt.h]: https://github.com/stm32duino/Arduino_Core_STM32/wiki/Customize-build-options-using-build_opt.h
+[build_opt.h description in wiki]: https://github.com/stm32duino/Arduino_Core_STM32/wiki/Customize-build-options-using-build_opt.h
+[virtio_log.h]: /libraries/VirtIO/inc/virtio_log.h
 
-[`variant.h` of the board]: /variants/STM32MP157_DK/variant.h
+[`variant_STM32MP157_DK.h` of the board]: /variants/STM32MP1xx/MP153AAC_MP153CAC_MP153DAC_MP153FAC_MP157AAC_MP157CAC_MP157DAC_MP157FAC/variant_STM32MP157_DK.h
 
 [The ST Wiki page on C-Kermit]: https://wiki.st.com/stm32mpu/wiki/How_to_transfer_a_file_over_serial_console
 [a bug in OpenSTLinux]: https://community.st.com/s/question/0D50X0000B9vHa4/cannot-get-download-a-file-using-kermit
