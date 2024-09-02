@@ -46,7 +46,13 @@
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 /* this string will be sent to remote processor */
-#define RPMSG_SERVICE_NAME              "rpmsg-tty-channel"
+/* Since openSTLinux distribution 4.0 with Linux 5.15,
+   RPMSG_SERVICE_NAME has been renamed from 'rpmsg-tty-channel' to 'rpmsg-tty'
+   if older distribution is used, it is required to redefine it to 'rpmsg-tty-channel'
+*/
+#ifndef RPMSG_SERVICE_NAME
+  #define RPMSG_SERVICE_NAME              "rpmsg-tty"
+#endif
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -108,11 +114,9 @@ VIRT_UART_StatusTypeDef VIRT_UART_RegisterCallback(VIRT_UART_HandleTypeDef *huar
     break;
   }
   return status;
-
-  return VIRT_UART_OK;
 }
 
-VIRT_UART_StatusTypeDef VIRT_UART_Transmit(VIRT_UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size)
+VIRT_UART_StatusTypeDef VIRT_UART_Transmit(VIRT_UART_HandleTypeDef *huart, const void *pData, uint16_t Size)
 {
 	int res;
 

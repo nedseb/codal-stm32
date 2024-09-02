@@ -7,18 +7,17 @@
   *          This file contains:
   *           - Data structures and the address mapping for all peripherals
   *           - peripherals registers declarations and bits definition
-  *           - Macros to access peripheral’s registers hardware
+  *           - Macros to access peripheral's registers hardware
   *
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2017 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -35,7 +34,7 @@
 #define __STM32F415xx_H
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif /* __cplusplus */
 
 /** @addtogroup Configuration_section_for_CMSIS
@@ -65,7 +64,7 @@
  */
 typedef enum
 {
-/******  Cortex-M4 Processor Exceptions Numbers ****************************************************************/
+  /******  Cortex-M4 Processor Exceptions Numbers ****************************************************************/
   NonMaskableInt_IRQn         = -14,    /*!< 2 Non Maskable Interrupt                                          */
   MemoryManagement_IRQn       = -12,    /*!< 4 Cortex-M4 Memory Management Interrupt                           */
   BusFault_IRQn               = -11,    /*!< 5 Cortex-M4 Bus Fault Interrupt                                   */
@@ -74,7 +73,7 @@ typedef enum
   DebugMonitor_IRQn           = -4,     /*!< 12 Cortex-M4 Debug Monitor Interrupt                              */
   PendSV_IRQn                 = -2,     /*!< 14 Cortex-M4 Pend SV Interrupt                                    */
   SysTick_IRQn                = -1,     /*!< 15 Cortex-M4 System Tick Interrupt                                */
-/******  STM32 specific Interrupt Numbers **********************************************************************/
+  /******  STM32 specific Interrupt Numbers **********************************************************************/
   WWDG_IRQn                   = 0,      /*!< Window WatchDog Interrupt                                         */
   PVD_IRQn                    = 1,      /*!< PVD through EXTI Line detection Interrupt                         */
   TAMP_STAMP_IRQn             = 2,      /*!< Tamper and TimeStamp interrupts through the EXTI line             */
@@ -314,7 +313,7 @@ typedef struct
   __IO uint32_t CR;      /*!< Debug MCU configuration register, Address offset: 0x04 */
   __IO uint32_t APB1FZ;  /*!< Debug MCU APB1 freeze register,   Address offset: 0x08 */
   __IO uint32_t APB2FZ;  /*!< Debug MCU APB2 freeze register,   Address offset: 0x0C */
-}DBGMCU_TypeDef;
+} DBGMCU_TypeDef;
 
 
 /**
@@ -736,7 +735,7 @@ typedef struct
   __IO uint32_t HR[5];            /*!< HASH digest registers,          Address offset: 0x0C-0x1C   */
   __IO uint32_t IMR;              /*!< HASH interrupt enable register, Address offset: 0x20        */
   __IO uint32_t SR;               /*!< HASH status register,           Address offset: 0x24        */
-       uint32_t RESERVED[52];     /*!< Reserved, 0x28-0xF4                                         */
+  uint32_t RESERVED[52];     /*!< Reserved, 0x28-0xF4                                         */
   __IO uint32_t CSR[54];          /*!< HASH context swap registers,    Address offset: 0x0F8-0x1CC */
 } HASH_TypeDef;
 
@@ -1119,9 +1118,17 @@ typedef struct
   * @{
   */
 
-  /** @addtogroup Peripheral_Registers_Bits_Definition
+/** @addtogroup Hardware_Constant_Definition
   * @{
   */
+#define LSI_STARTUP_TIME                40U /*!< LSI Maximum startup time in us */
+/**
+  * @}
+  */
+
+/** @addtogroup Peripheral_Registers_Bits_Definition
+* @{
+*/
 
 /******************************************************************************/
 /*                         Peripheral Registers_Bits_Definition               */
@@ -1133,7 +1140,7 @@ typedef struct
 /*                                                                            */
 /******************************************************************************/
 /*
- * @brief Specific device feature definitions (not present on all devices in the STM32F4 serie)
+ * @brief Specific device feature definitions (not present on all devices in the STM32F4 series)
  */
 #define ADC_MULTIMODE_SUPPORT                                                  /*!<ADC Multimode feature available on specific devices */
 
@@ -5394,7 +5401,7 @@ typedef struct
 
 /*******************  Bit definition for CRC_IDR register  ********************/
 #define CRC_IDR_IDR_Pos     (0U)
-#define CRC_IDR_IDR_Msk     (0xFFUL << CRC_IDR_IDR_Pos)                         /*!< 0x000000FF */
+#define CRC_IDR_IDR_Msk     (0xFFUL << CRC_IDR_IDR_Pos)                        /*!< 0x000000FF */
 #define CRC_IDR_IDR         CRC_IDR_IDR_Msk                                    /*!< General-purpose 8-bit data register bits */
 
 
@@ -5517,7 +5524,7 @@ typedef struct
 /*                                                                            */
 /******************************************************************************/
 /*
- * @brief Specific device feature definitions (not present on all devices in the STM32F4 serie)
+ * @brief Specific device feature definitions (not present on all devices in the STM32F4 series)
  */
 #define DAC_CHANNEL2_SUPPORT                                    /*!< DAC feature available only on specific devices: availability of DAC channel 2 */
 /********************  Bit definition for DAC_CR register  ********************/
@@ -6642,6 +6649,9 @@ typedef struct
 #define FLASH_CR_EOPIE_Pos             (24U)
 #define FLASH_CR_EOPIE_Msk             (0x1UL << FLASH_CR_EOPIE_Pos)            /*!< 0x01000000 */
 #define FLASH_CR_EOPIE                 FLASH_CR_EOPIE_Msk
+#define FLASH_CR_ERRIE_Pos             (25U)
+#define FLASH_CR_ERRIE_Msk             (0x1UL << FLASH_CR_ERRIE_Pos)
+#define FLASH_CR_ERRIE                 FLASH_CR_ERRIE_Msk
 #define FLASH_CR_LOCK_Pos              (31U)
 #define FLASH_CR_LOCK_Msk              (0x1UL << FLASH_CR_LOCK_Pos)             /*!< 0x80000000 */
 #define FLASH_CR_LOCK                  FLASH_CR_LOCK_Msk
@@ -9436,7 +9446,7 @@ typedef struct
 #define RCC_CR_PLLRDY_Msk                  (0x1UL << RCC_CR_PLLRDY_Pos)         /*!< 0x02000000 */
 #define RCC_CR_PLLRDY                      RCC_CR_PLLRDY_Msk
 /*
- * @brief Specific device feature definitions (not present on all devices in the STM32F4 serie)
+ * @brief Specific device feature definitions (not present on all devices in the STM32F4 series)
  */
 #define RCC_PLLI2S_SUPPORT                                                     /*!< Support PLLI2S oscillator */
 
@@ -9718,7 +9728,7 @@ typedef struct
 #define RCC_AHB2RSTR_HASHRST_Pos           (5U)
 #define RCC_AHB2RSTR_HASHRST_Msk           (0x1UL << RCC_AHB2RSTR_HASHRST_Pos)  /*!< 0x00000020 */
 #define RCC_AHB2RSTR_HASHRST               RCC_AHB2RSTR_HASHRST_Msk
- /* maintained for legacy purpose */
+/* maintained for legacy purpose */
 #define  RCC_AHB2RSTR_HSAHRST                RCC_AHB2RSTR_HASHRST
 #define RCC_AHB2RSTR_RNGRST_Pos            (6U)
 #define RCC_AHB2RSTR_RNGRST_Msk            (0x1UL << RCC_AHB2RSTR_RNGRST_Pos)   /*!< 0x00000040 */
@@ -9892,7 +9902,7 @@ typedef struct
 #define RCC_AHB1ENR_OTGHSULPIEN            RCC_AHB1ENR_OTGHSULPIEN_Msk
 /********************  Bit definition for RCC_AHB2ENR register  ***************/
 /*
- * @brief Specific device feature definitions (not present on all devices in the STM32F4 serie)
+ * @brief Specific device feature definitions (not present on all devices in the STM32F4 series)
  */
 #define RCC_AHB2_SUPPORT                   /*!< AHB2 Bus is supported */
 
@@ -9911,7 +9921,7 @@ typedef struct
 
 /********************  Bit definition for RCC_AHB3ENR register  ***************/
 /*
- * @brief Specific device feature definitions (not present on all devices in the STM32F4 serie)
+ * @brief Specific device feature definitions (not present on all devices in the STM32F4 series)
  */
 #define RCC_AHB3_SUPPORT                   /*!< AHB3 Bus is supported */
 
@@ -10350,7 +10360,7 @@ typedef struct
 /*                                                                            */
 /******************************************************************************/
 /*
- * @brief Specific device feature definitions  (not present on all devices in the STM32F4 serie)
+ * @brief Specific device feature definitions  (not present on all devices in the STM32F4 series)
  */
 #define RTC_TAMPER2_SUPPORT  /*!< TAMPER 2 feature support */
 #define RTC_AF2_SUPPORT /*!< RTC Alternate Function 2 mapping support */
@@ -14278,7 +14288,7 @@ typedef struct
 #define IS_TIM_32B_COUNTER_INSTANCE(INSTANCE)(((INSTANCE) == TIM2) || \
                                               ((INSTANCE) == TIM5))
 
-/***************** TIM Instances : external trigger input availabe ************/
+/***************** TIM Instances : external trigger input available ************/
 #define IS_TIM_ETR_INSTANCE(INSTANCE)  (((INSTANCE) == TIM1) || \
                                         ((INSTANCE) == TIM2) || \
                                         ((INSTANCE) == TIM3) || \
@@ -14547,7 +14557,7 @@ typedef struct
 #define FLASH_SCALE2_LATENCY1_FREQ   30000000U      /*!< HCLK frequency to set FLASH latency 1 in power scale 2  */
 #define FLASH_SCALE2_LATENCY2_FREQ   60000000U      /*!< HCLK frequency to set FLASH latency 2 in power scale 2  */
 #define FLASH_SCALE2_LATENCY3_FREQ   90000000U      /*!< HCLK frequency to set FLASH latency 3 in power scale 2  */
-#define FLASH_SCALE2_LATENCY4_FREQ   12000000U      /*!< HCLK frequency to set FLASH latency 4 in power scale 2  */
+#define FLASH_SCALE2_LATENCY4_FREQ   120000000U     /*!< HCLK frequency to set FLASH latency 4 in power scale 2  */
 
 #define USB_OTG_HS_HOST_MAX_CHANNEL_NBR                12U
 #define USB_OTG_HS_MAX_IN_ENDPOINTS                    6U    /* Including EP0 */
@@ -14583,7 +14593,3 @@ typedef struct
 #endif /* __cplusplus */
 
 #endif /* __STM32F415xx_H */
-
-
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

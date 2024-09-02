@@ -6,13 +6,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2019 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -97,30 +96,30 @@ typedef struct
   */
 typedef struct
 {
-  LPTIM_ClockConfigTypeDef     Clock;               /*!< Specifies the clock parameters */
+  LPTIM_ClockConfigTypeDef     Clock;             /*!< Specifies the clock parameters */
 
-  LPTIM_ULPClockConfigTypeDef  UltraLowPowerClock;  /*!< Specifies the Ultra Low Power clock parameters */
+  LPTIM_ULPClockConfigTypeDef  UltraLowPowerClock;/*!< Specifies the Ultra Low Power clock parameters */
 
-  LPTIM_TriggerConfigTypeDef   Trigger;             /*!< Specifies the Trigger parameters */
+  LPTIM_TriggerConfigTypeDef   Trigger;           /*!< Specifies the Trigger parameters */
 
-  uint32_t                     OutputPolarity;      /*!< Specifies the Output polarity.
-                                                    This parameter can be a value of @ref LPTIM_Output_Polarity */
+  uint32_t                     OutputPolarity;    /*!< Specifies the Output polarity.
+                                                  This parameter can be a value of @ref LPTIM_Output_Polarity */
 
-  uint32_t                     UpdateMode;          /*!< Specifies whether the update of the autoreload and the compare
-                                                    values is done immediately or after the end of current period.
-                                                    This parameter can be a value of @ref LPTIM_Updating_Mode */
+  uint32_t                     UpdateMode;        /*!< Specifies whether the update of the autoreload and the compare
+                                                  values is done immediately or after the end of current period.
+                                                  This parameter can be a value of @ref LPTIM_Updating_Mode */
 
-  uint32_t                     CounterSource;       /*!< Specifies whether the counter is incremented each internal event
-                                                    or each external event.
-                                                    This parameter can be a value of @ref LPTIM_Counter_Source */
+  uint32_t                     CounterSource;     /*!< Specifies whether the counter is incremented each internal event
+                                                  or each external event.
+                                                  This parameter can be a value of @ref LPTIM_Counter_Source */
 
-  uint32_t                     Input1Source;        /*!< Specifies source selected for input1 (GPIO or comparator output).
-                                                    This parameter can be a value of @ref LPTIM_Input1_Source */
+  uint32_t                     Input1Source;      /*!< Specifies source selected for input1 (GPIO or comparator output).
+                                                  This parameter can be a value of @ref LPTIM_Input1_Source */
 
-  uint32_t                     Input2Source;        /*!< Specifies source selected for input2 (GPIO or comparator output).
-                                                    Note: This parameter is used only for encoder feature so is used only
-                                                    for LPTIM1 instance.
-                                                    This parameter can be a value of @ref LPTIM_Input2_Source */
+  uint32_t                     Input2Source;      /*!< Specifies source selected for input2 (GPIO or comparator output).
+                                                  Note: This parameter is used only for encoder feature so is used only
+                                                  for LPTIM1 instance.
+                                                  This parameter can be a value of @ref LPTIM_Input2_Source */
 } LPTIM_InitTypeDef;
 
 /**
@@ -449,6 +448,7 @@ typedef  void (*pLPTIM_CallbackTypeDef)(LPTIM_HandleTypeDef *hlptim);  /*!< poin
   * @brief  Write the passed parameter in the Autoreload register.
   * @param  __HANDLE__ LPTIM handle
   * @param  __VALUE__ Autoreload value
+  *         This parameter must be a value between Min_Data = 0x0001 and Max_Data = 0xFFFF.
   * @retval None
   * @note   The ARR register can only be modified when the LPTIM instance is enabled.
   */
@@ -660,9 +660,9 @@ HAL_StatusTypeDef HAL_LPTIM_Counter_Stop_IT(LPTIM_HandleTypeDef *hlptim);
   * @{
   */
 /* Reading operation functions ************************************************/
-uint32_t HAL_LPTIM_ReadCounter(LPTIM_HandleTypeDef *hlptim);
-uint32_t HAL_LPTIM_ReadAutoReload(LPTIM_HandleTypeDef *hlptim);
-uint32_t HAL_LPTIM_ReadCompare(LPTIM_HandleTypeDef *hlptim);
+uint32_t HAL_LPTIM_ReadCounter(const LPTIM_HandleTypeDef *hlptim);
+uint32_t HAL_LPTIM_ReadAutoReload(const LPTIM_HandleTypeDef *hlptim);
+uint32_t HAL_LPTIM_ReadCompare(const LPTIM_HandleTypeDef *hlptim);
 /**
   * @}
   */
@@ -698,7 +698,7 @@ HAL_StatusTypeDef HAL_LPTIM_UnRegisterCallback(LPTIM_HandleTypeDef *lphtim, HAL_
   * @{
   */
 /* Peripheral State functions  ************************************************/
-HAL_LPTIM_StateTypeDef HAL_LPTIM_GetState(LPTIM_HandleTypeDef *hlptim);
+HAL_LPTIM_StateTypeDef HAL_LPTIM_GetState(const LPTIM_HandleTypeDef *hlptim);
 /**
   * @}
   */
@@ -766,7 +766,7 @@ HAL_LPTIM_StateTypeDef HAL_LPTIM_GetState(LPTIM_HandleTypeDef *hlptim);
                                                  ((__POLARITY__) == LPTIM_CLOCKPOLARITY_FALLING) || \
                                                  ((__POLARITY__) == LPTIM_CLOCKPOLARITY_RISING_FALLING))
 
-#if defined(STM32G473xx) || defined(STM32G483xx) || defined(STM32G474xx) || defined(STM32G484xx)
+#if defined(STM32G414xx) || defined(STM32G473xx) || defined(STM32G483xx) || defined(STM32G474xx) || defined(STM32G484xx)
 #define IS_LPTIM_TRG_SOURCE(__TRIG__)           (((__TRIG__) == LPTIM_TRIGSOURCE_SOFTWARE) || \
                                                  ((__TRIG__) == LPTIM_TRIGSOURCE_0) || \
                                                  ((__TRIG__) == LPTIM_TRIGSOURCE_1) || \
@@ -793,7 +793,7 @@ HAL_LPTIM_StateTypeDef HAL_LPTIM_GetState(LPTIM_HandleTypeDef *hlptim);
                                                  ((__TRIG__) == LPTIM_TRIGSOURCE_7) || \
                                                  ((__TRIG__) == LPTIM_TRIGSOURCE_8) || \
                                                  ((__TRIG__) == LPTIM_TRIGSOURCE_9))
-#endif /* STM32G473xx || STM32G483xx || STM32G474xx || STM32G484xx */
+#endif /* STM32G414xx || STM32G473xx || STM32G483xx || STM32G474xx || STM32G484xx */
 
 #define IS_LPTIM_EXT_TRG_POLARITY(__POLARITY__) (((__POLARITY__) == LPTIM_ACTIVEEDGE_RISING         ) || \
                                                  ((__POLARITY__) == LPTIM_ACTIVEEDGE_FALLING        ) || \
@@ -810,11 +810,10 @@ HAL_LPTIM_StateTypeDef HAL_LPTIM_GetState(LPTIM_HandleTypeDef *hlptim);
 #define IS_LPTIM_COUNTER_SOURCE(__SOURCE__)     (((__SOURCE__) == LPTIM_COUNTERSOURCE_INTERNAL) || \
                                                  ((__SOURCE__) == LPTIM_COUNTERSOURCE_EXTERNAL))
 
-#define IS_LPTIM_AUTORELOAD(__AUTORELOAD__)     ((__AUTORELOAD__) <= 0x0000FFFFUL)
-
 #define IS_LPTIM_COMPARE(__COMPARE__)           ((__COMPARE__) <= 0x0000FFFFUL)
 
-#define IS_LPTIM_PERIOD(__PERIOD__)             ((__PERIOD__) <= 0x0000FFFFUL)
+#define IS_LPTIM_PERIOD(__PERIOD__)             ((0x00000001UL <= (__PERIOD__)) &&\
+                                                 ((__PERIOD__) <= 0x0000FFFFUL))
 
 #define IS_LPTIM_PULSE(__PULSE__)               ((__PULSE__) <= 0x0000FFFFUL)
 
@@ -826,7 +825,15 @@ HAL_LPTIM_StateTypeDef HAL_LPTIM_GetState(LPTIM_HandleTypeDef *hlptim);
      ((__SOURCE__) == LPTIM_INPUT1SOURCE_COMP3) ||        \
      ((__SOURCE__) == LPTIM_INPUT1SOURCE_COMP5) ||        \
      ((__SOURCE__) == LPTIM_INPUT1SOURCE_COMP7))))
+#else
+#define IS_LPTIM_INPUT1_SOURCE(__INSTANCE__, __SOURCE__)  \
+  ((((__INSTANCE__) == LPTIM1) &&                       \
+    (((__SOURCE__) == LPTIM_INPUT1SOURCE_GPIO) ||        \
+     ((__SOURCE__) == LPTIM_INPUT1SOURCE_COMP1) ||        \
+     ((__SOURCE__) == LPTIM_INPUT1SOURCE_COMP3))))
+#endif /* COMP5 && COMP6 && COMP7 */
 
+#if defined(COMP5) && defined(COMP6) && defined(COMP7)
 #define IS_LPTIM_INPUT2_SOURCE(__INSTANCE__, __SOURCE__)  \
   (((__INSTANCE__) == LPTIM1) &&                       \
    (((__SOURCE__) == LPTIM_INPUT2SOURCE_GPIO) ||        \
@@ -834,12 +841,6 @@ HAL_LPTIM_StateTypeDef HAL_LPTIM_GetState(LPTIM_HandleTypeDef *hlptim);
     ((__SOURCE__) == LPTIM_INPUT2SOURCE_COMP4) ||        \
     ((__SOURCE__) == LPTIM_INPUT2SOURCE_COMP6)))
 #else
-#define IS_LPTIM_INPUT1_SOURCE(__INSTANCE__, __SOURCE__)  \
-  ((((__INSTANCE__) == LPTIM1) &&                       \
-    (((__SOURCE__) == LPTIM_INPUT1SOURCE_GPIO) ||        \
-     ((__SOURCE__) == LPTIM_INPUT1SOURCE_COMP1) ||        \
-     ((__SOURCE__) == LPTIM_INPUT1SOURCE_COMP3))))
-
 #define IS_LPTIM_INPUT2_SOURCE(__INSTANCE__, __SOURCE__)  \
   (((__INSTANCE__) == LPTIM1) &&                       \
    (((__SOURCE__) == LPTIM_INPUT2SOURCE_GPIO) ||        \
@@ -874,5 +875,3 @@ void LPTIM_Disable(LPTIM_HandleTypeDef *hlptim);
 #endif
 
 #endif /* STM32G4xx_HAL_LPTIM_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -14,12 +14,12 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2018 STMicroelectronics. All rights reserved.
+  * Copyright (c) 2018-2021 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under Apache License, Version 2.0,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/Apache-2.0
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -127,7 +127,6 @@ Infinite_Loop:
 ******************************************************************************/
   .section .isr_vector,"a",%progbits
   .type g_pfnVectors, %object
-  .size g_pfnVectors, .-g_pfnVectors
 
 g_pfnVectors:
   .word _estack
@@ -176,6 +175,8 @@ g_pfnVectors:
   .word USART1_IRQHandler                 /* USART1                       */
   .word USART2_IRQHandler                 /* USART2                       */
   .word USART3_4_IRQHandler               /* USART3, USART4               */
+
+  .size g_pfnVectors, .-g_pfnVectors
 
 /*******************************************************************************
 *
@@ -280,6 +281,3 @@ g_pfnVectors:
 
   .weak      USART3_4_IRQHandler
   .thumb_set USART3_4_IRQHandler,Default_Handler
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-

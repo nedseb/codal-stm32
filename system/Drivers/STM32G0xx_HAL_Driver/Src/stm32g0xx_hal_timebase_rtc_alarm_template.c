@@ -10,6 +10,18 @@
   *           + The alarm is configured to assert an interrupt when the RTC reaches 1ms
   *           + HAL_IncTick is called at each Alarm event and the time is reset to 00:00:00
   *           + HSE (default), LSE or LSI can be selected as RTC clock source
+  *
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2018 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
  @verbatim
   ==============================================================================
                         ##### How to use this driver #####
@@ -29,17 +41,6 @@
           requiring low power modes
 
   @endverbatim
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2018 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
-  *
   ******************************************************************************
   */
 
@@ -82,7 +83,7 @@
 /* HSE Freq as RTCCLK = 8 MHz / 32 = 250 kHz */
 #define RTC_ASYNCH_PREDIV                   0x07u   /* (8 - 1) */
 #define RTC_SYNCH_PREDIV                    0x7A11u /* (31250 -1) */
-#endif
+#endif /* RTC_CLOCK_SOURCE_LSE */
 
 
 /* Private macro -------------------------------------------------------------*/
@@ -143,7 +144,7 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
     if ((PeriphClkInitStruct.RTCClockSelection == RCC_RTCCLKSOURCE_HSE_DIV32) && (__HAL_RCC_GET_FLAG(RCC_FLAG_HSERDY) != 0x00u))
 #else
 #error Please select the RTC Clock source
-#endif
+#endif /* RTC_CLOCK_SOURCE_LSE */
     {
       /* Do nothing */
     }
@@ -167,7 +168,7 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
       RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
       RCC_OscInitStruct.HSEState = RCC_HSE_ON;
       PeriphClkInitStruct.RTCClockSelection = RCC_RTCCLKSOURCE_HSE_DIV32;
-#endif
+#endif /* RTC_CLOCK_SOURCE_LSE */
 
       /* Configure oscillator */
       status = HAL_RCC_OscConfig(&RCC_OscInitStruct);
@@ -254,7 +255,7 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
         /* When RTCCLK is around 32 kHz, need to mask Subsecond register bit 12 to 11
           to have 10 Hhz interrupt */
         alarm.AlarmSubSecondMask = RTC_ALARMSUBSECONDMASK_SS14_11;
-#endif
+#endif /* RTC_CLOCK_SOURCE_HSE */
       }
       alarm.AlarmDateWeekDaySel = RTC_ALARMDATEWEEKDAYSEL_DATE;
       alarm.AlarmDateWeekDay = RTC_WEEKDAY_MONDAY;
@@ -345,4 +346,3 @@ void RTC_TAMP_IRQHandler(void)
   * @}
   */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

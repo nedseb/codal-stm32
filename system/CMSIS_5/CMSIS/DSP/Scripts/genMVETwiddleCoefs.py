@@ -2,14 +2,25 @@ import numpy as np
 import math
 import argparse
 import sys
+import struct
 
 sys.path.append("PatternGeneration")
 
 import Tools
 
+# Force to f16 value
+def f16(x):
+    return struct.unpack('<e', struct.pack('<e', x))[0]
+
+# Force to f32 value
+def f32(x):
+    return struct.unpack('<f', struct.pack('<f', x))[0]
+
 parser = argparse.ArgumentParser(description='Generate C arrays')
 parser.add_argument('-f', nargs='?',type = str, default="../Source/CommonTables/arm_mve_tables.c", help="C File path")
+parser.add_argument('-f16', nargs='?',type = str, default="../Source/CommonTables/arm_mve_tables_f16.c", help="C File path")
 parser.add_argument('-he', nargs='?',type = str, default="../Include/arm_mve_tables.h", help="H File path")
+parser.add_argument('-he16', nargs='?',type = str, default="../Include/arm_mve_tables_f16.h", help="H File path")
 
 args = parser.parse_args()
 
@@ -19,9 +30,10 @@ condition="""#if !defined(ARM_DSP_CONFIG_TABLES) || defined(ARM_ALL_FFT_TABLES) 
 """
 
 F32 = 1
-Q31 = 2
-Q15 = 3
-Q7  = 4
+F16 = 2
+Q31 = 3
+Q15 = 4
+Q7  = 5
 
 def printCUInt32Array(f,name,arr):
     nb = 0
@@ -42,7 +54,21 @@ def printCFloat32Array(f,name,arr):
     print("float32_t %s[%d]={" % (name,len(arr)),file=f)
 
     for d in arr:
-        val = "%.20ff," % d
+        val = "%.20ff," % f32(d)
+        nb = nb + len(val)
+        if nb > COLLIM:
+            print("",file=f)
+            nb = len(val)
+        print(val,end="",file=f)
+
+    print("};\n",file=f)
+
+def printCFloat16Array(f,name,arr):
+    nb = 0
+    print("float16_t %s[%d]={" % (name,len(arr)),file=f)
+
+    for d in arr:
+        val = "(float16_t)%.13ff," % f16(d)
         nb = nb + len(val)
         if nb > COLLIM:
             print("",file=f)
@@ -98,6 +124,9 @@ def printHUInt32Array(f,name,arr):
 
 def printHFloat32Array(f,name,arr):
  print("extern float32_t %s[%d];" % (name,len(arr)),file=f)
+
+def printHFloat16Array(f,name,arr):
+ print("extern float16_t %s[%d];" % (name,len(arr)),file=f)
 
 def printHQ31Array(f,name,arr):
  print("extern q31_t %s[%d];" % (name,len(arr)),file=f)
@@ -225,6 +254,30 @@ def reorderTwiddle(theType,conjugate,f,h,n):
        print("#endif\n",file=f)
        print("#endif\n",file=h)
 
+    # F16 SECTION FOR THIS FFT LENGTH
+    if theType == F16:
+       print(condition % ("F16",n, "F16",n << 1),file=f)
+       print(condition % ("F16",n, "F16",n << 1),file=h)
+       printCUInt32Array(f,"rearranged_twiddle_tab_stride1_arr_%d_f16" % n,list(tab1Offset))
+       printHUInt32Array(h,"rearranged_twiddle_tab_stride1_arr_%d_f16" % n,list(tab1Offset)) 
+   
+       printCUInt32Array(f,"rearranged_twiddle_tab_stride2_arr_%d_f16" % n,list(tab2Offset))
+       printHUInt32Array(h,"rearranged_twiddle_tab_stride2_arr_%d_f16" % n,list(tab2Offset))
+      
+       printCUInt32Array(f,"rearranged_twiddle_tab_stride3_arr_%d_f16" % n,list(tab3Offset))
+       printHUInt32Array(h,"rearranged_twiddle_tab_stride3_arr_%d_f16" % n,list(tab3Offset))
+   
+       printCFloat16Array(f,"rearranged_twiddle_stride1_%d_f16" % n,list(tab1))
+       printHFloat16Array(h,"rearranged_twiddle_stride1_%d_f16" % n,list(tab1))
+   
+       printCFloat16Array(f,"rearranged_twiddle_stride2_%d_f16" % n,list(tab2))
+       printHFloat16Array(h,"rearranged_twiddle_stride2_%d_f16" % n,list(tab2))
+   
+       printCFloat16Array(f,"rearranged_twiddle_stride3_%d_f16" % n,list(tab3))
+       printHFloat16Array(h,"rearranged_twiddle_stride3_%d_f16" % n,list(tab3))
+       print("#endif\n",file=f)
+       print("#endif\n",file=h)
+
     # Q31 SECTION FOR THIS FFT LENGTH
     if theType == Q31:
        print(condition % ("Q31",n, "Q31",n << 1),file=f)
@@ -281,17 +334,17 @@ def reorderTwiddle(theType,conjugate,f,h,n):
 
 cheader="""/* ----------------------------------------------------------------------
  * Project:      CMSIS DSP Library
- * Title:        arm_mve_tables.c
+ * Title:        arm_mve_tables%s.c
  * Description:  common tables like fft twiddle factors, Bitreverse, reciprocal etc
  *               used for MVE implementation only
  *
- * $Date:        08. January 2020
- * $Revision:    V1.7.0
+ * @version  V1.10.0
+ * @date     04 October 2021
  *
- * Target Processor: Cortex-M cores
+ * Target Processor: Cortex-M and Cortex-A cores
  * -------------------------------------------------------------------- */
 /*
- * Copyright (C) 2010-2020 ARM Limited or its affiliates. All rights reserved.
+ * Copyright (C) 2010-2021 ARM Limited or its affiliates. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -308,11 +361,13 @@ cheader="""/* ------------------------------------------------------------------
  * limitations under the License.
  */
 
+ #include "arm_math_types%s.h"
+
  """ 
 
-cifdeMVEF="""#include "arm_math.h"
+cifdeMVEF="""
 
-#if defined(ARM_MATH_MVEF) && !defined(ARM_MATH_AUTOVECTORIZE)
+#if defined(%s) && !defined(ARM_MATH_AUTOVECTORIZE)
 
 #if !defined(ARM_DSP_CONFIG_TABLES) || defined(ARM_FFT_ALLOW_TABLES)
 """
@@ -320,12 +375,12 @@ cifdeMVEF="""#include "arm_math.h"
 cfooterMVEF="""
 
 #endif /* !defined(ARM_DSP_CONFIG_TABLES) || defined(ARM_FFT_ALLOW_TABLES) */
-#endif /* defined(ARM_MATH_MVEF) && !defined(ARM_MATH_AUTOVECTORIZE) */
+#endif /* defined(%s) && !defined(ARM_MATH_AUTOVECTORIZE) */
 """
 
-cifdeMVEI="""#include "arm_math.h"
+cifdeMVEI="""
 
-#if defined(ARM_MATH_MVEI) 
+#if defined(ARM_MATH_MVEI) && !defined(ARM_MATH_AUTOVECTORIZE)
 
 #if !defined(ARM_DSP_CONFIG_TABLES) || defined(ARM_FFT_ALLOW_TABLES)
 """
@@ -338,17 +393,17 @@ cfooterMVEI="""
 
 hheader="""/* ----------------------------------------------------------------------
  * Project:      CMSIS DSP Library
- * Title:        arm_mve_tables.h
+ * Title:        arm_mve_tables%s.h
  * Description:  common tables like fft twiddle factors, Bitreverse, reciprocal etc
  *               used for MVE implementation only
  *
- * $Date:        08. January 2020
- * $Revision:    V1.7.0
+ * @version  V1.10.0
+ * @date     04 October 2021
  *
- * Target Processor: Cortex-M cores
+ * Target Processor: Cortex-M and Cortex-A cores
  * -------------------------------------------------------------------- */
 /*
- * Copyright (C) 2010-2020 ARM Limited or its affiliates. All rights reserved.
+ * Copyright (C) 2010-2021 ARM Limited or its affiliates. All rights reserved.
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -365,18 +420,21 @@ hheader="""/* ------------------------------------------------------------------
  * limitations under the License.
  */
 
- #ifndef _ARM_MVE_TABLES_H
- #define _ARM_MVE_TABLES_H
+ #ifndef _ARM_MVE_TABLES_%sH
+ #define _ARM_MVE_TABLES_%sH
 
- #include "arm_math.h"
+#include "arm_math_types%s.h"
 
- 
+#ifdef   __cplusplus
+extern "C"
+{
+#endif
 
 
  """ 
 
 hifdefMVEF="""
-#if defined(ARM_MATH_MVEF) && !defined(ARM_MATH_AUTOVECTORIZE)
+#if defined(%s) && !defined(ARM_MATH_AUTOVECTORIZE)
 
 #if !defined(ARM_DSP_CONFIG_TABLES) || defined(ARM_FFT_ALLOW_TABLES)
 """
@@ -384,12 +442,12 @@ hifdefMVEF="""
 hfooterMVEF="""
 #endif /* !defined(ARM_DSP_CONFIG_TABLES) || defined(ARM_FFT_ALLOW_TABLES) */
 
-#endif /* defined(ARM_MATH_MVEF) && !defined(ARM_MATH_AUTOVECTORIZE) */
+#endif /* defined(%s) && !defined(ARM_MATH_AUTOVECTORIZE) */
 
 """
 
 hifdefMVEI="""
-#if defined(ARM_MATH_MVEI) 
+#if defined(ARM_MATH_MVEI)  && !defined(ARM_MATH_AUTOVECTORIZE)
 
 #if !defined(ARM_DSP_CONFIG_TABLES) || defined(ARM_FFT_ALLOW_TABLES)
 """
@@ -402,26 +460,49 @@ hfooterMVEI="""
 """
 
 hfooter="""
-#endif /*_ARM_MVE_TABLES_H*/
+#ifdef   __cplusplus
+}
+#endif
+
+#endif /*_ARM_MVE_TABLES_%sH*/
 """
 
+with open(args.f16,'w') as f:
+  with open(args.he16,'w') as h:
+     print(cheader % ("_f16","_f16"),file=f)
+     print(hheader % ("_f16","F16_","F16_","_f16"),file=h)
 
+     print("#if defined(ARM_FLOAT16_SUPPORTED)",file=f)
+
+     print(cifdeMVEF % ("ARM_MATH_MVE_FLOAT16",),file=f)
+     print(hifdefMVEF % "ARM_MATH_MVE_FLOAT16",file=h)
+     reorderTwiddle(F16,False,f,h,16)
+     reorderTwiddle(F16,False,f,h,64)
+     reorderTwiddle(F16,False,f,h,256)
+     reorderTwiddle(F16,False,f,h,1024)
+     reorderTwiddle(F16,False,f,h,4096)
+     print(cfooterMVEF % ("ARM_MATH_MVE_FLOAT16"),file=f)
+     print(hfooterMVEF % "ARM_MATH_MVE_FLOAT16",file=h)
+
+     print("#endif /* if defined(ARM_FLOAT16_SUPPORTED) */",file=f)
+
+     print(hfooter % "F16_",file=h)
 
 with open(args.f,'w') as f:
   with open(args.he,'w') as h:
-     print(cheader,file=f)
-     print(hheader,file=h)
+     print(cheader % ("",""),file=f)
+     print(hheader % ("","","",""),file=h)
 
     
-     print(cifdeMVEF,file=f)
-     print(hifdefMVEF,file=h)
+     print(cifdeMVEF % ("ARM_MATH_MVEF",),file=f)
+     print(hifdefMVEF % "ARM_MATH_MVEF",file=h)
      reorderTwiddle(F32,False,f,h,16)
      reorderTwiddle(F32,False,f,h,64)
      reorderTwiddle(F32,False,f,h,256)
      reorderTwiddle(F32,False,f,h,1024)
      reorderTwiddle(F32,False,f,h,4096)
-     print(cfooterMVEF,file=f)
-     print(hfooterMVEF,file=h)
+     print(cfooterMVEF % ("ARM_MATH_MVEF"),file=f)
+     print(hfooterMVEF % "ARM_MATH_MVEF",file=h)
 
      print(cifdeMVEI,file=f)
      print(hifdefMVEI,file=h)
@@ -443,14 +524,14 @@ with open(args.f,'w') as f:
      print(cfooterMVEI,file=f)
      print(hfooterMVEI,file=h)
 
-     print(cifdeMVEI,file=f)
-     print(hifdefMVEI,file=h)
-     reorderTwiddle(Q7,True,f,h,16)
-     reorderTwiddle(Q7,True,f,h,64)
-     reorderTwiddle(Q7,True,f,h,256)
-     reorderTwiddle(Q7,True,f,h,1024)
-     reorderTwiddle(Q7,True,f,h,4096)
-     print(cfooterMVEI,file=f)
-     print(hfooterMVEI,file=h)
+     #print(cifdeMVEI,file=f)
+     #print(hifdefMVEI,file=h)
+     #reorderTwiddle(Q7,True,f,h,16)
+     #reorderTwiddle(Q7,True,f,h,64)
+     #reorderTwiddle(Q7,True,f,h,256)
+     #reorderTwiddle(Q7,True,f,h,1024)
+     #reorderTwiddle(Q7,True,f,h,4096)
+     #print(cfooterMVEI,file=f)
+     #print(hfooterMVEI,file=h)
 
-     print(hfooter,file=h)
+     print(hfooter % "",file=h)

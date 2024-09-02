@@ -1,7 +1,7 @@
 /**
   ******************************************************************************
   * @file    stm32f0xx_hal_conf_default.h
-  * @brief   HAL defalt configuration file.
+  * @brief   HAL default configuration file.
   ******************************************************************************
   * @attention
   *
@@ -39,6 +39,7 @@ extern "C" {
   */
 #define HAL_MODULE_ENABLED
 #define HAL_ADC_MODULE_ENABLED
+#define HAL_CAN_LEGACY_MODULE_ENABLED
 #define HAL_CAN_MODULE_ENABLED
 #define HAL_CEC_MODULE_ENABLED
 #define HAL_COMP_MODULE_ENABLED
@@ -172,24 +173,60 @@ in voltage and temperature.  */
 #define  USE_SPI_CRC                  0U
 #endif
 
+#if !defined(USE_HAL_ADC_REGISTER_CALLBACKS)
 #define  USE_HAL_ADC_REGISTER_CALLBACKS         0U /* ADC register callback disabled       */
+#endif
+#if !defined(USE_HAL_CAN_REGISTER_CALLBACKS)
 #define  USE_HAL_CAN_REGISTER_CALLBACKS         0U /* CAN register callback disabled       */
+#endif
+#if !defined(USE_HAL_COMP_REGISTER_CALLBACKS)
 #define  USE_HAL_COMP_REGISTER_CALLBACKS        0U /* COMP register callback disabled      */
+#endif
+#if !defined(USE_HAL_CEC_REGISTER_CALLBACKS)
 #define  USE_HAL_CEC_REGISTER_CALLBACKS         0U /* CEC register callback disabled       */
+#endif
+#if !defined(USE_HAL_DAC_REGISTER_CALLBACKS)
 #define  USE_HAL_DAC_REGISTER_CALLBACKS         0U /* DAC register callback disabled       */
+#endif
+#if !defined(USE_HAL_I2C_REGISTER_CALLBACKS)
 #define  USE_HAL_I2C_REGISTER_CALLBACKS         0U /* I2C register callback disabled       */
+#endif
+#if !defined(USE_HAL_SMBUS_REGISTER_CALLBACKS)
 #define  USE_HAL_SMBUS_REGISTER_CALLBACKS       0U /* SMBUS register callback disabled     */
+#endif
+#if !defined(USE_HAL_UART_REGISTER_CALLBACKS)
 #define  USE_HAL_UART_REGISTER_CALLBACKS        0U /* UART register callback disabled      */
+#endif
+#if !defined(USE_HAL_USART_REGISTER_CALLBACKS)
 #define  USE_HAL_USART_REGISTER_CALLBACKS       0U /* USART register callback disabled     */
+#endif
+#if !defined(USE_HAL_IRDA_REGISTER_CALLBACKS)
 #define  USE_HAL_IRDA_REGISTER_CALLBACKS        0U /* IRDA register callback disabled      */
+#endif
+#if !defined(USE_HAL_SMARTCARD_REGISTER_CALLBACKS)
 #define  USE_HAL_SMARTCARD_REGISTER_CALLBACKS   0U /* SMARTCARD register callback disabled */
+#endif
+#if !defined(USE_HAL_WWDG_REGISTER_CALLBACKS)
 #define  USE_HAL_WWDG_REGISTER_CALLBACKS        0U /* WWDG register callback disabled      */
+#endif
+#if !defined(USE_HAL_RTC_REGISTER_CALLBACKS)
 #define  USE_HAL_RTC_REGISTER_CALLBACKS         0U /* RTC register callback disabled       */
+#endif
+#if !defined(USE_HAL_SPI_REGISTER_CALLBACKS)
 #define  USE_HAL_SPI_REGISTER_CALLBACKS         0U /* SPI register callback disabled       */
+#endif
+#if !defined(USE_HAL_I2S_REGISTER_CALLBACKS)
 #define  USE_HAL_I2S_REGISTER_CALLBACKS         0U /* I2S register callback disabled       */
+#endif
+#if !defined(USE_HAL_TIM_REGISTER_CALLBACKS)
 #define  USE_HAL_TIM_REGISTER_CALLBACKS         0U /* TIM register callback disabled       */
+#endif
+#if !defined(USE_HAL_TSC_REGISTER_CALLBACKS)
 #define  USE_HAL_TSC_REGISTER_CALLBACKS         0U /* TSC register callback disabled       */
+#endif
+#if !defined(USE_HAL_PCD_REGISTER_CALLBACKS)
 #define  USE_HAL_PCD_REGISTER_CALLBACKS         0U /* PCD register callback disabled       */
+#endif
 
 /* ########################## Assert Selection ############################## */
 /**
@@ -230,6 +267,10 @@ in voltage and temperature.  */
 #ifdef HAL_CAN_MODULE_ENABLED
 #include "stm32f0xx_hal_can.h"
 #endif /* HAL_CAN_MODULE_ENABLED */
+
+#ifdef HAL_CAN_LEGACY_MODULE_ENABLED
+#include "stm32f0xx_hal_can_legacy.h"
+#endif /* HAL_CAN_LEGACY_MODULE_ENABLED */
 
 #ifdef HAL_CEC_MODULE_ENABLED
 #include "stm32f0xx_hal_cec.h"

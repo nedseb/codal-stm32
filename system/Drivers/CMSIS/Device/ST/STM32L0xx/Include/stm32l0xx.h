@@ -18,13 +18,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright(c) 2016 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2016 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************  
   */ 
@@ -104,7 +103,7 @@
   */
 #define __STM32L0xx_CMSIS_VERSION_MAIN   (0x01) /*!< [31:24] main version */
 #define __STM32L0xx_CMSIS_VERSION_SUB1   (0x09) /*!< [23:16] sub1 version */
-#define __STM32L0xx_CMSIS_VERSION_SUB2   (0x01) /*!< [15:8]  sub2 version */
+#define __STM32L0xx_CMSIS_VERSION_SUB2   (0x03) /*!< [15:8]  sub2 version */
 #define __STM32L0xx_CMSIS_VERSION_RC     (0x00) /*!< [7:0]  release candidate */
 #define __STM32L0xx_CMSIS_VERSION        ((__STM32L0xx_CMSIS_VERSION_MAIN     << 24)\
                                          |(__STM32L0xx_CMSIS_VERSION_SUB1 << 16)\
@@ -208,6 +207,46 @@ typedef enum
 
 #define MODIFY_REG(REG, CLEARMASK, SETMASK)  WRITE_REG((REG), (((READ_REG(REG)) & (~(CLEARMASK))) | (SETMASK)))
 
+/* Use of interrupt control for register exclusive access */
+/* Atomic 32-bit register access macro to set one or several bits */
+#define ATOMIC_SET_BIT(REG, BIT)                             \
+  do {                                                       \
+    uint32_t primask;                                        \
+    primask = __get_PRIMASK();                               \
+    __set_PRIMASK(1);                                        \
+    SET_BIT((REG), (BIT));                                   \
+    __set_PRIMASK(primask);                                  \
+  } while(0)
+
+/* Atomic 32-bit register access macro to clear one or several bits */
+#define ATOMIC_CLEAR_BIT(REG, BIT)                           \
+  do {                                                       \
+    uint32_t primask;                                        \
+    primask = __get_PRIMASK();                               \
+    __set_PRIMASK(1);                                        \
+    CLEAR_BIT((REG), (BIT));                                 \
+    __set_PRIMASK(primask);                                  \
+  } while(0)
+
+/* Atomic 32-bit register access macro to clear and set one or several bits */
+#define ATOMIC_MODIFY_REG(REG, CLEARMSK, SETMASK)            \
+  do {                                                       \
+    uint32_t primask;                                        \
+    primask = __get_PRIMASK();                               \
+    __set_PRIMASK(1);                                        \
+    MODIFY_REG((REG), (CLEARMSK), (SETMASK));                \
+    __set_PRIMASK(primask);                                  \
+  } while(0)
+
+/* Atomic 16-bit register access macro to set one or several bits */
+#define ATOMIC_SETH_BIT(REG, BIT) ATOMIC_SET_BIT(REG, BIT)                                   \
+
+/* Atomic 16-bit register access macro to clear one or several bits */
+#define ATOMIC_CLEARH_BIT(REG, BIT) ATOMIC_CLEAR_BIT(REG, BIT)                               \
+
+/* Atomic 16-bit register access macro to clear and set one or several bits */
+#define ATOMIC_MODIFYH_REG(REG, CLEARMSK, SETMASK) ATOMIC_MODIFY_REG(REG, CLEARMSK, SETMASK) \
+
 /**
   * @}
   */
@@ -232,4 +271,3 @@ typedef enum
 
 
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

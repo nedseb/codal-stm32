@@ -6,13 +6,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2019 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -31,6 +30,8 @@ extern "C" {
 /** @addtogroup STM32G4xx_HAL_Driver
   * @{
   */
+
+#if defined (OPAMP1) || defined (OPAMP2) || defined (OPAMP3) || defined (OPAMP4) || defined (OPAMP5) || defined (OPAMP6)
 
 /** @addtogroup OPAMP
   * @{
@@ -452,7 +453,7 @@ typedef void (*pOPAMP_CallbackTypeDef)(OPAMP_HandleTypeDef *hopamp);
                                  ((GAIN) == OPAMP_PGA_GAIN_32_OR_MINUS_31) || \
                                  ((GAIN) == OPAMP_PGA_GAIN_64_OR_MINUS_63))
 
-#define IS_OPAMP_POWERMODE(POWERMODE) (((POWERMODE) == OPAMP_POWERMODE_NORMAL) || \
+#define IS_OPAMP_POWERMODE(POWERMODE) (((POWERMODE) == OPAMP_POWERMODE_NORMALSPEED) || \
                                        ((POWERMODE) == OPAMP_POWERMODE_HIGHSPEED) )
 
 #define IS_OPAMP_TRIMMING(TRIMMING) (((TRIMMING) == OPAMP_TRIMMING_FACTORY) || \
@@ -561,15 +562,14 @@ OPAMP_TrimmingValueTypeDef HAL_OPAMP_GetTrimOffset(OPAMP_HandleTypeDef *hopamp, 
   * @}
   */
 
+#endif /* OPAMP1 || OPAMP2 || OPAMP3 || OPAMP4  || OPAMP5 || OPAMP6 */
+
 /**
   * @}
   */
-
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* STM32G4xx_HAL_OPAMP_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

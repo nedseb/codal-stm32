@@ -9,18 +9,17 @@
   *          This file contains:
   *           - Data structures and the address mapping for all peripherals
   *           - Peripheral's registers declarations and bits definition
-  *           - Macros to access peripheral’s registers hardware
+  *           - Macros to access peripheral's registers hardware
   *
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2017-2021 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -677,6 +676,7 @@ typedef struct
 #define FSMC_R_BASE           (0xA0000000UL)              /*!< FSMC registers base address */
 #define SRAM_BB_BASE          (0x22000000UL)              /*!< SRAM base address in the bit-band region */
 #define PERIPH_BB_BASE        (0x42000000UL)              /*!< Peripheral base address in the bit-band region */
+#define FLASH_END             (0x0805FFFFUL)              /*!< Program end FLASH address for Cat4 */
 #define FLASH_BANK2_BASE      (0x08030000UL)              /*!< FLASH BANK2 base address in the alias region */
 #define FLASH_BANK1_END       (0x0802FFFFUL)              /*!< Program end FLASH BANK1 address */
 #define FLASH_BANK2_END       (0x0805FFFFUL)              /*!< Program end FLASH BANK2 address */
@@ -865,6 +865,15 @@ typedef struct
   * @{
   */
 
+  /** @addtogroup Hardware_Constant_Definition
+    * @{
+    */
+#define LSI_STARTUP_TIME 200U /*!< LSI Maximum startup time in us */
+
+  /**
+    * @}
+    */
+
 /** @addtogroup Peripheral_Registers_Bits_Definition
   * @{
   */
@@ -1013,7 +1022,7 @@ typedef struct
 #define ADC_CR2_EOCS                         ADC_CR2_EOCS_Msk                  /*!< ADC end of unitary or end of sequence conversions selection */
 #define ADC_CR2_ALIGN_Pos                    (11U)
 #define ADC_CR2_ALIGN_Msk                    (0x1UL << ADC_CR2_ALIGN_Pos)       /*!< 0x00000800 */
-#define ADC_CR2_ALIGN                        ADC_CR2_ALIGN_Msk                 /*!< ADC data alignement */
+#define ADC_CR2_ALIGN                        ADC_CR2_ALIGN_Msk                 /*!< ADC data alignment */
 
 #define ADC_CR2_JEXTSEL_Pos                  (16U)
 #define ADC_CR2_JEXTSEL_Msk                  (0xFUL << ADC_CR2_JEXTSEL_Pos)     /*!< 0x000F0000 */
@@ -3143,6 +3152,10 @@ typedef struct
 /*                        (FLASH, DATA_EEPROM, OB)                            */
 /*                                                                            */
 /******************************************************************************/
+/*
+ * @brief Specific device feature definitions (not present on all devices in the STM32L1 series)
+ */
+#define FLASH_CUT4
 
 /*******************  Bit definition for FLASH_ACR register  ******************/
 #define FLASH_ACR_LATENCY_Pos                (0U)
@@ -3335,6 +3348,12 @@ typedef struct
 #define FSMC_BCRx_ASYNCWAIT_Pos             (15U)
 #define FSMC_BCRx_ASYNCWAIT_Msk             (0x1UL << FSMC_BCRx_ASYNCWAIT_Pos)  /*!< 0x00008000 */
 #define FSMC_BCRx_ASYNCWAIT                 FSMC_BCRx_ASYNCWAIT_Msk            /*!< Asynchronous wait */
+#define FSMC_BCRx_CPSIZE_Pos                (16U)
+#define FSMC_BCRx_CPSIZE_Msk                (0x7UL << FSMC_BCRx_CPSIZE_Pos)     /*!< 0x00070000 */
+#define FSMC_BCRx_CPSIZE                    FSMC_BCRx_CPSIZE_Msk               /*!< Cellular RAM page size */
+#define FSMC_BCRx_CPSIZE_0                  (0x1UL << FSMC_BCRx_CPSIZE_Pos)     /*!< 0x00010000 */
+#define FSMC_BCRx_CPSIZE_1                  (0x2UL << FSMC_BCRx_CPSIZE_Pos)     /*!< 0x00020000 */
+#define FSMC_BCRx_CPSIZE_2                  (0x4UL << FSMC_BCRx_CPSIZE_Pos)     /*!< 0x00040000 */
 #define FSMC_BCRx_CBURSTRW_Pos              (19U)
 #define FSMC_BCRx_CBURSTRW_Msk              (0x1UL << FSMC_BCRx_CBURSTRW_Pos)   /*!< 0x00080000 */
 #define FSMC_BCRx_CBURSTRW                  FSMC_BCRx_CBURSTRW_Msk             /*!< Write burst enable */
@@ -4291,7 +4310,7 @@ typedef struct
 /*                                                                            */
 /******************************************************************************/
 /*
-* @brief Specific device feature definitions  (not present on all devices in the STM32F0 serie)
+* @brief Specific device feature definitions  (not present on all devices in the STM32F0 series)
 */
 #define RCC_LSECSS_SUPPORT          /*!< LSE CSS feature support */
 
@@ -5031,7 +5050,7 @@ typedef struct
 #define RCC_CSR_RTCSEL_0                    (0x1UL << RCC_CSR_RTCSEL_Pos)       /*!< 0x00010000 */
 #define RCC_CSR_RTCSEL_1                    (0x2UL << RCC_CSR_RTCSEL_Pos)       /*!< 0x00020000 */
 
-/*!< RTC congiguration */
+/*!< RTC configuration */
 #define RCC_CSR_RTCSEL_NOCLOCK              (0x00000000U)                      /*!< No clock */
 #define RCC_CSR_RTCSEL_LSE_Pos              (16U)
 #define RCC_CSR_RTCSEL_LSE_Msk              (0x1UL << RCC_CSR_RTCSEL_LSE_Pos)   /*!< 0x00010000 */
@@ -5081,7 +5100,7 @@ typedef struct
 /*                                                                            */
 /******************************************************************************/
 /*
-* @brief Specific device feature definitions  (not present on all devices in the STM32F0 serie)
+* @brief Specific device feature definitions  (not present on all devices in the STM32F0 series)
 */
 #define RTC_TAMPER1_SUPPORT       /*!< TAMPER 1 feature support */
 #define RTC_TAMPER2_SUPPORT       /*!< TAMPER 2 feature support */
@@ -6185,7 +6204,7 @@ typedef struct
 /******************************************************************************/
 
 /*
- * @brief Specific device feature definitions (not present on all devices in the STM32F3 serie)
+ * @brief Specific device feature definitions (not present on all devices in the STM32F3 series)
  */
 #define SPI_I2S_SUPPORT
 
@@ -6439,8 +6458,8 @@ typedef struct
 #define SYSCFG_EXTICR1_EXTI3_PC         (0x00002000U)                          /*!< PC[3] pin */
 #define SYSCFG_EXTICR1_EXTI3_PD         (0x00003000U)                          /*!< PD[3] pin */
 #define SYSCFG_EXTICR1_EXTI3_PE         (0x00004000U)                          /*!< PE[3] pin */
-#define SYSCFG_EXTICR1_EXTI3_PF         (0x00003000U)                          /*!< PF[3] pin */
-#define SYSCFG_EXTICR1_EXTI3_PG         (0x00004000U)                          /*!< PG[3] pin */
+#define SYSCFG_EXTICR1_EXTI3_PF         (0x00006000U)                          /*!< PF[3] pin */
+#define SYSCFG_EXTICR1_EXTI3_PG         (0x00007000U)                          /*!< PG[3] pin */
 
 /*****************  Bit definition for SYSCFG_EXTICR2 register  *****************/
 #define SYSCFG_EXTICR2_EXTI4_Pos        (0U)
@@ -7744,12 +7763,21 @@ typedef struct
 #define USART_DR_DR                         USART_DR_DR_Msk                    /*!< Data value */
 
 /******************  Bit definition for USART_BRR register  *******************/
-#define USART_BRR_DIV_FRACTION_Pos          (0U)
-#define USART_BRR_DIV_FRACTION_Msk          (0xFUL << USART_BRR_DIV_FRACTION_Pos) /*!< 0x0000000F */
-#define USART_BRR_DIV_FRACTION              USART_BRR_DIV_FRACTION_Msk         /*!< Fraction of USARTDIV */
-#define USART_BRR_DIV_MANTISSA_Pos          (4U)
-#define USART_BRR_DIV_MANTISSA_Msk          (0xFFFUL << USART_BRR_DIV_MANTISSA_Pos) /*!< 0x0000FFF0 */
-#define USART_BRR_DIV_MANTISSA              USART_BRR_DIV_MANTISSA_Msk         /*!< Mantissa of USARTDIV */
+#define USART_BRR_DIV_Fraction_Pos    (0U)
+#define USART_BRR_DIV_Fraction_Msk    (0xFUL << USART_BRR_DIV_Fraction_Pos)     /*!< 0x0000000F */
+#define USART_BRR_DIV_Fraction        USART_BRR_DIV_Fraction_Msk               /*!<Fraction of USARTDIV */
+#define USART_BRR_DIV_Mantissa_Pos    (4U)
+#define USART_BRR_DIV_Mantissa_Msk    (0xFFFUL << USART_BRR_DIV_Mantissa_Pos)   /*!< 0x0000FFF0 */
+#define USART_BRR_DIV_Mantissa        USART_BRR_DIV_Mantissa_Msk               /*!<Mantissa of USARTDIV */
+
+/* Legacy aliases */
+#define  USART_BRR_DIV_FRACTION_Pos              USART_BRR_DIV_Fraction_Pos
+#define  USART_BRR_DIV_FRACTION_Msk              USART_BRR_DIV_Fraction_Msk
+#define  USART_BRR_DIV_FRACTION                  USART_BRR_DIV_Fraction
+
+#define  USART_BRR_DIV_MANTISSA_Pos              USART_BRR_DIV_Mantissa_Pos
+#define  USART_BRR_DIV_MANTISSA_Msk              USART_BRR_DIV_Mantissa_Msk
+#define  USART_BRR_DIV_MANTISSA                  USART_BRR_DIV_Mantissa
 
 /******************  Bit definition for USART_CR1 register  *******************/
 #define USART_CR1_SBK_Pos                   (0U)
@@ -9393,4 +9421,3 @@ typedef struct
 
 
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

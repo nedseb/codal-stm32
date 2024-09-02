@@ -6,13 +6,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2018 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2018 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -112,12 +111,11 @@ typedef struct
                                  with [1 Sec / SecondFraction +1] granularity.
                                  This field will be used only by HAL_RTC_GetTime function */
 
-  uint32_t DayLightSaving;  /*!< Specifies RTC_DayLightSaveOperation: the value of hour adjustment.
-                                 This parameter can be a value of @ref RTC_DayLightSaving_Definitions */
+  uint32_t DayLightSaving;  /*!< This interface is deprecated. To manage Daylight Saving Time,
+                                 please use HAL_RTC_DST_xxx functions */
 
-  uint32_t StoreOperation;  /*!< Specifies RTC_StoreOperation value to be written in the BKP bit
-                                 in CR register to store the operation.
-                                 This parameter can be a value of @ref RTC_StoreOperation_Definitions */
+  uint32_t StoreOperation;  /*!< This interface is deprecated. To manage Daylight Saving Time,
+                                 please use HAL_RTC_DST_xxx functions */
 }RTC_TimeTypeDef;
 
 /**
@@ -170,7 +168,7 @@ typedef struct
 typedef struct __RTC_HandleTypeDef
 #else
 typedef struct
-#endif
+#endif /* USE_HAL_RTC_REGISTER_CALLBACKS */
 {
   RTC_TypeDef               *Instance;  /*!< Register base address    */
 
@@ -197,7 +195,7 @@ typedef struct
 
 #if defined(TAMP_CR1_TAMP3E)
   void  (* Tamper3EventCallback)     ( struct __RTC_HandleTypeDef * hrtc);           /*!< RTC Tamper 3 Event callback           */
-#endif
+#endif /* TAMP_CR1_TAMP3E */
 
   void  (* InternalTamper3EventCallback)     ( struct __RTC_HandleTypeDef * hrtc);   /*!< RTC Internal Tamper 3 Event callback  */
 
@@ -230,7 +228,7 @@ typedef enum
   HAL_RTC_TAMPER2_EVENT_CB_ID           = 0x05U,    /*!< RTC Tamper 2 Callback ID           */
 #if defined(TAMP_CR1_TAMP3E)
   HAL_RTC_TAMPER3_EVENT_CB_ID           = 0x06U,    /*!< RTC Tamper 3 Callback ID           */
-#endif
+#endif /* TAMP_CR1_TAMP3E */
   HAL_RTC_INTERNAL_TAMPER3_EVENT_CB_ID  = 0x09U,    /*!< RTC Internal Tamper 3 Callback ID  */
   HAL_RTC_INTERNAL_TAMPER4_EVENT_CB_ID  = 0x0AU,    /*!< RTC Internal Tamper 4 Callback ID  */
   HAL_RTC_INTERNAL_TAMPER5_EVENT_CB_ID  = 0x0BU,    /*!< RTC Internal Tamper 5 Callback ID  */
@@ -486,7 +484,7 @@ typedef  void (*pRTC_CallbackTypeDef)(RTC_HandleTypeDef * hrtc); /*!< pointer to
   *           - YYYYY  : Interrupt flag position in the XX register (5bits)
   *           - XX  : Interrupt status register (2bits)
   *                 - 01: ICSR register
-  *                 - 10: SR or SCR or MISR or SMISR registers
+  *                 - 10: SR or SCR or MISR registers
   * @{
   */
 #define RTC_FLAG_RECALPF                    (0x00000100U | RTC_ICSR_RECALPF_Pos) /*!< Recalibration pending Flag */
@@ -565,7 +563,16 @@ typedef  void (*pRTC_CallbackTypeDef)(RTC_HandleTypeDef * hrtc); /*!< pointer to
                           } while(0U)
 
 /**
+  * @brief  Check whether the RTC Calendar is initialized.
+  * @param  __HANDLE__ specifies the RTC handle.
+  * @retval None
+  */
+#define __HAL_RTC_IS_CALENDAR_INITIALIZED(__HANDLE__)  (((((__HANDLE__)->Instance->ICSR) & (RTC_ICSR_INITS)) == RTC_ICSR_INITS) ? 1U : 0U)
+
+/**
   * @brief  Add 1 hour (summer time change).
+  * @note   This interface is deprecated.
+  *         To manage Daylight Saving Time, please use HAL_RTC_DST_xxx functions
   * @param  __HANDLE__ specifies the RTC handle.
   * @param  __BKP__ Backup
   *         This parameter can be:
@@ -583,6 +590,8 @@ typedef  void (*pRTC_CallbackTypeDef)(RTC_HandleTypeDef * hrtc); /*!< pointer to
 
 /**
   * @brief  Subtract 1 hour (winter time change).
+  * @note   This interface is deprecated.
+  *         To manage Daylight Saving Time, please use HAL_RTC_DST_xxx functions
   * @param  __HANDLE__ specifies the RTC handle.
   * @param  __BKP__ Backup
   *         This parameter can be:
@@ -655,9 +664,9 @@ typedef  void (*pRTC_CallbackTypeDef)(RTC_HandleTypeDef * hrtc); /*!< pointer to
   *         This parameter can be:
   *            @arg @ref RTC_IT_ALRA Alarm A interrupt
   *            @arg @ref RTC_IT_ALRB Alarm B interrupt
-  * @retval None
+  * @retval The state of __INTERRUPT__ (TRUE or FALSE).
   */
-#define __HAL_RTC_ALARM_GET_IT(__HANDLE__, __INTERRUPT__) (((((__HANDLE__)->Instance->SR)& ((__INTERRUPT__)>> 12U)) != 0U)? 1U : 0U)
+#define __HAL_RTC_ALARM_GET_IT(__HANDLE__, __INTERRUPT__) (((((__HANDLE__)->Instance->MISR) & ((__INTERRUPT__) >> 12U)) != 0U) ? 1U : 0U)
 
 /**
   * @brief  Check whether the specified RTC Alarm interrupt has been enabled or not.
@@ -666,7 +675,7 @@ typedef  void (*pRTC_CallbackTypeDef)(RTC_HandleTypeDef * hrtc); /*!< pointer to
   *         This parameter can be:
   *            @arg @ref RTC_IT_ALRA Alarm A interrupt
   *            @arg @ref RTC_IT_ALRB Alarm B interrupt
-  * @retval None
+  * @retval The state of __INTERRUPT__ (TRUE or FALSE).
   */
 #define __HAL_RTC_ALARM_GET_IT_SOURCE(__HANDLE__, __INTERRUPT__)     (((((__HANDLE__)->Instance->CR) & (__INTERRUPT__)) != 0U) ? 1U : 0U)
 
@@ -679,9 +688,13 @@ typedef  void (*pRTC_CallbackTypeDef)(RTC_HandleTypeDef * hrtc); /*!< pointer to
   *            @arg @ref RTC_FLAG_ALRBF
   *            @arg @ref RTC_FLAG_ALRAWF
   *            @arg @ref RTC_FLAG_ALRBWF
-  * @retval None
+  * @retval The state of __FLAG__ (TRUE or FALSE).
   */
-#define __HAL_RTC_ALARM_GET_FLAG(__HANDLE__, __FLAG__)   (__HAL_RTC_GET_FLAG((__HANDLE__), (__FLAG__)))
+#define __HAL_RTC_ALARM_GET_FLAG(__HANDLE__, __FLAG__)( \
+                                ((__FLAG__) == RTC_FLAG_ALRAF)  ? (((((__HANDLE__)->Instance->SR)   & (RTC_SR_ALRAF))    != 0U) ? 1U : 0U):\
+                                ((__FLAG__) == RTC_FLAG_ALRBF)  ? (((((__HANDLE__)->Instance->SR)   & (RTC_SR_ALRBF))    != 0U) ? 1U : 0U):\
+                                ((__FLAG__) == RTC_FLAG_ALRAWF) ? (((((__HANDLE__)->Instance->ICSR) & (RTC_ICSR_ALRAWF)) != 0U) ? 1U : 0U):\
+                                                                  (((((__HANDLE__)->Instance->ICSR) & (RTC_ICSR_ALRBWF)) != 0U) ? 1U : 0U))
 
 /**
   * @brief  Clear the RTC Alarms pending flags.
@@ -692,8 +705,9 @@ typedef  void (*pRTC_CallbackTypeDef)(RTC_HandleTypeDef * hrtc); /*!< pointer to
   *             @arg @ref RTC_FLAG_ALRBF
   * @retval None
   */
-#define __HAL_RTC_ALARM_CLEAR_FLAG(__HANDLE__, __FLAG__)   (((__FLAG__) == RTC_FLAG_ALRAF) ? (__HAL_RTC_CLEAR_FLAG((__HANDLE__), RTC_CLEAR_ALRAF)) : \
-                                                            (__HAL_RTC_CLEAR_FLAG((__HANDLE__), RTC_CLEAR_ALRBF)))
+#define __HAL_RTC_ALARM_CLEAR_FLAG(__HANDLE__, __FLAG__)( \
+                                ((__FLAG__) == RTC_FLAG_ALRAF) ? ((__HANDLE__)->Instance->SCR |= (RTC_SCR_CALRAF)):\
+                                                                 ((__HANDLE__)->Instance->SCR |= (RTC_SCR_CALRBF)))
 
 /**
   * @brief  Enable interrupt on the RTC Alarm associated Exti line.
@@ -759,6 +773,11 @@ HAL_StatusTypeDef HAL_RTC_SetTime(RTC_HandleTypeDef *hrtc, RTC_TimeTypeDef *sTim
 HAL_StatusTypeDef HAL_RTC_GetTime(RTC_HandleTypeDef *hrtc, RTC_TimeTypeDef *sTime, uint32_t Format);
 HAL_StatusTypeDef HAL_RTC_SetDate(RTC_HandleTypeDef *hrtc, RTC_DateTypeDef *sDate, uint32_t Format);
 HAL_StatusTypeDef HAL_RTC_GetDate(RTC_HandleTypeDef *hrtc, RTC_DateTypeDef *sDate, uint32_t Format);
+void              HAL_RTC_DST_Add1Hour(RTC_HandleTypeDef *hrtc);
+void              HAL_RTC_DST_Sub1Hour(RTC_HandleTypeDef *hrtc);
+void              HAL_RTC_DST_SetStoreOperation(RTC_HandleTypeDef *hrtc);
+void              HAL_RTC_DST_ClearStoreOperation(RTC_HandleTypeDef *hrtc);
+uint32_t          HAL_RTC_DST_ReadStoreOperation(RTC_HandleTypeDef *hrtc);
 /**
   * @}
   */
@@ -813,6 +832,9 @@ HAL_RTCStateTypeDef HAL_RTC_GetState(RTC_HandleTypeDef *hrtc);
 #define RTC_DR_RESERVED_MASK                (RTC_DR_YT | RTC_DR_YU | RTC_DR_WDU | \
                                             RTC_DR_MT | RTC_DR_MU | RTC_DR_DT  | \
                                             RTC_DR_DU)
+#define RTC_ICSR_RESERVED_MASK              (RTC_ICSR_RECALPF | RTC_ICSR_INIT | RTC_ICSR_INITF | \
+                                            RTC_ICSR_RSF | RTC_ICSR_INITS | RTC_ICSR_SHPF | \
+                                            RTC_ICSR_WUTWF | RTC_ICSR_ALRBWF | RTC_ICSR_ALRAWF)
 #define RTC_INIT_MASK                       0xFFFFFFFFu
 #define RTC_RSF_MASK                        (~(RTC_ICSR_INIT | RTC_ICSR_RSF))
 
@@ -964,4 +986,3 @@ uint8_t            RTC_Bcd2ToByte(uint8_t Value);
 
 #endif /* STM32G0xx_HAL_RTC_H */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

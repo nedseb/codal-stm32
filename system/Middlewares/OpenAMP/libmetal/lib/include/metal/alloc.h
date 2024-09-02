@@ -17,7 +17,8 @@ extern "C" {
 #endif
 
 /** \defgroup Memory Allocation Interfaces
- *  @{ */
+ *  @{
+ */
 
 /**
  * @brief      allocate requested memory size
@@ -35,12 +36,16 @@ static inline void *metal_allocate_memory(unsigned int size);
  */
 static inline void metal_free_memory(void *ptr);
 
-#include <metal/system/generic/alloc.h>
-
 /** @} */
 
 #ifdef __cplusplus
 }
+#endif
+
+#ifdef METAL_FREERTOS
+#include <metal/system/freertos/alloc.h>
+#else
+#include <metal/system/generic/alloc.h>
 #endif
 
 #endif /* __METAL_ALLOC__H__ */

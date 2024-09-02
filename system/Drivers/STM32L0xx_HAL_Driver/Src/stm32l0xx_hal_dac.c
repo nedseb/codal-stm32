@@ -6,11 +6,21 @@
   *         This file provides firmware functions to manage the following
   *         functionalities of the Digital to Analog Converter (DAC) peripheral:
   *           + Initialization and de-initialization functions
-  *           + IO operation functions
   *           + Peripheral Control functions
   *           + Peripheral State and Errors functions
   *
   *
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2016 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
   @verbatim
   ==============================================================================
                       ##### DAC Peripheral features #####
@@ -146,7 +156,7 @@
       The compilation define  USE_HAL_DAC_REGISTER_CALLBACKS when set to 1
       allows the user to configure dynamically the driver callbacks.
 
-    Use Functions @ref HAL_DAC_RegisterCallback() to register a user callback,
+    Use Functions HAL_DAC_RegisterCallback() to register a user callback,
       it allows to register following callbacks:
       (+) ConvCpltCallbackCh1     : callback when a half transfer is completed on Ch1.
       (+) ConvHalfCpltCallbackCh1 : callback when a transfer is completed on Ch1.
@@ -161,8 +171,8 @@
       This function takes as parameters the HAL peripheral handle, the Callback ID
       and a pointer to the user callback function.
 
-    Use function @ref HAL_DAC_UnRegisterCallback() to reset a callback to the default
-      weak (surcharged) function. It allows to reset following callbacks:
+    Use function HAL_DAC_UnRegisterCallback() to reset a callback to the default
+      weak (overridden) function. It allows to reset following callbacks:
       (+) ConvCpltCallbackCh1     : callback when a half transfer is completed on Ch1.
       (+) ConvHalfCpltCallbackCh1 : callback when a transfer is completed on Ch1.
       (+) ErrorCallbackCh1        : callback when an error occurs on Ch1.
@@ -176,12 +186,12 @@
       (+) All Callbacks
       This function) takes as parameters the HAL peripheral handle and the Callback ID.
 
-      By default, after the @ref HAL_DAC_Init and if the state is HAL_DAC_STATE_RESET
-      all callbacks are reset to the corresponding legacy weak (surcharged) functions.
+      By default, after the HAL_DAC_Init and if the state is HAL_DAC_STATE_RESET
+      all callbacks are reset to the corresponding legacy weak (overridden) functions.
       Exception done for MspInit and MspDeInit callbacks that are respectively
-      reset to the legacy weak (surcharged) functions in the @ref HAL_DAC_Init
-      and @ref  HAL_DAC_DeInit only when these callbacks are null (not registered beforehand).
-      If not, MspInit or MspDeInit are not null, the @ref HAL_DAC_Init and @ref HAL_DAC_DeInit
+      reset to the legacy weak (overridden) functions in the HAL_DAC_Init
+      and  HAL_DAC_DeInit only when these callbacks are null (not registered beforehand).
+      If not, MspInit or MspDeInit are not null, the HAL_DAC_Init and HAL_DAC_DeInit
       keep and use the user MspInit/MspDeInit callbacks (registered beforehand)
 
       Callbacks can be registered/unregistered in READY state only.
@@ -189,12 +199,12 @@
       in READY or RESET state, thus registered (user) MspInit/DeInit callbacks can be used
       during the Init/DeInit.
       In that case first register the MspInit/MspDeInit user callbacks
-      using @ref HAL_DAC_RegisterCallback before calling @ref HAL_DAC_DeInit
-      or @ref HAL_DAC_Init function.
+      using HAL_DAC_RegisterCallback before calling HAL_DAC_DeInit
+      or HAL_DAC_Init function.
 
       When The compilation define USE_HAL_DAC_REGISTER_CALLBACKS is set to 0 or
       not defined, the callback registering feature is not available
-      and weak (surcharged) callbacks are used.
+      and weak (overridden) callbacks are used.
 
      *** DAC HAL driver macros list ***
      =============================================
@@ -210,17 +220,6 @@
       (@) You can refer to the DAC HAL driver header file for more useful macros
 
  @endverbatim
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2016 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
-  *
   ******************************************************************************
   */
 
@@ -293,10 +292,12 @@ HAL_StatusTypeDef HAL_DAC_Init(DAC_HandleTypeDef* hdac)
     hdac->ErrorCallbackCh1              = HAL_DAC_ErrorCallbackCh1;
     hdac->DMAUnderrunCallbackCh1        = HAL_DAC_DMAUnderrunCallbackCh1;
 
+#if defined (DAC_CHANNEL2_SUPPORT)
     hdac->ConvCpltCallbackCh2           = HAL_DACEx_ConvCpltCallbackCh2;
     hdac->ConvHalfCpltCallbackCh2       = HAL_DACEx_ConvHalfCpltCallbackCh2;
     hdac->ErrorCallbackCh2              = HAL_DACEx_ErrorCallbackCh2;
     hdac->DMAUnderrunCallbackCh2        = HAL_DACEx_DMAUnderrunCallbackCh2;
+#endif /* DAC_CHANNEL2_SUPPORT */
 
     if(hdac->MspInitCallback == NULL)
     {
@@ -785,9 +786,9 @@ __weak HAL_StatusTypeDef HAL_DAC_SetValue(DAC_HandleTypeDef* hdac, uint32_t Chan
 #if (USE_HAL_DAC_REGISTER_CALLBACKS == 1)
 /**
   * @brief  Register a User DAC Callback
-  *         To be used instead of the weak (surcharged) predefined callback
+  *         To be used instead of the weak (overridden) predefined callback
   * @param hdac DAC handle
-  * @param CallbackID ID of the callback to be registered
+  * @param CallbackId ID of the callback to be registered
   *        This parameter can be one of the following values:
   *          @arg @ref HAL_DAC_ERROR_INVALID_CALLBACK   DAC Error Callback ID
   *          @arg @ref HAL_DAC_CH1_COMPLETE_CB_ID       DAC CH1 Complete Callback ID
@@ -893,11 +894,11 @@ HAL_StatusTypeDef HAL_DAC_RegisterCallback (DAC_HandleTypeDef *hdac, HAL_DAC_Cal
 
 /**
   * @brief  Unregister a User DAC Callback
-  *         DAC Callback is redirected to the weak (surcharged) predefined callback
+  *         DAC Callback is redirected to the weak (overridden) predefined callback
   * @param hdac DAC handle
   * @param  CallbackID ID of the callback to be unregistered
   *        This parameter can be one of the following values:
-  *          @arg @ref HAL_DAC_CH1_COMPLETE_CB_ID          DAC CH1 tranfer Complete Callback ID
+  *          @arg @ref HAL_DAC_CH1_COMPLETE_CB_ID          DAC CH1 transfer Complete Callback ID
   *          @arg @ref HAL_DAC_CH1_HALF_COMPLETE_CB_ID     DAC CH1 Half Complete Callback ID
   *          @arg @ref HAL_DAC_CH1_ERROR_ID                DAC CH1 Error Callback ID
   *          @arg @ref HAL_DAC_CH1_UNDERRUN_CB_ID          DAC CH1 UnderRun Callback ID
@@ -933,6 +934,7 @@ HAL_StatusTypeDef HAL_DAC_UnRegisterCallback (DAC_HandleTypeDef *hdac, HAL_DAC_C
     case HAL_DAC_CH1_UNDERRUN_CB_ID :
       hdac->DMAUnderrunCallbackCh1 = HAL_DAC_DMAUnderrunCallbackCh1;
       break;
+#if defined (DAC_CHANNEL2_SUPPORT)
     case HAL_DAC_CH2_COMPLETE_CB_ID :
       hdac->ConvCpltCallbackCh2 = HAL_DACEx_ConvCpltCallbackCh2;
       break;
@@ -945,6 +947,7 @@ HAL_StatusTypeDef HAL_DAC_UnRegisterCallback (DAC_HandleTypeDef *hdac, HAL_DAC_C
     case HAL_DAC_CH2_UNDERRUN_CB_ID :
       hdac->DMAUnderrunCallbackCh2 = HAL_DACEx_DMAUnderrunCallbackCh2;
       break;
+#endif /* DAC_CHANNEL2_SUPPORT */
     case HAL_DAC_MSP_INIT_CB_ID :
       hdac->MspInitCallback = HAL_DAC_MspInit;
       break;
@@ -956,10 +959,12 @@ HAL_StatusTypeDef HAL_DAC_UnRegisterCallback (DAC_HandleTypeDef *hdac, HAL_DAC_C
       hdac->ConvHalfCpltCallbackCh1 = HAL_DAC_ConvHalfCpltCallbackCh1;
       hdac->ErrorCallbackCh1 = HAL_DAC_ErrorCallbackCh1;
       hdac->DMAUnderrunCallbackCh1 = HAL_DAC_DMAUnderrunCallbackCh1;
+#if defined (DAC_CHANNEL2_SUPPORT)
       hdac->ConvCpltCallbackCh2 = HAL_DACEx_ConvCpltCallbackCh2;
       hdac->ConvHalfCpltCallbackCh2 = HAL_DACEx_ConvHalfCpltCallbackCh2;
       hdac->ErrorCallbackCh2 = HAL_DACEx_ErrorCallbackCh2;
       hdac->DMAUnderrunCallbackCh2 = HAL_DACEx_DMAUnderrunCallbackCh2;
+#endif /* DAC_CHANNEL2_SUPPORT */
       hdac->MspInitCallback = HAL_DAC_MspInit;
       hdac->MspDeInitCallback = HAL_DAC_MspDeInit;
       break;
@@ -1017,5 +1022,4 @@ HAL_StatusTypeDef HAL_DAC_UnRegisterCallback (DAC_HandleTypeDef *hdac, HAL_DAC_C
 #endif /* HAL_DAC_MODULE_ENABLED */
 #endif /* !STM32L010xB && !STM32L010x8 && !STM32L010x6 && !STM32L010x4 && !STM32L011xx && !STM32L021xx && !STM32L031xx && !STM32L041xx && !STM32L051xx !STM32L071xx&& !STM32L081xx */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
 

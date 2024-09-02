@@ -5,13 +5,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2017 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2017 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -158,48 +157,124 @@ in voltage and temperature.  */
 #if !defined (PREFETCH_ENABLE)
 #define  PREFETCH_ENABLE              1U /* To enable prefetch */
 #endif
-#if !defined (ART_ACCLERATOR_ENABLE)
-#define  ART_ACCLERATOR_ENABLE        1U /* To enable ART Accelerator */
+#if !defined (ART_ACCELERATOR_ENABLE)
+#define  ART_ACCELERATOR_ENABLE        1U /* To enable ART Accelerator */
 #endif
 
+#if !defined(USE_HAL_ADC_REGISTER_CALLBACKS)
 #define  USE_HAL_ADC_REGISTER_CALLBACKS         0U /* ADC register callback disabled       */
+#endif
+#if !defined(USE_HAL_CAN_REGISTER_CALLBACKS)
 #define  USE_HAL_CAN_REGISTER_CALLBACKS         0U /* CAN register callback disabled       */
+#endif
+#if !defined(USE_HAL_CEC_REGISTER_CALLBACKS)
 #define  USE_HAL_CEC_REGISTER_CALLBACKS         0U /* CEC register callback disabled       */
+#endif
+#if !defined(USE_HAL_CRYP_REGISTER_CALLBACKS)
 #define  USE_HAL_CRYP_REGISTER_CALLBACKS        0U /* CRYP register callback disabled      */
+#endif
+#if !defined(USE_HAL_DAC_REGISTER_CALLBACKS)
 #define  USE_HAL_DAC_REGISTER_CALLBACKS         0U /* DAC register callback disabled       */
+#endif
+#if !defined(USE_HAL_DCMI_REGISTER_CALLBACKS)
 #define  USE_HAL_DCMI_REGISTER_CALLBACKS        0U /* DCMI register callback disabled      */
+#endif
+#if !defined(USE_HAL_DFSDM_REGISTER_CALLBACKS)
 #define  USE_HAL_DFSDM_REGISTER_CALLBACKS       0U /* DFSDM register callback disabled     */
+#endif
+#if !defined(USE_HAL_DMA2D_REGISTER_CALLBACKS)
 #define  USE_HAL_DMA2D_REGISTER_CALLBACKS       0U /* DMA2D register callback disabled     */
+#endif
+#if !defined(USE_HAL_DSI_REGISTER_CALLBACKS)
 #define  USE_HAL_DSI_REGISTER_CALLBACKS         0U /* DSI register callback disabled       */
+#endif
+#if !defined(USE_HAL_ETH_REGISTER_CALLBACKS)
 #define  USE_HAL_ETH_REGISTER_CALLBACKS         0U /* ETH register callback disabled       */
+#endif
+#if !defined(USE_HAL_HASH_REGISTER_CALLBACKS)
 #define  USE_HAL_HASH_REGISTER_CALLBACKS        0U /* HASH register callback disabled      */
+#endif
+#if !defined(USE_HAL_HCD_REGISTER_CALLBACKS)
 #define  USE_HAL_HCD_REGISTER_CALLBACKS         0U /* HCD register callback disabled       */
+#endif
+#if !defined(USE_HAL_I2C_REGISTER_CALLBACKS)
 #define  USE_HAL_I2C_REGISTER_CALLBACKS         0U /* I2C register callback disabled       */
+#endif
+#if !defined(USE_HAL_I2S_REGISTER_CALLBACKS)
 #define  USE_HAL_I2S_REGISTER_CALLBACKS         0U /* I2S register callback disabled       */
+#endif
+#if !defined(USE_HAL_IRDA_REGISTER_CALLBACKS)
 #define  USE_HAL_IRDA_REGISTER_CALLBACKS        0U /* IRDA register callback disabled      */
+#endif
+#if !defined(USE_HAL_JPEG_REGISTER_CALLBACKS)
 #define  USE_HAL_JPEG_REGISTER_CALLBACKS        0U /* JPEG register callback disabled      */
+#endif
+#if !defined(USE_HAL_LPTIM_REGISTER_CALLBACKS)
 #define  USE_HAL_LPTIM_REGISTER_CALLBACKS       0U /* LPTIM register callback disabled     */
+#endif
+#if !defined(USE_HAL_LTDC_REGISTER_CALLBACKS)
 #define  USE_HAL_LTDC_REGISTER_CALLBACKS        0U /* LTDC register callback disabled      */
+#endif
+#if !defined(USE_HAL_MDIOS_REGISTER_CALLBACKS)
 #define  USE_HAL_MDIOS_REGISTER_CALLBACKS       0U /* MDIOS register callback disabled     */
+#endif
+#if !defined(USE_HAL_MMC_REGISTER_CALLBACKS)
 #define  USE_HAL_MMC_REGISTER_CALLBACKS         0U /* MMC register callback disabled       */
+#endif
+#if !defined(USE_HAL_NAND_REGISTER_CALLBACKS)
 #define  USE_HAL_NAND_REGISTER_CALLBACKS        0U /* NAND register callback disabled      */
+#endif
+#if !defined(USE_HAL_NOR_REGISTER_CALLBACKS)
 #define  USE_HAL_NOR_REGISTER_CALLBACKS         0U /* NOR register callback disabled       */
+#endif
+#if !defined(USE_HAL_PCD_REGISTER_CALLBACKS)
 #define  USE_HAL_PCD_REGISTER_CALLBACKS         0U /* PCD register callback disabled       */
+#endif
+#if !defined(USE_HAL_QSPI_REGISTER_CALLBACKS)
 #define  USE_HAL_QSPI_REGISTER_CALLBACKS        0U /* QSPI register callback disabled      */
+#endif
+#if !defined(USE_HAL_RNG_REGISTER_CALLBACKS)
 #define  USE_HAL_RNG_REGISTER_CALLBACKS         0U /* RNG register callback disabled       */
+#endif
+#if !defined(USE_HAL_RTC_REGISTER_CALLBACKS)
 #define  USE_HAL_RTC_REGISTER_CALLBACKS         0U /* RTC register callback disabled       */
+#endif
+#if !defined(USE_HAL_SAI_REGISTER_CALLBACKS)
 #define  USE_HAL_SAI_REGISTER_CALLBACKS         0U /* SAI register callback disabled       */
+#endif
+#if !defined(USE_HAL_SD_REGISTER_CALLBACKS)
 #define  USE_HAL_SD_REGISTER_CALLBACKS          0U /* SD register callback disabled        */
+#endif
+#if !defined(USE_HAL_SMARTCARD_REGISTER_CALLBACKS)
 #define  USE_HAL_SMARTCARD_REGISTER_CALLBACKS   0U /* SMARTCARD register callback disabled */
+#endif
+#if !defined(USE_HAL_SDRAM_REGISTER_CALLBACKS)
 #define  USE_HAL_SDRAM_REGISTER_CALLBACKS       0U /* SDRAM register callback disabled     */
+#endif
+#if !defined(USE_HAL_SRAM_REGISTER_CALLBACKS)
 #define  USE_HAL_SRAM_REGISTER_CALLBACKS        0U /* SRAM register callback disabled      */
+#endif
+#if !defined(USE_HAL_SPDIFRX_REGISTER_CALLBACKS)
 #define  USE_HAL_SPDIFRX_REGISTER_CALLBACKS     0U /* SPDIFRX register callback disabled   */
+#endif
+#if !defined(USE_HAL_SMBUS_REGISTER_CALLBACKS)
 #define  USE_HAL_SMBUS_REGISTER_CALLBACKS       0U /* SMBUS register callback disabled     */
+#endif
+#if !defined(USE_HAL_SPI_REGISTER_CALLBACKS)
 #define  USE_HAL_SPI_REGISTER_CALLBACKS         0U /* SPI register callback disabled       */
+#endif
+#if !defined(USE_HAL_TIM_REGISTER_CALLBACKS)
 #define  USE_HAL_TIM_REGISTER_CALLBACKS         0U /* TIM register callback disabled       */
+#endif
+#if !defined(USE_HAL_UART_REGISTER_CALLBACKS)
 #define  USE_HAL_UART_REGISTER_CALLBACKS        0U /* UART register callback disabled      */
+#endif
+#if !defined(USE_HAL_USART_REGISTER_CALLBACKS)
 #define  USE_HAL_USART_REGISTER_CALLBACKS       0U /* USART register callback disabled     */
+#endif
+#if !defined(USE_HAL_WWDG_REGISTER_CALLBACKS)
 #define  USE_HAL_WWDG_REGISTER_CALLBACKS        0U /* WWDG register callback disabled      */
+#endif
 
 /* ########################## Assert Selection ############################## */
 /**
@@ -339,6 +414,10 @@ in voltage and temperature.  */
 #ifdef HAL_ETH_MODULE_ENABLED
 #include "stm32f7xx_hal_eth.h"
 #endif /* HAL_ETH_MODULE_ENABLED */
+
+#ifdef HAL_ETH_LEGACY_MODULE_ENABLED
+#include "Legacy/stm32f7xx_hal_eth_legacy.h"
+#endif /* HAL_ETH_LEGACY_MODULE_ENABLED */
 
 #ifdef HAL_EXTI_MODULE_ENABLED
 #include "stm32f7xx_hal_exti.h"
@@ -499,6 +578,3 @@ void assert_failed(uint8_t *file, uint32_t line);
 #endif
 
 #endif /* __STM32F7xx_HAL_CONF_DEFAULT_H */
-
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

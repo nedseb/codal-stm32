@@ -6,13 +6,12 @@
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
+  * Copyright (c) 2019 STMicroelectronics.
+  * All rights reserved.
   *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
   *
   ******************************************************************************
   */
@@ -144,7 +143,7 @@ typedef struct
   uint32_t DAC_OutputBuffer;             /*!< Specifies whether the DAC channel output buffer is enabled or disabled.
                                                This parameter can be a value of @ref DAC_output_buffer */
 
-  uint32_t DAC_ConnectOnChipPeripheral ; /*!< Specifies whether the DAC output is connected or not to on chip peripheral .
+  uint32_t DAC_ConnectOnChipPeripheral ; /*!< Specifies whether the DAC output is connected or not to on chip peripheral.
                                               This parameter can be a value of @ref DAC_ConnectOnChipPeripheral */
 
   uint32_t DAC_UserTrimming;             /*!< Specifies the trimming mode
@@ -350,6 +349,20 @@ typedef void (*pDAC_CallbackTypeDef)(DAC_HandleTypeDef *hdac);
   * @}
   */
 
+/* Delay for DAC channel voltage settling time from DAC channel startup       */
+/* (transition from disable to enable).                                       */
+/* Note: DAC channel startup time depends on board application environment:   */
+/*       impedance connected to DAC channel output.                           */
+/*       The delay below is specified under conditions:                       */
+/*        - voltage maximum transition (lowest to highest value)              */
+/*        - until voltage reaches final value +-1LSB                          */
+/*        - DAC channel output buffer enabled                                 */
+/*        - load impedance of 5kOhm (min), 50pF (max)                         */
+/* Literal set to maximum value (refer to device datasheet,                   */
+/* parameter "tWAKEUP").                                                      */
+/* Unit: us                                                                   */
+#define DAC_DELAY_STARTUP_US          (15UL)  /*!< Delay for DAC channel voltage settling time from DAC channel startup (transition from disable to enable) */
+
 /* Exported macro ------------------------------------------------------------*/
 
 /** @defgroup DAC_Exported_Macros DAC Exported Macros
@@ -486,7 +499,7 @@ typedef void (*pDAC_CallbackTypeDef)(DAC_HandleTypeDef *hdac);
 #define IS_DAC_OUTPUT_BUFFER_STATE(STATE) (((STATE) == DAC_OUTPUTBUFFER_ENABLE) || \
                                            ((STATE) == DAC_OUTPUTBUFFER_DISABLE))
 
-#if defined(STM32G474xx) || defined(STM32G484xx) || defined(STM32G473xx)
+#if defined(STM32G414xx) || defined(STM32G474xx) || defined(STM32G484xx) || defined(STM32G473xx)
 #define IS_DAC_CHANNEL(DACX, CHANNEL)        \
   (((DACX) == DAC2) ?                  \
    ((CHANNEL) == DAC_CHANNEL_1)        \
@@ -497,7 +510,7 @@ typedef void (*pDAC_CallbackTypeDef)(DAC_HandleTypeDef *hdac);
 #define IS_DAC_CHANNEL(DACX, CHANNEL)        \
   (((CHANNEL) == DAC_CHANNEL_1)     || \
    ((CHANNEL) == DAC_CHANNEL_2))
-#endif
+#endif /* STM32G414xx || STM32G474xx || STM32G484xx || STM32G473xx */
 
 #define IS_DAC_ALIGN(ALIGN) (((ALIGN) == DAC_ALIGN_12B_R) || \
                              ((ALIGN) == DAC_ALIGN_12B_L) || \
@@ -539,7 +552,7 @@ void HAL_DAC_MspDeInit(DAC_HandleTypeDef *hdac);
 /* IO operation functions *****************************************************/
 HAL_StatusTypeDef HAL_DAC_Start(DAC_HandleTypeDef *hdac, uint32_t Channel);
 HAL_StatusTypeDef HAL_DAC_Stop(DAC_HandleTypeDef *hdac, uint32_t Channel);
-HAL_StatusTypeDef HAL_DAC_Start_DMA(DAC_HandleTypeDef *hdac, uint32_t Channel, uint32_t *pData, uint32_t Length,
+HAL_StatusTypeDef HAL_DAC_Start_DMA(DAC_HandleTypeDef *hdac, uint32_t Channel, const uint32_t *pData, uint32_t Length,
                                     uint32_t Alignment);
 HAL_StatusTypeDef HAL_DAC_Stop_DMA(DAC_HandleTypeDef *hdac, uint32_t Channel);
 void HAL_DAC_IRQHandler(DAC_HandleTypeDef *hdac);
@@ -565,8 +578,9 @@ HAL_StatusTypeDef     HAL_DAC_UnRegisterCallback(DAC_HandleTypeDef *hdac, HAL_DA
   * @{
   */
 /* Peripheral Control functions ***********************************************/
-uint32_t HAL_DAC_GetValue(DAC_HandleTypeDef *hdac, uint32_t Channel);
-HAL_StatusTypeDef HAL_DAC_ConfigChannel(DAC_HandleTypeDef *hdac, DAC_ChannelConfTypeDef *sConfig, uint32_t Channel);
+uint32_t HAL_DAC_GetValue(const DAC_HandleTypeDef *hdac, uint32_t Channel);
+HAL_StatusTypeDef HAL_DAC_ConfigChannel(DAC_HandleTypeDef *hdac,
+                                        const DAC_ChannelConfTypeDef *sConfig, uint32_t Channel);
 /**
   * @}
   */
@@ -575,8 +589,8 @@ HAL_StatusTypeDef HAL_DAC_ConfigChannel(DAC_HandleTypeDef *hdac, DAC_ChannelConf
   * @{
   */
 /* Peripheral State and Error functions ***************************************/
-HAL_DAC_StateTypeDef HAL_DAC_GetState(DAC_HandleTypeDef *hdac);
-uint32_t HAL_DAC_GetError(DAC_HandleTypeDef *hdac);
+HAL_DAC_StateTypeDef HAL_DAC_GetState(const DAC_HandleTypeDef *hdac);
+uint32_t HAL_DAC_GetError(const DAC_HandleTypeDef *hdac);
 
 /**
   * @}
@@ -612,5 +626,3 @@ void DAC_DMAHalfConvCpltCh1(DMA_HandleTypeDef *hdma);
 
 
 #endif /* STM32G4xx_HAL_DAC_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

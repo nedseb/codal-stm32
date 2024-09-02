@@ -9,7 +9,17 @@
   *           + I/O operation functions
   *           + Peripheral Control functions
   *           + Peripheral State functions
+  ******************************************************************************
+  * @attention
   *
+  * Copyright (c) 2019 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
   @verbatim
   ==============================================================================
                   ##### How to use this driver #####
@@ -159,7 +169,7 @@
 
     [..]
     Use function HAL_SAI_UnRegisterCallback() to reset a callback to the default
-    weak (surcharged) function.
+    weak function.
     HAL_SAI_UnRegisterCallback() takes as parameters the HAL peripheral handle,
     and the callback ID.
     [..]
@@ -174,10 +184,10 @@
 
     [..]
     By default, after the HAL_SAI_Init and if the state is HAL_SAI_STATE_RESET
-    all callbacks are reset to the corresponding legacy weak (surcharged) functions:
+    all callbacks are reset to the corresponding legacy weak functions:
     examples HAL_SAI_RxCpltCallback(), HAL_SAI_ErrorCallback().
     Exception done for MspInit and MspDeInit callbacks that are respectively
-    reset to the legacy weak (surcharged) functions in the HAL_SAI_Init
+    reset to the legacy weak functions in the HAL_SAI_Init
     and HAL_SAI_DeInit only when these callbacks are null (not registered beforehand).
     If not, MspInit or MspDeInit are not null, the HAL_SAI_Init and HAL_SAI_DeInit
     keep and use the user MspInit/MspDeInit callbacks (registered beforehand).
@@ -194,21 +204,9 @@
     [..]
     When the compilation define USE_HAL_SAI_REGISTER_CALLBACKS is set to 0 or
     not defined, the callback registering feature is not available
-    and weak (surcharged) callbacks are used.
+    and weak callbacks are used.
 
   @endverbatim
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics.
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
-  *
-  ******************************************************************************
   */
 
 /* Includes ------------------------------------------------------------------*/
@@ -244,6 +242,8 @@ typedef enum
   */
 #define SAI_DEFAULT_TIMEOUT      4U
 #define SAI_LONG_TIMEOUT         1000U
+#define SAI_SPDIF_FRAME_LENGTH   64U
+#define SAI_AC97_FRAME_LENGTH    256U
 /**
   * @}
   */
@@ -534,12 +534,12 @@ HAL_StatusTypeDef HAL_SAI_Init(SAI_HandleTypeDef *hsai)
       if (hsai->Init.Protocol == SAI_SPDIF_PROTOCOL)
       {
         /* For SPDIF protocol, frame length is set by hardware to 64 */
-        tmpframelength = 64U;
+        tmpframelength = SAI_SPDIF_FRAME_LENGTH;
       }
       else if (hsai->Init.Protocol == SAI_AC97_PROTOCOL)
       {
         /* For AC97 protocol, frame length is set by hardware to 256 */
-        tmpframelength = 256U;
+        tmpframelength = SAI_AC97_FRAME_LENGTH;
       }
       else
       {
@@ -1377,6 +1377,12 @@ HAL_StatusTypeDef HAL_SAI_DMAStop(SAI_HandleTypeDef *hsai)
   /* Process Locked */
   __HAL_LOCK(hsai);
 
+  /* Disable SAI peripheral */
+  if (SAI_Disable(hsai) != HAL_OK)
+  {
+    status = HAL_ERROR;
+  }
+
   /* Disable the SAI DMA request */
   hsai->Instance->CR1 &= ~SAI_xCR1_DMAEN;
 
@@ -1394,12 +1400,6 @@ HAL_StatusTypeDef HAL_SAI_DMAStop(SAI_HandleTypeDef *hsai)
     /* No need to check the returned value of HAL_DMA_Abort. */
     /* Only HAL_DMA_ERROR_NO_XFER can be returned in case of error and it's not an error for SAI. */
     (void) HAL_DMA_Abort(hsai->hdmarx);
-  }
-
-  /* Disable SAI peripheral */
-  if (SAI_Disable(hsai) != HAL_OK)
-  {
-    status = HAL_ERROR;
   }
 
   /* Flush the fifo */
@@ -1427,6 +1427,12 @@ HAL_StatusTypeDef HAL_SAI_Abort(SAI_HandleTypeDef *hsai)
   /* Process Locked */
   __HAL_LOCK(hsai);
 
+  /* Disable SAI peripheral */
+  if (SAI_Disable(hsai) != HAL_OK)
+  {
+    status = HAL_ERROR;
+  }
+
   /* Check SAI DMA is enabled or not */
   if ((hsai->Instance->CR1 & SAI_xCR1_DMAEN) == SAI_xCR1_DMAEN)
   {
@@ -1453,12 +1459,6 @@ HAL_StatusTypeDef HAL_SAI_Abort(SAI_HandleTypeDef *hsai)
   /* Disabled All interrupt and clear all the flag */
   hsai->Instance->IMR = 0;
   hsai->Instance->CLRFR = 0xFFFFFFFFU;
-
-  /* Disable SAI peripheral */
-  if (SAI_Disable(hsai) != HAL_OK)
-  {
-    status = HAL_ERROR;
-  }
 
   /* Flush the fifo */
   SET_BIT(hsai->Instance->CR2, SAI_xCR2_FFLUSH);
@@ -2087,7 +2087,7 @@ __weak void HAL_SAI_ErrorCallback(SAI_HandleTypeDef *hsai)
   *              the configuration information for SAI module.
   * @retval HAL state
   */
-HAL_SAI_StateTypeDef HAL_SAI_GetState(SAI_HandleTypeDef *hsai)
+HAL_SAI_StateTypeDef HAL_SAI_GetState(const SAI_HandleTypeDef *hsai)
 {
   return hsai->State;
 }
@@ -2098,7 +2098,7 @@ HAL_SAI_StateTypeDef HAL_SAI_GetState(SAI_HandleTypeDef *hsai)
   *              the configuration information for the specified SAI Block.
   * @retval SAI Error Code
   */
-uint32_t HAL_SAI_GetError(SAI_HandleTypeDef *hsai)
+uint32_t HAL_SAI_GetError(const SAI_HandleTypeDef *hsai)
 {
   return hsai->ErrorCode;
 }
@@ -2777,4 +2777,3 @@ static void SAI_DMAAbort(DMA_HandleTypeDef *hdma)
   * @}
   */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
