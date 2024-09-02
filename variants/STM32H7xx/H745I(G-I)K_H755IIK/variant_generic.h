@@ -1,6 +1,6 @@
 /*
  *******************************************************************************
- * Copyright (c) 2020-2021, STMicroelectronics
+ * Copyright (c) 2020, STMicroelectronics
  * All rights reserved.
  *
  * This software component is licensed by ST under BSD 3-Clause license,
@@ -154,6 +154,7 @@
 #define PA1_ALT1                (PA1   | ALT1)
 #define PA1_ALT2                (PA1   | ALT2)
 #define PA1_C_ALT1              (PA1_C | ALT1)
+#define PA1_C_ALT2              (PA1_C | ALT2)
 #define PA2_ALT1                (PA2   | ALT1)
 #define PA2_ALT2                (PA2   | ALT2)
 #define PA3_ALT1                (PA3   | ALT1)
@@ -185,9 +186,7 @@
 #define PB6_ALT2                (PB6   | ALT2)
 #define PB7_ALT1                (PB7   | ALT1)
 #define PB8_ALT1                (PB8   | ALT1)
-#define PB8_ALT2                (PB8   | ALT2)
 #define PB9_ALT1                (PB9   | ALT1)
-#define PB9_ALT2                (PB9   | ALT2)
 #define PB14_ALT1               (PB14  | ALT1)
 #define PB14_ALT2               (PB14  | ALT2)
 #define PB15_ALT1               (PB15  | ALT1)
@@ -202,9 +201,7 @@
 #define PC4_ALT1                (PC4   | ALT1)
 #define PC5_ALT1                (PC5   | ALT1)
 #define PC6_ALT1                (PC6   | ALT1)
-#define PC6_ALT2                (PC6   | ALT2)
 #define PC7_ALT1                (PC7   | ALT1)
-#define PC7_ALT2                (PC7   | ALT2)
 #define PC8_ALT1                (PC8   | ALT1)
 #define PC9_ALT1                (PC9   | ALT1)
 #define PC10_ALT1               (PC10  | ALT1)

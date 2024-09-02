@@ -37,9 +37,7 @@ PB_6_ALT1  = PB_6  | ALT1,
 PB_6_ALT2  = PB_6  | ALT2,
 PB_7_ALT1  = PB_7  | ALT1,
 PB_8_ALT1  = PB_8  | ALT1,
-PB_8_ALT2  = PB_8  | ALT2,
 PB_9_ALT1  = PB_9  | ALT1,
-PB_9_ALT2  = PB_9  | ALT2,
 PB_14_ALT1 = PB_14 | ALT1,
 PB_14_ALT2 = PB_14 | ALT2,
 PB_15_ALT1 = PB_15 | ALT1,
@@ -51,9 +49,7 @@ PC_1_ALT2  = PC_1  | ALT2,
 PC_4_ALT1  = PC_4  | ALT1,
 PC_5_ALT1  = PC_5  | ALT1,
 PC_6_ALT1  = PC_6  | ALT1,
-PC_6_ALT2  = PC_6  | ALT2,
 PC_7_ALT1  = PC_7  | ALT1,
-PC_7_ALT2  = PC_7  | ALT2,
 PC_8_ALT1  = PC_8  | ALT1,
 PC_9_ALT1  = PC_9  | ALT1,
 PC_10_ALT1 = PC_10 | ALT1,
@@ -63,22 +59,22 @@ PF_9_ALT1  = PF_9  | ALT1,
 
 /* SYS_WKUP */
 #ifdef PWR_WAKEUP_PIN1
-  SYS_WKUP1 = PA_0, /* SYS_WKUP0 */
+  SYS_WKUP1 = PA_0,
 #endif
 #ifdef PWR_WAKEUP_PIN2
-  SYS_WKUP2 = PA_2, /* SYS_WKUP1 */
+  SYS_WKUP2 = PA_2,
 #endif
 #ifdef PWR_WAKEUP_PIN3
-  SYS_WKUP3 = PC_13, /* SYS_WKUP2 */
+  SYS_WKUP3 = NC,
 #endif
 #ifdef PWR_WAKEUP_PIN4
-  SYS_WKUP4 = NC,
+  SYS_WKUP4 = PC_13,
 #endif
 #ifdef PWR_WAKEUP_PIN5
-  SYS_WKUP5 = PI_11, /* SYS_WKUP4 */
+  SYS_WKUP5 = PI_11,
 #endif
 #ifdef PWR_WAKEUP_PIN6
-  SYS_WKUP6 = PC_1, /* SYS_WKUP5 */
+  SYS_WKUP6 = PC_1,
 #endif
 #ifdef PWR_WAKEUP_PIN7
   SYS_WKUP7 = NC,
