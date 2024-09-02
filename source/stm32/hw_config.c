@@ -10,9 +10,10 @@
  *
  *******************************************************************************
  */
-#include "dwt.h"
 #include "hw_config.h"
+
 #include "clock.h"
+#include "dwt.h"
 #include "usbd_if.h"
 
 #ifdef __cplusplus
@@ -20,34 +21,34 @@ extern "C" {
 #endif
 
 /**
-  * @brief  This function performs the global init of the system (HAL, IOs...)
-  * @param  None
-  * @retval None
-  */
+ * @brief  This function performs the global init of the system (HAL, IOs...)
+ * @param  None
+ * @retval None
+ */
 void hw_config_init(void)
 {
-  configIPClock();
+    configIPClock();
 
 #if defined(PWR_CR3_UCPD_DBDIS) || defined(STM32L5xx)
-  /* Disable the internal Pull-Up in Dead Battery pins of UCPD peripheral */
-  HAL_PWREx_DisableUCPDDeadBattery();
+    /* Disable the internal Pull-Up in Dead Battery pins of UCPD peripheral */
+    HAL_PWREx_DisableUCPDDeadBattery();
 #endif
 
-  /* Init DWT if present */
+    /* Init DWT if present */
 #ifdef DWT_BASE
-  dwt_init();
+    dwt_init();
 #endif
 
-  /* Initialize the HAL */
-  HAL_Init();
+    /* Initialize the HAL */
+    HAL_Init();
 
-  configHSECapacitorTuning();
+    configHSECapacitorTuning();
 
-  /* Configure the system clock */
-  SystemClock_Config();
+    /* Configure the system clock */
+    SystemClock_Config();
 
-#if defined (USBCON) && defined(USBD_USE_CDC)
-  USBD_CDC_init();
+#if defined(USBCON) && defined(USBD_USE_CDC)
+    USBD_CDC_init();
 #endif
 }
 #ifdef __cplusplus

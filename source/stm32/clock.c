@@ -10,8 +10,9 @@
  *
  *******************************************************************************
  */
-#include "backup.h"
 #include "clock.h"
+
+#include "backup.h"
 #include "lock_resource.h"
 #include "otp.h"
 #include "stm32yyxx_ll_cortex.h"
@@ -22,137 +23,137 @@ extern "C" {
 #endif
 
 /**
-  * @brief  Function called to read the current micro second
-  * @param  None
-  * @retval None
-  */
+ * @brief  Function called to read the current micro second
+ * @param  None
+ * @retval None
+ */
 uint32_t getCurrentMicros(void)
 {
-  /* Ensure COUNTFLAG is reset by reading SysTick control and status register */
-  LL_SYSTICK_IsActiveCounterFlag();
-  uint32_t m = HAL_GetTick();
-  const uint32_t tms = SysTick->LOAD + 1;
-  __IO uint32_t u = tms - SysTick->VAL;
-  if (LL_SYSTICK_IsActiveCounterFlag()) {
-    m = HAL_GetTick();
-    u = tms - SysTick->VAL;
-  }
-  return (m * 1000 + (u * 1000) / tms);
+    /* Ensure COUNTFLAG is reset by reading SysTick control and status register */
+    LL_SYSTICK_IsActiveCounterFlag();
+    uint32_t m         = HAL_GetTick();
+    const uint32_t tms = SysTick->LOAD + 1;
+    __IO uint32_t u    = tms - SysTick->VAL;
+    if (LL_SYSTICK_IsActiveCounterFlag()) {
+        m = HAL_GetTick();
+        u = tms - SysTick->VAL;
+    }
+    return (m * 1000 + (u * 1000) / tms);
 }
 
 /**
-  * @brief  Function called wto read the current millisecond
-  * @param  None
-  * @retval None
-  */
+ * @brief  Function called wto read the current millisecond
+ * @param  None
+ * @retval None
+ */
 uint32_t getCurrentMillis(void)
 {
-  return HAL_GetTick();
+    return HAL_GetTick();
 }
 
 /**
-  * @brief  Enable the specified clock if not already set
-  * @param  source: clock source: LSE_CLOCK, LSI_CLOCK, HSI_CLOCK or HSE_CLOCK
-  * @retval None
-  */
+ * @brief  Enable the specified clock if not already set
+ * @param  source: clock source: LSE_CLOCK, LSI_CLOCK, HSI_CLOCK or HSE_CLOCK
+ * @retval None
+ */
 void enableClock(sourceClock_t source)
 {
-  RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+    RCC_OscInitTypeDef RCC_OscInitStruct = {0};
+    RCC_OscInitStruct.PLL.PLLState       = RCC_PLL_NONE;
 
 #if defined(STM32MP1xx)
-  /** Clock source selection is done by First Stage Boot Loader on Cortex A
-   *  See variant.cpp for corresponding boards.
-   */
-  if (!IS_ENGINEERING_BOOT_MODE()) {
-    return;
-  }
+    /** Clock source selection is done by First Stage Boot Loader on Cortex A
+     *  See variant.cpp for corresponding boards.
+     */
+    if (!IS_ENGINEERING_BOOT_MODE()) {
+        return;
+    }
 #endif /* STM32MP1xx */
 
-  enableBackupDomain();
+    enableBackupDomain();
 
-  switch (source) {
-    case LSI_CLOCK:
+    switch (source) {
+        case LSI_CLOCK:
 #ifdef STM32WBxx
-      if (__HAL_RCC_GET_FLAG(RCC_FLAG_LSI1RDY) == RESET) {
-        RCC_OscInitStruct.OscillatorType =  RCC_OSCILLATORTYPE_LSI1;
+            if (__HAL_RCC_GET_FLAG(RCC_FLAG_LSI1RDY) == RESET) {
+                RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI1;
 #else
-      if (__HAL_RCC_GET_FLAG(RCC_FLAG_LSIRDY) == RESET) {
-        RCC_OscInitStruct.OscillatorType =  RCC_OSCILLATORTYPE_LSI;
+            if (__HAL_RCC_GET_FLAG(RCC_FLAG_LSIRDY) == RESET) {
+                RCC_OscInitStruct.OscillatorType      = RCC_OSCILLATORTYPE_LSI;
 #endif
-        RCC_OscInitStruct.LSIState = RCC_LSI_ON;
-      }
-      break;
-    case HSI_CLOCK:
-      if (__HAL_RCC_GET_FLAG(RCC_FLAG_HSIRDY) == RESET) {
-        RCC_OscInitStruct.OscillatorType =  RCC_OSCILLATORTYPE_HSI;
-        RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+                RCC_OscInitStruct.LSIState = RCC_LSI_ON;
+            }
+            break;
+        case HSI_CLOCK:
+            if (__HAL_RCC_GET_FLAG(RCC_FLAG_HSIRDY) == RESET) {
+                RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
+                RCC_OscInitStruct.HSIState       = RCC_HSI_ON;
 #if defined(STM32MP1xx)
-        RCC_OscInitStruct.HSICalibrationValue = 0x00;
+                RCC_OscInitStruct.HSICalibrationValue = 0x00;
 #else
-        RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+                RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
 #endif
-      }
-      break;
-    case LSE_CLOCK:
-      if (__HAL_RCC_GET_FLAG(RCC_FLAG_LSERDY) == RESET) {
+            }
+            break;
+        case LSE_CLOCK:
+            if (__HAL_RCC_GET_FLAG(RCC_FLAG_LSERDY) == RESET) {
 #ifdef __HAL_RCC_LSEDRIVE_CONFIG
-        __HAL_RCC_LSEDRIVE_CONFIG(RCC_LSEDRIVE_LOW);
+                __HAL_RCC_LSEDRIVE_CONFIG(RCC_LSEDRIVE_LOW);
 #endif
-        RCC_OscInitStruct.OscillatorType =  RCC_OSCILLATORTYPE_LSE;
-        RCC_OscInitStruct.LSEState = RCC_LSE_ON;
-      }
-      break;
-    case HSE_CLOCK:
-      if (__HAL_RCC_GET_FLAG(RCC_FLAG_HSERDY) == RESET) {
-        RCC_OscInitStruct.OscillatorType =  RCC_OSCILLATORTYPE_HSE;
-        RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-      }
-      break;
-    default:
-      /* No valid clock to enable */
-      break;
-  }
-  if (RCC_OscInitStruct.OscillatorType != RCC_OSCILLATORTYPE_NONE) {
-    hsem_lock(CFG_HW_RCC_SEMID, HSEM_LOCK_DEFAULT_RETRY);
-    if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
-      Error_Handler();
+                RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSE;
+                RCC_OscInitStruct.LSEState       = RCC_LSE_ON;
+            }
+            break;
+        case HSE_CLOCK:
+            if (__HAL_RCC_GET_FLAG(RCC_FLAG_HSERDY) == RESET) {
+                RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+                RCC_OscInitStruct.HSEState       = RCC_HSE_ON;
+            }
+            break;
+        default:
+            /* No valid clock to enable */
+            break;
     }
-    hsem_unlock(CFG_HW_RCC_SEMID);
-  }
+    if (RCC_OscInitStruct.OscillatorType != RCC_OSCILLATORTYPE_NONE) {
+        hsem_lock(CFG_HW_RCC_SEMID, HSEM_LOCK_DEFAULT_RETRY);
+        if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
+            Error_Handler();
+        }
+        hsem_unlock(CFG_HW_RCC_SEMID);
+    }
 }
 
 void configHSECapacitorTuning(void)
 {
 #if defined(OTP_AREA_BASE) && defined(STM32WBxx)
-  OTP_BT_t *p_otp;
-  /* Read HSE_Tuning from OTP with index 0 */
-  p_otp = (OTP_BT_t *) OTP_Read(0);
-  if ((p_otp) && (!LL_RCC_HSE_IsReady())) {
-    LL_RCC_HSE_SetCapacitorTuning(p_otp->hse_tuning);
-  }
+    OTP_BT_t* p_otp;
+    /* Read HSE_Tuning from OTP with index 0 */
+    p_otp = (OTP_BT_t*)OTP_Read(0);
+    if ((p_otp) && (!LL_RCC_HSE_IsReady())) {
+        LL_RCC_HSE_SetCapacitorTuning(p_otp->hse_tuning);
+    }
 #endif
 }
 
 /**
-  * @brief  This function enables clocks for some system IP
-  * @param  None
-  * @retval None
-  */
+ * @brief  This function enables clocks for some system IP
+ * @param  None
+ * @retval None
+ */
 void configIPClock(void)
 {
 #ifdef HSEM_BASE
-  __HAL_RCC_HSEM_CLK_ENABLE();
+    __HAL_RCC_HSEM_CLK_ENABLE();
 #endif
 
 #if defined(__HAL_RCC_PWR_CLK_ENABLE)
-  /* Enable PWR clock, needed for example: voltage scaling, low power ... */
-  __HAL_RCC_PWR_CLK_ENABLE();
+    /* Enable PWR clock, needed for example: voltage scaling, low power ... */
+    __HAL_RCC_PWR_CLK_ENABLE();
 #endif
 
 #if defined(__HAL_RCC_SYSCFG_CLK_ENABLE)
-  /* Enable SYSCFG clock, needed for example: Pin remap or Analog switch ... */
-  __HAL_RCC_SYSCFG_CLK_ENABLE();
+    /* Enable SYSCFG clock, needed for example: Pin remap or Analog switch ... */
+    __HAL_RCC_SYSCFG_CLK_ENABLE();
 #endif
 }
 

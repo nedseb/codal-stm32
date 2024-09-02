@@ -1,10 +1,10 @@
 /**
-  ******************************************************************************
-  * @file    usbd_if.h
-  * @author  fpistm
-  * @brief   Header file for the usbd_if.c file
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file    usbd_if.h
+ * @author  fpistm
+ * @brief   Header file for the usbd_if.c file
+ ******************************************************************************
+ */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __USBD_IF_H
@@ -16,7 +16,7 @@
 
 /* Re-enumeration handling*/
 #ifndef USBD_ENUM_DELAY
-  #define USBD_ENUM_DELAY 10
+#define USBD_ENUM_DELAY 10
 #endif
 
 #ifdef __cplusplus

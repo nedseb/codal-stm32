@@ -205,7 +205,10 @@ class VL53L1X_base {
      * @param void
      * @return     0 on success,  @a #CALIBRATION_WARNING if failed
      */
-    virtual int Init() { return VL53L1X_SensorInit(); }
+    virtual int Init()
+    {
+        return VL53L1X_SensorInit();
+    }
 
     /* Read function of the ID device */
     virtual int ReadID()
