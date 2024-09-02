@@ -1,8 +1,8 @@
 #ifndef _BOARD_H_
 #define _BOARD_H_
 
-#include "stm32_def.h"
 #include "hw_config.h"
+#include "stm32_def.h"
 
 #ifdef __cplusplus
 extern "C" {

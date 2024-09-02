@@ -299,7 +299,7 @@ size_t rgb_lcd::print(unsigned int n, PrintRadix base)
     return print((unsigned long)n, base);
 }
 
-size_t rgb_lcd::print(long n,PrintRadix base)
+size_t rgb_lcd::print(long n, PrintRadix base)
 {
     if (base == PrintRadix::DEC) {
         return write(n);
@@ -346,7 +346,7 @@ size_t rgb_lcd::printNumber(unsigned long n, PrintRadix base)
 
     do {
         unsigned long m = n;
-        n /= static_cast<uint8_t>(base);  // Cast base to uint8_t
+        n /= static_cast<uint8_t>(base);              // Cast base to uint8_t
         char c = m - static_cast<uint8_t>(base) * n;  // Cast base to uint8_t
         *--str = c < 10 ? c + '0' : c + 'A' - 10;
     } while (n);

@@ -24,12 +24,7 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 /* Clock source selection */
-typedef enum {
-  LSI_CLOCK,
-  HSI_CLOCK,
-  LSE_CLOCK,
-  HSE_CLOCK
-} sourceClock_t;
+typedef enum { LSI_CLOCK, HSI_CLOCK, LSE_CLOCK, HSE_CLOCK } sourceClock_t;
 
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/

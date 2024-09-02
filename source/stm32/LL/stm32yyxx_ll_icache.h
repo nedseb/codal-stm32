@@ -6,7 +6,7 @@
 #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 
 #ifdef STM32L5xx
-  #include "stm32l5xx_ll_icache.h"
+#include "stm32l5xx_ll_icache.h"
 #endif
 #pragma GCC diagnostic pop
 #endif /* _STM32YYXX_LL_ICACHE_H_ */

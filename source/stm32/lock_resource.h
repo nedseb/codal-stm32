@@ -24,9 +24,9 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 typedef enum {
-  LOCK_RESOURCE_STATUS_OK       = 0x00U,
-  LOCK_RESOURCE_STATUS_ERROR    = 0x01U,
-  LOCK_RESOURCE_STATUS_TIMEOUT  = 0x02U
+    LOCK_RESOURCE_STATUS_OK      = 0x00U,
+    LOCK_RESOURCE_STATUS_ERROR   = 0x01U,
+    LOCK_RESOURCE_STATUS_TIMEOUT = 0x02U
 } LockResource_Status_t;
 
 /* Exported constants --------------------------------------------------------*/
@@ -46,7 +46,7 @@ typedef enum {
  * timing. The CPU1 may request the CPU2 to use the semaphore instead of the
  * PES bit by sending the system command SHCI_C2_SetFlashActivityControl()
  */
-#define CFG_HW_BLOCK_FLASH_REQ_BY_CPU2_SEMID                    7U
+#define CFG_HW_BLOCK_FLASH_REQ_BY_CPU2_SEMID 7U
 
 /*
  * Index of the semaphore used by CPU1 to prevent the CPU2 to either write or
@@ -55,7 +55,7 @@ typedef enum {
  * (as this will stall both CPUs)
  * The PES bit shall not be used as this may stall the CPU2 in some cases.
  */
-#define CFG_HW_BLOCK_FLASH_REQ_BY_CPU1_SEMID                    6U
+#define CFG_HW_BLOCK_FLASH_REQ_BY_CPU1_SEMID 6U
 
 /*
  * Index of the semaphore used to manage the CLK48 clock configuration
@@ -65,30 +65,30 @@ typedef enum {
  * enough to use CFG_HW_RNG_SEMID to control CLK48.
  * More details in AN5289
  */
-#define CFG_HW_CLK48_CONFIG_SEMID                               5U
-#define CFG_HW_RCC_CRRCR_CCIPR_SEMID     CFG_HW_CLK48_CONFIG_SEMID
+#define CFG_HW_CLK48_CONFIG_SEMID    5U
+#define CFG_HW_RCC_CRRCR_CCIPR_SEMID CFG_HW_CLK48_CONFIG_SEMID
 
 /* Index of the semaphore used to manage the entry Stop Mode procedure */
-#define CFG_HW_ENTRY_STOP_MODE_SEMID                            4U
-#define CFG_HW_ENTRY_STOP_MODE_MASK_SEMID   (1U << CFG_HW_ENTRY_STOP_MODE_SEMID)
+#define CFG_HW_ENTRY_STOP_MODE_SEMID      4U
+#define CFG_HW_ENTRY_STOP_MODE_MASK_SEMID (1U << CFG_HW_ENTRY_STOP_MODE_SEMID)
 
 /* Index of the semaphore used to access the RCC */
-#define CFG_HW_RCC_SEMID                                        3U
+#define CFG_HW_RCC_SEMID 3U
 
 /* Index of the semaphore used to access the FLASH */
-#define CFG_HW_FLASH_SEMID                                      2U
+#define CFG_HW_FLASH_SEMID 2U
 
 /* Index of the semaphore used to access the PKA */
-#define CFG_HW_PKA_SEMID                                        1U
+#define CFG_HW_PKA_SEMID 1U
 
 /* Index of the semaphore used to access the RNG */
-#define CFG_HW_RNG_SEMID                                        0U
+#define CFG_HW_RNG_SEMID 0U
 
 /* Index of the semaphore used to access GPIO */
-#define CFG_HW_GPIO_SEMID                                       8U
+#define CFG_HW_GPIO_SEMID 8U
 
 /* Index of the semaphore used to access the EXTI */
-#define CFG_HW_EXTI_SEMID                                       9U
+#define CFG_HW_EXTI_SEMID 9U
 
 #elif defined(STM32MP1xx)
 /*
@@ -98,55 +98,55 @@ typedef enum {
  * but reserved for MPU.
  */
 /* Index of the semaphore used to access GPIO */
-#define CFG_HW_GPIO_SEMID                                       0U
+#define CFG_HW_GPIO_SEMID 0U
 
 /* Index of the semaphore used to access the EXTI */
-#define CFG_HW_EXTI_SEMID                                       1U
+#define CFG_HW_EXTI_SEMID 1U
 #endif /* STM32WBxx */
 
 /* Fake semaphore ID definition for compilation purpose only */
 #ifndef HSEM_SEMID_MAX
-#define HSEM_SEMID_MAX                                          0U
+#define HSEM_SEMID_MAX 0U
 #endif
 #ifndef CFG_HW_BLOCK_FLASH_REQ_BY_CPU2_SEMID
-#define CFG_HW_BLOCK_FLASH_REQ_BY_CPU2_SEMID   (HSEM_SEMID_MAX +1)
+#define CFG_HW_BLOCK_FLASH_REQ_BY_CPU2_SEMID (HSEM_SEMID_MAX + 1)
 #endif
 #ifndef CFG_HW_BLOCK_FLASH_REQ_BY_CPU1_SEMID
-#define CFG_HW_BLOCK_FLASH_REQ_BY_CPU1_SEMID   (HSEM_SEMID_MAX +1)
+#define CFG_HW_BLOCK_FLASH_REQ_BY_CPU1_SEMID (HSEM_SEMID_MAX + 1)
 #endif
 #ifndef CFG_HW_CLK48_CONFIG_SEMID
-#define CFG_HW_CLK48_CONFIG_SEMID              (HSEM_SEMID_MAX +1)
+#define CFG_HW_CLK48_CONFIG_SEMID (HSEM_SEMID_MAX + 1)
 #endif
 #ifndef CFG_HW_RCC_CRRCR_CCIPR_SEMID
-#define CFG_HW_RCC_CRRCR_CCIPR_SEMID           (HSEM_SEMID_MAX +1)
+#define CFG_HW_RCC_CRRCR_CCIPR_SEMID (HSEM_SEMID_MAX + 1)
 #endif
 #ifndef CFG_HW_ENTRY_STOP_MODE_SEMID
-#define CFG_HW_ENTRY_STOP_MODE_SEMID           (HSEM_SEMID_MAX +1)
+#define CFG_HW_ENTRY_STOP_MODE_SEMID (HSEM_SEMID_MAX + 1)
 #endif
 #ifndef CFG_HW_RCC_SEMID
-#define CFG_HW_RCC_SEMID                       (HSEM_SEMID_MAX +1)
+#define CFG_HW_RCC_SEMID (HSEM_SEMID_MAX + 1)
 #endif
 #ifndef CFG_HW_FLASH_SEMID
-#define CFG_HW_FLASH_SEMID                     (HSEM_SEMID_MAX +1)
+#define CFG_HW_FLASH_SEMID (HSEM_SEMID_MAX + 1)
 #endif
 #ifndef CFG_HW_PKA_SEMID
-#define CFG_HW_PKA_SEMID                       (HSEM_SEMID_MAX +1)
+#define CFG_HW_PKA_SEMID (HSEM_SEMID_MAX + 1)
 #endif
 #ifndef CFG_HW_RNG_SEMID
-#define CFG_HW_RNG_SEMID                       (HSEM_SEMID_MAX +1)
+#define CFG_HW_RNG_SEMID (HSEM_SEMID_MAX + 1)
 #endif
 #ifndef CFG_HW_GPIO_SEMID
-#define CFG_HW_GPIO_SEMID                      (HSEM_SEMID_MAX +1)
+#define CFG_HW_GPIO_SEMID (HSEM_SEMID_MAX + 1)
 #endif
 #ifndef CFG_HW_EXTI_SEMID
-#define CFG_HW_EXTI_SEMID                      (HSEM_SEMID_MAX +1)
+#define CFG_HW_EXTI_SEMID (HSEM_SEMID_MAX + 1)
 #endif
 
 /* Hardware Semaphore wait forever value */
-#define HSEM_LOCK_WAIT_FOREVER                         0xFFFFFFFFU
+#define HSEM_LOCK_WAIT_FOREVER 0xFFFFFFFFU
 /* Hardware Semaphore default retry value */
 #ifndef HSEM_LOCK_DEFAULT_RETRY
-#define HSEM_LOCK_DEFAULT_RETRY                            0xFFFFU
+#define HSEM_LOCK_DEFAULT_RETRY 0xFFFFU
 #endif
 
 /*
@@ -161,19 +161,19 @@ typedef enum {
 static inline void hsem_lock(uint32_t semID, uint32_t retry)
 {
 #if defined(STM32MP1xx) || defined(STM32WBxx)
-  if ((semID) <= HSEM_SEMID_MAX) {
-    while (LL_HSEM_1StepLock(HSEM, semID)) {
-      if (retry != HSEM_LOCK_WAIT_FOREVER) {
-        retry--;
-        if (retry == 0) {
-          Error_Handler();
+    if ((semID) <= HSEM_SEMID_MAX) {
+        while (LL_HSEM_1StepLock(HSEM, semID)) {
+            if (retry != HSEM_LOCK_WAIT_FOREVER) {
+                retry--;
+                if (retry == 0) {
+                    Error_Handler();
+                }
+            }
         }
-      }
     }
-  }
 #else
-  UNUSED(semID);
-  UNUSED(retry);
+    UNUSED(semID);
+    UNUSED(retry);
 #endif /* STM32MP1xx || STM32WBxx */
 }
 
@@ -185,20 +185,18 @@ static inline void hsem_lock(uint32_t semID, uint32_t retry)
 static inline void hsem_unlock(uint32_t semID)
 {
 #if defined(STM32MP1xx) || defined(STM32WBxx)
-  if ((semID) <= HSEM_SEMID_MAX) {
-    LL_HSEM_ReleaseLock(HSEM, semID, 0);
-  }
+    if ((semID) <= HSEM_SEMID_MAX) {
+        LL_HSEM_ReleaseLock(HSEM, semID, 0);
+    }
 #else
-  UNUSED(semID);
+    UNUSED(semID);
 #endif /* STM32MP1xx || STM32WBxx */
 }
 
 #ifdef __cplusplus
-} // extern "C"
+}  // extern "C"
 #endif
 
 #endif /* _LOCK_RESOURCE_H */
-
-
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
