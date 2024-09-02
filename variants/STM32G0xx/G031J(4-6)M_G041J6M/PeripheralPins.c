@@ -1,6 +1,6 @@
 /*
  *******************************************************************************
- * Copyright (c) 2020-2021, STMicroelectronics
+ * Copyright (c) 2020, STMicroelectronics
  * All rights reserved.
  *
  * This software component is licensed by ST under BSD 3-Clause license,
@@ -12,7 +12,7 @@
  */
 /*
  * Automatically generated from STM32G031J(4-6)Mx.xml, STM32G041J6Mx.xml
- * CubeMX DB release 6.0.21
+ * CubeMX DB release 6.0.110
  */
 #if !defined(CUSTOM_PERIPHERAL_PINS)
 #include "Arduino.h"
@@ -71,6 +71,8 @@ WEAK const PinMap PinMap_I2C_SCL[] = {
 };
 #endif
 
+//*** No I3C ***
+
 //*** TIM ***
 
 #ifdef HAL_TIM_MODULE_ENABLED
@@ -102,16 +104,19 @@ WEAK const PinMap PinMap_TIM[] = {
 
 #ifdef HAL_UART_MODULE_ENABLED
 WEAK const PinMap PinMap_UART_TX[] = {
-  {PA_2,   LPUART1, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF6_LPUART1)},
-  {PA_9_R, USART1,  STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF1_USART1)},
-  {PB_6,   USART1,  STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF0_USART1)},
-  {NC,     NP,      0}
+  {PA_2,      LPUART1, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF6_LPUART1)},
+  {PA_2_ALT1, USART2,  STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF1_USART2)},
+  {PA_9_R,    USART1,  STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF1_USART1)},
+  {PA_14,     USART2,  STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF1_USART2)},
+  {PB_6,      USART1,  STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF0_USART1)},
+  {NC,        NP,      0}
 };
 #endif
 
 #ifdef HAL_UART_MODULE_ENABLED
 WEAK const PinMap PinMap_UART_RX[] = {
   {PA_10_R, USART1, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF1_USART1)},
+  {PA_15,   USART2, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF1_USART2)},
   {PB_7,    USART1, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF0_USART1)},
   {NC,      NP,     0}
 };
@@ -119,6 +124,7 @@ WEAK const PinMap PinMap_UART_RX[] = {
 
 #ifdef HAL_UART_MODULE_ENABLED
 WEAK const PinMap PinMap_UART_RTS[] = {
+  {PA_1,  USART2,  STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF1_USART2)},
   {PA_12, USART1,  STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF1_USART1)},
   {PB_1,  LPUART1, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF6_LPUART1)},
   {NC,    NP,      0}
@@ -127,6 +133,7 @@ WEAK const PinMap PinMap_UART_RTS[] = {
 
 #ifdef HAL_UART_MODULE_ENABLED
 WEAK const PinMap PinMap_UART_CTS[] = {
+  {PA_0,  USART2, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF1_USART2)},
   {PA_11, USART1, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF1_USART1)},
   {NC,    NP,     0}
 };
