@@ -1,6 +1,6 @@
 /*
  *******************************************************************************
- * Copyright (c) 2020-2021, STMicroelectronics
+ * Copyright (c) 2020, STMicroelectronics
  * All rights reserved.
  *
  * This software component is licensed by ST under BSD 3-Clause license,
@@ -14,7 +14,7 @@
  * Automatically generated from STM32F401C(B-C)Ux.xml, STM32F401C(B-C)Yx.xml
  * STM32F401C(D-E)Ux.xml, STM32F401C(D-E)Yx.xml
  * STM32F401CCFx.xml
- * CubeMX DB release 6.0.21
+ * CubeMX DB release 6.0.110
  */
 #if !defined(CUSTOM_PERIPHERAL_PINS)
 #include "Arduino.h"
@@ -72,6 +72,8 @@ WEAK const PinMap PinMap_I2C_SCL[] = {
   {NC,    NP,   0}
 };
 #endif
+
+//*** No I3C ***
 
 //*** TIM ***
 

@@ -1,6 +1,6 @@
 /*
  *******************************************************************************
- * Copyright (c) 2011-2021, STMicroelectronics
+ * Copyright (c) 2023, STMicroelectronics
  * All rights reserved.
  *
  * This software component is licensed by ST under BSD 3-Clause license,
@@ -15,6 +15,7 @@
 /*----------------------------------------------------------------------------
  *        STM32 pins number
  *----------------------------------------------------------------------------*/
+
 #define PG9                     0
 #define PG14                    1
 #define PF15                    2
@@ -48,7 +49,7 @@
 #define PD11                    30
 #define PE2                     31
 #define PA0                     PIN_A14
-#define PB0                     PIN_A18 // LED_GREEN
+#define PB0                     PIN_A15 // LED_GREEN
 #define PE0                     34
 #define PB11                    35
 #define PB10                    36
@@ -71,14 +72,14 @@
 #define PD5                     53
 #define PD4                     54
 #define PD3                     55
-// 56 is PE2 (31)
+// 56 is PE2                   (31)
 #define PE4                     57
 #define PE5                     58
 #define PE6                     59
 #define PE3                     60
-#define PF8                     PIN_A15
-#define PF7                     PIN_A16
-#define PF9                     PIN_A17
+#define PF8                     61
+#define PF7                     62
+#define PF9                     63
 #define PG1                     64
 #define PG0                     65
 #define PD1                     66
@@ -86,59 +87,55 @@
 #define PF0                     68
 #define PF1                     69
 #define PF2                     70
-// 71 is PA7 (11)
-// 72 is NC
-#define PB7                     73 // LED_BLUE
-#define PB14                    74 // LED_RED
-#define PC13                    75 // USER_BTN
-#define PD9                     76 // Serial Rx
-#define PD8                     77 // Serial Tx
+#define PB7                     71 // LED_BLUE
+#define PB14                    72 // LED_RED
+#define PC13                    73 // USER_BTN
+#define PD9                     74 // Serial Rx
+#define PD8                     75 // Serial Tx
 #define PA3                     PIN_A0
 #define PC0                     PIN_A1
 #define PC3                     PIN_A2
-#define PF3                     PIN_A3
-#define PF5                     PIN_A4
-#define PF10                    PIN_A5
+#define PC1                     PIN_A3
+#define PC4                     PIN_A4
+#define PC5                     PIN_A5
 #define PB1                     PIN_A6
 #define PC2                     PIN_A7
-#define PF4                     PIN_A8
-#define PF6                     PIN_A9
-
-#define PA1                     PIN_A19
-#define PA2                     PIN_A20
-#define PA8                     90
-#define PA9                     91
-#define PA10                    92
-#define PA11                    93
-#define PA12                    94
-#define PA13                    95
-#define PA14                    96
-#define PC1                     PIN_A21
-#define PC4                     PIN_A22
-#define PC5                     PIN_A23
-#define PC14                    100
-#define PC15                    101
-#define PD10                    102
-#define PE1                     103
-#define PF11                    104
-#define PG4                     105
-#define PG5                     106
-#define PG6                     107
-#define PG7                     108
-#define PG8                     109
-#define PG10                    110
-#define PG11                    111
-#define PG12                    112
-#define PG13                    113
-#define PG15                    114
-#define PH0                     115
-#define PH1                     116
+#define PA2                     PIN_A8
+// ST Morpho
+#define PF6                     85
+#define PA1                     PIN_A9
+#define PF4                     87
+#define PA8                     88
+#define PA9                     89
+#define PA10                    90
+#define PA11                    91
+#define PA12                    92
+#define PA13                    93 // SWD
+#define PA14                    94 // SWD
+#define PF3                     95
+#define PF5                     96
+#define PF10                    97
+#define PC14                    98
+#define PC15                    99
+#define PD10                    100
+#define PE1                     101
+#define PF11                    102
+#define PG4                     103
+#define PG5                     104
+#define PG6                     105
+#define PG7                     106
+#define PG8                     107
+#define PG10                    108
+#define PG11                    109
+#define PG12                    110
+#define PG13                    111
+#define PG15                    112
+#define PH0                     113 // MCO
+#define PH1                     114
 
 // Alternate pins number
 #define PA0_ALT1                (PA0  | ALT1)
-#define PA0_ALT2                (PA0  | ALT2)
 #define PA1_ALT1                (PA1  | ALT1)
-#define PA1_ALT2                (PA1  | ALT2)
 #define PA2_ALT1                (PA2  | ALT1)
 #define PA2_ALT2                (PA2  | ALT2)
 #define PA3_ALT1                (PA3  | ALT1)
@@ -159,29 +156,27 @@
 #define PB5_ALT1                (PB5  | ALT1)
 #define PB8_ALT1                (PB8  | ALT1)
 #define PB9_ALT1                (PB9  | ALT1)
+#define PB12_ALT1               (PB12 | ALT1)
+#define PB13_ALT1               (PB13 | ALT1)
 #define PB14_ALT1               (PB14 | ALT1)
 #define PB14_ALT2               (PB14 | ALT2)
 #define PB15_ALT1               (PB15 | ALT1)
 #define PB15_ALT2               (PB15 | ALT2)
-#define PC0_ALT1                (PC0  | ALT1)
-#define PC0_ALT2                (PC0  | ALT2)
-#define PC1_ALT1                (PC1  | ALT1)
-#define PC1_ALT2                (PC1  | ALT2)
-#define PC2_ALT1                (PC2  | ALT1)
-#define PC2_ALT2                (PC2  | ALT2)
-#define PC3_ALT1                (PC3  | ALT1)
-#define PC3_ALT2                (PC3  | ALT2)
-#define PC4_ALT1                (PC4  | ALT1)
-#define PC5_ALT1                (PC5  | ALT1)
 #define PC6_ALT1                (PC6  | ALT1)
 #define PC7_ALT1                (PC7  | ALT1)
 #define PC8_ALT1                (PC8  | ALT1)
 #define PC9_ALT1                (PC9  | ALT1)
-#define PC10_ALT1               (PC10 | ALT1)
-#define PC11_ALT1               (PC11 | ALT1)
+#define PE2_ALT1                (PE2  | ALT1)
+#define PE4_ALT1                (PE4  | ALT1)
+#define PE5_ALT1                (PE5  | ALT1)
+#define PE6_ALT1                (PE6  | ALT1)
+#define PE11_ALT1               (PE11 | ALT1)
+#define PE12_ALT1               (PE12 | ALT1)
+#define PE13_ALT1               (PE13 | ALT1)
+#define PE14_ALT1               (PE14 | ALT1)
 
-#define NUM_DIGITAL_PINS        117
-#define NUM_ANALOG_INPUTS       24
+#define NUM_DIGITAL_PINS        115
+#define NUM_ANALOG_INPUTS       16
 
 // On-board LED pin number
 #define LED_GREEN               PB0
@@ -196,7 +191,7 @@
   #define USER_BTN              PC13
 #endif
 
-// Timer Definitions
+// Timer Definitions (optional)
 // Use TIM6/TIM7 when possible as servo and tone don't need GPIO output pin
 #ifndef TIMER_TONE
   #define TIMER_TONE            TIM6
@@ -207,11 +202,11 @@
 
 // UART Definitions
 #ifndef SERIAL_UART_INSTANCE
-  #define SERIAL_UART_INSTANCE  3 //Connected to ST-Link
+  #define SERIAL_UART_INSTANCE  3
 #endif
 
-// Serial pin used for console (ex: stlink)
-// Rerquired by Firmata
+// Default pin used for 'Serial' instance (ex: ST-Link)
+// Mandatory for Firmata
 #ifndef PIN_SERIAL_RX
   #define PIN_SERIAL_RX         PD9
 #endif
@@ -220,14 +215,17 @@
 #endif
 
 /* Extra HAL modules */
-#if !defined(HAL_DAC_MODULE_DISABLED)
-  #define HAL_DAC_MODULE_ENABLED
-#endif
-#if !defined(HAL_ETH_MODULE_DISABLED)
-  #define HAL_ETH_MODULE_ENABLED
+#if !defined(HAL_QSPI_MODULE_DISABLED)
+  #define HAL_QSPI_MODULE_ENABLED
 #endif
 #if !defined(HAL_SD_MODULE_DISABLED)
   #define HAL_SD_MODULE_ENABLED
+#endif
+
+// HSE default value is 25MHz in HAL
+// HSE_BYPASS is 8MHz
+#ifndef HSE_BYPASS_NOT_USED
+  #define HSE_VALUE             8000000
 #endif
 
 /*----------------------------------------------------------------------------

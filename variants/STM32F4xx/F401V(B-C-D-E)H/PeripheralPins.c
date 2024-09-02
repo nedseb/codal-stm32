@@ -1,6 +1,6 @@
 /*
  *******************************************************************************
- * Copyright (c) 2020-2021, STMicroelectronics
+ * Copyright (c) 2020, STMicroelectronics
  * All rights reserved.
  *
  * This software component is licensed by ST under BSD 3-Clause license,
@@ -12,7 +12,7 @@
  */
 /*
  * Automatically generated from STM32F401V(B-C)Hx.xml, STM32F401V(D-E)Hx.xml
- * CubeMX DB release 6.0.21
+ * CubeMX DB release 6.0.110
  */
 #if !defined(CUSTOM_PERIPHERAL_PINS)
 #include "Arduino.h"
@@ -78,6 +78,8 @@ WEAK const PinMap PinMap_I2C_SCL[] = {
   {NC,    NP,   0}
 };
 #endif
+
+//*** No I3C ***
 
 //*** TIM ***
 
@@ -267,18 +269,72 @@ WEAK const PinMap PinMap_USB_OTG_FS[] = {
 //*** SD ***
 
 #ifdef HAL_SD_MODULE_ENABLED
-WEAK const PinMap PinMap_SD[] = {
-  {PB_8,  SDIO, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF12_SDIO)}, // SDIO_D4
-  {PB_9,  SDIO, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF12_SDIO)}, // SDIO_D5
-  {PC_6,  SDIO, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF12_SDIO)}, // SDIO_D6
-  {PC_7,  SDIO, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF12_SDIO)}, // SDIO_D7
-  {PC_8,  SDIO, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF12_SDIO)}, // SDIO_D0
-  {PC_9,  SDIO, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF12_SDIO)}, // SDIO_D1
-  {PC_10, SDIO, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF12_SDIO)}, // SDIO_D2
-  {PC_11, SDIO, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF12_SDIO)}, // SDIO_D3
+WEAK const PinMap PinMap_SD_CMD[] = {
+  {PD_2, SDIO, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_NOPULL, GPIO_AF12_SDIO)}, // SDIO_CMD
+  {NC,   NP,   0}
+};
+#endif
+
+#ifdef HAL_SD_MODULE_ENABLED
+WEAK const PinMap PinMap_SD_CK[] = {
   {PC_12, SDIO, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_NOPULL, GPIO_AF12_SDIO)}, // SDIO_CK
-  {PD_2,  SDIO, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_NOPULL, GPIO_AF12_SDIO)}, // SDIO_CMD
   {NC,    NP,   0}
+};
+#endif
+
+#ifdef HAL_SD_MODULE_ENABLED
+WEAK const PinMap PinMap_SD_DATA0[] = {
+  {PC_8, SDIO, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF12_SDIO)}, // SDIO_D0
+  {NC,   NP,   0}
+};
+#endif
+
+#ifdef HAL_SD_MODULE_ENABLED
+WEAK const PinMap PinMap_SD_DATA1[] = {
+  {PC_9, SDIO, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF12_SDIO)}, // SDIO_D1
+  {NC,   NP,   0}
+};
+#endif
+
+#ifdef HAL_SD_MODULE_ENABLED
+WEAK const PinMap PinMap_SD_DATA2[] = {
+  {PC_10, SDIO, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF12_SDIO)}, // SDIO_D2
+  {NC,    NP,   0}
+};
+#endif
+
+#ifdef HAL_SD_MODULE_ENABLED
+WEAK const PinMap PinMap_SD_DATA3[] = {
+  {PC_11, SDIO, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF12_SDIO)}, // SDIO_D3
+  {NC,    NP,   0}
+};
+#endif
+
+#ifdef HAL_SD_MODULE_ENABLED
+WEAK const PinMap PinMap_SD_DATA4[] = {
+  {PB_8, SDIO, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF12_SDIO)}, // SDIO_D4
+  {NC,   NP,   0}
+};
+#endif
+
+#ifdef HAL_SD_MODULE_ENABLED
+WEAK const PinMap PinMap_SD_DATA5[] = {
+  {PB_9, SDIO, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF12_SDIO)}, // SDIO_D5
+  {NC,   NP,   0}
+};
+#endif
+
+#ifdef HAL_SD_MODULE_ENABLED
+WEAK const PinMap PinMap_SD_DATA6[] = {
+  {PC_6, SDIO, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF12_SDIO)}, // SDIO_D6
+  {NC,   NP,   0}
+};
+#endif
+
+#ifdef HAL_SD_MODULE_ENABLED
+WEAK const PinMap PinMap_SD_DATA7[] = {
+  {PC_7, SDIO, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF12_SDIO)}, // SDIO_D7
+  {NC,   NP,   0}
 };
 #endif
 
