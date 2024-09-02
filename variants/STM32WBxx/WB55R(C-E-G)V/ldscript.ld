@@ -37,8 +37,7 @@
 ENTRY(Reset_Handler)
 
 /* Highest address of the user mode stack */
-/* _estack = 0x20030000;    /* end of RAM */
-_estack = ORIGIN(RAM1) + LENGTH(RAM1);
+_estack = 0x20030000;    /* end of RAM */
 /* Generate a link error if heap and stack don't fit into RAM */
 _Min_Heap_Size = 0x200 ;  /* required amount of heap  */
 _Min_Stack_Size = 0x400 ; /* required amount of stack */
@@ -47,7 +46,7 @@ _Min_Stack_Size = 0x400 ; /* required amount of stack */
 MEMORY
 {
 FLASH (rx)                 : ORIGIN = 0x08000000 + LD_FLASH_OFFSET, LENGTH = LD_MAX_SIZE - LD_FLASH_OFFSET
-RAM1 (xrw)                 : ORIGIN = 0x20000000, LENGTH = LD_MAX_DATA_SIZE
+RAM1 (xrw)                 : ORIGIN = 0x20000004, LENGTH = LD_MAX_DATA_SIZE - 4
 RAM_SHARED (xrw)           : ORIGIN = 0x20030000, LENGTH = 10K
 }
 
@@ -137,7 +136,7 @@ SECTIONS
   . = ALIGN(4);
   .bss :
   {
-    /* This is used by the startup in order to initialize the .bss secion */
+    /* This is used by the startup in order to initialize the .bss section */
     _sbss = .;         /* define a global symbol at bss start */
     __bss_start__ = _sbss;
     *(.bss)
@@ -169,7 +168,15 @@ SECTIONS
   }
 
   .ARM.attributes 0       : { *(.ARM.attributes) }
-   MAPPING_TABLE (NOLOAD) : { *(MAPPING_TABLE) } >RAM_SHARED
-   MB_MEM1 (NOLOAD)       : { *(MB_MEM1) } >RAM_SHARED
-   MB_MEM2 (NOLOAD)       : { _sMB_MEM2 = . ; *(MB_MEM2) ; _eMB_MEM2 = . ; } >RAM_SHARED
+  MAPPING_TABLE (NOLOAD) : { *(MAPPING_TABLE) } >RAM_SHARED
+  MB_MEM1 (NOLOAD)       : { *(MB_MEM1) } >RAM_SHARED
+
+  /* used by the startup to initialize .MB_MEM2 data */
+  _siMB_MEM2 = LOADADDR(.MB_MEM2);
+  .MB_MEM2 (NOLOAD) :
+  {
+    _sMB_MEM2 = . ;
+    *(MB_MEM2) ;
+    _eMB_MEM2 = . ;
+  } >RAM_SHARED
 }
