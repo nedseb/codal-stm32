@@ -361,7 +361,7 @@ void FrameBuffer::drawEllipse(int width, int height, int xCenter, int yCenter, b
 
 void FrameBuffer::drawCircle(int x, int y, int radius, bool fill, uint16_t color)
 {
-    drawEllipse(radius * 2, radius * 2, x, y, fill, color);
+    drawEllipse(radius, radius, x, y, fill, color);
 }
 
 void FrameBuffer::drawArc(int x, int y, int radius, int start_angle, int end_angle, uint16_t color)
