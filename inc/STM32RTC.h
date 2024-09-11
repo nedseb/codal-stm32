@@ -151,6 +151,4 @@ class STM32RTC {
     void configureClock();
 };
 }  // namespace codal
-#else
-#warning "STM32RTC is not supported by your target !"
 #endif

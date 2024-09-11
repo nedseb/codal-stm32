@@ -160,6 +160,4 @@ class STM32DMA {
     IRQn_Type getIRQn(DMA_Channel_TypeDef* channel);
 };
 }  // namespace codal
-#else
-#warning "STM32DMA is not supported by your target !"
 #endif
