@@ -4,6 +4,7 @@
 #include "STM32I2C.h"
 #include "lis2mdl_register.h"
 
+
 enum class LIS2_ODR : uint8_t { F_10_HZ = 0x00, F_20_HZ = 0x01, F_50_HZ = 0x02, F_100_HZ = 0x03 };
 
 struct Lis2Data {

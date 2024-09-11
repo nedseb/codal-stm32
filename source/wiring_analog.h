@@ -19,6 +19,9 @@
 #ifndef _WIRING_ANALOG_
 #define _WIRING_ANALOG_
 
+#include <stdint.h>
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -28,8 +31,8 @@ extern "C" {
  * This is kept only for compatibility with existing AVR based API.
  */
 typedef enum _eAnalogReference {
-  AR_DEFAULT,
-} eAnalogReference ;
+    AR_DEFAULT,
+} eAnalogReference;
 
 /*
  * \brief Configures the reference voltage used for analog input (i.e. the value used as the top of the input range).
@@ -37,7 +40,7 @@ typedef enum _eAnalogReference {
  *
  * \param ulMmode Should be set to AR_DEFAULT.
  */
-extern void analogReference(eAnalogReference ulMode) ;
+extern void analogReference(eAnalogReference ulMode);
 
 /*
  * \brief Writes an analog value (PWM wave) to a pin.
@@ -45,7 +48,7 @@ extern void analogReference(eAnalogReference ulMode) ;
  * \param ulPin
  * \param ulValue
  */
-extern void analogWrite(uint32_t ulPin, uint32_t ulValue) ;
+extern void analogWrite(uint32_t ulPin, uint32_t ulValue);
 
 /*
  * \brief Reads the value from the specified analog pin.
@@ -54,7 +57,7 @@ extern void analogWrite(uint32_t ulPin, uint32_t ulValue) ;
  *
  * \return Read value from selected pin, if no error.
  */
-extern uint32_t analogRead(uint32_t ulPin) ;
+extern uint32_t analogRead(uint32_t ulPin);
 
 /*
  * \brief Set the resolution of analogRead return values. Default is 10 bits (range from 0 to 1023).
@@ -77,8 +80,7 @@ extern void analogWriteResolution(int res);
  */
 extern void analogWriteFrequency(uint32_t freq);
 
-
-extern void analogOutputInit(void) ;
+extern void analogOutputInit(void);
 
 #ifdef __cplusplus
 }

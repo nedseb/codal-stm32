@@ -85,6 +85,4 @@ class MP34DT01 {
 };
 
 }  // namespace codal
-#else
-#warning "MP34DT01 is not supported by your target !"
 #endif

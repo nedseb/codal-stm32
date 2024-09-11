@@ -11,7 +11,7 @@
  */
 static void __empty()
 {
-  // Empty
+    // Empty
 }
 void yield(void) __attribute__((weak, alias("__empty")));
 
@@ -25,10 +25,10 @@ void yield(void) __attribute__((weak, alias("__empty")));
  * Its defined as a weak symbol and it can be redefined to implement
  * task to achieve in this case.
  */
-static void __empty_dtr_toggling(uint8_t *buf, uint32_t *len)
+static void __empty_dtr_toggling(uint8_t* buf, uint32_t* len)
 {
-  (void)buf;
-  (void)len;
+    (void)buf;
+    (void)len;
 }
-void dtr_togglingHook(uint8_t *buf, uint32_t *len) __attribute__((weak, alias("__empty_dtr_toggling")));
+void dtr_togglingHook(uint8_t* buf, uint32_t* len) __attribute__((weak, alias("__empty_dtr_toggling")));
 #endif

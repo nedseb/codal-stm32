@@ -8,7 +8,7 @@ constexpr bool isBitSet(uint8_t reg, uint8_t bit)
 
 constexpr void setBitRegister(uint8_t* reg, uint8_t bit)
 {
-   *reg &= ~(1 << bit);
+    *reg &= ~(1 << bit);
 }
 
 constexpr void clearBitRegister(uint8_t* reg, uint8_t bit)

@@ -45,6 +45,4 @@ class MP34DT01_dBMeter : public MP34DT01, public Sensor {
 
 }  // namespace codal
 
-#else
-#warning "MP34DT01 is not supported by your target !"
 #endif

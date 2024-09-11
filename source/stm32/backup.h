@@ -1,21 +1,21 @@
 /**
-  ******************************************************************************
-  * @file    backup.h
-  * @author  fpistm
-  * @brief   Header for backup domain driver
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2017 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the
-  * License. You may obtain a copy of the License at:
-  *                        opensource.org/licenses/BSD-3-Clause
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file    backup.h
+ * @author  fpistm
+ * @brief   Header for backup domain driver
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2017 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software component is licensed by ST under BSD 3-Clause license,
+ * the "License"; You may not use this file except in compliance with the
+ * License. You may obtain a copy of the License at:
+ *                        opensource.org/licenses/BSD-3-Clause
+ *
+ ******************************************************************************
+ */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __BACKUP_H
@@ -30,9 +30,9 @@ extern "C" {
 #endif
 
 /* Exported macro ------------------------------------------------------------*/
-#if (!defined(STM32F0xx) && !defined(STM32F3xx) && !defined(STM32L0xx) &&\
-  !defined(STM32L1xx) && !defined(STM32L4xx) && !defined(STM32MP1xx)) || \
-  defined(RTC_BACKUP_SUPPORT)
+#if (!defined(STM32F0xx) && !defined(STM32F3xx) && !defined(STM32L0xx) && !defined(STM32L1xx) && \
+     !defined(STM32L4xx) && !defined(STM32MP1xx)) ||                                             \
+    defined(RTC_BACKUP_SUPPORT)
 #if !defined(STM32L412xx) && !defined(STM32L422xx)
 #define ENABLE_BACKUP_SUPPORT
 #endif
@@ -47,7 +47,7 @@ extern "C" {
 #define RTC_BKP_VALUE 0x32F2
 #endif
 
-#if defined (BL_HID)
+#if defined(BL_HID)
 #if !defined(HID_MAGIC_NUMBER_BKP_INDEX)
 #define HID_MAGIC_NUMBER_BKP_INDEX LL_RTC_BKP_DR4
 #endif /* HID_MAGIC_NUMBER_BKP_INDEX */
@@ -63,64 +63,64 @@ extern "C" {
 static inline void resetBackupDomain(void)
 {
 #ifdef HAL_PWR_MODULE_ENABLED
-  /*  Enable access to the RTC registers */
-  HAL_PWR_EnableBkUpAccess();
-  /**
-    *  Write twice the value to flush the APB-AHB bridge
-    *  This bit shall be written in the register before writing the next one
-    */
-  HAL_PWR_EnableBkUpAccess();
+    /*  Enable access to the RTC registers */
+    HAL_PWR_EnableBkUpAccess();
+    /**
+     *  Write twice the value to flush the APB-AHB bridge
+     *  This bit shall be written in the register before writing the next one
+     */
+    HAL_PWR_EnableBkUpAccess();
 #endif
-  __HAL_RCC_BACKUPRESET_FORCE();
-  __HAL_RCC_BACKUPRESET_RELEASE();
+    __HAL_RCC_BACKUPRESET_FORCE();
+    __HAL_RCC_BACKUPRESET_RELEASE();
 }
 
 static inline void enableBackupDomain(void)
 {
 #ifdef HAL_PWR_MODULE_ENABLED
-  /* Allow access to Backup domain */
-  HAL_PWR_EnableBkUpAccess();
+    /* Allow access to Backup domain */
+    HAL_PWR_EnableBkUpAccess();
 #endif
 #ifdef __HAL_RCC_BKP_CLK_ENABLE
-  /* Enable BKP CLK for backup registers */
-  __HAL_RCC_BKP_CLK_ENABLE();
+    /* Enable BKP CLK for backup registers */
+    __HAL_RCC_BKP_CLK_ENABLE();
 #endif
 #ifdef __HAL_RCC_BKPSRAM_CLK_ENABLE
-  /* Enable BKPSRAM CLK for backup SRAM */
-  __HAL_RCC_BKPSRAM_CLK_ENABLE();
+    /* Enable BKPSRAM CLK for backup SRAM */
+    __HAL_RCC_BKPSRAM_CLK_ENABLE();
 #endif
 }
 
 static inline void disableBackupDomain(void)
 {
 #ifdef HAL_PWR_MODULE_ENABLED
-  /* Forbid access to Backup domain */
-  HAL_PWR_DisableBkUpAccess();
+    /* Forbid access to Backup domain */
+    HAL_PWR_DisableBkUpAccess();
 #endif
 #ifdef __HAL_RCC_BKPSRAM_CLK_DISABLE
-  /* Disnable BKPSRAM CLK for backup SRAM */
-  __HAL_RCC_BKPSRAM_CLK_DISABLE();
+    /* Disnable BKPSRAM CLK for backup SRAM */
+    __HAL_RCC_BKPSRAM_CLK_DISABLE();
 #endif
 #ifdef __HAL_RCC_BKP_CLK_DISABLE
-  /* Disable BKP CLK for backup registers */
-  __HAL_RCC_BKP_CLK_DISABLE();
+    /* Disable BKP CLK for backup registers */
+    __HAL_RCC_BKP_CLK_DISABLE();
 #endif
 }
 
 static inline void setBackupRegister(uint32_t index, uint32_t value)
 {
 #if defined(STM32F1xx)
-  LL_RTC_BKP_SetRegister(BKP, index, value);
+    LL_RTC_BKP_SetRegister(BKP, index, value);
 #elif defined(STM32G0xx)
-  LL_RTC_BKP_SetRegister(TAMP, index, value);
+    LL_RTC_BKP_SetRegister(TAMP, index, value);
 #elif defined(STM32G4xx) || defined(STM32L5xx)
-  LL_RTC_BKP_SetRegister(RTC, index, value);
+    LL_RTC_BKP_SetRegister(RTC, index, value);
 #else
 #ifdef ENABLE_BACKUP_SUPPORT
-  LL_RTC_BAK_SetRegister(RTC, index, value);
+    LL_RTC_BAK_SetRegister(RTC, index, value);
 #else
-  UNUSED(index);
-  UNUSED(value);
+    UNUSED(index);
+    UNUSED(value);
 #endif
 #endif
 }
@@ -128,48 +128,48 @@ static inline void setBackupRegister(uint32_t index, uint32_t value)
 static inline uint32_t getBackupRegister(uint32_t index)
 {
 #if defined(STM32F1xx)
-  return LL_RTC_BKP_GetRegister(BKP, index);
+    return LL_RTC_BKP_GetRegister(BKP, index);
 #elif defined(STM32G0xx)
-  return LL_RTC_BKP_GetRegister(TAMP, index);
+    return LL_RTC_BKP_GetRegister(TAMP, index);
 #elif defined(STM32G4xx) || defined(STM32L5xx)
-  return LL_RTC_BKP_GetRegister(RTC, index);
+    return LL_RTC_BKP_GetRegister(RTC, index);
 #else
 #ifdef ENABLE_BACKUP_SUPPORT
-  return LL_RTC_BAK_GetRegister(RTC, index);
+    return LL_RTC_BAK_GetRegister(RTC, index);
 #else
-  UNUSED(index);
-  return 0;
+    UNUSED(index);
+    return 0;
 #endif
 #endif
 }
 
-static inline void writeBackupSRAM(uint32_t offset, uint32_t *data, uint32_t length)
+static inline void writeBackupSRAM(uint32_t offset, uint32_t* data, uint32_t length)
 {
 #if defined(BKPSRAM_BASE)
-  uint32_t i = 0;
-  /* Write 32-Bit data to Backup SRAM */
-  for (i = 0; i < length; i++) {
-    *(__IO uint32_t *)(BKPSRAM_BASE + (offset + i) * 4) = data[i];
-  }
+    uint32_t i = 0;
+    /* Write 32-Bit data to Backup SRAM */
+    for (i = 0; i < length; i++) {
+        *(__IO uint32_t*)(BKPSRAM_BASE + (offset + i) * 4) = data[i];
+    }
 #else
-  UNUSED(offset);
-  UNUSED(data);
-  UNUSED(length);
+    UNUSED(offset);
+    UNUSED(data);
+    UNUSED(length);
 #endif
 }
 
-static inline void readBackupSRAM(uint32_t offset, uint32_t *data, uint32_t length)
+static inline void readBackupSRAM(uint32_t offset, uint32_t* data, uint32_t length)
 {
 #if defined(BKPSRAM_BASE)
-  uint32_t i = 0;
-  /* Read 32-Bit data from Backup SRAM */
-  for (i = 0; i < length; i++) {
-    data[i] = *(__IO uint32_t *)(BKPSRAM_BASE + (offset + i) * 4);
-  }
+    uint32_t i = 0;
+    /* Read 32-Bit data from Backup SRAM */
+    for (i = 0; i < length; i++) {
+        data[i] = *(__IO uint32_t*)(BKPSRAM_BASE + (offset + i) * 4);
+    }
 #else
-  UNUSED(offset);
-  UNUSED(data);
-  UNUSED(length);
+    UNUSED(offset);
+    UNUSED(data);
+    UNUSED(length);
 #endif
 }
 

@@ -1,8 +1,8 @@
 #pragma once
 
 #include "LowLevelTimer.h"
-#include "stm32yyxx_hal_conf.h"
 #include "codal-stm32/source/stm32/timer.h"
+#include "stm32yyxx_hal_conf.h"
 
 #define STM_LOW_LEVEL_TIMER_STATUS_ENABLED 0x02
 

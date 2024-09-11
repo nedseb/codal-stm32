@@ -117,7 +117,4 @@ class STM32SAI {
     void disableClock();
 };
 }  // namespace codal
-
-#else
-#warning "STM32SAI is not supported by your target !"
 #endif

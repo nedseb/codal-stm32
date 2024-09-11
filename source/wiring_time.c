@@ -17,6 +17,7 @@
 */
 
 #include "wiring_time.h"
+
 #include "clock.h"
 
 #ifdef __cplusplus
@@ -26,24 +27,24 @@ void yield(void);
 
 uint32_t millis(void)
 {
-  // ToDo: ensure no interrupts
-  return getCurrentMillis();
+    // ToDo: ensure no interrupts
+    return getCurrentMillis();
 }
 
 // Interrupt-compatible version of micros
 uint32_t micros(void)
 {
-  return getCurrentMicros();
+    return getCurrentMicros();
 }
 
 void delay(uint32_t ms)
 {
-  if (ms != 0) {
-    uint32_t start = getCurrentMillis();
-    do {
-      yield();
-    } while (getCurrentMillis() - start < ms);
-  }
+    if (ms != 0) {
+        uint32_t start = getCurrentMillis();
+        do {
+            yield();
+        } while (getCurrentMillis() - start < ms);
+    }
 }
 
 #ifdef __cplusplus

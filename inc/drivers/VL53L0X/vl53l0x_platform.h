@@ -26,7 +26,6 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ********************************************************************************/
 
-
 #ifndef _VL53L0X_PLATFORM_H_
 #define _VL53L0X_PLATFORM_H_
 
@@ -42,7 +41,7 @@ extern "C" {
  *
  * @brief All end user OS/platform/application porting
  */
- 
+
 /**
  * @defgroup VL53L0X_platform_group VL53L0 Platform Functions
  * @brief    VL53L0 Platform Functions
@@ -55,15 +54,14 @@ extern "C" {
  *
  */
 typedef struct {
-    VL53L0X_DevData_t Data;               /*!< embed ST Ewok Dev  data as "Data"*/
+    VL53L0X_DevData_t Data; /*!< embed ST Ewok Dev  data as "Data"*/
 
     /*!< user specific field */
-    uint8_t   I2cDevAddr;                /*!< i2c device address user specific field */
-    uint8_t   comms_type;                /*!< Type of comms : VL53L0X_COMMS_I2C or VL53L0X_COMMS_SPI */
-    uint16_t  comms_speed_khz;           /*!< Comms speed [kHz] : typically 400kHz for I2C           */
+    uint8_t I2cDevAddr;       /*!< i2c device address user specific field */
+    uint8_t comms_type;       /*!< Type of comms : VL53L0X_COMMS_I2C or VL53L0X_COMMS_SPI */
+    uint16_t comms_speed_khz; /*!< Comms speed [kHz] : typically 400kHz for I2C           */
 
 } VL53L0X_Dev_t;
-
 
 /**
  * @brief   Declare the device Handle as a pointer of the structure @a VL53L0X_Dev_t.
@@ -89,7 +87,7 @@ typedef VL53L0X_Dev_t* VL53L0X_DEV;
  * @param field     ST structure field name
  * @param data      Data to be set
  */
-#define PALDevDataSet(Dev, field, data) (Dev->Data.field)=(data)
+#define PALDevDataSet(Dev, field, data) (Dev->Data.field) = (data)
 
 /** @} end of VL53L0X_platform_group */
 
@@ -97,8 +95,4 @@ typedef VL53L0X_Dev_t* VL53L0X_DEV;
 }
 #endif
 
-#endif  /* _VL53L0X_PLATFORM_H_ */
-
-
-
-
+#endif /* _VL53L0X_PLATFORM_H_ */

@@ -118,10 +118,11 @@ bool LPS22HB::setODR_When_Enabled(float odr)
 {
     LPS22HB_Odr_et new_odr;
 
-    new_odr = (odr <= 1.0f) ? LPS22HB_ODR_1HZ
-                            : (odr <= 10.0f) ? LPS22HB_ODR_10HZ
-                                             : (odr <= 25.0f) ? LPS22HB_ODR_25HZ
-                                                              : (odr <= 50.0f) ? LPS22HB_ODR_50HZ : LPS22HB_ODR_75HZ;
+    new_odr = (odr <= 1.0f)    ? LPS22HB_ODR_1HZ
+              : (odr <= 10.0f) ? LPS22HB_ODR_10HZ
+              : (odr <= 25.0f) ? LPS22HB_ODR_25HZ
+              : (odr <= 50.0f) ? LPS22HB_ODR_50HZ
+                               : LPS22HB_ODR_75HZ;
 
     if (LPS22HB_Set_Odr((void*)this, new_odr) == LPS22HB_ERROR) {
         return false;

@@ -1,10 +1,11 @@
 #pragma once
 
 #include <STM32I2C.h>
-#include "../registerBit_utils.h"
 
 #include <cstdint>
 #include <functional>
+
+#include "../registerBit_utils.h"
 
 enum class ISM_ODR : uint8_t {
     POWER_DOWN = 0x00,
