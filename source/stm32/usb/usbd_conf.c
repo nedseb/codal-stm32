@@ -52,14 +52,25 @@ PCD_HandleTypeDef g_hpcd;
 void HAL_PCD_MspInit(PCD_HandleTypeDef* hpcd)
 {
     const PinMap* map = NULL;
-#if defined(PWR_CR2_USV)
-    /* Enable VDDUSB on Pwrctrl CR2 register*/
-    HAL_PWREx_EnableVddUSB();
+
+#if defined(PIN_UCPD_TCPP)
+    /* Set TCPP default state: Type-C legacy */
+    pinMode(PIN_UCPD_TCPP, OUTPUT_OPEN_DRAIN);
+    digitalWriteFast(digitalPinToPinName(PIN_UCPD_TCPP), LOW);
 #endif
-#ifdef STM32H7xx
-    if (!LL_PWR_IsActiveFlag_USB()) {
-        HAL_PWREx_EnableUSBVoltageDetector();
-    }
+#if defined(PWR_CR3_USB33DEN) || defined(PWR_USBSCR_USB33DEN)
+    HAL_PWREx_EnableUSBVoltageDetector();
+#endif
+#if defined(PWR_CR3_USB33RDY)
+    while (!LL_PWR_IsActiveFlag_USB())
+        ;
+#elif defined(PWR_VMSR_USB33RDY)
+    while (!LL_PWR_IsActiveFlag_VDDUSB())
+        ;
+#endif
+#if defined(PWR_CR2_USV) || defined(PWR_SVMCR_USV) || defined(PWR_USBSCR_USB33SV)
+    /* Enable VDDUSB */
+    HAL_PWREx_EnableVddUSB();
 #endif
 #if defined(USB)
     if (hpcd->Instance == USB) {
@@ -98,7 +109,9 @@ void HAL_PCD_MspInit(PCD_HandleTypeDef* hpcd)
 #ifdef __HAL_USB_WAKEUP_EXTI_ENABLE_RISING_EDGE
             __HAL_USB_WAKEUP_EXTI_ENABLE_RISING_EDGE();
 #endif
+#ifdef __HAL_USB_WAKEUP_EXTI_ENABLE_IT
             __HAL_USB_WAKEUP_EXTI_ENABLE_IT();
+#endif
 #if defined(USB_WKUP_IRQn)
             /* USB Wakeup Interrupt */
             HAL_NVIC_EnableIRQ(USB_WKUP_IRQn);
@@ -135,8 +148,10 @@ void HAL_PCD_MspInit(PCD_HandleTypeDef* hpcd)
 #ifdef __HAL_USB_OTG_FS_WAKEUP_EXTI_ENABLE_RISING_EDGE
             __HAL_USB_OTG_FS_WAKEUP_EXTI_ENABLE_RISING_EDGE();
 #endif
+#ifdef __HAL_USB_OTG_FS_WAKEUP_EXTI_ENABLE_IT
             __HAL_USB_OTG_FS_WAKEUP_EXTI_ENABLE_IT();
-#if !defined(STM32L4xx)
+#endif
+#if !defined(STM32L4xx) && !defined(STM32U5xx)
             /* Set EXTI Wakeup Interrupt priority */
             HAL_NVIC_SetPriority(OTG_FS_WKUP_IRQn, USBD_IRQ_PRIO, USBD_IRQ_SUBPRIO);
 
@@ -448,7 +463,7 @@ USBD_StatusTypeDef USBD_LL_Init(USBD_HandleTypeDef* pdev)
     g_hpcd.Init.ep0_mps                 = DEP0CTL_MPS_64;
 #else
 #ifdef EP_MPS_64
-    g_hpcd.Init.ep0_mps             = EP_MPS_64;
+    g_hpcd.Init.ep0_mps = EP_MPS_64;
 #else
 #error "Missing EP0 MPS definition: DEP0CTL_MPS_64 or EP_MPS_64!"
 #endif
@@ -475,16 +490,16 @@ USBD_StatusTypeDef USBD_LL_Init(USBD_HandleTypeDef* pdev)
     g_hpcd.Init.use_external_vbus   = DISABLE;
 #else /* USE_USB_FS */
 #ifdef USB_OTG_FS
-    g_hpcd.Instance                 = USB_OTG_FS;
-    g_hpcd.Init.use_dedicated_ep1   = DISABLE;
-    g_hpcd.Init.dma_enable          = DISABLE;
+    g_hpcd.Instance = USB_OTG_FS;
+    g_hpcd.Init.use_dedicated_ep1 = DISABLE;
+    g_hpcd.Init.dma_enable = DISABLE;
     g_hpcd.Init.vbus_sensing_enable = VBUS_SENSING;
-    g_hpcd.Init.use_external_vbus   = DISABLE;
+    g_hpcd.Init.use_external_vbus = DISABLE;
 #else
     g_hpcd.Instance = USB;
 #endif
-    g_hpcd.Init.phy_itface          = PCD_PHY_EMBEDDED;
-    g_hpcd.Init.speed               = PCD_SPEED_FULL;
+    g_hpcd.Init.phy_itface = PCD_PHY_EMBEDDED;
+    g_hpcd.Init.speed = PCD_SPEED_FULL;
 #endif /* USE_USB_HS */
 
     /* Link The driver to the stack */

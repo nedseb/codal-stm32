@@ -1,8 +1,8 @@
 /**
  ******************************************************************************
- * @file    usbd_cdc.h
+ * @file    usbd_webusb.h
  * @author  MCD Application Team
- * @brief   header file for the usbd_cdc.c file.
+ * @brief   header file for the usbd_webusb.c file.
  ******************************************************************************
  * @attention
  *
@@ -18,15 +18,14 @@
  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __USB_WebUSB_H
-#define __USB_WebUSB_H
+#ifndef __USB_WEBUSB_H
+#define __USB_WEBUSB_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /* Includes ------------------------------------------------------------------*/
-#include "usbd_def.h"
 #include "usbd_ep_conf.h"
 #include "usbd_ioreq.h"
 
@@ -39,7 +38,7 @@ extern "C" {
  * @{
  */
 
-/** @defgroup usbd_WebUSB_Exported_Defines
+/** @defgroup usbd_cdc_Exported_Defines
  * @{
  */
 #ifndef WebUSB_HS_BINTERVAL
@@ -59,6 +58,7 @@ extern "C" {
 #define WebUSB_DATA_FS_IN_PACKET_SIZE  CDC_DATA_FS_MAX_PACKET_SIZE
 #define WebUSB_DATA_FS_OUT_PACKET_SIZE CDC_DATA_FS_MAX_PACKET_SIZE
 
+#define WebUSB_REQ_MAX_DATA_SIZE 0x7U
 /*---------------------------------------------------------------------*/
 /*  CDC definitions                                                    */
 /*---------------------------------------------------------------------*/
@@ -71,6 +71,10 @@ extern "C" {
 #define WebUSB_GET_LINE_CODING           0x21U
 #define WebUSB_SET_CONTROL_LINE_STATE    0x22U
 #define WebUSB_SEND_BREAK                0x23U
+
+// Control Line State bits
+#define CLS_DTR (1 << 0)
+#define CLS_RTS (1 << 1)
 
 /**
  * @}
@@ -99,7 +103,7 @@ typedef struct _USBD_WebUSB_Itf {
 } USBD_WebUSB_ItfTypeDef;
 
 typedef struct {
-    uint32_t data[CDC_DATA_HS_MAX_PACKET_SIZE / 4U]; /* Force 32bits alignment */
+    uint32_t data[CDC_DATA_HS_MAX_PACKET_SIZE / 4U]; /* Force 32-bit alignment */
     uint8_t CmdOpCode;
     uint8_t CmdLength;
     uint8_t* RxBuffer;
@@ -123,8 +127,8 @@ typedef struct {
  * @{
  */
 
-extern USBD_ClassTypeDef USBD_WEBUSB_ClassDriver;
-#define USBD_WebUSB_CLASS &USBD_WEBUSB_ClassDriver
+extern USBD_ClassTypeDef USBD_WebUSB;
+#define USBD_WebUSB_CLASS &USBD_WebUSB
 /**
  * @}
  */
@@ -134,12 +138,17 @@ extern USBD_ClassTypeDef USBD_WEBUSB_ClassDriver;
  */
 uint8_t USBD_WebUSB_RegisterInterface(USBD_HandleTypeDef* pdev, USBD_WebUSB_ItfTypeDef* fops);
 
+#ifdef USE_USBD_COMPOSITE
+uint8_t USBD_WebUSB_SetTxBuffer(USBD_HandleTypeDef* pdev, uint8_t* pbuff, uint32_t length, uint8_t ClassId);
+uint8_t USBD_WebUSB_TransmitPacket(USBD_HandleTypeDef* pdev, uint8_t ClassId);
+uint8_t USBD_WebUSB_ClearBuffer(USBD_HandleTypeDef* pdev, uint8_t ClassId);
+#else
 uint8_t USBD_WebUSB_SetTxBuffer(USBD_HandleTypeDef* pdev, uint8_t* pbuff, uint32_t length);
-
+uint8_t USBD_WebUSB_TransmitPacket(USBD_HandleTypeDef* pdev);
+uint8_t USBD_WebUSB_ClearBuffer(USBD_HandleTypeDef* pdev);
+#endif /* USE_USBD_COMPOSITE */
 uint8_t USBD_WebUSB_SetRxBuffer(USBD_HandleTypeDef* pdev, uint8_t* pbuff);
 uint8_t USBD_WebUSB_ReceivePacket(USBD_HandleTypeDef* pdev);
-uint8_t USBD_WebUSB_ClearBuffer(USBD_HandleTypeDef* pdev);
-uint8_t USBD_WebUSB_TransmitPacket(USBD_HandleTypeDef* pdev);
 /**
  * @}
  */
@@ -148,7 +157,7 @@ uint8_t USBD_WebUSB_TransmitPacket(USBD_HandleTypeDef* pdev);
 }
 #endif
 
-#endif /* __USB_WebUSB_H */
+#endif /* __USB_WEBUSB_H */
 /**
  * @}
  */

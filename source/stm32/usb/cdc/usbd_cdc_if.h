@@ -54,6 +54,7 @@ bool CDC_connected(void);
 void CDC_OnDataReceived(void (*callback)(void));
 
 void CDC_enableDTR(bool enable);
+
 #ifdef __cplusplus
 }
 #endif

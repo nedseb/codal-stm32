@@ -35,6 +35,10 @@ extern "C" {
 #if defined(USE_USB_HS) && !defined(USB_OTG_HS)
 #error "This board does not support USB High Speed! Select 'Full Speed' in the 'Tools->USB interface' menu"
 #endif
+#if !defined(USB_BASE) && !defined(USB_OTG_FS) && defined(USB_OTG_HS) && !defined(USE_USB_HS)
+#error \
+    "This board support only USB High Speed! Select 'High Speed' or 'High Speed in Full Speed mode' in the 'Tools->USB interface' menu"
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -66,6 +70,15 @@ extern "C" {
 #define USB_WKUP_IRQHandler USB_FS_WKUP_IRQHandler
 #endif
 #endif
+#elif defined(STM32G0xx)
+#define USB_IRQn       USB_UCPD1_2_IRQn
+#define USB_IRQHandler USB_UCPD1_2_IRQHandler
+#elif defined(STM32H5xx)
+#define USB_IRQn       USB_DRD_FS_IRQn
+#define USB_IRQHandler USB_DRD_FS_IRQHandler
+#elif defined(STM32U5xx) && !defined(USB_DRD_FS)
+#define USB_IRQn       OTG_FS_IRQn
+#define USB_IRQHandler OTG_FS_IRQHandler
 #elif defined(STM32L5xx)
 #define USB_IRQn       USB_FS_IRQn
 #define USB_IRQHandler USB_FS_IRQHandler
@@ -184,7 +197,7 @@ extern "C" {
 #ifndef UVC_MATRIX_COEFFICIENTS
 #define UVC_MATRIX_COEFFICIENTS 0x04U
 #endif /* UVC_MATRIX_COEFFICIENTS */
-#endif
+#endif /* USBD_UVC_FORMAT_UNCOMPRESSED */
 
 /* Video Stream frame width and height */
 #ifndef UVC_WIDTH
@@ -271,7 +284,7 @@ extern "C" {
 #define USBD_UsrLog(...) \
     do {                 \
     } while (0)
-#endif
+#endif /* (USBD_DEBUG_LEVEL > 0U) */
 
 #if (USBD_DEBUG_LEVEL > 1U)
 
@@ -285,7 +298,7 @@ extern "C" {
 #define USBD_ErrLog(...) \
     do {                 \
     } while (0)
-#endif
+#endif /* (USBD_DEBUG_LEVEL > 1U) */
 
 #if (USBD_DEBUG_LEVEL > 2U)
 #define USBD_DbgLog(...)     \
@@ -298,7 +311,7 @@ extern "C" {
 #define USBD_DbgLog(...) \
     do {                 \
     } while (0)
-#endif
+#endif /* (USBD_DEBUG_LEVEL > 2U) */
 
 /* Exported functions -------------------------------------------------------*/
 void* USBD_static_malloc(uint32_t size);
