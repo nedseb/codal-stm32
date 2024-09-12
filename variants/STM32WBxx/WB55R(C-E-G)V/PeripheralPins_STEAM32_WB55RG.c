@@ -1,6 +1,6 @@
 /*
  *******************************************************************************
- * Copyright (c) 2020-2021, STMicroelectronics
+ * Copyright (c) 2020, STMicroelectronics
  * All rights reserved.
  *
  * This software component is licensed by ST under BSD 3-Clause license,
@@ -13,7 +13,7 @@
 /*
  * Automatically generated from STM32WB55RCVx.xml, STM32WB55REVx.xml
  * STM32WB55RGVx.xml
- * CubeMX DB release 6.0.21
+ * CubeMX DB release 6.0.120
  */
 #if defined(STEAM32_WB55RG)
 #include "Arduino.h"
@@ -77,6 +77,8 @@ WEAK const PinMap PinMap_I2C_SCL[] = {{PA_7, I2C3, STM_PIN_DATA(STM_MODE_AF_OD, 
                                       {PC_0, I2C3, STM_PIN_DATA(STM_MODE_AF_OD, GPIO_NOPULL, GPIO_AF4_I2C3)},
                                       {NC, NP, 0}};
 #endif
+
+//*** No I3C ***
 
 //*** TIM ***
 
@@ -239,10 +241,10 @@ WEAK const PinMap PinMap_QUADSPI_SSEL[] = {
 #if defined(HAL_PCD_MODULE_ENABLED) || defined(HAL_HCD_MODULE_ENABLED)
 WEAK const PinMap PinMap_USB[] = {{PA_11, USB, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_NOPULL, GPIO_AF10_USB)},  // USB_DM
                                   {PA_12, USB, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_NOPULL, GPIO_AF10_USB)},  // USB_DP
-                                  //{PA_13, USB, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF10_USB)}, // USB_NOE
+                                  {PA_13, USB, STM_PIN_DATA(STM_MODE_AF_PP, GPIO_PULLUP, GPIO_AF10_USB)},  // USB_NOE
                                   {NC, NP, 0}};
 #endif
 
 //*** No SD ***
 
-#endif /* !CUSTOM_PERIPHERAL_PINS */
+#endif /* STEAM32_WB55RGS */

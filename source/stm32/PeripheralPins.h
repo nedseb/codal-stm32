@@ -33,7 +33,7 @@
 
 #include "pinmap.h"
 #ifdef STM32F1xx
-#include "PinAF_STM32F1.h"
+  #include "PinAF_STM32F1.h"
 #endif
 
 //*** ADC ***
@@ -46,8 +46,12 @@ extern const PinMap PinMap_DAC[];
 extern const PinMap PinMap_I2C_SDA[];
 extern const PinMap PinMap_I2C_SCL[];
 
+//*** I3C ***
+extern const PinMap PinMap_I3C_SDA[];
+extern const PinMap PinMap_I3C_SCL[];
+
 //*** TIM ***
-/* For backward compatibilty */
+/* For backward compatibility */
 #define PinMap_PWM PinMap_TIM
 extern const PinMap PinMap_TIM[];
 
@@ -83,6 +87,10 @@ extern const PinMap PinMap_OCTOSPI_DATA0[];
 extern const PinMap PinMap_OCTOSPI_DATA1[];
 extern const PinMap PinMap_OCTOSPI_DATA2[];
 extern const PinMap PinMap_OCTOSPI_DATA3[];
+extern const PinMap PinMap_OCTOSPI_DATA4[];
+extern const PinMap PinMap_OCTOSPI_DATA5[];
+extern const PinMap PinMap_OCTOSPI_DATA6[];
+extern const PinMap PinMap_OCTOSPI_DATA7[];
 extern const PinMap PinMap_OCTOSPI_SCLK[];
 extern const PinMap PinMap_OCTOSPI_SSEL[];
 
@@ -92,5 +100,20 @@ extern const PinMap PinMap_USB_OTG_FS[];
 extern const PinMap PinMap_USB_OTG_HS[];
 
 //*** SD ***
-extern const PinMap PinMap_SD[];
+extern const PinMap PinMap_SD_CMD[];
+extern const PinMap PinMap_SD_CK[];
+extern const PinMap PinMap_SD_DATA0[];
+extern const PinMap PinMap_SD_DATA1[];
+extern const PinMap PinMap_SD_DATA2[];
+extern const PinMap PinMap_SD_DATA3[];
+extern const PinMap PinMap_SD_DATA4[];
+extern const PinMap PinMap_SD_DATA5[];
+extern const PinMap PinMap_SD_DATA6[];
+extern const PinMap PinMap_SD_DATA7[];
+extern const PinMap PinMap_SD_CKIN[];
+extern const PinMap PinMap_SD_CDIR[];
+extern const PinMap PinMap_SD_D0DIR[];
+extern const PinMap PinMap_SD_D123DIR[];
+
 #endif
+

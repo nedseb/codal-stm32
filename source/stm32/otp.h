@@ -29,9 +29,9 @@ extern "C" {
  * by its index (one byte).The index used for the BT structure is 0.
  */
 typedef struct __packed {
-    uint8_t bd_address[6];
-    uint8_t hse_tuning;
-    uint8_t id;
+  uint8_t   bd_address[6];
+  uint8_t   hse_tuning;
+  uint8_t   id;
 } OTP_BT_t;
 #endif /* STM32WBxx */
 
@@ -50,7 +50,7 @@ typedef struct __packed {
  * @param  id: ID of the parameter to read from OTP
  * @retval Address of the ID in the OTP - returns 0 when no ID found
  */
-uint8_t* OTP_Read(uint8_t id);
+uint8_t *OTP_Read(uint8_t id);
 
 #ifdef __cplusplus
 }

@@ -29,16 +29,18 @@ extern "C" {
  */
 uint32_t getCurrentMicros(void)
 {
-    /* Ensure COUNTFLAG is reset by reading SysTick control and status register */
-    LL_SYSTICK_IsActiveCounterFlag();
-    uint32_t m         = HAL_GetTick();
+    uint32_t m0        = HAL_GetTick();
+    __IO uint32_t u0   = SysTick->VAL;
+    uint32_t m1        = HAL_GetTick();
+    __IO uint32_t u1   = SysTick->VAL;
     const uint32_t tms = SysTick->LOAD + 1;
-    __IO uint32_t u    = tms - SysTick->VAL;
-    if (LL_SYSTICK_IsActiveCounterFlag()) {
-        m = HAL_GetTick();
-        u = tms - SysTick->VAL;
+
+    if (m1 != m0) {
+        return (m1 * 1000 + ((tms - u1) * 1000) / tms);
     }
-    return (m * 1000 + (u * 1000) / tms);
+    else {
+        return (m0 * 1000 + ((tms - u0) * 1000) / tms);
+    }
 }
 
 /**
@@ -59,7 +61,13 @@ uint32_t getCurrentMillis(void)
 void enableClock(sourceClock_t source)
 {
     RCC_OscInitTypeDef RCC_OscInitStruct = {0};
-    RCC_OscInitStruct.PLL.PLLState       = RCC_PLL_NONE;
+#if defined(RCC_PLL_NONE)
+#if defined(STM32WBAxx)
+    RCC_OscInitStruct.PLL1.PLLState = RCC_PLL_NONE;
+#else
+    RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
+#endif
+#endif
 
 #if defined(STM32MP1xx)
     /** Clock source selection is done by First Stage Boot Loader on Cortex A
@@ -74,17 +82,30 @@ void enableClock(sourceClock_t source)
 
     switch (source) {
         case LSI_CLOCK:
-#ifdef STM32WBxx
+#ifdef RCC_FLAG_LSI1RDY
+            __HAL_RCC_LSI1_ENABLE();
             if (__HAL_RCC_GET_FLAG(RCC_FLAG_LSI1RDY) == RESET) {
+#ifdef RCC_OSCILLATORTYPE_LSI1
                 RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI1;
 #else
-            if (__HAL_RCC_GET_FLAG(RCC_FLAG_LSIRDY) == RESET) {
-                RCC_OscInitStruct.OscillatorType      = RCC_OSCILLATORTYPE_LSI;
+                RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI;
 #endif
-                RCC_OscInitStruct.LSIState = RCC_LSI_ON;
+#ifdef RCC_LSI1_ON
+                RCC_OscInitStruct.LSIState = RCC_LSI1_ON;
+#else
+                RCC_OscInitStruct.LSIState       = RCC_LSI_ON;
+#endif
             }
+#else
+            __HAL_RCC_LSI_ENABLE();
+            if (__HAL_RCC_GET_FLAG(RCC_FLAG_LSIRDY) == RESET) {
+                RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI;
+                RCC_OscInitStruct.LSIState       = RCC_LSI_ON;
+            }
+#endif
             break;
         case HSI_CLOCK:
+            __HAL_RCC_HSI_ENABLE();
             if (__HAL_RCC_GET_FLAG(RCC_FLAG_HSIRDY) == RESET) {
                 RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
                 RCC_OscInitStruct.HSIState       = RCC_HSI_ON;
@@ -96,20 +117,31 @@ void enableClock(sourceClock_t source)
             }
             break;
         case LSE_CLOCK:
+            __HAL_RCC_LSE_CONFIG(RCC_LSE_ON);
             if (__HAL_RCC_GET_FLAG(RCC_FLAG_LSERDY) == RESET) {
 #ifdef __HAL_RCC_LSEDRIVE_CONFIG
+#ifdef RCC_LSEDRIVE_LOW
                 __HAL_RCC_LSEDRIVE_CONFIG(RCC_LSEDRIVE_LOW);
+#else
+                __HAL_RCC_LSEDRIVE_CONFIG(RCC_LSEDRIVE_MEDIUMLOW);
+#endif
 #endif
                 RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSE;
                 RCC_OscInitStruct.LSEState       = RCC_LSE_ON;
             }
             break;
-        case HSE_CLOCK:
+        case HSE_CLOCK: {
+#if defined(RCC_HSE_BYPASS_PWR) && defined(LORAWAN_BOARD_HAS_TCXO) && (LORAWAN_BOARD_HAS_TCXO == 1)
+            uint32_t HSEState = RCC_HSE_BYPASS_PWR;
+#else
+            uint32_t HSEState = RCC_HSE_ON;
+#endif
+            __HAL_RCC_HSE_CONFIG(HSEState);
             if (__HAL_RCC_GET_FLAG(RCC_FLAG_HSERDY) == RESET) {
                 RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-                RCC_OscInitStruct.HSEState       = RCC_HSE_ON;
+                RCC_OscInitStruct.HSEState       = HSEState;
             }
-            break;
+        } break;
         default:
             /* No valid clock to enable */
             break;
@@ -154,6 +186,15 @@ void configIPClock(void)
 #if defined(__HAL_RCC_SYSCFG_CLK_ENABLE)
     /* Enable SYSCFG clock, needed for example: Pin remap or Analog switch ... */
     __HAL_RCC_SYSCFG_CLK_ENABLE();
+#endif
+
+#if defined(HAL_CRC_MODULE_ENABLED)
+    /* Enable CRC clock, needed for example: MotionFX Library ... */
+#if defined(__HAL_RCC_CRC2_CLK_ENABLE)
+    __HAL_RCC_CRC2_CLK_ENABLE();
+#elif defined(__HAL_RCC_CRC_CLK_ENABLE)
+    __HAL_RCC_CRC_CLK_ENABLE();
+#endif
 #endif
 }
 
