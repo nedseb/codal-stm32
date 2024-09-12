@@ -1,14 +1,14 @@
 /**
   ******************************************************************************
-  * @file    hw_config.h
+  * @file    core_callback.h
   * @author  WI6LABS
   * @version V1.0.0
-  * @date    01-August-2016
-  * @brief   Header for hw_config module
+  * @date    8-September-2017
+  * @brief   Header for callback methods.
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT(c) 2016 STMicroelectronics</center></h2>
+  * <h2><center>&copy; COPYRIGHT(c) 2017 STMicroelectronics</center></h2>
   *
   * Redistribution and use in source and binary forms, with or without modification,
   * are permitted provided that the following conditions are met:
@@ -36,27 +36,32 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __HW_CONFIG_H
-#define __HW_CONFIG_H
-
-/* Includes ------------------------------------------------------------------*/
-#include "stm32_def.h"
+#ifndef __CALLBACK_H
+#define __CALLBACK_H
+#if defined(CORE_CALLBACK)
+#include "variant.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+/* Includes ------------------------------------------------------------------*/
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
-/* Exported functions ------------------------------------------------------- */
+#ifndef CALLBACK_LIST_SIZE
+#define CALLBACK_LIST_SIZE  4
+#endif
 
-void hw_config_init(void);
+/* Exported functions ------------------------------------------------------- */
+void registerCoreCallback(void (*func)(void));
+void unregisterCoreCallback(void (*func)(void));
+void CoreCallback(void);
 
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* __HW_CONFIG_H */
+#endif // CORE_CALLBACK
+#endif /* __CALLBACK_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

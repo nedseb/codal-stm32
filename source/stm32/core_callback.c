@@ -1,14 +1,14 @@
 /**
   ******************************************************************************
-  * @file    hw_config.h
+  * @file    core_callback.c
   * @author  WI6LABS
   * @version V1.0.0
-  * @date    01-August-2016
-  * @brief   Header for hw_config module
+  * @date    8-September-2017
+  * @brief   Provides methods to add callback to call inside the main loop.
   ******************************************************************************
   * @attention
   *
-  * <h2><center>&copy; COPYRIGHT(c) 2016 STMicroelectronics</center></h2>
+  * <h2><center>&copy; COPYRIGHT(c) 2017 STMicroelectronics</center></h2>
   *
   * Redistribution and use in source and binary forms, with or without modification,
   * are permitted provided that the following conditions are met:
@@ -35,28 +35,80 @@
   ******************************************************************************
   */
 
-/* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __HW_CONFIG_H
-#define __HW_CONFIG_H
-
-/* Includes ------------------------------------------------------------------*/
-#include "stm32_def.h"
-
+/*
+ * @NOTE
+ * This file provides methods to add callback in the main() function loop.
+ * If you need to call as often as possible a function to update your system and
+ * you want to be sure this function to be called, you can add it to the callback
+ * list. Otherwise, your function should be called inside the loop() function of
+ * the sketch.
+ */
+#if defined(CORE_CALLBACK)
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* Exported types ------------------------------------------------------------*/
-/* Exported constants --------------------------------------------------------*/
-/* Exported macro ------------------------------------------------------------*/
-/* Exported functions ------------------------------------------------------- */
+/* Includes ------------------------------------------------------------------*/
+#include "core_callback.h"
 
-void hw_config_init(void);
+// List of callback to call
+static void (*callbackList[CALLBACK_LIST_SIZE])(void);
+
+/**
+  * @brief  Adds a callback pointer
+  * @param  func: callback pointer
+  * @retval None
+  */
+void registerCoreCallback(void (*func)(void))
+{
+  if (func == NULL) {
+    return;
+  }
+
+  for (uint8_t i = 0; i < CALLBACK_LIST_SIZE; i++) {
+    if (callbackList[i] == NULL) {
+      callbackList[i] = func;
+      break;
+    }
+  }
+}
+
+/**
+  * @brief  Removes a callback pointer
+  * @param  func: callback pointer
+  * @retval None
+  */
+void unregisterCoreCallback(void (*func)(void))
+{
+  if (func == NULL) {
+    return;
+  }
+
+  for (uint8_t i = 0; i < CALLBACK_LIST_SIZE; i++) {
+    if (callbackList[i] == func) {
+      callbackList[i] = NULL;
+      break;
+    }
+  }
+}
+
+/**
+  * @brief  Calls callback of the list. There is no priority. First added first
+  *         called. This function must be called only in main() function loop.
+  * @param  None
+  * @retval None
+  */
+void CoreCallback(void)
+{
+  for (uint8_t i = 0; i < CALLBACK_LIST_SIZE; i++) {
+    if (callbackList[i] != NULL) {
+      callbackList[i]();
+    }
+  }
+}
 
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* __HW_CONFIG_H */
-
+#endif // CORE_CALLBACK
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

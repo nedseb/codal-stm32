@@ -71,6 +71,8 @@ struct serial_s {
     int (*tx_callback)(serial_t*);
     PinName pin_tx;
     PinName pin_rx;
+    PinName pin_rts;
+    PinName pin_cts;
     IRQn_Type irq;
     uint8_t index;
     uint8_t recv;
@@ -84,7 +86,27 @@ struct serial_s {
 };
 
 /* Exported constants --------------------------------------------------------*/
+#ifndef TX_TIMEOUT
 #define TX_TIMEOUT 1000
+#endif
+
+#if !defined(RCC_USART1CLKSOURCE_HSI)
+/* Some series like C0 have 2 derivated clock from HSI: HSIKER (for peripherals)
+ * and HSISYS (for system clock). But each have a dedicated prescaler.
+ * To avoid changing Arduino implementation,
+ * remap RCC_USART1CLKSOURCE_HSI to RCC_USART1CLKSOURCE_HSIKER
+ */
+#define RCC_USART1CLKSOURCE_HSI RCC_USART1CLKSOURCE_HSIKER
+#endif
+
+#if defined(USART2_BASE) && !defined(USART2_IRQn)
+#if defined(STM32G0xx) || defined(STM32U0xx)
+#if defined(LPUART2_BASE)
+#define USART2_IRQn       USART2_LPUART2_IRQn
+#define USART2_IRQHandler USART2_LPUART2_IRQHandler
+#endif
+#endif /* STM32G0xx */
+#endif
 
 #if defined(USART3_BASE) && !defined(USART3_IRQn)
 #if defined(STM32F0xx)
@@ -98,17 +120,24 @@ struct serial_s {
 #define USART3_IRQn       USART3_4_IRQn
 #define USART3_IRQHandler USART3_4_IRQHandler
 #endif /* STM32F091xC || STM32F098xx */
-#endif /* STM32F0xx */
-
-#if defined(STM32G0xx)
-#if defined(LPUART1_BASE)
+#elif defined(STM32G0xx)
+#if defined(LPUART2_BASE)
+#define USART3_IRQn       USART3_4_5_6_LPUART1_IRQn
+#define USART3_IRQHandler USART3_4_5_6_LPUART1_IRQHandler
+#elif defined(LPUART1_BASE)
 #define USART3_IRQn       USART3_4_LPUART1_IRQn
 #define USART3_IRQHandler USART3_4_LPUART1_IRQHandler
+#elif defined(USART5_BASE)
+#define USART3_IRQn       USART3_4_5_6_IRQn
+#define USART3_IRQHandler USART3_4_5_6_IRQHandler
 #else
 #define USART3_IRQn       USART3_4_IRQn
 #define USART3_IRQHandler USART3_4_IRQHandler
 #endif
-#endif /* STM32G0xx */
+#elif defined(STM32U0xx)
+#define USART3_IRQn       USART3_LPUART1_IRQn
+#define USART3_IRQHandler USART3_LPUART1_IRQHandler
+#endif /* STM32F0xx */
 #endif
 
 #if defined(USART4_BASE) && !defined(USART4_IRQn)
@@ -123,15 +152,22 @@ struct serial_s {
 #endif /* STM32F091xC || STM32F098xx */
 #elif defined(STM32L0xx)
 #define USART4_IRQn USART4_5_IRQn
-#endif /* STM32F0xx */
-#if defined(STM32G0xx)
-#if defined(LPUART1_BASE)
+#elif defined(STM32G0xx)
+#if defined(LPUART2_BASE)
+#define USART4_IRQn USART3_4_5_6_LPUART1_IRQn
+#elif defined(LPUART1_BASE)
 #define USART4_IRQn USART3_4_LPUART1_IRQn
+#elif defined(USART5_BASE)
+#define USART4_IRQn USART3_4_5_6_IRQn
 #else
 #define USART4_IRQn USART3_4_IRQn
 #endif
+#elif defined(STM32U0xx)
+#if defined(LPUART3_BASE)
+#define USART4_IRQn       USART4_LPUART3_IRQn
+#define USART4_IRQHandler USART4_LPUART3_IRQHandler
+#endif /* LPUART3_BASE */
 #endif /* STM32G0xx */
-
 #endif
 
 #if defined(USART5_BASE) && !defined(USART5_IRQn)
@@ -142,45 +178,85 @@ struct serial_s {
 #elif defined(STM32F030xC)
 #define USART5_IRQn USART3_6_IRQn
 #endif /* STM32F091xC || STM32F098xx */
+#elif defined(STM32G0xx)
+#if defined(LPUART2_BASE)
+#define USART5_IRQn USART3_4_5_6_LPUART1_IRQn
+#elif defined(USART5_BASE)
+#define USART5_IRQn USART3_4_5_6_IRQn
+#endif
 #elif defined(STM32L0xx)
 #define USART5_IRQn USART4_5_IRQn
 #endif /* STM32F0xx */
 #endif
 
-#if defined(STM32F0xx)
 /* IRQHandler is mapped on USART3_IRQHandler for STM32F0xx */
 #if defined(USART6_BASE) && !defined(USART6_IRQn)
+#if defined(STM32F0xx)
 #if defined(STM32F091xC) || defined(STM32F098xx)
 #define USART6_IRQn USART3_8_IRQn
 #elif defined(STM32F030xC)
 #define USART6_IRQn USART3_6_IRQn
 #endif /* STM32F091xC || STM32F098xx */
+#elif defined(STM32G0xx)
+#if defined(LPUART2_BASE)
+#define USART6_IRQn USART3_4_5_6_LPUART1_IRQn
+#elif defined(USART5_BASE)
+#define USART6_IRQn USART3_4_5_6_IRQn
+#endif
+#endif /* STM32F0xx */
 #endif
 
 #if defined(USART7_BASE) && !defined(USART7_IRQn)
+#if defined(STM32F0xx)
 #if defined(STM32F091xC) || defined(STM32F098xx)
 #define USART7_IRQn USART3_8_IRQn
 #endif /* STM32F091xC || STM32F098xx */
+#endif /* STM32F0xx */
 #endif
 
 #if defined(USART8_BASE) && !defined(USART8_IRQn)
+#if defined(STM32F0xx)
 #if defined(STM32F091xC) || defined(STM32F098xx)
 #define USART8_IRQn USART3_8_IRQn
 #endif /* STM32F091xC || STM32F098xx */
-#endif
 #endif /* STM32F0xx */
+#endif
 
 #if defined(LPUART1_BASE) && !defined(LPUART1_IRQn)
-#if defined(STM32G0xx) && defined(USART3_BASE)
+#if defined(STM32G0xx)
+#if defined(LPUART2_BASE)
+#define LPUART1_IRQn USART3_4_5_6_LPUART1_IRQn
+#elif defined(USART3_BASE)
 #define LPUART1_IRQn USART3_4_LPUART1_IRQn
+#endif
 #endif /* STM32G0xx */
+#if defined(STM32U0xx)
+#define LPUART1_IRQn USART3_LPUART1_IRQn
+#endif /* STM32U0xx */
+#endif
+
+#if defined(LPUART2_BASE) && !defined(LPUART2_IRQn)
+#if defined(STM32G0xx)
+#if defined(LPUART2_BASE)
+#define LPUART2_IRQn USART2_LPUART2_IRQn
+#endif
+#endif /* STM32G0xx */
+#if defined(STM32U0xx)
+#define LPUART2_IRQn USART2_LPUART2_IRQn
+#endif /* STM32U0xx */
+#endif
+
+#if defined(LPUART3_BASE) && !defined(LPUART3_IRQn)
+#if defined(STM32U0xx)
+#define LPUART3_IRQn USART4_LPUART3_IRQn
+#endif /* STM32U0xx */
 #endif
 
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
 void uart_init(serial_t* obj, uint32_t baudrate, uint32_t databits, uint32_t parity, uint32_t stopbits);
 void uart_deinit(serial_t* obj);
-#if defined(HAL_PWR_MODULE_ENABLED) && defined(UART_IT_WUF)
+#if defined(HAL_PWR_MODULE_ENABLED) && (defined(UART_IT_WUF) || defined(LPUART1_BASE))
 void uart_config_lowpower(serial_t* obj);
 #endif
 size_t uart_write(serial_t* obj, uint8_t data, uint16_t size);

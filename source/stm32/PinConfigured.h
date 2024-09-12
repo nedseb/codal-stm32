@@ -36,17 +36,20 @@
 extern "C" {
 #endif
 
-#define PINCONF_INDEX(X) (STM_PORT(X) - FirstPort)
+#define PINCONF_INDEX(X) (STM_PORT(X)-FirstPort)
 
 #define PINCONF_MASK     0x01
 #define PINCONF_SHIFT(X) (STM_PIN(X))
 #define PINCONF_BIT(X)   (PINCONF_MASK << PINCONF_SHIFT(X))
 
-#define PINCONF_VAL(X, Y) ((Y >> PINCONF_SHIFT(X)) & PINCONF_MASK)
+#define PINCONF_VAL(X, Y)   ((Y >> PINCONF_SHIFT(X)) & PINCONF_MASK)
 
-#define is_pin_configured(pin, map)    (PINCONF_VAL(pin, map[PINCONF_INDEX(pin)]))
-#define set_pin_configured(pin, map)   (map[PINCONF_INDEX(pin)] = map[PINCONF_INDEX(pin)] | PINCONF_BIT(pin))
-#define reset_pin_configured(pin, map) (map[PINCONF_INDEX(pin)] = map[PINCONF_INDEX(pin)] & (~PINCONF_BIT(pin)))
+#define is_pin_configured(pin, map) \
+  (PINCONF_VAL(pin, map[PINCONF_INDEX(pin)]))
+#define set_pin_configured(pin, map) \
+  (map[PINCONF_INDEX(pin)] = map[PINCONF_INDEX(pin)] | PINCONF_BIT(pin))
+#define reset_pin_configured(pin, map) \
+  (map[PINCONF_INDEX(pin)] = map[PINCONF_INDEX(pin)] & (~PINCONF_BIT(pin)))
 
 #ifdef __cplusplus
 }
