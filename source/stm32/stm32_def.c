@@ -1,5 +1,6 @@
 #include "stm32_def.h"
-//#include "core_debug.h"
+
+#include "core_debug.h"
 
 #ifdef __cplusplus
 extern "C" {
