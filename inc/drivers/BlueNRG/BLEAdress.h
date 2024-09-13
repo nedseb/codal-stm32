@@ -16,7 +16,7 @@ class BLEAddress {
         return BLE_Utils::hexToString(msb, ':').substr(6) + ":" + BLE_Utils::hexToString(lsb, ':');
     }
 
-    inline bool operator==(const BLEAddress& other) { return other.msb == msb && other.lsb == lsb; }
+    inline bool operator==(const BLEAddress& other) const { return other.msb == msb && other.lsb == lsb; }
 
   private:
     uint32_t msb;
