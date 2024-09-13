@@ -117,9 +117,6 @@ BLEDeviceError BLEDevice::startAdvertising()
     if (!hci->leSetAdvertisingParameters(100.0f, 100.0f, AdvertisingType::ADV_IND, OwnAddressType::RANDOM))
         return BLEDeviceError::LE_SET_ADVERTISING_PARAMS_ERROR;
 
-    if (hci->leReadAdvertisingPhysicalChannelTxPower() == 127)
-        return BLEDeviceError::LE_READ_ADVERTISING_TX_POWER_ERROR;
-
     if (!hci->leSetAdvertisingData(advData.getSignificantSize(), adv.data()))
         return BLEDeviceError::LE_SET_ADVERTISING_DATA_ERROR;
 
