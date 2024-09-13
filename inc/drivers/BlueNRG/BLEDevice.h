@@ -15,6 +15,7 @@ enum class BLEDeviceError : uint8_t {
     LE_SET_ADVERTISING_ENABLE_ERROR    = 0x07,
     LE_SET_SCAN_PARAMS_ERROR           = 0x08,
     LE_SET_SCAN_ENABLE_ERROR           = 0x09,
+    LE_SET_RANDOM_ADDRESS              = 0x0A,
 
     ALREADY_ADVERTISING_ERROR  = 0xF0,
     ALREADY_SCANNING_ERROR     = 0xF1,
@@ -107,6 +108,7 @@ class BLEDevice {
     ModeState scanningState;
     AdvertisingData advData;
     AdvertisingData advScanData;
+    uint8_t random_address[6];
 
     void handleAdvReport(std::deque<BLEAdvertisingReport> reports);
 };

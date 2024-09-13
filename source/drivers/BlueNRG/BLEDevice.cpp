@@ -1,10 +1,18 @@
 #include "BLEDevice.h"
 
+#include "CodalCompat.h"
+#include "clock.h"
+
 using namespace std;
 
 BLEDevice::BLEDevice(HCI* hci)
     : hci(hci), advertisingState(ModeState::DISABLE), scanningState(ModeState::DISABLE), advData(), advScanData()
 {
+    codal::seed_random(getCurrentMicros());
+    for (uint8_t i = 0; i < 6; ++i) {
+        random_address[i] = codal::random(256);
+    }
+    random_address[5] &= 0b11000000;
 }
 
 BLEDevice::~BLEDevice() {}
@@ -103,6 +111,8 @@ BLEDeviceError BLEDevice::startAdvertising()
     auto advScan = advScanData.toData();
 
     hci->leSetAdvertisingEnable(false);
+
+    if (!hci->leSetRandomAddress(random_address)) return BLEDeviceError::LE_SET_RANDOM_ADDRESS;
 
     if (!hci->leSetAdvertisingParameters(100.0f, 100.0f, AdvertisingType::ADV_IND, OwnAddressType::RANDOM))
         return BLEDeviceError::LE_SET_ADVERTISING_PARAMS_ERROR;
