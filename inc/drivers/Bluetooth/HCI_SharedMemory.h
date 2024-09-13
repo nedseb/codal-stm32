@@ -1,0 +1,24 @@
+#pragma once
+
+#include <vector>
+
+#include "HCI.h"
+#include "opcode.h"
+
+class HCI_SharedMemory : public HCI {
+  public:
+    HCI_SharedMemory();
+
+    bool init() override final;
+
+    void resetHardware() override final {}
+
+  protected:
+    std::vector<uint8_t> sendCommand(OpCodeCommand command, uint8_t nbArgs, const uint8_t* args) override final;
+
+  private:
+    void start_ble_rf(void);
+    void stm32wb_reset(void);
+    bool transport_init(void);
+    bool stm32wb_start_ble();
+};
