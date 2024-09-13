@@ -20,13 +20,13 @@ bool BLEDevice::init()
 
     if (hci->isDebugEnable()) printf("[init] Set Event Mask Bluetooth\r\n");
     if (!hci->setEventMask(maskBT.getMSBMask(), maskBT.getLSBMask())) {
-        if (hci->isDebugEnable()) printf("[init] ACI GAP Init FAILEDr\n");
+        if (hci->isDebugEnable()) printf("[init] ACI GAP Init FAILED\r\n");
         return false;
     }
 
     if (hci->isDebugEnable()) printf("[init] Set Event Mask BLE\r\n");
     if (!hci->leSetEventMask(maskLE.getMSBMask(), maskLE.getLSBMask())) {
-        if (hci->isDebugEnable()) printf("[init] ACI GAP Init FAILEDr\n");
+        if (hci->isDebugEnable()) printf("[init] ACI GAP Init FAILED\r\n");
         return false;
     }
 
