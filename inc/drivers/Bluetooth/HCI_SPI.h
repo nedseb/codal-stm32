@@ -20,10 +20,10 @@ class HCI_SPI : public HCI {
 
   protected:
     virtual std::vector<uint8_t> sendCommand(OpCodeCommand command, uint8_t nbARgs, const uint8_t* args) override final;
-    virtual uint8_t available() override final;
-    virtual uint8_t readByte() override final;
-    virtual void readBytes(uint8_t* data, uint8_t size) override final;
-    virtual bool writeBytes(uint8_t* data, uint8_t size) override final;
+    uint8_t available();
+    uint8_t readByte();
+    void readBytes(uint8_t* data, uint8_t size);
+    bool writeBytes(uint8_t* data, uint8_t size);
 
     bool aciEnableLLOnly();
     bool aciGattInit();
