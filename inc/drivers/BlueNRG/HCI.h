@@ -187,6 +187,15 @@ class HCI {
     bool leSetScanEnable(bool enable, bool filterDuplicate = false);
 
     /**
+     * @brief The HCI_LE_Set_Random_Address command is used by the Host to set the LE Random Device Address in the
+     * Controller (see [Vol 6] Part B, Section 1.3).
+     *
+     * @param address the address array of 6 uint8_t
+     * @return true if succes, false otherwise
+     */
+    bool leSetRandomAddress(uint8_t* address);
+
+    /**
      * @brief The HCI_LE_Rand command is used to request the Controller to generate 8 octets of random data to be sent
      * to the Host.
      *

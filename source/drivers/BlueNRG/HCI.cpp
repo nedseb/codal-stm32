@@ -297,6 +297,12 @@ bool HCI::leSetScanEnable(bool enable, bool filterDuplicate)
     return !result.empty() && result.front() == 0x00;
 }
 
+bool HCI::leSetRandomAddress(uint8_t* address)
+{
+    auto result = sendCommand(OpCodeCommand::LE_SET_RANDOM_ADDRESS, 6, address);
+    return !result.empty() && result.size() == 1 && result[0] == 0x00;
+}
+
 std::array<uint32_t, 2> HCI::leRand()
 {
     auto result                    = sendCommand(OpCodeCommand::LE_RAND);
