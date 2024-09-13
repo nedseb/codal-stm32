@@ -69,7 +69,7 @@ uint8_t HTS221::whoAmI()
 void HTS221::setAverageConfiguration(HTS221_AVCONF_T avg_temp, HTS221_AVCONF_H avg_hum)
 {
     i2c->beginTransmission(address);
-    i2c->writeRegister(AV_CONF, avg_temp | avg_hum);
+    i2c->writeRegister(AV_CONF, static_cast<uint8_t>(avg_temp) | static_cast<uint8_t>(avg_hum));
     i2c->endTransmission();
 }
 
