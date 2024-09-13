@@ -45,6 +45,7 @@ enum class OpCodeCommand : uint16_t {
     LE_READ_BUFFER_SIZE = makeOpCode(OGFValue::OGF_LE_ONLY, 0x0002),
 
     // --- Advertising ---
+    LE_SET_RANDOM_ADDRESS = makeOpCode(OGFValue::OGF_LE_ONLY, 0x0005),
     LE_SET_ADV_PARAM      = makeOpCode(OGFValue::OGF_LE_ONLY, 0x0006),
     LE_READ_TX_POWER      = makeOpCode(OGFValue::OGF_LE_ONLY, 0x0007),
     LE_SET_ADV_DATA       = makeOpCode(OGFValue::OGF_LE_ONLY, 0x0008),
