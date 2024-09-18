@@ -14,8 +14,8 @@
 #undef errno
 extern int errno;
 
-extern int __io_putchar(int ch) __attribute__((weak));
-extern int __io_getchar(void) __attribute__((weak));
+extern int __io_putchar(int ch);
+extern int __io_getchar(void);
 
 extern size_t uart_debug_write(uint8_t* data, uint32_t size);
 
@@ -30,7 +30,7 @@ extern size_t uart_debug_write(uint8_t* data, uint32_t size);
 #define UNUSED(x) x##_UNUSED
 #endif
 
-__attribute__((weak)) caddr_t _sbrk(int incr)
+caddr_t _sbrk(int incr)
 {
     extern char _estack;         /* Defined in the linker script */
     extern char _Min_Stack_Size; /* Defined in the linker script */
@@ -53,28 +53,28 @@ __attribute__((weak)) caddr_t _sbrk(int incr)
     return (caddr_t)prev_heap_end;
 }
 
-__attribute__((weak)) int _close(UNUSED(int file))
+int _close(UNUSED(int file))
 {
     return -1;
 }
 
-__attribute__((weak)) int _fstat(UNUSED(int file), struct stat* st)
+int _fstat(UNUSED(int file), struct stat* st)
 {
     st->st_mode = S_IFCHR;
     return 0;
 }
 
-__attribute__((weak)) int _isatty(UNUSED(int file))
+int _isatty(UNUSED(int file))
 {
     return 1;
 }
 
-__attribute__((weak)) int _lseek(UNUSED(int file), UNUSED(int ptr), UNUSED(int dir))
+int _lseek(UNUSED(int file), UNUSED(int ptr), UNUSED(int dir))
 {
     return 0;
 }
 
-__attribute__((weak)) int _read(int file, char* ptr, int len)
+int _read(int file, char* ptr, int len)
 {
     /* The I/O library uses an internal buffer */
     /* It asks for 1024 characters even if only getc() is used. */
@@ -86,7 +86,7 @@ __attribute__((weak)) int _read(int file, char* ptr, int len)
     return 1;
 }
 
-__attribute__((weak)) int _write(int file, char* ptr, int len)
+int _write(int file, char* ptr, int len)
 {
     int DataIdx;
 
@@ -96,19 +96,19 @@ __attribute__((weak)) int _write(int file, char* ptr, int len)
     return len;
 }
 
-__attribute__((weak)) void _exit(UNUSED(int status))
+void _exit(UNUSED(int status))
 {
     for (;;)
         ;
 }
 
-__attribute__((weak)) int _kill(UNUSED(int pid), UNUSED(int sig))
+int _kill(UNUSED(int pid), UNUSED(int sig))
 {
     errno = EINVAL;
     return -1;
 }
 
-__attribute__((weak)) int _getpid(void)
+int _getpid(void)
 {
     return 1;
 }
