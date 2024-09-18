@@ -40,7 +40,9 @@ void STM32Serial::init(uint32_t baudrate, LengthSerial databits, ParitySerial pa
     this->parity   = parity;
     this->stopBit  = stopBit;
 
-    serial.pin_tx = (PinName)txPin.name;
+    serial.pin_tx  = (PinName)txPin.name;
+    serial.pin_cts = NC;
+    serial.pin_rts = NC;
 
     if (rxPin.name == PinNumber::NC) {
         serial.pin_rx = PinName::NC;
@@ -137,7 +139,7 @@ void STM32Serial::enableHalfDuplexReceiver()
    set to 'Yes') calls __io_putchar() */
 
 #if !defined(PUTCHAR_PROTOTYPE)
-#define PUTCHAR_PROTOTYPE WEAK int __io_putchar(int ch)
+#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
 /**
  * @brief Retargets the C library msg_info function to the USART.
  * @param None
@@ -155,7 +157,7 @@ extern "C" PUTCHAR_PROTOTYPE
 #endif
 
 #if !defined(GETCHAR_PROTOTYPE)
-#define GETCHAR_PROTOTYPE WEAK int __io_getchar(void)
+#define GETCHAR_PROTOTYPE int __io_getchar(void)
 /**
  * @brief Retargets the C library scanf function to the USART.
  * @param None
