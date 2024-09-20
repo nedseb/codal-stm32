@@ -1,5 +1,6 @@
 #include "HCI_SharedMemory.h"
 
+#if defined(STM32WBxx)
 #include "app_conf.h"
 #include "clock.h"
 #include "hw.h"
@@ -297,3 +298,4 @@ bool HCI_SharedMemory::stm32wb_start_ble()
      */
     return SHCI_C2_BLE_Init(&ble_init_cmd_packet) == SHCI_Success;
 }
+#endif

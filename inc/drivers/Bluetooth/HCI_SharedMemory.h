@@ -1,5 +1,6 @@
 #pragma once
 
+#if defined(STM32WBxx)
 #include <vector>
 
 #include "HCI.h"
@@ -25,3 +26,4 @@ class HCI_SharedMemory : public HCI {
     bool transport_init(void);
     bool stm32wb_start_ble();
 };
+#endif
