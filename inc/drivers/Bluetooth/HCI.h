@@ -232,6 +232,8 @@ class HCI {
 
     virtual std::vector<uint8_t> sendCommand(OpCodeCommand command, uint8_t nbArgs, const uint8_t* args) = 0;
     virtual std::vector<uint8_t> sendCommand(OpCodeCommand command) { return sendCommand(command, 0, NULL); }
+    virtual void readBytes(uint8_t* data, uint8_t size) = 0;
+    virtual uint8_t available()                         = 0;
 
     void handleLeEvent(EventPacket pkt);
 
