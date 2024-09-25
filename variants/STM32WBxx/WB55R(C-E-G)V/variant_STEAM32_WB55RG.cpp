@@ -16,40 +16,21 @@
 #include "lock_resource.h"
 #include "pins_arduino.h"
 
-// // Pin number
-// const PinName digitalPin[] = {PA_3, PA_2, PC_6, PA_10, PC_10, PA_15, PA_8, PC_13, PC_12, PA_9, PA_4, PA_7, PA_6,
-// PA_5,
-//                               PB_9, PB_8,
-//                               // ST Morpho
-//                               // CN7 Left Side
-//                               PB_11, PC_5, PA_13, PA_14, PC_14, PC_15,
-//                               // CN7 Right Side
-//                               PB_2, PE_4,
-//                               // CN10 Left Side
-//                               PC_4,
-//                               // CN10 Right side
-//                               PB_4, PB_7, PA_12, PA_11, PB_12, PB_0, PB_1, PB_15, PB_14, PB_13, PB_6, PD_0, PD_1,
-//                               PB_3, PC_0, PC_1, PA_1, PA_0, PC_3, PC_2, PB_5, PB_10, PC_11, PH_3};
+// Pin number
+const PinName digitalPin[] = {
+    PC_4, PA_5, PC_5, PA_2,  PA_4,  PA_7,  PC_3, PA_9, PA_15, PC_2,
+    PA_6, PA_8, PC_6, PB_13, PB_14, PB_15, PE_4, PC_1, PC_0,
+};
 
-// // Analog (Ax) pin number array
-// const uint32_t analogInputPin[] = {
-//     39,  // A0
-//     40,  // A1
-//     41,  // A2
-//     42,  // A3
-//     43,  // A4
-//     44,  // A5
-//     0,   // A6
-//     1,   // A7
-//     6,   // A8
-//     9,   // A9
-//     10,  // A10
-//     11,  // A11
-//     12,  // A12
-//     13,  // A13
-//     17,  // A14
-//     24   // A15
-// };
+// Analog (Ax) pin number array
+const uint32_t analogInputPin[] = {
+    3,   // A0
+    0,   // A1
+    4,   // A2
+    1,   // A3
+    10,  // A4
+    2    // A5
+};
 
 // ----------------------------------------------------------------------------
 #ifdef __cplusplus

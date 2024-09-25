@@ -15,89 +15,172 @@
 /*----------------------------------------------------------------------------
  *        STM32 pins number
  *----------------------------------------------------------------------------*/
-#define PA3  PIN_A6
-#define PA2  PIN_A7
-#define PC6  2
-#define PA10 3
-#define PC10 4
-#define PA15 5
-#define PA8  PIN_A8
-#define PC13 7
-#define PC12 8
-#define PA9  PIN_A9
-#define PA4  PIN_A10  // PB10 (SB41 !SB42)
-#define PA7  PIN_A11
-#define PA6  PIN_A12
-#define PA5  PIN_A13
-#define PB9  14
-#define PB8  15
-// ST Morpho
-// CN7 Left Side
-#define PB11 16
-#define PC5  PIN_A14
-#define PA13 18  // SWD
-#define PA14 19  // SWD
-#define PC14 20
-#define PC15 21
-// CN7 Right Side
-#define PB2 22
-#define PE4 23
-// CN10 Left Side
-#define PC4 PIN_A15  // SW1
-// CN10 Right side
-#define PB4  25
-#define PB7  26
-#define PA12 27
-#define PA11 28
-#define PB12 29
-#define PB0  30  // LED2
-#define PB1  31  // LED3
-#define PB15 32  // PB4 (SB7 !SB9 !SB10) or PA9 (!SB7 !SB9 SB10)
-#define PB14 33
-#define PB13 34  // PB3 (!SB12 SB13)
-#define PB6  35
-#define PD0  36  // SW2
-#define PD1  37  // SW3
-#define PB3  38
-#define PC0  PIN_A0
-#define PC1  PIN_A1
-#define PA1  PIN_A2
-#define PA0  PIN_A3
-#define PC3  PIN_A4
-#define PC2  PIN_A5
+
+// micro:bit Edge connector
+#define PC4  PIN_A1
+#define PA5  PIN_A3
+#define PC5  PIN_A5
+#define PA2  PIN_A0
+#define PA4  PIN_A2
+#define PA7  5
+#define PC3  6
+#define PA9  7
+#define PA15 8
+#define PC2  9
+#define PA6  PIN_A4
+#define PA8  11
+#define PC6  12
+#define PB13 13
+#define PB14 14
+#define PB15 15
+#define PE4  16
+#define PC1  17
+#define PC0  18
+
 // Not on connectors
-#define PB5  45  // LED1
-#define PB10 46
-#define PC11 47
-#define PH3  48  // BOOT0
+#define PA7  19
+#define PB2  20
+#define PA8  21
+#define PD0  22
+#define PC1  23
+#define PC0  24
+#define PB8  25
+#define PB9  26
+#define PC13 27
+#define PB12 28
+#define PB0  29
+#define PD1  30
+#define PB6  31
+#define PB7  32
+#define PC10 33
+#define PH3  34
+#define PC11 35
+#define PC12 36
+#define PA0  37
+#define PA3  38
+#define PA10 39
+#define PA12 40
+#define PB1  41
+#define PB10 42
+#define PB11 43
+#define PA11 44
+#define PB14 45
+#define PB15 46
+#define PB13 47
+#define PB4  48
+#define PB5  49
+#define PA1  50
 
-// Alternate pins number
-#define PA7_ALT1 (PA7 | ALT1)
-#define PB8_ALT1 (PB8 | ALT1)
-#define PB9_ALT1 (PB9 | ALT1)
+#define NUM_DIGITAL_PINS  51
+#define NUM_ANALOG_INPUTS 6
 
-#define NUM_DIGITAL_PINS  49
-#define NUM_ANALOG_INPUTS 16
+// Upper pad
+#define GP0 51
+#define GP1 52
+#define GP2 53
+#define GP3 54
+
+// 4 directions switches
+#define GP4 55
+#define GP5 56
+#define GP6 57
+#define GP7 58
+
+// STeaMi's PinName
+#define ACTIVATE_3V3_STLINK PB2
+#define CS_DISPLAY          PD0
+#define I2C_EXT_SCL         PC1
+#define I2C_EXT_SDA         PC0
+#define I2C_INT_SCL         PB8
+#define I2C_INT_SDA         PB9
+#define INT_ACC             PC13
+#define INT_DIST            PB12
+#define INT_EXPANDER        PB0
+#define INT_MAG             PD1
+#define JACDAC_DATA         PB6
+#define JACDAC_DATA         PB7
+#define MENU_BUTTON         PA0
+#define MIC_CLK             PA3
+#define MIC_IN              PA10
+
+#define P0  PC4
+#define P1  PA5
+#define P2  PC5
+#define P3  PA2
+#define P4  PA4
+#define P5  PA7
+#define P6  PC3
+#define P7  PA9
+#define P8  PA15
+#define P9  PC2
+#define P10 PA6
+#define P11 PA8
+#define P12 PC6
+#define P13 PB13
+#define P14 PB14
+#define P15 PB15
+#define P16 PE4
+#define P19 PC1
+#define P20 PC0
+#define P24 GP0
+#define P25 GP1
+#define P28 GP2
+#define P29 GP3
+
+#define RST_DISPLAY  PA12
+#define RST_EXPANDER PB1
+
+#define SERIAL_RX PB10
+#define SERIAL_TX PB11
+
+#define SPEAKER PA11
+
+#define SPI_EXT_MISO PB14
+#define SPI_EXT_MOSI PB15
+#define SPI_EXT_SCK  PB13
+
+#define SPI_INT_MISO PB4
+#define SPI_INT_MOSI PB5
+#define SPI_INT_SCK  PA1
 
 // On-board LED pin number
-#define LED1 PB5
-#define LED2 PB0
-#define LED3 PB1
+#define LED1 PC10
+#define LED2 PC11
+#define LED3 PC12
+#define LED4 PH3
+
 #ifndef LED_BUILTIN
 #define LED_BUILTIN LED1
 #endif
+
 #define LED_BLUE  LED1
 #define LED_GREEN LED2
 #define LED_RED   LED3
 
+#define LED_BLE LED4
+
 // On-board user button
-// Note: use '_BTN' for SW1 and SW2 as they are register name of M24SR64-Y
-#define SW1_BTN PC4  // PC13 (!SB47 SB48)
-#define SW2_BTN PD0
-#define SW3_BTN PD1
+#define A_BUTTON     PA7
+#define B_BUTTON     PA8
+#define DOWN_BUTTON  GP5
+#define LEFT_BUTTON  GP7
+#define MENU_BUTTON  PA0
+#define RIGHT_BUTTON GP4
+#define UP_BUTTON    GP6
+
 #ifndef USER_BTN
-#define USER_BTN SW1_BTN
+#define USER_BTN MENU_BUTTON
 #endif
+
+// SPI Definitions
+#define PIN_SPI_SS   P16
+#define PIN_SPI_MOSI SPI_EXT_MOSI
+#define PIN_SPI_MISO SPI_EXT_MISO
+#define PIN_SPI_SCK  PB13
+
+// I2C Definitions
+#define PIN_WIRE_SDA I2C_EXT_SDA
+#define PIN_WIRE_SCL I2C_EXT_SCL
 
 // Timer Definitions
 // Use TIM6/TIM7 when possible as servo and tone don't need GPIO output pin
@@ -116,10 +199,10 @@
 // Default pin used for 'Serial' instance (ex: ST-Link)
 // Mandatory for Firmata
 #ifndef PIN_SERIAL_RX
-#define PIN_SERIAL_RX PB10
+#define PIN_SERIAL_RX SERIAL_RX
 #endif
 #ifndef PIN_SERIAL_TX
-#define PIN_SERIAL_TX PB11
+#define PIN_SERIAL_TX SERIAL_TX
 #endif
 
 // Only 512k provided for cpu1, so defined the FLASH_PAGE_NUMBER
