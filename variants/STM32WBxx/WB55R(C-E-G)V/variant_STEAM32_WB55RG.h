@@ -34,8 +34,8 @@
 #define PB14 14
 #define PB15 15
 #define PE4  16
-#define PC1  17
-#define PC0  18
+#define PC0  17
+#define PC1  18
 
 // Not on connectors
 #define PB2  19
@@ -68,22 +68,22 @@
 #define NUM_ANALOG_INPUTS 6
 
 // Upper pad
-#define GP0 44
-#define GP1 45
-#define GP2 46
-#define GP3 47
+#define GPIO1 44  // P28
+#define GPIO2 45  // P29
+#define GPIO3 46  // P24
+#define GPIO4 47  // P25
 
 // 4 directions switches
-#define GP4 48
-#define GP5 49
-#define GP6 50
-#define GP7 51
+#define GPIO5 48
+#define GPIO6 49
+#define GPIO7 50
+#define GPIO8 51
 
 // STeaMi's PinName
 #define ACTIVATE_3V3_STLINK PB2
 #define CS_DISPLAY          PD0
-#define I2C_EXT_SCL         PC1
-#define I2C_EXT_SDA         PC0
+#define I2C_EXT_SCL         PC0
+#define I2C_EXT_SDA         PC1
 #define I2C_INT_SCL         PB8
 #define I2C_INT_SDA         PB9
 #define INT_ACC             PC13
@@ -115,10 +115,10 @@
 #define P16 PE4
 #define P19 PC1
 #define P20 PC0
-#define P24 GP0
-#define P25 GP1
-#define P28 GP2
-#define P29 GP3
+#define P24 GPIO3
+#define P25 GPIO4
+#define P28 GPIO1
+#define P29 GPIO2
 
 #define RST_DISPLAY  PA12
 #define RST_EXPANDER PB1
@@ -155,11 +155,11 @@
 // On-board user button
 #define A_BUTTON     PA7
 #define B_BUTTON     PA8
-#define DOWN_BUTTON  GP5
-#define LEFT_BUTTON  GP7
+#define DOWN_BUTTON  GPIO6
+#define LEFT_BUTTON  GPIO7
 #define MENU_BUTTON  PA0
-#define RIGHT_BUTTON GP4
-#define UP_BUTTON    GP6
+#define RIGHT_BUTTON GPIO5
+#define UP_BUTTON    GPIO8
 
 #ifndef USER_BTN
 #define USER_BTN MENU_BUTTON
@@ -169,7 +169,7 @@
 #define PIN_SPI_SS   P16
 #define PIN_SPI_MOSI SPI_EXT_MOSI
 #define PIN_SPI_MISO SPI_EXT_MISO
-#define PIN_SPI_SCK  PB13
+#define PIN_SPI_SCK  SPI_EXT_SCK
 
 // I2C Definitions
 #define PIN_WIRE_SDA I2C_EXT_SDA
@@ -186,7 +186,7 @@
 
 // UART Definitions
 #ifndef SERIAL_UART_INSTANCE
-#define SERIAL_UART_INSTANCE 1  // Connected to ST-Link
+#define SERIAL_UART_INSTANCE 0  // Connected to ST-Link
 #endif
 
 // Default pin used for 'Serial' instance (ex: ST-Link)
