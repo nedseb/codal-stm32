@@ -12,7 +12,7 @@
  */
 #include "variant_STEAM32_WB55RG.h"
 
-#if defined(STEAM32_WB55RG)
+#if defined(ARDUINO_STEAM32_WB55RG)
 #include "lock_resource.h"
 #include "pins_arduino.h"
 
@@ -157,4 +157,4 @@ WEAK void SystemClock_Config(void)
 #ifdef __cplusplus
 }
 #endif
-#endif /* STEAM32_WB55RG */
+#endif /* ARDUINO_STEAM32_WB55RG */

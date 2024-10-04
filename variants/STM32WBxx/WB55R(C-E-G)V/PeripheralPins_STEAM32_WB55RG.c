@@ -19,7 +19,7 @@
  * STM32WB55RGVx.xml
  * CubeMX DB release 6.0.120
  */
-#if defined(STEAM32_WB55RG)
+#if defined(ARDUINO_STEAM32_WB55RG)
 #include "Arduino.h"
 #include "PeripheralPins.h"
 
@@ -251,4 +251,4 @@ WEAK const PinMap PinMap_USB[] = {{PA_11, USB, STM_PIN_DATA(STM_MODE_AF_PP, GPIO
 
 //*** No SD ***
 
-#endif /* STEAM32_WB55RGS */
+#endif /* ARDUINO_STEAM32_WB55RGS */

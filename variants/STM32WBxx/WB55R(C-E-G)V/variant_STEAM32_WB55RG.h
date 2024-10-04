@@ -207,9 +207,6 @@
 #define HAL_QSPI_MODULE_ENABLED
 #endif
 
-/* backward compatibility */
-#define ARDUINO_PNUCLEO_WB55RG
-
 /*----------------------------------------------------------------------------
  *        Arduino objects - C++ only
  *----------------------------------------------------------------------------*/
