@@ -18,30 +18,30 @@
  */
 
 #ifdef USBCON
-#ifdef USBD_USE_CDC
+    #ifdef USBD_USE_CDC
 
-/* Includes ------------------------------------------------------------------*/
-#include "usbd_cdc_if.h"
+        /* Includes ------------------------------------------------------------------*/
+        #include "usbd_cdc_if.h"
 
-#include "bootloader.h"
-#include "usbd_desc.h"
+        #include "bootloader.h"
+        #include "usbd_desc.h"
 
-#ifdef USE_USB_HS
-#define CDC_MAX_PACKET_SIZE USB_OTG_HS_MAX_PACKET_SIZE
-#elif defined(USB_OTG_FS) || defined(USB_OTG_FS_MAX_PACKET_SIZE)
-#define CDC_MAX_PACKET_SIZE USB_OTG_FS_MAX_PACKET_SIZE
-#else /* USB */
-#define CDC_MAX_PACKET_SIZE USB_MAX_EP0_SIZE
-#endif
+        #ifdef USE_USB_HS
+            #define CDC_MAX_PACKET_SIZE USB_OTG_HS_MAX_PACKET_SIZE
+        #elif defined(USB_OTG_FS) || defined(USB_OTG_FS_MAX_PACKET_SIZE)
+            #define CDC_MAX_PACKET_SIZE USB_OTG_FS_MAX_PACKET_SIZE
+        #else /* USB */
+            #define CDC_MAX_PACKET_SIZE USB_MAX_EP0_SIZE
+        #endif
 
-/*
- * The value USB_CDC_TRANSMIT_TIMEOUT is defined in terms of HAL_GetTick() units.
- * Typically it is 1ms value. The timeout determines when we would consider the
- * host "too slow" and threat the USB CDC port as disconnected.
- */
-#ifndef USB_CDC_TRANSMIT_TIMEOUT
-#define USB_CDC_TRANSMIT_TIMEOUT 3
-#endif
+        /*
+         * The value USB_CDC_TRANSMIT_TIMEOUT is defined in terms of HAL_GetTick() units.
+         * Typically it is 1ms value. The timeout determines when we would consider the
+         * host "too slow" and threat the USB CDC port as disconnected.
+         */
+        #ifndef USB_CDC_TRANSMIT_TIMEOUT
+            #define USB_CDC_TRANSMIT_TIMEOUT 3
+        #endif
 
 /* USBD_CDC Private Variables */
 /* USB Device Core CDC handle declaration */
@@ -49,9 +49,9 @@ USBD_HandleTypeDef hUSBD_Device_CDC;
 
 static bool CDC_initialized = false;
 static bool CDC_DTR_enabled = true;
-#if defined(ICACHE) && defined(HAL_ICACHE_MODULE_ENABLED) && !defined(HAL_ICACHE_MODULE_DISABLED)
+        #if defined(ICACHE) && defined(HAL_ICACHE_MODULE_ENABLED) && !defined(HAL_ICACHE_MODULE_DISABLED)
 static bool icache_enabled = false;
-#endif /* ICACHE && HAL_ICACHE_MODULE_ENABLED && !HAL_ICACHE_MODULE_DISABLED */
+        #endif /* ICACHE && HAL_ICACHE_MODULE_ENABLED && !HAL_ICACHE_MODULE_DISABLED */
 
 /* Received Data over USB are stored in this buffer       */
 CDC_TransmitQueue_TypeDef TransmitQueue;
@@ -61,11 +61,11 @@ __IO bool rtsState            = false;
 __IO bool receivePended       = true;
 static uint32_t transmitStart = 0;
 
-#ifdef DTR_TOGGLING_SEQ
+        #ifdef DTR_TOGGLING_SEQ
 /* DTR toggling sequence management */
 extern void dtr_togglingHook(uint8_t* buf, uint32_t* len);
 uint8_t dtr_toggling = 0;
-#endif
+        #endif
 
 /** USBD_CDC Private Function Prototypes */
 
@@ -75,14 +75,14 @@ static int8_t USBD_CDC_Control(uint8_t cmd, uint8_t* pbuf, uint16_t length);
 static int8_t USBD_CDC_Receive(uint8_t* pbuf, uint32_t* Len);
 static int8_t USBD_CDC_TransmitCplt(uint8_t* pbuf, uint32_t* Len, uint8_t epnum);
 
-USBD_CDC_ItfTypeDef USBD_CDC_fops = {USBD_CDC_Init, USBD_CDC_DeInit, USBD_CDC_Control, USBD_CDC_Receive,
-                                     USBD_CDC_TransmitCplt};
+USBD_CDC_ItfTypeDef USBD_CDC_fops     = {USBD_CDC_Init, USBD_CDC_DeInit, USBD_CDC_Control, USBD_CDC_Receive,
+                                         USBD_CDC_TransmitCplt};
 
 USBD_CDC_LineCodingTypeDef linecoding = {
-    115200, /* baud rate*/
-    0x00,   /* stop bits-1*/
-    0x00,   /* parity - none*/
-    0x08    /* nb. of bits 8*/
+    115'200, /* baud rate*/
+    0x00,    /* stop bits-1*/
+    0x00,    /* parity - none*/
+    0x08     /* nb. of bits 8*/
 };
 
 void (*rx_callback)(void) = NULL;
@@ -191,9 +191,9 @@ static int8_t USBD_CDC_Control(uint8_t cmd, uint8_t* pbuf, uint16_t length)
                 transmitStart = 0;
             }
             rtsState = (((USBD_SetupReqTypedef*)pbuf)->wValue & CLS_RTS);
-#ifdef DTR_TOGGLING_SEQ
+        #ifdef DTR_TOGGLING_SEQ
             dtr_toggling++; /* Count DTR toggling */
-#endif
+        #endif
             break;
 
         case CDC_SEND_BREAK:
@@ -225,14 +225,14 @@ static int8_t USBD_CDC_Control(uint8_t cmd, uint8_t* pbuf, uint16_t length)
  */
 static int8_t USBD_CDC_Receive(uint8_t* Buf, uint32_t* Len)
 {
-#ifdef DTR_TOGGLING_SEQ
+        #ifdef DTR_TOGGLING_SEQ
     if (dtr_toggling > 3) {
         dtr_togglingHook(Buf, Len);
         dtr_toggling = 0;
     }
-#else
+        #else
     UNUSED(Buf);
-#endif
+        #endif
     /* It always contains required amount of free space for writing */
     CDC_ReceiveQueue_CommitBlock(&ReceiveQueue, (uint16_t)(*Len));
     receivePended = false;
@@ -273,7 +273,7 @@ static int8_t USBD_CDC_TransmitCplt(uint8_t* Buf, uint32_t* Len, uint8_t epnum)
 
 void CDC_init(void)
 {
-#if defined(ICACHE) && defined(HAL_ICACHE_MODULE_ENABLED) && !defined(HAL_ICACHE_MODULE_DISABLED)
+        #if defined(ICACHE) && defined(HAL_ICACHE_MODULE_ENABLED) && !defined(HAL_ICACHE_MODULE_DISABLED)
     if (HAL_ICACHE_IsEnabled() == 1) {
         icache_enabled = true;
         /* Disable instruction cache prior to internal cacheable memory update */
@@ -281,7 +281,7 @@ void CDC_init(void)
             Error_Handler();
         }
     }
-#endif /* ICACHE && HAL_ICACHE_MODULE_ENABLED && !HAL_ICACHE_MODULE_DISABLED */
+        #endif /* ICACHE && HAL_ICACHE_MODULE_ENABLED && !HAL_ICACHE_MODULE_DISABLED */
     if (!CDC_initialized) {
         /* Init Device Library */
         if (USBD_Init(&hUSBD_Device_CDC, &USBD_Desc, 0) == USBD_OK) {
@@ -306,14 +306,14 @@ void CDC_deInit(void)
         USBD_DeInit(&hUSBD_Device_CDC);
         CDC_initialized = false;
     }
-#if defined(ICACHE) && defined(HAL_ICACHE_MODULE_ENABLED) && !defined(HAL_ICACHE_MODULE_DISABLED)
+        #if defined(ICACHE) && defined(HAL_ICACHE_MODULE_ENABLED) && !defined(HAL_ICACHE_MODULE_DISABLED)
     if (icache_enabled) {
         /* Re-enable instruction cache */
         if (HAL_ICACHE_Enable() != HAL_OK) {
             Error_Handler();
         }
     }
-#endif /* ICACHE && HAL_ICACHE_MODULE_ENABLED && !HAL_ICACHE_MODULE_DISABLED */
+        #endif /* ICACHE && HAL_ICACHE_MODULE_ENABLED && !HAL_ICACHE_MODULE_DISABLED */
 }
 
 bool CDC_connected()
@@ -383,6 +383,6 @@ void CDC_enableDTR(bool enable)
     CDC_DTR_enabled = enable;
 }
 
-#endif /* USBD_USE_CDC */
-#endif /* USBCON */
+    #endif /* USBD_USE_CDC */
+#endif     /* USBCON */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

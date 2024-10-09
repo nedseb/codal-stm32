@@ -2,12 +2,12 @@
 
 #if defined(STM32WBxx)
 
-#include <functional>
-#include <vector>
+    #include <functional>
+    #include <vector>
 
-#include "STM32DMA.h"
-#include "STM32Pin.h"
-#include "stm32_def.h"
+    #include "STM32DMA.h"
+    #include "STM32Pin.h"
+    #include "stm32_def.h"
 
 namespace codal {
 
@@ -21,7 +21,7 @@ class STM32SAI {
      * @param alternate Peripheral to be connected to the selected pins. This parameter can be a value of @ref
      * GPIOEx_Alternate_function_selection
      */
-    STM32SAI(STM32Pin* data, STM32Pin* clock, uint8_t alternate, uint16_t bufferSize = 1024);
+    STM32SAI(STM32Pin* data, STM32Pin* clock, uint8_t alternate, uint16_t bufferSize = 1'024);
     ~STM32SAI();
 
     /**

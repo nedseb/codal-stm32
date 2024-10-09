@@ -38,7 +38,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "lps22hb_driver.h"
 #ifdef USE_FULL_ASSERT_LPS22HB
-#include <stdio.h>
+    #include <stdio.h>
 #endif
 
 /** @addtogroup Environmental_Sensor
@@ -961,7 +961,7 @@ LPS22HB_Error_et LPS22HB_Get_Pressure(void* handle, int32_t* Pout)
 
     if (LPS22HB_Get_RawPressure(handle, &raw_press)) return LPS22HB_ERROR;
 
-    *Pout = (raw_press * 100) / 4096;
+    *Pout = (raw_press * 100) / 4'096;
 
     return LPS22HB_OK;
 }
@@ -982,7 +982,7 @@ LPS22HB_Error_et LPS22HB_Get_RawTemperature(void* handle, int16_t* raw_data)
     if (LPS22HB_ReadReg(handle, LPS22HB_TEMP_OUT_L_REG, 2, buffer)) return LPS22HB_ERROR;
 
     /* Build the raw tmp */
-    tmp = (((uint16_t)buffer[1]) << 8) + (uint16_t)buffer[0];
+    tmp       = (((uint16_t)buffer[1]) << 8) + (uint16_t)buffer[0];
 
     *raw_data = ((int16_t)tmp);
 
@@ -1164,9 +1164,9 @@ LPS22HB_Error_et LPS22HB_Get_PressureOffsetValue(void* handle, int16_t* pressoff
 
     if (LPS22HB_ReadReg(handle, LPS22HB_RPDS_L_REG, 2, buffer)) return LPS22HB_ERROR;
 
-    raw_press = (int16_t)((((uint16_t)buffer[1]) << 8) + (uint16_t)buffer[0]);
+    raw_press    = (int16_t)((((uint16_t)buffer[1]) << 8) + (uint16_t)buffer[0]);
 
-    *pressoffset = (raw_press * 100) / 4096;
+    *pressoffset = (raw_press * 100) / 4'096;
 
     return LPS22HB_OK;
 }
@@ -1195,7 +1195,7 @@ LPS22HB_Error_et LPS22HB_Get_ReferencePressure(void* handle, int32_t* RefP)
     if (tempVal & 0x00800000) tempVal |= 0xFF000000;
 
     raw_press = ((int32_t)tempVal);
-    *RefP     = (raw_press * 100) / 4096;
+    *RefP     = (raw_press * 100) / 4'096;
 
     return LPS22HB_OK;
 }
@@ -1216,7 +1216,7 @@ LPS22HB_Error_et LPS22HB_IsMeasurementCompleted(void* handle, uint8_t* Is_Measur
     datastatus.TempDataAvailable  = (uint8_t)((tmp & LPS22HB_TDA_MASK) >> LPS22HB_TDA_BIT);
     datastatus.PressDataAvailable = (uint8_t)(tmp & LPS22HB_PDA_MASK);
 
-    *Is_Measurement_Completed = (uint8_t)((datastatus.PressDataAvailable) & (datastatus.TempDataAvailable));
+    *Is_Measurement_Completed     = (uint8_t)((datastatus.PressDataAvailable) & (datastatus.TempDataAvailable));
 
     return LPS22HB_OK;
 }

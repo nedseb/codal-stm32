@@ -5,8 +5,8 @@
 using namespace codal;
 using namespace std;
 
-constexpr uint32_t EXPIRATION_PACKETS_MS = 10000;
-constexpr uint32_t TIMEOUT_COMMAND_MS    = 5000;
+constexpr uint32_t EXPIRATION_PACKETS_MS = 10'000;
+constexpr uint32_t TIMEOUT_COMMAND_MS    = 5'000;
 
 /*  BLUENRG SPI OPERATION */
 constexpr uint8_t BLUENRG_WRITE_OP = 0x0A;
@@ -81,8 +81,7 @@ void HCI_SPI::waitForInit()
 
     if (isDebug) printf("[waitForInit] Start initialization...\r\n");
 
-    while (irq.getDigitalValue() == 0)
-        ;
+    while (irq.getDigitalValue() == 0);
 
     while (wait) {
         uint8_t bytesToRead = available();

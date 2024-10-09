@@ -17,23 +17,23 @@
  ******************************************************************************
  */
 #ifdef USBCON
-/* Includes ------------------------------------------------------------------*/
-#include "PeripheralPins.h"
-#include "stm32yyxx_ll_pwr.h"
-#include "usbd_core.h"
-#include "usbd_ep_conf.h"
-#include "usbd_if.h"
+    /* Includes ------------------------------------------------------------------*/
+    #include "PeripheralPins.h"
+    #include "stm32yyxx_ll_pwr.h"
+    #include "usbd_core.h"
+    #include "usbd_ep_conf.h"
+    #include "usbd_if.h"
 
-#ifndef HAL_PCD_MODULE_ENABLED
-#error "HAL_PCD_MODULE_ENABLED is required"
-#else
-/* Private typedef -----------------------------------------------------------*/
-/* Private define ------------------------------------------------------------*/
-#if !defined(USBD_VBUS_DETECTION_ENABLE)
-#define VBUS_SENSING DISABLE
-#else
-#define VBUS_SENSING ENABLE
-#endif
+    #ifndef HAL_PCD_MODULE_ENABLED
+        #error "HAL_PCD_MODULE_ENABLED is required"
+    #else
+        /* Private typedef -----------------------------------------------------------*/
+        /* Private define ------------------------------------------------------------*/
+        #if !defined(USBD_VBUS_DETECTION_ENABLE)
+            #define VBUS_SENSING DISABLE
+        #else
+            #define VBUS_SENSING ENABLE
+        #endif
 
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -53,26 +53,24 @@ void HAL_PCD_MspInit(PCD_HandleTypeDef* hpcd)
 {
     const PinMap* map = NULL;
 
-#if defined(PIN_UCPD_TCPP)
+        #if defined(PIN_UCPD_TCPP)
     /* Set TCPP default state: Type-C legacy */
     pinMode(PIN_UCPD_TCPP, OUTPUT_OPEN_DRAIN);
     digitalWriteFast(digitalPinToPinName(PIN_UCPD_TCPP), LOW);
-#endif
-#if defined(PWR_CR3_USB33DEN) || defined(PWR_USBSCR_USB33DEN)
+        #endif
+        #if defined(PWR_CR3_USB33DEN) || defined(PWR_USBSCR_USB33DEN)
     HAL_PWREx_EnableUSBVoltageDetector();
-#endif
-#if defined(PWR_CR3_USB33RDY)
-    while (!LL_PWR_IsActiveFlag_USB())
-        ;
-#elif defined(PWR_VMSR_USB33RDY)
-    while (!LL_PWR_IsActiveFlag_VDDUSB())
-        ;
-#endif
-#if defined(PWR_CR2_USV) || defined(PWR_SVMCR_USV) || defined(PWR_USBSCR_USB33SV)
+        #endif
+        #if defined(PWR_CR3_USB33RDY)
+    while (!LL_PWR_IsActiveFlag_USB());
+        #elif defined(PWR_VMSR_USB33RDY)
+    while (!LL_PWR_IsActiveFlag_VDDUSB());
+        #endif
+        #if defined(PWR_CR2_USV) || defined(PWR_SVMCR_USV) || defined(PWR_USBSCR_USB33SV)
     /* Enable VDDUSB */
     HAL_PWREx_EnableVddUSB();
-#endif
-#if defined(USB)
+        #endif
+        #if defined(USB)
     if (hpcd->Instance == USB) {
         /* Configure USB FS GPIOs */
         map = PinMap_USB;
@@ -84,17 +82,17 @@ void HAL_PCD_MspInit(PCD_HandleTypeDef* hpcd)
         /* Enable USB FS Clock */
         __HAL_RCC_USB_CLK_ENABLE();
 
-#if defined(SYSCFG_CFGR1_USB_IT_RMP) && defined(USE_USB_INTERRUPT_REMAPPED)
+            #if defined(SYSCFG_CFGR1_USB_IT_RMP) && defined(USE_USB_INTERRUPT_REMAPPED)
         /* USB interrupt remapping enable */
         __HAL_REMAPINTERRUPT_USB_ENABLE();
-#endif
+            #endif
 
-#if defined(USB_H_IRQn)
+            #if defined(USB_H_IRQn)
         /* Set USB High priority Interrupt priority */
         HAL_NVIC_SetPriority(USB_HP_IRQn, USBD_IRQ_PRIO, USBD_IRQ_SUBPRIO);
         /* Enable USB High priority Interrupt */
         HAL_NVIC_EnableIRQ(USB_HP_IRQn);
-#endif
+            #endif
         /* Set USB Interrupt priority */
         HAL_NVIC_SetPriority(USB_IRQn, USBD_IRQ_PRIO, USBD_IRQ_SUBPRIO);
 
@@ -102,27 +100,27 @@ void HAL_PCD_MspInit(PCD_HandleTypeDef* hpcd)
         HAL_NVIC_EnableIRQ(USB_IRQn);
 
         if (hpcd->Init.low_power_enable == 1) {
-            /* Enable EXTI for USB wakeup */
-#ifdef __HAL_USB_WAKEUP_EXTI_CLEAR_FLAG
+                    /* Enable EXTI for USB wakeup */
+            #ifdef __HAL_USB_WAKEUP_EXTI_CLEAR_FLAG
             __HAL_USB_WAKEUP_EXTI_CLEAR_FLAG();
-#endif
-#ifdef __HAL_USB_WAKEUP_EXTI_ENABLE_RISING_EDGE
+            #endif
+            #ifdef __HAL_USB_WAKEUP_EXTI_ENABLE_RISING_EDGE
             __HAL_USB_WAKEUP_EXTI_ENABLE_RISING_EDGE();
-#endif
-#ifdef __HAL_USB_WAKEUP_EXTI_ENABLE_IT
+            #endif
+            #ifdef __HAL_USB_WAKEUP_EXTI_ENABLE_IT
             __HAL_USB_WAKEUP_EXTI_ENABLE_IT();
-#endif
-#if defined(USB_WKUP_IRQn)
+            #endif
+            #if defined(USB_WKUP_IRQn)
             /* USB Wakeup Interrupt */
             HAL_NVIC_EnableIRQ(USB_WKUP_IRQn);
 
             /* Enable USB Wake-up interrupt */
             HAL_NVIC_SetPriority(USB_WKUP_IRQn, 0, 0);
-#endif
+            #endif
         }
     }
-#endif /* USB */
-#if defined(USB_OTG_FS)
+        #endif /* USB */
+        #if defined(USB_OTG_FS)
     if (hpcd->Instance == USB_OTG_FS) {
         /* Configure USB FS GPIOs */
         map = PinMap_USB_OTG_FS;
@@ -141,27 +139,27 @@ void HAL_PCD_MspInit(PCD_HandleTypeDef* hpcd)
         HAL_NVIC_EnableIRQ(OTG_FS_IRQn);
 
         if (hpcd->Init.low_power_enable == 1) {
-            /* Enable EXTI Line 18 for USB wakeup */
-#ifdef __HAL_USB_OTG_FS_WAKEUP_EXTI_CLEAR_FLAG
+                    /* Enable EXTI Line 18 for USB wakeup */
+            #ifdef __HAL_USB_OTG_FS_WAKEUP_EXTI_CLEAR_FLAG
             __HAL_USB_OTG_FS_WAKEUP_EXTI_CLEAR_FLAG();
-#endif
-#ifdef __HAL_USB_OTG_FS_WAKEUP_EXTI_ENABLE_RISING_EDGE
+            #endif
+            #ifdef __HAL_USB_OTG_FS_WAKEUP_EXTI_ENABLE_RISING_EDGE
             __HAL_USB_OTG_FS_WAKEUP_EXTI_ENABLE_RISING_EDGE();
-#endif
-#ifdef __HAL_USB_OTG_FS_WAKEUP_EXTI_ENABLE_IT
+            #endif
+            #ifdef __HAL_USB_OTG_FS_WAKEUP_EXTI_ENABLE_IT
             __HAL_USB_OTG_FS_WAKEUP_EXTI_ENABLE_IT();
-#endif
-#if !defined(STM32L4xx) && !defined(STM32U5xx)
+            #endif
+            #if !defined(STM32L4xx) && !defined(STM32U5xx)
             /* Set EXTI Wakeup Interrupt priority */
             HAL_NVIC_SetPriority(OTG_FS_WKUP_IRQn, USBD_IRQ_PRIO, USBD_IRQ_SUBPRIO);
 
             /* Enable EXTI Interrupt */
             HAL_NVIC_EnableIRQ(OTG_FS_WKUP_IRQn);
-#endif
+            #endif
         }
     }
-#endif /* USB_OTG_FS */
-#if defined(USB_OTG_HS)
+        #endif /* USB_OTG_FS */
+        #if defined(USB_OTG_HS)
     if (hpcd->Instance == USB_OTG_HS) {
         /* Configure USB HS GPIOs */
         map = PinMap_USB_OTG_HS;
@@ -169,9 +167,9 @@ void HAL_PCD_MspInit(PCD_HandleTypeDef* hpcd)
             pin_function(map->pin, map->function);
             map++;
         }
-#ifndef USE_USB_HS_IN_FS
+            #ifndef USE_USB_HS_IN_FS
         __HAL_RCC_USB_OTG_HS_ULPI_CLK_ENABLE();
-#endif /* USE_USB_HS_IN_FS */
+            #endif /* USE_USB_HS_IN_FS */
 
         /* Enable USB HS Clocks */
         __HAL_RCC_USB_OTG_HS_CLK_ENABLE();
@@ -183,13 +181,13 @@ void HAL_PCD_MspInit(PCD_HandleTypeDef* hpcd)
         HAL_NVIC_EnableIRQ(OTG_HS_IRQn);
 
         if (hpcd->Init.low_power_enable == 1) {
-            /* Enable EXTI Line 20 for USB wakeup */
-#ifdef __HAL_USB_OTG_HS_WAKEUP_EXTI_CLEAR_FLAG
+                    /* Enable EXTI Line 20 for USB wakeup */
+            #ifdef __HAL_USB_OTG_HS_WAKEUP_EXTI_CLEAR_FLAG
             __HAL_USB_OTG_HS_WAKEUP_EXTI_CLEAR_FLAG();
-#endif
-#ifdef __HAL_USB_OTG_HS_WAKEUP_EXTI_ENABLE_RISING_EDGE
+            #endif
+            #ifdef __HAL_USB_OTG_HS_WAKEUP_EXTI_ENABLE_RISING_EDGE
             __HAL_USB_OTG_HS_WAKEUP_EXTI_ENABLE_RISING_EDGE();
-#endif
+            #endif
             __HAL_USB_OTG_HS_WAKEUP_EXTI_ENABLE_IT();
 
             /* Set EXTI Wakeup Interrupt priority */
@@ -199,7 +197,7 @@ void HAL_PCD_MspInit(PCD_HandleTypeDef* hpcd)
             HAL_NVIC_EnableIRQ(OTG_HS_WKUP_IRQn);
         }
     }
-#endif /* USB_OTG_HS */
+        #endif /* USB_OTG_HS */
 }
 
 /**
@@ -209,24 +207,24 @@ void HAL_PCD_MspInit(PCD_HandleTypeDef* hpcd)
  */
 void HAL_PCD_MspDeInit(PCD_HandleTypeDef* hpcd)
 {
-    /* Disable USB FS Clock */
-#if defined(USB)
+        /* Disable USB FS Clock */
+        #if defined(USB)
     if (hpcd->Instance == USB) {
         __HAL_RCC_USB_CLK_DISABLE();
     }
-#endif
-#if defined(USB_OTG_FS)
+        #endif
+        #if defined(USB_OTG_FS)
     if (hpcd->Instance == USB_OTG_FS) {
         /* Disable USB FS Clock */
         __HAL_RCC_USB_OTG_FS_CLK_DISABLE();
     }
-#endif
-#if defined(USB_OTG_HS)
+        #endif
+        #if defined(USB_OTG_HS)
     if (hpcd->Instance == USB_OTG_HS) {
         /* Disable USB HS Clocks */
         __HAL_RCC_USB_OTG_HS_CLK_DISABLE();
     }
-#endif /* USB_OTG_HS */
+        #endif /* USB_OTG_HS */
 }
 
 /*******************************************************************************
@@ -284,7 +282,7 @@ void HAL_PCD_ResetCallback(PCD_HandleTypeDef* hpcd)
 {
     USBD_SpeedTypeDef speed = USBD_SPEED_FULL;
 
-#if defined(USB_OTG_HS)
+        #if defined(USB_OTG_HS)
     /* Set USB Current Speed */
     switch (hpcd->Init.speed) {
         case PCD_SPEED_HIGH:
@@ -299,7 +297,7 @@ void HAL_PCD_ResetCallback(PCD_HandleTypeDef* hpcd)
             speed = USBD_SPEED_FULL;
             break;
     }
-#endif
+        #endif
     /* Reset Device */
     USBD_LL_Reset(hpcd->pData);
 
@@ -334,7 +332,7 @@ void HAL_PCD_ResumeCallback(PCD_HandleTypeDef* hpcd)
         USBD_SystemClockConfigFromResume();
 
         /* Reset SLEEPDEEP bit of Cortex System Control Register */
-        SCB->SCR &= (uint32_t) ~((uint32_t)(SCB_SCR_SLEEPDEEP_Msk | SCB_SCR_SLEEPONEXIT_Msk));
+        SCB->SCR &= (uint32_t)~((uint32_t)(SCB_SCR_SLEEPDEEP_Msk | SCB_SCR_SLEEPONEXIT_Msk));
     }
     __HAL_PCD_UNGATE_PHYCLOCK(hpcd);
     USBD_LL_Resume(hpcd->pData);
@@ -382,23 +380,23 @@ void HAL_PCD_DisconnectCallback(PCD_HandleTypeDef* hpcd)
     USBD_LL_DevDisconnected(hpcd->pData);
 }
 
-/**
- * @brief  This function handles USB-On-The-Go FS/HS global interrupt request.
- * @param  None
- * @retval None
- */
-#ifdef USE_USB_HS
+        /**
+         * @brief  This function handles USB-On-The-Go FS/HS global interrupt request.
+         * @param  None
+         * @retval None
+         */
+        #ifdef USE_USB_HS
 void OTG_HS_IRQHandler(void)
-#elif defined(USB_OTG_FS)
+        #elif defined(USB_OTG_FS)
 void OTG_FS_IRQHandler(void)
-#else /* USB */
+        #else /* USB */
 void USB_IRQHandler(void)
-#endif
+        #endif
 {
     HAL_PCD_IRQHandler(&g_hpcd);
 }
 
-#if defined(USB_H_IRQn)
+        #if defined(USB_H_IRQn)
 /**
  * @brief This function handles USB high priority interrupt.
  * @param  None
@@ -408,26 +406,26 @@ void USB_H_IRQHandler(void)
 {
     HAL_PCD_IRQHandler(&g_hpcd);
 }
-#endif /* USB_H_IRQn */
+        #endif /* USB_H_IRQn */
 
-/**
- * @brief  This function handles USB Wakeup IRQ Handler.
- * @param  None
- * @retval None
- */
-#ifdef USE_USB_HS
+        /**
+         * @brief  This function handles USB Wakeup IRQ Handler.
+         * @param  None
+         * @retval None
+         */
+        #ifdef USE_USB_HS
 void OTG_HS_WKUP_IRQHandler(void)
-#elif defined(USB_OTG_FS)
+        #elif defined(USB_OTG_FS)
 void OTG_FS_WKUP_IRQHandler(void)
-#elif defined(USB_WKUP_IRQHandler)
+        #elif defined(USB_WKUP_IRQHandler)
 void USB_WKUP_IRQHandler(void)
-#else
+        #else
 void USBWakeUp_IRQHandler_dummy(void)
-#endif
+        #endif
 {
     if ((&g_hpcd)->Init.low_power_enable) {
         /* Reset SLEEPDEEP bit of Cortex System Control Register */
-        SCB->SCR &= (uint32_t) ~((uint32_t)(SCB_SCR_SLEEPDEEP_Msk | SCB_SCR_SLEEPONEXIT_Msk));
+        SCB->SCR &= (uint32_t)~((uint32_t)(SCB_SCR_SLEEPDEEP_Msk | SCB_SCR_SLEEPONEXIT_Msk));
 
         /* Configures system clock after wake-up */
         USBD_SystemClockConfigFromResume();
@@ -435,15 +433,15 @@ void USBWakeUp_IRQHandler_dummy(void)
         /* ungate PHY clock */
         __HAL_PCD_UNGATE_PHYCLOCK((&g_hpcd));
     }
-#if defined(USE_USB_HS) && defined(__HAL_USB_OTG_HS_WAKEUP_EXTI_CLEAR_FLAG)
+        #if defined(USE_USB_HS) && defined(__HAL_USB_OTG_HS_WAKEUP_EXTI_CLEAR_FLAG)
     /* Clear EXTI pending Bit*/
     __HAL_USB_OTG_HS_WAKEUP_EXTI_CLEAR_FLAG();
-#elif defined(USB_OTG_FS) && defined(__HAL_USB_OTG_FS_WAKEUP_EXTI_CLEAR_FLAG)
+        #elif defined(USB_OTG_FS) && defined(__HAL_USB_OTG_FS_WAKEUP_EXTI_CLEAR_FLAG)
     /* Clear EXTI pending Bit*/
     __HAL_USB_OTG_FS_WAKEUP_EXTI_CLEAR_FLAG();
-#elif defined(__HAL_USB_WAKEUP_EXTI_CLEAR_FLAG)
+        #elif defined(__HAL_USB_WAKEUP_EXTI_CLEAR_FLAG)
     __HAL_USB_WAKEUP_EXTI_CLEAR_FLAG();
-#endif
+        #endif
 }
 
 /*******************************************************************************
@@ -458,49 +456,49 @@ USBD_StatusTypeDef USBD_LL_Init(USBD_HandleTypeDef* pdev)
 {
     USBD_reenumerate();
     /* Set common LL Driver parameters */
-    g_hpcd.Init.dev_endpoints           = DEV_NUM_EP;
-#ifdef DEP0CTL_MPS_64
-    g_hpcd.Init.ep0_mps                 = DEP0CTL_MPS_64;
-#else
-#ifdef EP_MPS_64
+    g_hpcd.Init.dev_endpoints = DEV_NUM_EP;
+        #ifdef DEP0CTL_MPS_64
+    g_hpcd.Init.ep0_mps = DEP0CTL_MPS_64;
+        #else
+            #ifdef EP_MPS_64
     g_hpcd.Init.ep0_mps = EP_MPS_64;
-#else
-#error "Missing EP0 MPS definition: DEP0CTL_MPS_64 or EP_MPS_64!"
-#endif
-#endif
-#if !defined(STM32F1xx) && !defined(STM32F2xx) || defined(USB)
+            #else
+                #error "Missing EP0 MPS definition: DEP0CTL_MPS_64 or EP_MPS_64!"
+            #endif
+        #endif
+        #if !defined(STM32F1xx) && !defined(STM32F2xx) || defined(USB)
     g_hpcd.Init.lpm_enable              = DISABLE;
     g_hpcd.Init.battery_charging_enable = DISABLE;
-#endif
-    g_hpcd.Init.low_power_enable        = DISABLE;
-    g_hpcd.Init.Sof_enable              = DISABLE;
+        #endif
+    g_hpcd.Init.low_power_enable = DISABLE;
+    g_hpcd.Init.Sof_enable       = DISABLE;
 
-    /* Set specific LL Driver parameters */
-#ifdef USE_USB_HS
-    g_hpcd.Instance                 = USB_OTG_HS;
-    g_hpcd.Init.use_dedicated_ep1   = DISABLE;
-    g_hpcd.Init.dma_enable          = DISABLE;
-#ifdef USE_USB_HS_IN_FS
-    g_hpcd.Init.phy_itface          = PCD_PHY_EMBEDDED;
-#else
+        /* Set specific LL Driver parameters */
+        #ifdef USE_USB_HS
+    g_hpcd.Instance               = USB_OTG_HS;
+    g_hpcd.Init.use_dedicated_ep1 = DISABLE;
+    g_hpcd.Init.dma_enable        = DISABLE;
+            #ifdef USE_USB_HS_IN_FS
+    g_hpcd.Init.phy_itface = PCD_PHY_EMBEDDED;
+            #else
     g_hpcd.Init.phy_itface = PCD_PHY_ULPI;
-#endif
+            #endif
     g_hpcd.Init.speed               = PCD_SPEED_HIGH;
     g_hpcd.Init.vbus_sensing_enable = VBUS_SENSING;
     g_hpcd.Init.use_external_vbus   = DISABLE;
-#else /* USE_USB_FS */
-#ifdef USB_OTG_FS
-    g_hpcd.Instance = USB_OTG_FS;
-    g_hpcd.Init.use_dedicated_ep1 = DISABLE;
-    g_hpcd.Init.dma_enable = DISABLE;
+        #else /* USE_USB_FS */
+            #ifdef USB_OTG_FS
+    g_hpcd.Instance                 = USB_OTG_FS;
+    g_hpcd.Init.use_dedicated_ep1   = DISABLE;
+    g_hpcd.Init.dma_enable          = DISABLE;
     g_hpcd.Init.vbus_sensing_enable = VBUS_SENSING;
-    g_hpcd.Init.use_external_vbus = DISABLE;
-#else
+    g_hpcd.Init.use_external_vbus   = DISABLE;
+            #else
     g_hpcd.Instance = USB;
-#endif
+            #endif
     g_hpcd.Init.phy_itface = PCD_PHY_EMBEDDED;
-    g_hpcd.Init.speed = PCD_SPEED_FULL;
-#endif /* USE_USB_HS */
+    g_hpcd.Init.speed      = PCD_SPEED_FULL;
+        #endif /* USE_USB_HS */
 
     /* Link The driver to the stack */
     g_hpcd.pData = pdev;
@@ -511,17 +509,17 @@ USBD_StatusTypeDef USBD_LL_Init(USBD_HandleTypeDef* pdev)
         Error_Handler();
     }
 
-#if !defined(USB)
+        #if !defined(USB)
     /* configure EPs FIFOs */
     HAL_PCDEx_SetRxFiFo(&g_hpcd, ep_def[0].ep_size);
     for (uint32_t i = 1; i < (DEV_NUM_EP + 1); i++) {
         HAL_PCDEx_SetTxFiFo(&g_hpcd, ep_def[i].ep_adress & 0xF, ep_def[i].ep_size);
     }
-#else
+        #else
     for (uint32_t i = 0; i < (DEV_NUM_EP + 1); i++) {
         HAL_PCDEx_PMAConfig(&g_hpcd, ep_def[i].ep_adress, ep_def[i].ep_kind, ep_def[i].ep_size);
     }
-#endif /* USE_USB_HS */
+        #endif /* USE_USB_HS */
     return USBD_OK;
 }
 
@@ -698,6 +696,6 @@ void USBD_LL_Delay(uint32_t Delay)
 {
     HAL_Delay(Delay);
 }
-#endif /* HAL_PCD_MODULE_ENABLED */
-#endif /* USBCON */
+    #endif     /* HAL_PCD_MODULE_ENABLED */
+#endif         /* USBCON */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -3,6 +3,6 @@
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
 #ifdef STM32U5xx
-  #include "stm32u5xx_hal_sdio.c"
+    #include "stm32u5xx_hal_sdio.c"
 #endif
 #pragma GCC diagnostic pop

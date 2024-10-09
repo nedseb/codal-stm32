@@ -51,7 +51,7 @@ extern "C" {
 // these could change accordingly with the architecture
 
 #ifndef __ARCHDEP__TYPES
-#define __ARCHDEP__TYPES
+    #define __ARCHDEP__TYPES
 
 typedef unsigned char u8_t;
 typedef unsigned short int u16_t;
@@ -65,7 +65,7 @@ typedef signed char i8_t;
 /* Exported common structure --------------------------------------------------------*/
 
 #ifndef __SHARED__TYPES
-#define __SHARED__TYPES
+    #define __SHARED__TYPES
 
 typedef union {
     i16_t i16bit[3];

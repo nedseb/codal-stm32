@@ -250,7 +250,7 @@ enum class PinNumber : uint16_t {
 #endif
 // Specific pin name define in the variant
 #if __has_include("PinNamesVar.h")
-#include "PinNamesVar.h"
+    #include "PinNamesVar.h"
 #endif
     P_END = NC
 };

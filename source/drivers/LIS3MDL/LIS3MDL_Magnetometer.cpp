@@ -48,13 +48,13 @@ int LIS3MDL_Magnetometer::requestUpdate()
     auto values    = getMeasure();
     auto rawValues = getRawMeasure();
 
-    sample.x = values[0];
-    sample.y = values[1];
-    sample.z = values[2];
+    sample.x       = values[0];
+    sample.y       = values[1];
+    sample.z       = values[2];
 
-    sampleENU.x = rawValues[0];
-    sampleENU.y = rawValues[1];
-    sampleENU.z = rawValues[2];
+    sampleENU.x    = rawValues[0];
+    sampleENU.y    = rawValues[1];
+    sampleENU.z    = rawValues[2];
 
     update();
 

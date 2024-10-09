@@ -46,9 +46,9 @@ array<int32_t, 3> LIS3MDL::getMeasure()
     auto values       = getRawMeasure();
     float sensitivity = getSensitivity();
 
-    finalValues[0] = (int32_t)((float)values[0] / sensitivity);
-    finalValues[1] = (int32_t)((float)values[1] / sensitivity);
-    finalValues[2] = (int32_t)((float)values[2] / sensitivity);
+    finalValues[0]    = (int32_t)((float)values[0] / sensitivity);
+    finalValues[1]    = (int32_t)((float)values[1] / sensitivity);
+    finalValues[2]    = (int32_t)((float)values[2] / sensitivity);
 
     return finalValues;
 }

@@ -267,7 +267,7 @@ mems_status_t LIS3MDL_MAG_Get_Magnetic(void* handle, u8_t* buff)
 
     numberOfByteForDimension = 6 / 3;
 
-    k = 0;
+    k                        = 0;
     for (i = 0; i < 3; i++) {
         for (j = 0; j < numberOfByteForDimension; j++) {
             if (!LIS3MDL_MAG_ReadReg(handle, LIS3MDL_MAG_OUTX_L + k, &buff[k], 1)) return MEMS_ERROR;
@@ -1273,7 +1273,7 @@ mems_status_t LIS3MDL_MAG_Get_Temperature(void* handle, u8_t* buff)
 
     numberOfByteForDimension = 2 / 1;
 
-    k = 0;
+    k                        = 0;
     for (i = 0; i < 1; i++) {
         for (j = 0; j < numberOfByteForDimension; j++) {
             if (!LIS3MDL_MAG_ReadReg(handle, LIS3MDL_MAG_TEMP_OUT_L + k, &buff[k], 1)) return MEMS_ERROR;
@@ -1315,7 +1315,7 @@ mems_status_t LIS3MDL_MAG_Get_MagneticThreshold(void* handle, u8_t* buff)
 
     numberOfByteForDimension = 2 / 1;
 
-    k = 0;
+    k                        = 0;
     for (i = 0; i < 1; i++) {
         for (j = 0; j < numberOfByteForDimension; j++) {
             if (!LIS3MDL_MAG_ReadReg(handle, LIS3MDL_MAG_INT_THS_L + k, &buff[k], 1)) return MEMS_ERROR;

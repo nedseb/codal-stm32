@@ -3,6 +3,6 @@
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 
 #ifdef STM32WLxx
-  #include "stm32wlxx_hal_subghz.c"
+    #include "stm32wlxx_hal_subghz.c"
 #endif
 #pragma GCC diagnostic pop

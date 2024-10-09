@@ -86,36 +86,36 @@ uint32_t spi_getClkFreqInst(SPI_TypeDef* spi_inst)
     if (spi_inst != NP) {
         /* Get source clock depending on SPI instance */
         switch ((uint32_t)spi_inst) {
-#if defined(SPI1_BASE) || defined(SPI4_BASE) || defined(SPI5_BASE) || defined(SPI6_BASE)
-            /* Some STM32's (eg. STM32F302x8) have no SPI1, but do have SPI2/3. */
-#if defined SPI1_BASE
+    #if defined(SPI1_BASE) || defined(SPI4_BASE) || defined(SPI5_BASE) || defined(SPI6_BASE)
+                /* Some STM32's (eg. STM32F302x8) have no SPI1, but do have SPI2/3. */
+        #if defined SPI1_BASE
             case (uint32_t)SPI1:
-#endif
-#if defined SPI4_BASE
+        #endif
+        #if defined SPI4_BASE
             case (uint32_t)SPI4:
-#endif
-#if defined SPI5_BASE
+        #endif
+        #if defined SPI5_BASE
             case (uint32_t)SPI5:
-#endif
-#if defined SPI6_BASE
+        #endif
+        #if defined SPI6_BASE
             case (uint32_t)SPI6:
-#endif
+        #endif
                 /* SPI1, SPI4, SPI5 and SPI6. Source CLK is PCKL2 */
                 spi_freq = HAL_RCC_GetPCLK2Freq();
                 break;
-#endif /* SPI[1456]_BASE */
+    #endif /* SPI[1456]_BASE */
 
-#if defined(SPI2_BASE) || defined(SPI3_BASE)
-#if defined SPI2_BASE
+    #if defined(SPI2_BASE) || defined(SPI3_BASE)
+        #if defined SPI2_BASE
             case (uint32_t)SPI2:
-#endif
-#if defined SPI3_BASE
+        #endif
+        #if defined SPI3_BASE
             case (uint32_t)SPI3:
-#endif
+        #endif
                 /* SPI_2 and SPI_3. Source CLK is PCKL1 */
                 spi_freq = HAL_RCC_GetPCLK1Freq();
                 break;
-#endif
+    #endif
             default:
                 core_debug("CLK: SPI instance not set");
                 break;
@@ -177,7 +177,7 @@ void spi_init(spi_t* obj, uint32_t speed, spi_mode_e mode, uint8_t msb)
     SPI_TypeDef* spi_data = pinmap_merge_peripheral(spi_mosi, spi_miso);
     SPI_TypeDef* spi_cntl = pinmap_merge_peripheral(spi_sclk, spi_ssel);
 
-    obj->spi = pinmap_merge_peripheral(spi_data, spi_cntl);
+    obj->spi              = pinmap_merge_peripheral(spi_data, spi_cntl);
 
     // Are all pins connected to the same SPI instance?
     if (spi_data == NP || spi_cntl == NP || obj->spi == NP) {
@@ -197,7 +197,7 @@ void spi_init(spi_t* obj, uint32_t speed, spi_mode_e mode, uint8_t msb)
     handle->Instance  = obj->spi;
     handle->Init.Mode = SPI_MODE_MASTER;
 
-    spi_freq = spi_getClkFreqInst(obj->spi);
+    spi_freq          = spi_getClkFreqInst(obj->spi);
     if (speed >= (spi_freq / SPI_SPEED_CLOCK_DIV2_MHZ)) {
         handle->Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_2;
     }
@@ -425,21 +425,17 @@ spi_status_e spi_transfer(spi_t* obj, uint8_t* tx_buffer, uint8_t* rx_buffer, ui
 
     while (size--) {
 #if defined(STM32H7xx) || defined(STM32MP1xx)
-        while (!LL_SPI_IsActiveFlag_TXP(_SPI))
-            ;
+        while (!LL_SPI_IsActiveFlag_TXP(_SPI));
 #else
-        while (!LL_SPI_IsActiveFlag_TXE(_SPI))
-            ;
+        while (!LL_SPI_IsActiveFlag_TXE(_SPI));
 #endif
         LL_SPI_TransmitData8(_SPI, *tx_buffer++);
 
         if (!skipReceive) {
 #if defined(STM32H7xx) || defined(STM32MP1xx)
-            while (!LL_SPI_IsActiveFlag_RXP(_SPI))
-                ;
+            while (!LL_SPI_IsActiveFlag_RXP(_SPI));
 #else
-            while (!LL_SPI_IsActiveFlag_RXNE(_SPI))
-                ;
+            while (!LL_SPI_IsActiveFlag_RXNE(_SPI));
 #endif
             *rx_buffer++ = LL_SPI_ReceiveData8(_SPI);
         }

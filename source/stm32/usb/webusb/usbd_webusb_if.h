@@ -19,22 +19,22 @@
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __USBD_WebUSB_IF_H
-#define __USBD_WebUSB_IF_H
+    #define __USBD_WebUSB_IF_H
 
-#ifdef USBCON
-#ifdef USBD_USE_CDC
+    #ifdef USBCON
+        #ifdef USBD_USE_CDC
 
-#ifdef __cplusplus
+            #ifdef __cplusplus
 extern "C" {
-#endif
+            #endif
 
-/* Includes ------------------------------------------------------------------*/
-#include "cdc_queue.h"
-#include "usbd_webusb.h"
+            /* Includes ------------------------------------------------------------------*/
+            #include "cdc_queue.h"
+            #include "usbd_webusb.h"
 
-/* Periodically, the state of the buffer "UserTxBuffer" is checked.
-   The period depends on WebUSB_POLLING_INTERVAL */
-#define WebUSB_POLLING_INTERVAL 2 /* in ms. The max is 65 and the min is 1 */
+            /* Periodically, the state of the buffer "UserTxBuffer" is checked.
+               The period depends on WebUSB_POLLING_INTERVAL */
+            #define WebUSB_POLLING_INTERVAL 2 /* in ms. The max is 65 and the min is 1 */
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
@@ -53,11 +53,11 @@ bool webUSB_connected(void);
 
 void webUSB_OnDataReceived(void (*callback)(void));
 
-#ifdef __cplusplus
+            #ifdef __cplusplus
 }
-#endif
-#endif /* USBD_USE_CDC */
-#endif /* USBCON */
-#endif /* __USBD_WebUSB_IF_H */
+            #endif
+        #endif /* USBD_USE_CDC */
+    #endif     /* USBCON */
+#endif         /* __USBD_WebUSB_IF_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

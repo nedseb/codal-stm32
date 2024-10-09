@@ -19,62 +19,62 @@
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __USB_CDC_H
-#define __USB_CDC_H
+    #define __USB_CDC_H
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 extern "C" {
-#endif
+    #endif
 
-/* Includes ------------------------------------------------------------------*/
-#include "usbd_ep_conf.h"
-#include "usbd_ioreq.h"
+    /* Includes ------------------------------------------------------------------*/
+    #include "usbd_ep_conf.h"
+    #include "usbd_ioreq.h"
 
-/** @addtogroup STM32_USB_DEVICE_LIBRARY
- * @{
- */
+    /** @addtogroup STM32_USB_DEVICE_LIBRARY
+     * @{
+     */
 
-/** @defgroup usbd_cdc
- * @brief This file is the Header file for usbd_cdc.c
- * @{
- */
+    /** @defgroup usbd_cdc
+     * @brief This file is the Header file for usbd_cdc.c
+     * @{
+     */
 
-/** @defgroup usbd_cdc_Exported_Defines
- * @{
- */
-#ifndef CDC_HS_BINTERVAL
-#define CDC_HS_BINTERVAL 0x10U
-#endif /* CDC_HS_BINTERVAL */
+    /** @defgroup usbd_cdc_Exported_Defines
+     * @{
+     */
+    #ifndef CDC_HS_BINTERVAL
+        #define CDC_HS_BINTERVAL 0x10U
+    #endif /* CDC_HS_BINTERVAL */
 
-#ifndef CDC_FS_BINTERVAL
-#define CDC_FS_BINTERVAL 0x10U
-#endif /* CDC_FS_BINTERVAL */
+    #ifndef CDC_FS_BINTERVAL
+        #define CDC_FS_BINTERVAL 0x10U
+    #endif /* CDC_FS_BINTERVAL */
 
 /* CDC Endpoints parameters */
 
-#define USB_CDC_CONFIG_DESC_SIZ     67U
-#define CDC_DATA_HS_IN_PACKET_SIZE  CDC_DATA_HS_MAX_PACKET_SIZE
-#define CDC_DATA_HS_OUT_PACKET_SIZE CDC_DATA_HS_MAX_PACKET_SIZE
+    #define USB_CDC_CONFIG_DESC_SIZ     67U
+    #define CDC_DATA_HS_IN_PACKET_SIZE  CDC_DATA_HS_MAX_PACKET_SIZE
+    #define CDC_DATA_HS_OUT_PACKET_SIZE CDC_DATA_HS_MAX_PACKET_SIZE
 
-#define CDC_DATA_FS_IN_PACKET_SIZE  CDC_DATA_FS_MAX_PACKET_SIZE
-#define CDC_DATA_FS_OUT_PACKET_SIZE CDC_DATA_FS_MAX_PACKET_SIZE
+    #define CDC_DATA_FS_IN_PACKET_SIZE  CDC_DATA_FS_MAX_PACKET_SIZE
+    #define CDC_DATA_FS_OUT_PACKET_SIZE CDC_DATA_FS_MAX_PACKET_SIZE
 
-#define CDC_REQ_MAX_DATA_SIZE 0x7U
-/*---------------------------------------------------------------------*/
-/*  CDC definitions                                                    */
-/*---------------------------------------------------------------------*/
-#define CDC_SEND_ENCAPSULATED_COMMAND 0x00U
-#define CDC_GET_ENCAPSULATED_RESPONSE 0x01U
-#define CDC_SET_COMM_FEATURE          0x02U
-#define CDC_GET_COMM_FEATURE          0x03U
-#define CDC_CLEAR_COMM_FEATURE        0x04U
-#define CDC_SET_LINE_CODING           0x20U
-#define CDC_GET_LINE_CODING           0x21U
-#define CDC_SET_CONTROL_LINE_STATE    0x22U
-#define CDC_SEND_BREAK                0x23U
+    #define CDC_REQ_MAX_DATA_SIZE       0x7U
+    /*---------------------------------------------------------------------*/
+    /*  CDC definitions                                                    */
+    /*---------------------------------------------------------------------*/
+    #define CDC_SEND_ENCAPSULATED_COMMAND 0x00U
+    #define CDC_GET_ENCAPSULATED_RESPONSE 0x01U
+    #define CDC_SET_COMM_FEATURE          0x02U
+    #define CDC_GET_COMM_FEATURE          0x03U
+    #define CDC_CLEAR_COMM_FEATURE        0x04U
+    #define CDC_SET_LINE_CODING           0x20U
+    #define CDC_GET_LINE_CODING           0x21U
+    #define CDC_SET_CONTROL_LINE_STATE    0x22U
+    #define CDC_SEND_BREAK                0x23U
 
-// Control Line State bits
-#define CLS_DTR (1 << 0)
-#define CLS_RTS (1 << 1)
+    // Control Line State bits
+    #define CLS_DTR (1 << 0)
+    #define CLS_RTS (1 << 1)
 
 /**
  * @}
@@ -128,7 +128,7 @@ typedef struct {
  */
 
 extern USBD_ClassTypeDef USBD_CDC;
-#define USBD_CDC_CLASS &USBD_CDC
+    #define USBD_CDC_CLASS &USBD_CDC
 /**
  * @}
  */
@@ -138,24 +138,24 @@ extern USBD_ClassTypeDef USBD_CDC;
  */
 uint8_t USBD_CDC_RegisterInterface(USBD_HandleTypeDef* pdev, USBD_CDC_ItfTypeDef* fops);
 
-#ifdef USE_USBD_COMPOSITE
+    #ifdef USE_USBD_COMPOSITE
 uint8_t USBD_CDC_SetTxBuffer(USBD_HandleTypeDef* pdev, uint8_t* pbuff, uint32_t length, uint8_t ClassId);
 uint8_t USBD_CDC_TransmitPacket(USBD_HandleTypeDef* pdev, uint8_t ClassId);
 uint8_t USBD_CDC_ClearBuffer(USBD_HandleTypeDef* pdev, uint8_t ClassId);
-#else
+    #else
 uint8_t USBD_CDC_SetTxBuffer(USBD_HandleTypeDef* pdev, uint8_t* pbuff, uint32_t length);
 uint8_t USBD_CDC_TransmitPacket(USBD_HandleTypeDef* pdev);
 uint8_t USBD_CDC_ClearBuffer(USBD_HandleTypeDef* pdev);
-#endif /* USE_USBD_COMPOSITE */
+    #endif /* USE_USBD_COMPOSITE */
 uint8_t USBD_CDC_SetRxBuffer(USBD_HandleTypeDef* pdev, uint8_t* pbuff);
 uint8_t USBD_CDC_ReceivePacket(USBD_HandleTypeDef* pdev);
 /**
  * @}
  */
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* __USB_CDC_H */
 /**

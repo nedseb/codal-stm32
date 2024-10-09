@@ -18,20 +18,20 @@
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __USBD_HID_COMPOSITE_IF_H
-#define __USBD_HID_COMPOSITE_IF_H
-#ifdef USBCON
-#ifdef USBD_USE_HID_COMPOSITE
+    #define __USBD_HID_COMPOSITE_IF_H
+    #ifdef USBCON
+        #ifdef USBD_USE_HID_COMPOSITE
 
-/* Includes ------------------------------------------------------------------*/
-#ifdef __cplusplus
+            /* Includes ------------------------------------------------------------------*/
+            #ifdef __cplusplus
 extern "C" {
-#endif
+            #endif
 
 /* Exported types ------------------------------------------------------------*/
 typedef enum { HID_KEYBOARD, HID_MOUSE } HID_Interface;
 
-/* Exported macro ------------------------------------------------------------*/
-#define IS_HID_INTERFACE(DEVICE) (((DEVICE) == HID_KEYBOARD) || ((DEVICE) == HID_MOUSE))
+            /* Exported macro ------------------------------------------------------------*/
+            #define IS_HID_INTERFACE(DEVICE) (((DEVICE) == HID_KEYBOARD) || ((DEVICE) == HID_MOUSE))
 
 /* Exported functions ------------------------------------------------------- */
 void HID_Composite_Init(HID_Interface device);
@@ -40,11 +40,11 @@ void HID_Composite_DeInit(HID_Interface device);
 void HID_Composite_mouse_sendReport(uint8_t* report, uint16_t len);
 void HID_Composite_keyboard_sendReport(uint8_t* report, uint16_t len);
 
-#ifdef __cplusplus
+            #ifdef __cplusplus
 }
-#endif
-#endif /* USBD_USE_HID_COMPOSITE */
-#endif /* USBCON */
+            #endif
+        #endif /* USBD_USE_HID_COMPOSITE */
+    #endif     /* USBCON */
 
 #endif /* __USBD_HID_COMPOSITE_IF_H */
 

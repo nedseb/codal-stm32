@@ -11,7 +11,7 @@ constexpr uint8_t DAPFLASH_WRITE_DATA   = 0x11;
 constexpr uint8_t DAPFLASH_STATUS_REG   = 0x80;
 constexpr uint8_t DAPFLASH_ERROR_REG    = 0x81;
 
-constexpr uint16_t I2C_WRITE_DATA_LEN = 30;
+constexpr uint16_t I2C_WRITE_DATA_LEN   = 30;
 
 DaplinkFlash::DaplinkFlash(STM32I2C& i2c, uint16_t address) : i2c{i2c}, address{address} {}
 
@@ -36,7 +36,7 @@ bool DaplinkFlash::setFilename(const char* filename, const char* extension)
     memcpy(data, filename, len_file <= 8 ? len_file : 8);
     memcpy(data + 8, extension, len_ext <= 3 ? len_ext : 3);
 
-    if (!wait_busy(1000)) {
+    if (!wait_busy(1'000)) {
         return false;
     }
 
@@ -50,7 +50,7 @@ bool DaplinkFlash::setFilename(const char* filename, const char* extension)
 
 string DaplinkFlash::getFilename()
 {
-    if (!wait_busy(1000)) {
+    if (!wait_busy(1'000)) {
         return "";
     }
 
@@ -60,7 +60,7 @@ string DaplinkFlash::getFilename()
 
 void DaplinkFlash::clearFlash()
 {
-    if (!wait_busy(1000)) {
+    if (!wait_busy(1'000)) {
         return;
     }
 
@@ -76,7 +76,7 @@ uint16_t DaplinkFlash::writeData(uint8_t* data, uint16_t length)
     uint16_t bytes_to_send;
 
     while (sent_data < length) {
-        if (!wait_busy(1000)) {
+        if (!wait_busy(1'000)) {
             break;
         }
 

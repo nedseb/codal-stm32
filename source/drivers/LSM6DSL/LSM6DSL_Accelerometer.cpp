@@ -28,9 +28,9 @@ int LSM6DSL_Accelerometer::requestUpdate()
     if (!isConfigured) configure();
 
     auto result = getAccelerometerMeasure();
-    sampleENU.x = result[0] * 1000;
-    sampleENU.y = result[1] * 1000;
-    sampleENU.z = result[2] * 1000;
+    sampleENU.x = result[0] * 1'000;
+    sampleENU.y = result[1] * 1'000;
+    sampleENU.z = result[2] * 1'000;
 
     return update();
 }
@@ -49,7 +49,7 @@ LSM6DSL_ACC_GYRO_FS_XL_t LSM6DSL_Accelerometer::getBestFullScale(float value)
 
 LSM6DSL_ACC_GYRO_ODR_XL_t LSM6DSL_Accelerometer::getBestODR(float ms)
 {
-    float freq = 1 / (ms * 1000);
+    float freq = 1 / (ms * 1'000);
 
     if (freq <= 12.5)
         return LSM6DSL_ACC_GYRO_ODR_XL_13Hz;
@@ -65,9 +65,9 @@ LSM6DSL_ACC_GYRO_ODR_XL_t LSM6DSL_Accelerometer::getBestODR(float ms)
         return LSM6DSL_ACC_GYRO_ODR_XL_416Hz;
     else if (freq <= 833)
         return LSM6DSL_ACC_GYRO_ODR_XL_833Hz;
-    else if (freq <= 1666)
+    else if (freq <= 1'666)
         return LSM6DSL_ACC_GYRO_ODR_XL_1660Hz;
-    else if (freq <= 3332)
+    else if (freq <= 3'332)
         return LSM6DSL_ACC_GYRO_ODR_XL_3330Hz;
     else
         return LSM6DSL_ACC_GYRO_ODR_XL_6660Hz;

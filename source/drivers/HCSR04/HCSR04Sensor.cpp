@@ -10,7 +10,7 @@ using namespace codal;
  * @param id The ID of this component e.g. DEVICE_ID_THERMOMETER
  */
 HCSR04Sensor::HCSR04Sensor(STM32Pin& trig, STM32Pin& echo, uint16_t id)
-    : HCSR04(trig, echo), Sensor(id, 1023), onNearDistance(nullptr), onFarDistance(nullptr)
+    : HCSR04(trig, echo), Sensor(id, 1'023), onNearDistance(nullptr), onFarDistance(nullptr)
 {
     updateSample();
     EventModel::defaultEventBus->listen(id, SENSOR_THRESHOLD_HIGH, this, &HCSR04Sensor::onEvent);
@@ -31,7 +31,7 @@ void HCSR04Sensor::registerDistanceEvent(DistanceBehold fromDistanceIs, uint16_t
     uint16_t reelDistance;
     switch (type) {
         case codal::HCSR04Unit::M:
-            reelDistance = distance * 1000;
+            reelDistance = distance * 1'000;
             break;
         case codal::HCSR04Unit::Dm:
             reelDistance = distance * 100;

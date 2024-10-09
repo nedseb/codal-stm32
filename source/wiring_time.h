@@ -65,16 +65,15 @@ static inline void delayMicroseconds(uint32_t us)
 {
 #if defined(DWT_BASE) && !defined(DWT_DELAY_DISABLED)
     int32_t start  = dwt_getCycles();
-    int32_t cycles = us * (SystemCoreClock / 1000000);
+    int32_t cycles = us * (SystemCoreClock / 1'000'000);
 
-    while ((int32_t)dwt_getCycles() - start < cycles)
-        ;
+    while ((int32_t)dwt_getCycles() - start < cycles);
 #else
     __IO uint32_t currentTicks = SysTick->VAL;
     /* Number of ticks per millisecond */
     const uint32_t tickPerMs = SysTick->LOAD + 1;
     /* Number of ticks to count */
-    const uint32_t nbTicks = ((us - ((us > 0) ? 1 : 0)) * tickPerMs) / 1000;
+    const uint32_t nbTicks = ((us - ((us > 0) ? 1 : 0)) * tickPerMs) / 1'000;
     /* Number of elapsed ticks */
     uint32_t elapsedTicks  = 0;
     __IO uint32_t oldTicks = currentTicks;

@@ -111,13 +111,13 @@ void rgb_lcd::init()
 void rgb_lcd::clear()
 {
     command(LCD_CLEARDISPLAY);  // clear display, set cursor position to zero
-    delayMicroseconds(2000);    // this command takes a long time!
+    delayMicroseconds(2'000);   // this command takes a long time!
 }
 
 void rgb_lcd::home()
 {
-    command(LCD_RETURNHOME);  // set cursor position to zero
-    delayMicroseconds(2000);  // this command takes a long time!
+    command(LCD_RETURNHOME);   // set cursor position to zero
+    delayMicroseconds(2'000);  // this command takes a long time!
 }
 
 void rgb_lcd::setCursor(uint8_t col, uint8_t row)
@@ -337,7 +337,7 @@ size_t rgb_lcd::printNumber(unsigned long n, PrintRadix base)
     char buf[8 * sizeof(long) + 1];  // Assumes 8-bit chars plus zero byte.
     char* str = &buf[sizeof(buf) - 1];
 
-    *str = '\0';
+    *str      = '\0';
 
     // prevent crash if called with base == 1
     if (base != PrintRadix::DEC) {

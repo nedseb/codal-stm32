@@ -17,10 +17,10 @@ bool STM32RTC::init(RTC_Hour_Format hourFormat, RTC_Output output, RTC_Output_Al
     init.OutPutPolarity = static_cast<uint32_t>(outPolarity);
     init.OutPutType     = static_cast<uint32_t>(outType);
 
-    hrtc->Instance = RTC;
-    hrtc->Init     = init;
+    hrtc->Instance      = RTC;
+    hrtc->Init          = init;
 
-    isHourMode12 = (hourFormat == RTC_Hour_Format::HOUR_12);
+    isHourMode12        = (hourFormat == RTC_Hour_Format::HOUR_12);
 
     configureClock();
     return HAL_RTC_Init(hrtc) == HAL_OK;
@@ -33,7 +33,7 @@ bool STM32RTC::setDaylightSaving(RTC_Day_Saving saving)
     HAL_RTC_GetTime(hrtc, &time, RTC_FORMAT_BIN);
     HAL_RTC_GetDate(hrtc, &_date, RTC_FORMAT_BIN);
 
-    daySaving = saving;
+    daySaving           = saving;
 
     time.DayLightSaving = static_cast<uint32_t>(daySaving);
     time.StoreOperation = (daySaving != RTC_Day_Saving::DISABLE) ? RTC_STOREOPERATION_SET : RTC_STOREOPERATION_RESET;

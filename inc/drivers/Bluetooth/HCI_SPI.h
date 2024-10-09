@@ -10,7 +10,7 @@
 class HCI_SPI : public HCI {
   public:
     HCI_SPI(codal::STM32SPI& spi, codal::STM32Pin& cs, codal::STM32Pin& irq, codal::STM32Pin& rst,
-            uint32_t freq = 1000000);
+            uint32_t freq = 1'000'000);
 
     virtual ~HCI_SPI() {}
 

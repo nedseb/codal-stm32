@@ -37,56 +37,56 @@
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __TWI_H__
-#define __TWI_H__
+    #define __TWI_H__
 
-/* Includes ------------------------------------------------------------------*/
-#include "PeripheralPins.h"
-#include "stm32_def.h"
+    /* Includes ------------------------------------------------------------------*/
+    #include "PeripheralPins.h"
+    #include "stm32_def.h"
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 extern "C" {
-#endif
+    #endif
 
-/* Exported types ------------------------------------------------------------*/
-/* offsetof is a gcc built-in function, this is the manual implementation */
-#define OFFSETOF(type, member) ((uint32_t)(&(((type*)(0))->member)))
+    /* Exported types ------------------------------------------------------------*/
+    /* offsetof is a gcc built-in function, this is the manual implementation */
+    #define OFFSETOF(type, member) ((uint32_t)(&(((type*)(0))->member)))
 
-/* Interrupt priority */
-#ifndef I2C_IRQ_PRIO
-#define I2C_IRQ_PRIO 2
-#endif
-#ifndef I2C_IRQ_SUBPRIO
-#define I2C_IRQ_SUBPRIO 0
-#endif
+    /* Interrupt priority */
+    #ifndef I2C_IRQ_PRIO
+        #define I2C_IRQ_PRIO 2
+    #endif
+    #ifndef I2C_IRQ_SUBPRIO
+        #define I2C_IRQ_SUBPRIO 0
+    #endif
 
-/* I2C Tx/Rx buffer size */
-#if !defined(I2C_TXRX_BUFFER_SIZE)
-#define I2C_TXRX_BUFFER_SIZE 32
-#elif (I2C_TXRX_BUFFER_SIZE >= 256)
-#error I2C buffer size cannot exceed 255
-#endif
+    /* I2C Tx/Rx buffer size */
+    #if !defined(I2C_TXRX_BUFFER_SIZE)
+        #define I2C_TXRX_BUFFER_SIZE 32
+    #elif (I2C_TXRX_BUFFER_SIZE >= 256)
+        #error I2C buffer size cannot exceed 255
+    #endif
 
-/* Redefinition of IRQ for F0/G0/L0 families */
-#if defined(STM32F0xx) || defined(STM32G0xx) || defined(STM32L0xx)
-#if defined(I2C1_BASE)
-#define I2C1_EV_IRQn       I2C1_IRQn
-#define I2C1_EV_IRQHandler I2C1_IRQHandler
-#endif  // defined(I2C1_BASE)
-#if defined(I2C2_BASE)
-#define I2C2_EV_IRQn       I2C2_IRQn
-#define I2C2_EV_IRQHandler I2C2_IRQHandler
-#endif  // defined(I2C2_BASE)
-/* Only for STM32L0xx */
-#if defined(I2C3_BASE)
-#define I2C3_EV_IRQn       I2C3_IRQn
-#define I2C3_EV_IRQHandler I2C3_IRQHandler
-#endif  // defined(I2C3_BASE)
-/* Defined but no one has it */
-#if defined(I2C4_BASE)
-#define I2C4_EV_IRQn       I2C4_IRQn
-#define I2C4_EV_IRQHandler I2C4_IRQHandler
-#endif  // defined(I2C4_BASE)
-#endif  /* STM32F0xx || STM32G0xx || STM32L0xx */
+    /* Redefinition of IRQ for F0/G0/L0 families */
+    #if defined(STM32F0xx) || defined(STM32G0xx) || defined(STM32L0xx)
+        #if defined(I2C1_BASE)
+            #define I2C1_EV_IRQn       I2C1_IRQn
+            #define I2C1_EV_IRQHandler I2C1_IRQHandler
+        #endif  // defined(I2C1_BASE)
+        #if defined(I2C2_BASE)
+            #define I2C2_EV_IRQn       I2C2_IRQn
+            #define I2C2_EV_IRQHandler I2C2_IRQHandler
+        #endif  // defined(I2C2_BASE)
+        /* Only for STM32L0xx */
+        #if defined(I2C3_BASE)
+            #define I2C3_EV_IRQn       I2C3_IRQn
+            #define I2C3_EV_IRQHandler I2C3_IRQHandler
+        #endif  // defined(I2C3_BASE)
+        /* Defined but no one has it */
+        #if defined(I2C4_BASE)
+            #define I2C4_EV_IRQn       I2C4_IRQn
+            #define I2C4_EV_IRQHandler I2C4_IRQHandler
+        #endif  // defined(I2C4_BASE)
+    #endif      /* STM32F0xx || STM32G0xx || STM32L0xx */
 
 typedef struct i2c_s i2c_t;
 
@@ -102,9 +102,9 @@ struct i2c_s {
     PinName sda;
     PinName scl;
     IRQn_Type irq;
-#if !defined(STM32F0xx) && !defined(STM32G0xx) && !defined(STM32L0xx)
+    #if !defined(STM32F0xx) && !defined(STM32G0xx) && !defined(STM32L0xx)
     IRQn_Type irqER;
-#endif                           /* !STM32F0xx && !STM32G0xx && !STM32L0xx */
+    #endif                       /* !STM32F0xx && !STM32G0xx && !STM32L0xx */
     volatile int slaveRxNbData;  // Number of accumulated bytes received in Slave mode
     void (*i2c_onSlaveReceive)(i2c_t*);
     void (*i2c_onSlaveTransmit)(i2c_t*);
@@ -140,9 +140,9 @@ i2c_status_e i2c_IsDeviceReady(i2c_t* obj, uint8_t devAddr, uint32_t trials);
 void i2c_attachSlaveRxEvent(i2c_t* obj, void (*function)(i2c_t*));
 void i2c_attachSlaveTxEvent(i2c_t* obj, void (*function)(i2c_t*));
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* __TWI_H__ */
 

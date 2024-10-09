@@ -101,16 +101,13 @@ vector<uint8_t> STM32SPI::endTransaction(uint32_t timeout, bool skipReceive)
     for (size_t i = 0; i < buffer.size(); ++i) {
         SPI1->CR2 |= (1) << 12;
 
-        while ((SPI1->SR & (1 << 1)) == 0)
-            ;
+        while ((SPI1->SR & (1 << 1)) == 0);
 
         *((uint8_t*)(&SPI1->DR)) = buffer[i];
 
-        while (SPI1->SR & (1 << 7))
-            ;  // Wait for not busy
+        while (SPI1->SR & (1 << 7));  // Wait for not busy
 
-        while ((SPI1->SR & (1 << 0)) == 0)
-            ;  // Wait for the receiving area to be empty
+        while ((SPI1->SR & (1 << 0)) == 0);  // Wait for the receiving area to be empty
 
         result.push_back(*((uint8_t*)(&SPI1->DR)));
     }

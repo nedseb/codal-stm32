@@ -12,23 +12,23 @@
 using namespace codal;
 
 #ifndef DEFAULT_PWM_FREQ
-#define DEFAULT_PWM_FREQ 20000
+    #define DEFAULT_PWM_FREQ 20'000
 #endif
 
 #ifndef PWM_SERVO_FREQ
-#define PWM_SERVO_FREQ 50
+    #define PWM_SERVO_FREQ 50
 #endif
 
 #ifndef ANALOG_PWM_RESOLUTION
-#define ANALOG_PWM_RESOLUTION 10
+    #define ANALOG_PWM_RESOLUTION 10
 #endif
 
 #ifndef ADC_SENSOR_RESOLUTION
-#define ADC_SENSOR_RESOLUTION 12
+    #define ADC_SENSOR_RESOLUTION 12
 #endif
 
 #ifndef ADC_OUPUT_RESOLUTION
-#define ADC_OUPUT_RESOLUTION 10
+    #define ADC_OUPUT_RESOLUTION 10
 #endif
 
 extern uint32_t g_anOutputPinConfigured[MAX_NB_PORT];
@@ -165,14 +165,14 @@ int STM32Pin::setServoValue(int value, int range, int center)
     if (value > DEVICE_PIN_MAX_SERVO_RANGE) value = DEVICE_PIN_MAX_SERVO_RANGE;
 
     // calculate the lower bound based on the midpoint
-    int lower = (center - (range / 2)) * 1000;
+    int lower = (center - (range / 2)) * 1'000;
 
-    value = value * 1000;
+    value     = value * 1'000;
 
     // add the percentage of the range based on the value between 0 and 180
     int scaled = lower + (range * (value / DEVICE_PIN_MAX_SERVO_RANGE));
 
-    return setServoPulseUs(scaled / 1000);
+    return setServoPulseUs(scaled / 1'000);
 }
 
 int STM32Pin::getAnalogValue()
@@ -198,8 +198,8 @@ int STM32Pin::getAnalogValue()
 
     if (value <= 0)
         adc_offset = value;
-    else if (value > 4095)
-        adc_offset = value - 4095;
+    else if (value > 4'095)
+        adc_offset = value - 4'095;
 
     return (value - adc_offset);
 }
@@ -230,7 +230,7 @@ int STM32Pin::setAnalogPeriod(int periodMs)
 
     if (pwm == nullptr) return DEVICE_NOT_SUPPORTED;
 
-    analogFrequency = (uint32_t)1000 / periodMs;
+    analogFrequency = (uint32_t)1'000 / periodMs;
 
     return DEVICE_OK;
 }
@@ -241,7 +241,7 @@ int STM32Pin::setAnalogPeriodUs(uint32_t periodUs)
 
     if (pwm == nullptr) return DEVICE_NOT_SUPPORTED;
 
-    analogFrequency = (uint32_t)1000000 / periodUs;
+    analogFrequency = (uint32_t)1'000'000 / periodUs;
 
     return DEVICE_OK;
 }
@@ -252,7 +252,7 @@ uint32_t STM32Pin::getAnalogPeriodUs()
 
     if (pwm == nullptr) return 0;
 
-    return (uint32_t)1000000 / analogFrequency;
+    return (uint32_t)1'000'000 / analogFrequency;
 }
 int STM32Pin::setPull(PullMode newPullMode)
 {

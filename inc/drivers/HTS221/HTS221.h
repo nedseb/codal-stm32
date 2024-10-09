@@ -6,14 +6,14 @@
 namespace codal {
 
 enum HTS221_AVCONF_T : uint8_t {
-    T_AVG_2   = 0b00000000,
-    T_AVG_4   = 0b00001000,
-    T_AVG_8   = 0b00010000,
-    T_AVG_16  = 0b00011000,
-    T_AVG_32  = 0b00100000,
-    T_AVG_64  = 0b00101000,
-    T_AVG_128 = 0b00110000,
-    T_AVG_256 = 0b00111000
+    T_AVG_2   = 0b0000'0000,
+    T_AVG_4   = 0b0000'1000,
+    T_AVG_8   = 0b0001'0000,
+    T_AVG_16  = 0b0001'1000,
+    T_AVG_32  = 0b0010'0000,
+    T_AVG_64  = 0b0010'1000,
+    T_AVG_128 = 0b0011'0000,
+    T_AVG_256 = 0b0011'1000
 };
 
 enum HTS221_AVCONF_H : uint8_t {

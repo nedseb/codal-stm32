@@ -1,50 +1,50 @@
 #pragma once
 
 #if defined(STM32WBxx)
-#include <cstdint>
+    #include <cstdint>
 
-#include "stm32_def.h"
+    #include "stm32_def.h"
 
 enum class DMA_Request : uint32_t {
-    MEM2MEM = DMA_REQUEST_MEM2MEM, /*!< memory to memory transfer  */
+    MEM2MEM    = DMA_REQUEST_MEM2MEM, /*!< memory to memory transfer  */
 
     GENERATOR0 = DMA_REQUEST_GENERATOR0, /*!< DMAMUX request generator 0 */
     GENERATOR1 = DMA_REQUEST_GENERATOR1, /*!< DMAMUX request generator 1 */
     GENERATOR2 = DMA_REQUEST_GENERATOR2, /*!< DMAMUX request generator 2 */
     GENERATOR3 = DMA_REQUEST_GENERATOR3, /*!< DMAMUX request generator 3 */
 
-    ADC_1 = DMA_REQUEST_ADC1, /*!< DMAMUX ADC1 request        */
+    ADC_1      = DMA_REQUEST_ADC1, /*!< DMAMUX ADC1 request        */
 
-    SPI_1_RX = DMA_REQUEST_SPI1_RX, /*!< DMAMUX SPI1 RX request     */
-    SPI_1_TX = DMA_REQUEST_SPI1_TX, /*!< DMAMUX SPI1 TX request     */
-#if defined(SPI2)
+    SPI_1_RX   = DMA_REQUEST_SPI1_RX, /*!< DMAMUX SPI1 RX request     */
+    SPI_1_TX   = DMA_REQUEST_SPI1_TX, /*!< DMAMUX SPI1 TX request     */
+    #if defined(SPI2)
     SPI_2_RX = DMA_REQUEST_SPI2_RX, /*!< DMAMUX SPI2 RX request     */
     SPI_2_TX = DMA_REQUEST_SPI2_TX, /*!< DMAMUX SPI2 TX request     */
-#endif                              /* SPI2 */
+    #endif                          /* SPI2 */
 
     I2C_1_RX = DMA_REQUEST_I2C1_RX, /*!< DMAMUX I2C1 RX request     */
     I2C_1_TX = DMA_REQUEST_I2C1_TX, /*!< DMAMUX I2C1 TX request     */
-#if defined(I2C3)
+    #if defined(I2C3)
     I2C_3_RX = DMA_REQUEST_I2C3_RX, /*!< DMAMUX I2C3 RX request     */
     I2C_3_TX = DMA_REQUEST_I2C3_TX, /*!< DMAMUX I2C3 TX request     */
-#endif                              /* I2C3 */
+    #endif                          /* I2C3 */
 
     USART_1_RX = DMA_REQUEST_USART1_RX, /*!< DMAMUX USART1 RX request   */
     USART_1_TX = DMA_REQUEST_USART1_TX, /*!< DMAMUX USART1 TX request   */
 
-#if defined(LPUART1)
+    #if defined(LPUART1)
     LPUART_1_RX = DMA_REQUEST_LPUART1_RX, /*!< DMAMUX LP_UART1_RX request */
     LPUART_1_TX = DMA_REQUEST_LPUART1_TX, /*!< DMAMUX LP_UART1_RX request */
-#endif                                    /* LPUART1 */
+    #endif                                /* LPUART1 */
 
-#if defined(SAI1)
+    #if defined(SAI1)
     SAI_1_A = DMA_REQUEST_SAI1_A, /*!< DMAMUX SAI1 A request      */
     SAI_1_B = DMA_REQUEST_SAI1_B, /*!< DMAMUX SAI1 B request      */
-#endif                            /* SAI1 */
+    #endif                        /* SAI1 */
 
-#if defined(QUADSPI)
+    #if defined(QUADSPI)
     QUADSPI_1 = DMA_REQUEST_QUADSPI, /*!< DMAMUX QUADSPI request     */
-#endif                               /* QUADSPI */
+    #endif                           /* QUADSPI */
 
     TIM_1_CH1  = DMA_REQUEST_TIM1_CH1,  /*!< DMAMUX TIM1 CH1 request    */
     TIM_1_CH2  = DMA_REQUEST_TIM1_CH2,  /*!< DMAMUX TIM1 CH2 request    */
@@ -54,11 +54,11 @@ enum class DMA_Request : uint32_t {
     TIM_1_TRIG = DMA_REQUEST_TIM1_TRIG, /*!< DMAMUX TIM1 TRIG request   */
     TIM_1_COM  = DMA_REQUEST_TIM1_COM,  /*!< DMAMUX TIM1 COM request    */
 
-    TIM_2_CH1 = DMA_REQUEST_TIM2_CH1, /*!< DMAMUX TIM2 CH1 request    */
-    TIM_2_CH2 = DMA_REQUEST_TIM2_CH2, /*!< DMAMUX TIM2 CH2 request    */
-    TIM_2_CH3 = DMA_REQUEST_TIM2_CH3, /*!< DMAMUX TIM2 CH3 request    */
-    TIM_2_CH4 = DMA_REQUEST_TIM2_CH4, /*!< DMAMUX TIM2 CH4 request    */
-    TIM_2_UP  = DMA_REQUEST_TIM2_UP,  /*!< DMAMUX TIM2 UP  request    */
+    TIM_2_CH1  = DMA_REQUEST_TIM2_CH1, /*!< DMAMUX TIM2 CH1 request    */
+    TIM_2_CH2  = DMA_REQUEST_TIM2_CH2, /*!< DMAMUX TIM2 CH2 request    */
+    TIM_2_CH3  = DMA_REQUEST_TIM2_CH3, /*!< DMAMUX TIM2 CH3 request    */
+    TIM_2_CH4  = DMA_REQUEST_TIM2_CH4, /*!< DMAMUX TIM2 CH4 request    */
+    TIM_2_UP   = DMA_REQUEST_TIM2_UP,  /*!< DMAMUX TIM2 UP  request    */
 
     TIM_16_CH1 = DMA_REQUEST_TIM16_CH1, /*!< DMAMUX TIM16 CH1 request   */
     TIM_16_UP  = DMA_REQUEST_TIM16_UP,  /*!< DMAMUX TIM16 UP  request   */
@@ -66,10 +66,10 @@ enum class DMA_Request : uint32_t {
     TIM_17_CH1 = DMA_REQUEST_TIM17_CH1, /*!< DMAMUX TIM17 CH1 request   */
     TIM_17_UP  = DMA_REQUEST_TIM17_UP,  /*!< DMAMUX TIM17 UP  request   */
 
-#if defined(AES1)
+    #if defined(AES1)
     AES_1_IN  = DMA_REQUEST_AES1_IN,  /*!< DMAMUX AES1 IN request     */
     AES_1_OUT = DMA_REQUEST_AES1_OUT, /*!< DMAMUX AES1 OUT request    */
-#endif                                /* AES1 */
+    #endif                            /* AES1 */
 
     AES_2_IN  = DMA_REQUEST_AES2_IN,  /*!< DMAMUX AES2 IN request     */
     AES_2_OUT = DMA_REQUEST_AES2_OUT, /*!< DMAMUX AES2 OUT request    */

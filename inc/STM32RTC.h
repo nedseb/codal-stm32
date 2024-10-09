@@ -1,9 +1,9 @@
 #pragma once
 
 #if defined(STM32WBxx)
-#include <cstdint>
+    #include <cstdint>
 
-#include "stm32_def.h"
+    #include "stm32_def.h"
 
 enum class RTC_Hour_Format : uint32_t { HOUR_24 = RTC_HOURFORMAT_24, HOUR_12 = RTC_HOURFORMAT_12 };
 enum class RTC_Time_AM_PM { AM = RTC_HOURFORMAT12_AM, PM = RTC_HOURFORMAT12_PM };

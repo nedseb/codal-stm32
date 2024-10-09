@@ -19,7 +19,7 @@
 #include <stdint.h>
 
 #ifdef __cplusplus
-#include <functional>
+    #include <functional>
 
 typedef std::function<void(void)> callback_function_t;
 void attachInterrupt(uint32_t pin, callback_function_t callback, uint32_t mode);

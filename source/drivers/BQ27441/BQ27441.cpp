@@ -94,7 +94,7 @@ BQ27441_Control_Status BQ27441::read_control_status()
     BQ27441_Control_Status status;
 
     send_control_command(CONTROL_CONTROL_STATUS);
-    auto data = read_data(CMD_CONTROL, 2);
+    auto data             = read_data(CMD_CONTROL, 2);
 
     status.control_status = (uint16_t(data[1]) << 8) | data[0];
 
@@ -128,7 +128,7 @@ uint16_t BQ27441::dm_code()
 BQ27441_Flags BQ27441::read_flags()
 {
     BQ27441_Flags flags;
-    auto data = read_data(CMD_FLAGS, 2);
+    auto data          = read_data(CMD_FLAGS, 2);
 
     flags.flags_status = (uint16_t(data[1]) << 8) | data[0];
     return flags;
@@ -155,7 +155,7 @@ uint8_t BQ27441::state_of_charge()
 
 float BQ27441::get_temperature()
 {
-    auto data = read_data(CMD_TEMPERATURE, 2);
+    auto data              = read_data(CMD_TEMPERATURE, 2);
 
     int16_t raw_decikelvin = (int16_t(data[1]) << 8) | int16_t(data[0]);
 
@@ -164,7 +164,7 @@ float BQ27441::get_temperature()
 
 float BQ27441::get_voltage()
 {
-    auto data = read_data(CMD_VOLTAGE, 2);
+    auto data            = read_data(CMD_VOLTAGE, 2);
 
     int16_t raw_millivol = (int16_t(data[1]) << 8) | int16_t(data[0]);
 
@@ -173,7 +173,7 @@ float BQ27441::get_voltage()
 
 float BQ27441::get_average_current()
 {
-    auto data = read_data(CMD_AVERAGE_CURRENT, 2);
+    auto data            = read_data(CMD_AVERAGE_CURRENT, 2);
 
     int16_t raw_milliamp = (int16_t(data[1]) << 8) | int16_t(data[0]);
 
@@ -182,7 +182,7 @@ float BQ27441::get_average_current()
 
 float BQ27441::get_average_power()
 {
-    auto data = read_data(CMD_AVERAGE_POWER, 2);
+    auto data             = read_data(CMD_AVERAGE_POWER, 2);
 
     int16_t raw_milliwatt = (int16_t(data[1]) << 8) | int16_t(data[0]);
 

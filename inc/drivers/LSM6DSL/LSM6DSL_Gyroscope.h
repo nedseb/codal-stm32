@@ -1,9 +1,9 @@
 #ifndef __LSM6DSL_GYROSCOPE_H__
-#define __LSL6DSL_GYROSCOPE_H__
+    #define __LSL6DSL_GYROSCOPE_H__
 
-#include "Gyroscope.h"
-#include "LSM6DSL.h"
-#include "STM32I2C.h"
+    #include "Gyroscope.h"
+    #include "LSM6DSL.h"
+    #include "STM32I2C.h"
 
 namespace codal {
 

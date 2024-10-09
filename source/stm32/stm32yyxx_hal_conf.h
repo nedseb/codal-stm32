@@ -23,45 +23,45 @@
  * Defined by default
  */
 #if !defined(HAL_ADC_MODULE_DISABLED)
-#define HAL_ADC_MODULE_ENABLED
+    #define HAL_ADC_MODULE_ENABLED
 #else
-#undef HAL_ADC_MODULE_ENABLED
+    #undef HAL_ADC_MODULE_ENABLED
 #endif
 
 #if !defined(HAL_I2C_MODULE_DISABLED)
-#define HAL_I2C_MODULE_ENABLED
+    #define HAL_I2C_MODULE_ENABLED
 #else
-#undef HAL_I2C_MODULE_ENABLED
+    #undef HAL_I2C_MODULE_ENABLED
 #endif
 
 #if !defined(HAL_I2S_MODULE_DISABLED)
-#define HAL_I2S_MODULE_ENABLED
+    #define HAL_I2S_MODULE_ENABLED
 #else
-#undef HAL_I2S_MODULE_ENABLED
+    #undef HAL_I2S_MODULE_ENABLED
 #endif
 
 #if !defined(HAL_RTC_MODULE_DISABLED)
-#define HAL_RTC_MODULE_ENABLED
+    #define HAL_RTC_MODULE_ENABLED
 #else
-#undef HAL_RTC_MODULE_ENABLED
+    #undef HAL_RTC_MODULE_ENABLED
 #endif
 
 #if !defined(HAL_SAI_MODULE_DISABLED)
-#define HAL_SAI_MODULE_ENABLED
+    #define HAL_SAI_MODULE_ENABLED
 #else
-#undef HAL_SAI_MODULE_ENABLED
+    #undef HAL_SAI_MODULE_ENABLED
 #endif
 
 #if !defined(HAL_SPI_MODULE_DISABLED)
-#define HAL_SPI_MODULE_ENABLED
+    #define HAL_SPI_MODULE_ENABLED
 #else
-#undef HAL_SPI_MODULE_ENABLED
+    #undef HAL_SPI_MODULE_ENABLED
 #endif
 
 #if !defined(HAL_TIM_MODULE_DISABLED)
-#define HAL_TIM_MODULE_ENABLED
+    #define HAL_TIM_MODULE_ENABLED
 #else
-#undef HAL_TIM_MODULE_ENABLED
+    #undef HAL_TIM_MODULE_ENABLED
 #endif
 
 /*
@@ -70,7 +70,7 @@
 #if !defined(HAL_DAC_MODULE_DISABLED)
 /*#define HAL_DAC_MODULE_ENABLED*/
 #else
-#undef HAL_DAC_MODULE_ENABLED
+    #undef HAL_DAC_MODULE_ENABLED
 #endif
 
 /* Note: interrupt API does not used HAL EXTI module */
@@ -78,31 +78,31 @@
 #if !defined(HAL_EXTI_MODULE_DISABLED)
 /*#define HAL_EXTI_MODULE_ENABLED*/
 #else
-#undef HAL_EXTI_MODULE_ENABLED
+    #undef HAL_EXTI_MODULE_ENABLED
 #endif
 
 #if !defined(HAL_ETH_MODULE_DISABLED)
 /*#define HAL_ETH_MODULE_ENABLED*/
 #else
-#undef HAL_ETH_MODULE_ENABLED
+    #undef HAL_ETH_MODULE_ENABLED
 #endif
 
 #if !defined(HAL_OSPI_MODULE_DISABLED)
 /*#define HAL_OSPI_MODULE_ENABLED*/
 #else
-#undef HAL_OSPI_MODULE_ENABLED
+    #undef HAL_OSPI_MODULE_ENABLED
 #endif
 
 #if !defined(HAL_QSPI_MODULE_DISABLED)
 /*#define HAL_QSPI_MODULE_ENABLED*/
 #else
-#undef HAL_QSPI_MODULE_ENABLED
+    #undef HAL_QSPI_MODULE_ENABLED
 #endif
 
 #if !defined(HAL_SD_MODULE_DISABLED)
 /*#define HAL_SD_MODULE_ENABLED*/
 #else
-#undef HAL_SD_MODULE_ENABLED
+    #undef HAL_SD_MODULE_ENABLED
 #endif
 
 /*

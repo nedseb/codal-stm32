@@ -13,23 +13,18 @@
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __CLOCK_H
-#define __CLOCK_H
+    #define __CLOCK_H
 
-/* Includes ------------------------------------------------------------------*/
-#include "stm32_def.h"
+    /* Includes ------------------------------------------------------------------*/
+    #include "stm32_def.h"
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 extern "C" {
-#endif
+    #endif
 
 /* Exported types ------------------------------------------------------------*/
 /* Clock source selection */
-typedef enum {
-  LSI_CLOCK,
-  HSI_CLOCK,
-  LSE_CLOCK,
-  HSE_CLOCK
-} sourceClock_t;
+typedef enum { LSI_CLOCK, HSI_CLOCK, LSE_CLOCK, HSE_CLOCK } sourceClock_t;
 
 /* Exported constants --------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
@@ -41,9 +36,9 @@ void configIPClock(void);
 void enableClock(sourceClock_t source);
 void configHSECapacitorTuning(void);
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* __CLOCK_H */
 

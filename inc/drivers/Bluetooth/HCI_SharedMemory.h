@@ -1,10 +1,10 @@
 #pragma once
 
 #if defined(STM32WBxx)
-#include <vector>
+    #include <vector>
 
-#include "HCI.h"
-#include "opcode.h"
+    #include "HCI.h"
+    #include "opcode.h"
 
 class HCI_SharedMemory : public HCI {
   public:

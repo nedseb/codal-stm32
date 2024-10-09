@@ -16,7 +16,7 @@ constexpr uint8_t OUTY_H_REG = 0x6B;
 constexpr uint8_t OUTZ_L_REG = 0x6C;
 constexpr uint8_t OUTZ_H_REG = 0x6D;
 
-constexpr float SENSITIVITY = 1.5;
+constexpr float SENSITIVITY  = 1.5;
 
 LIS2MDL::LIS2MDL(STM32I2C* i2c, uint16_t address) : i2c(i2c), address(address) {}
 
@@ -25,10 +25,10 @@ void LIS2MDL::init()
     LisCfgRegA regA = getCfgRegA();
     LisCfgRegC regC = getCfgRegC();
 
-    regA.MD        = 0;
-    regA.ODR       = uint8_t(LIS2_ODR::F_100_HZ);
-    regC.Self_test = 0;
-    regC.BDU       = 1;
+    regA.MD         = 0;
+    regA.ODR        = uint8_t(LIS2_ODR::F_100_HZ);
+    regC.Self_test  = 0;
+    regC.BDU        = 1;
 
     setCfgRegA(regA);
     setCfgRegC(regC);
@@ -64,9 +64,9 @@ Lis2Data LIS2MDL::readData()
 {
     vector<uint8_t> raw = i2c->readRegister(address, OUTX_L_REG, 6);
 
-    int16_t rawX = (int16_t(raw[1]) << 8) | raw[0];
-    int16_t rawY = (int16_t(raw[3]) << 8) | raw[2];
-    int16_t rawZ = (int16_t(raw[5]) << 8) | raw[4];
+    int16_t rawX        = (int16_t(raw[1]) << 8) | raw[0];
+    int16_t rawY        = (int16_t(raw[3]) << 8) | raw[2];
+    int16_t rawZ        = (int16_t(raw[5]) << 8) | raw[4];
 
     return Lis2Data{x : float(rawX) * SENSITIVITY, y : float(rawY) * SENSITIVITY, z : float(rawZ) * SENSITIVITY};
 }

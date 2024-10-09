@@ -1,14 +1,14 @@
 
 #ifdef USBCON
 
-#include "STM32USBSerial.h"
+    #include "STM32USBSerial.h"
 
-#include "PinNumber.h"
-#include "usbd_cdc_if.h"
+    #include "PinNumber.h"
+    #include "usbd_cdc_if.h"
 
-// required for gcc-6 (but not 7!)
-#undef putc
-#undef getc
+    // required for gcc-6 (but not 7!)
+    #undef putc
+    #undef getc
 
 using namespace codal;
 

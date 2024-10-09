@@ -47,7 +47,7 @@ LSM6DSL_ACC_GYRO_FS_G_t LSM6DSL_Gyroscope::getBestFullScale(float value)
 
 LSM6DSL_ACC_GYRO_ODR_G_t LSM6DSL_Gyroscope::getBestODR(float ms)
 {
-    float freq = 1 / (ms * 1000);
+    float freq = 1 / (ms * 1'000);
 
     if (freq <= 12.5)
         return LSM6DSL_ACC_GYRO_ODR_G_13Hz;
@@ -63,9 +63,9 @@ LSM6DSL_ACC_GYRO_ODR_G_t LSM6DSL_Gyroscope::getBestODR(float ms)
         return LSM6DSL_ACC_GYRO_ODR_G_416Hz;
     else if (freq <= 833)
         return LSM6DSL_ACC_GYRO_ODR_G_833Hz;
-    else if (freq <= 1666)
+    else if (freq <= 1'666)
         return LSM6DSL_ACC_GYRO_ODR_G_1660Hz;
-    else if (freq <= 3332)
+    else if (freq <= 3'332)
         return LSM6DSL_ACC_GYRO_ODR_G_3330Hz;
     else
         return LSM6DSL_ACC_GYRO_ODR_G_6660Hz;

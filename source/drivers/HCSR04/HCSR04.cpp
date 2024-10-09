@@ -50,7 +50,7 @@ float HCSR04::getTimeMicroSeconds()
 
     int pulse     = 1;
     uint32_t tick = micros();
-    uint64_t maxd = 200000;
+    uint64_t maxd = 200'000;
     while (echo.getDigitalValue() != pulse) {
         if (micros() - tick > maxd) return 0;
     }

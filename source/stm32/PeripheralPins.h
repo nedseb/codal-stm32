@@ -33,7 +33,7 @@
 
 #include "pinmap.h"
 #ifdef STM32F1xx
-  #include "PinAF_STM32F1.h"
+    #include "PinAF_STM32F1.h"
 #endif
 
 //*** ADC ***
@@ -116,4 +116,3 @@ extern const PinMap PinMap_SD_D0DIR[];
 extern const PinMap PinMap_SD_D123DIR[];
 
 #endif
-

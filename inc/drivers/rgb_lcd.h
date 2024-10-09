@@ -11,15 +11,15 @@
 #define RGB_ADDRESS (0xc4)
 
 // color define
-#define WHITE 0
-#define RED   1
-#define GREEN 2
-#define BLUE  3
-#define BLACK 4
+#define WHITE      0
+#define RED        1
+#define GREEN      2
+#define BLUE       3
+#define BLACK      4
 
-#define REG_RED   0x04  // pwm2
-#define REG_GREEN 0x03  // pwm1
-#define REG_BLUE  0x02  // pwm0
+#define REG_RED    0x04  // pwm2
+#define REG_GREEN  0x03  // pwm1
+#define REG_BLUE   0x02  // pwm0
 
 #define REG_MODE1  0x00
 #define REG_MODE2  0x01

@@ -34,7 +34,7 @@ vector<int16_t> PDM2PCM::lowpassAndDecimation(uint16_t* data, uint16_t size)
             }
         }
 
-        result.push_back(int16_t(sum * 65535) - 32767);
+        result.push_back(int16_t(sum * 65'535) - 32'767);
     }
 
     return result;

@@ -1,12 +1,12 @@
 #pragma once
 
 #ifdef STM32L4xx
-#include <cstdint>
+    #include <cstdint>
 
-#include "stm32l4xx_hal.h"
-#include "stm32l4xx_hal_dfsdm.h"
+    #include "stm32l4xx_hal.h"
+    #include "stm32l4xx_hal_dfsdm.h"
 
-constexpr uint32_t MP34DT01_AUDIO_BUFFER = 1024;
+constexpr uint32_t MP34DT01_AUDIO_BUFFER = 1'024;
 
 namespace codal {
 

@@ -17,10 +17,10 @@ enum class BLEDeviceError : uint8_t {
     LE_SET_SCAN_ENABLE_ERROR           = 0x09,
     LE_SET_RANDOM_ADDRESS              = 0x0A,
 
-    ALREADY_ADVERTISING_ERROR  = 0xF0,
-    ALREADY_SCANNING_ERROR     = 0xF1,
-    ADVERTISING_DISABLED_ERROR = 0xF2,
-    SCANNING_DISABLED_ERROR    = 0xF3,
+    ALREADY_ADVERTISING_ERROR          = 0xF0,
+    ALREADY_SCANNING_ERROR             = 0xF1,
+    ADVERTISING_DISABLED_ERROR         = 0xF2,
+    SCANNING_DISABLED_ERROR            = 0xF3,
 };
 
 enum class ModeState : uint8_t { DISABLE = 0x00, STAND_BY = 0x01, RUNNING = 0x02 };

@@ -30,13 +30,13 @@
 #define __VL53L1X_CLASS_H
 
 #ifdef _MSC_VER
-#ifdef VL53L1X_API_EXPORTS
-#define VL53L1X_API __declspec(dllexport)
+    #ifdef VL53L1X_API_EXPORTS
+        #define VL53L1X_API __declspec(dllexport)
+    #else
+        #define VL53L1X_API
+    #endif
 #else
-#define VL53L1X_API
-#endif
-#else
-#define VL53L1X_API
+    #define VL53L1X_API
 #endif
 
 /* Includes ------------------------------------------------------------------*/
@@ -92,7 +92,7 @@ typedef int8_t VL53L1X_ERROR;
 #define VL53L1X_IDENTIFICATION__MODEL_ID                                    0x010F
 #define VL53L1X_ROI_CONFIG__MODE_ROI_CENTRE_SPAD                            0x013E
 
-#define VL53L1X_DEFAULT_DEVICE_ADDRESS 0x52
+#define VL53L1X_DEFAULT_DEVICE_ADDRESS                                      0x52
 
 /****************************************
  * PRIVATE define do not edit
@@ -205,10 +205,7 @@ class VL53L1X_base {
      * @param void
      * @return     0 on success,  @a #CALIBRATION_WARNING if failed
      */
-    virtual int Init()
-    {
-        return VL53L1X_SensorInit();
-    }
+    virtual int Init() { return VL53L1X_SensorInit(); }
 
     /* Read function of the ID device */
     virtual int ReadID()

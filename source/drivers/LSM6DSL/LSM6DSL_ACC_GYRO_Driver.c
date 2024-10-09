@@ -199,7 +199,7 @@ mems_status_t LSM6DSL_ACC_GYRO_GetRawAccData(void* handle, u8_t* buff)
 
     numberOfByteForDimension = 6 / 3;
 
-    k = 0;
+    k                        = 0;
     for (i = 0; i < 3; i++) {
         for (j = 0; j < numberOfByteForDimension; j++) {
             if (!LSM6DSL_ACC_GYRO_ReadReg(handle, LSM6DSL_ACC_GYRO_OUTX_L_XL + k, &buff[k], 1)) return MEMS_ERROR;
@@ -266,9 +266,9 @@ mems_status_t LSM6DSL_ACC_Get_Acceleration(void* handle, int* buff, u8_t from_fi
         LSM6DSL_ACC_GYRO_GetRawAccData(handle, raw_data_tmp.u8bit);
 
     /* Apply proper shift and sensitivity */
-    buff[0] = (raw_data_tmp.i16bit[0] * sensitivity + 500) / 1000;
-    buff[1] = (raw_data_tmp.i16bit[1] * sensitivity + 500) / 1000;
-    buff[2] = (raw_data_tmp.i16bit[2] * sensitivity + 500) / 1000;
+    buff[0] = (raw_data_tmp.i16bit[0] * sensitivity + 500) / 1'000;
+    buff[1] = (raw_data_tmp.i16bit[1] * sensitivity + 500) / 1'000;
+    buff[2] = (raw_data_tmp.i16bit[2] * sensitivity + 500) / 1'000;
 
     return MEMS_SUCCESS;
 }
@@ -353,7 +353,7 @@ mems_status_t LSM6DSL_ACC_GYRO_translate_ODR_XL(LSM6DSL_ACC_GYRO_ODR_XL_t value,
             break;
 
         case LSM6DSL_ACC_GYRO_ODR_XL_1660Hz:
-            *odr_hz_val = 1660;
+            *odr_hz_val = 1'660;
             break;
 
         default:
@@ -414,7 +414,7 @@ mems_status_t LSM6DSL_ACC_GYRO_GetRawGyroData(void* handle, u8_t* buff)
 
     numberOfByteForDimension = 6 / 3;
 
-    k = 0;
+    k                        = 0;
     for (i = 0; i < 3; i++) {
         for (j = 0; j < numberOfByteForDimension; j++) {
             if (!LSM6DSL_ACC_GYRO_ReadReg(handle, LSM6DSL_ACC_GYRO_OUTX_L_G + k, &buff[k], 1)) return MEMS_ERROR;
@@ -437,11 +437,11 @@ mems_status_t LSM6DSL_ACC_GYRO_GetRawGyroData(void* handle, u8_t* buff)
  * Values are espressed in udps/digit.
  */
 static const long long LSM6DSL_GYRO_Sensitivity_List[5] = {
-    4375,  /* FS @125 */
-    8750,  /* FS @245 */
-    17500, /* FS @500 */
-    35000, /* FS @1000 */
-    70000, /* FS @2000 */
+    4'375,  /* FS @125 */
+    8'750,  /* FS @245 */
+    17'500, /* FS @500 */
+    35'000, /* FS @1000 */
+    70'000, /* FS @2000 */
 };
 mems_status_t LSM6DSL_ACC_Get_AngularRate(void* handle, int* buff, u8_t from_fifo)
 {
@@ -489,9 +489,9 @@ mems_status_t LSM6DSL_ACC_Get_AngularRate(void* handle, int* buff, u8_t from_fif
         LSM6DSL_ACC_GYRO_GetRawGyroData(handle, raw_data_tmp.u8bit);
 
     /* Apply proper shift and sensitivity */
-    buff[0] = (raw_data_tmp.i16bit[0] * sensitivity + 500) / 1000;
-    buff[1] = (raw_data_tmp.i16bit[1] * sensitivity + 500) / 1000;
-    buff[2] = (raw_data_tmp.i16bit[2] * sensitivity + 500) / 1000;
+    buff[0] = (raw_data_tmp.i16bit[0] * sensitivity + 500) / 1'000;
+    buff[1] = (raw_data_tmp.i16bit[1] * sensitivity + 500) / 1'000;
+    buff[2] = (raw_data_tmp.i16bit[2] * sensitivity + 500) / 1'000;
 
     return MEMS_SUCCESS;
 }
@@ -576,7 +576,7 @@ mems_status_t LSM6DSL_ACC_GYRO_translate_ODR_G(LSM6DSL_ACC_GYRO_ODR_G_t value, u
             break;
 
         case LSM6DSL_ACC_GYRO_ODR_G_1660Hz:
-            *odr_hz_val = 1660;
+            *odr_hz_val = 1'660;
             break;
 
         default:
@@ -5729,7 +5729,7 @@ mems_status_t LSM6DSL_ACC_GYRO_Get_GetFIFOData(void* handle, u8_t* buff)
 
     numberOfByteForDimension = 2 / 1;
 
-    k = 0;
+    k                        = 0;
     for (i = 0; i < 1; i++) {
         for (j = 0; j < numberOfByteForDimension; j++) {
             if (!LSM6DSL_ACC_GYRO_ReadReg(handle, LSM6DSL_ACC_GYRO_FIFO_DATA_OUT_L + k, &buff[k], 1)) return MEMS_ERROR;
@@ -5754,7 +5754,7 @@ mems_status_t LSM6DSL_ACC_GYRO_Get_GetTimestamp(void* handle, u8_t* buff)
 
     numberOfByteForDimension = 3 / 1;
 
-    k = 0;
+    k                        = 0;
     for (i = 0; i < 1; i++) {
         for (j = 0; j < numberOfByteForDimension; j++) {
             if (!LSM6DSL_ACC_GYRO_ReadReg(handle, LSM6DSL_ACC_GYRO_TIMESTAMP0_REG + k, &buff[k], 1)) return MEMS_ERROR;
@@ -5779,7 +5779,7 @@ mems_status_t LSM6DSL_ACC_GYRO_Get_GetStepCounter(void* handle, u8_t* buff)
 
     numberOfByteForDimension = 2 / 1;
 
-    k = 0;
+    k                        = 0;
     for (i = 0; i < 1; i++) {
         for (j = 0; j < numberOfByteForDimension; j++) {
             if (!LSM6DSL_ACC_GYRO_ReadReg(handle, LSM6DSL_ACC_GYRO_STEP_COUNTER_L + k, &buff[k], 1)) return MEMS_ERROR;

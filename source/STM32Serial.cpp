@@ -9,7 +9,7 @@ using namespace std;
 
 constexpr uint8_t STM32SERIAL_RX_BUFFER_SIZE = 128;
 
-STM32Serial* codal::default_serial_debug = nullptr;
+STM32Serial* codal::default_serial_debug     = nullptr;
 
 // We need to be sure that this object should be constructed before any static STM32Serial object. I'm so sorry for
 // that. Please don't judge me :)
@@ -86,8 +86,8 @@ int STM32Serial::setBaudrate(uint32_t baudrate)
 
 int STM32Serial::configurePins(Pin& tx, Pin& rx)
 {
-    txPin = (STM32Pin&)tx;
-    rxPin = (STM32Pin&)rx;
+    txPin         = (STM32Pin&)tx;
+    rxPin         = (STM32Pin&)rx;
 
     serial.pin_rx = (PinName)rx.name;
     serial.pin_tx = (PinName)tx.name;
@@ -115,7 +115,7 @@ void STM32Serial::RxIRQ(serial_t* obj)
     if (uart_getc(obj, &c) == 0) {
         STM32Serial* ser = mapSerialInstance[obj];
 
-        uint16_t i = (unsigned int)(ser->rxBuffHead + 1) % ser->rxBuffSize;
+        uint16_t i       = (unsigned int)(ser->rxBuffHead + 1) % ser->rxBuffSize;
 
         if (i != ser->rxBuffTail) {
             ser->rxBuff[ser->rxBuffHead] = c;
@@ -138,8 +138,8 @@ void STM32Serial::enableHalfDuplexReceiver()
 /* With GCC/RAISONANCE, small msg_info (option LD Linker->Libraries->Small msg_info
    set to 'Yes') calls __io_putchar() */
 
-#if !defined(PUTCHAR_PROTOTYPE)
-#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+    #if !defined(PUTCHAR_PROTOTYPE)
+        #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
 /**
  * @brief Retargets the C library msg_info function to the USART.
  * @param None
@@ -154,10 +154,10 @@ extern "C" PUTCHAR_PROTOTYPE
     }
     return 0;
 }
-#endif
+    #endif
 
-#if !defined(GETCHAR_PROTOTYPE)
-#define GETCHAR_PROTOTYPE int __io_getchar(void)
+    #if !defined(GETCHAR_PROTOTYPE)
+        #define GETCHAR_PROTOTYPE int __io_getchar(void)
 /**
  * @brief Retargets the C library scanf function to the USART.
  * @param None
@@ -173,5 +173,5 @@ extern "C" GETCHAR_PROTOTYPE
     }
     return ch;
 }
-#endif
+    #endif
 #endif /* __GNUC__ */

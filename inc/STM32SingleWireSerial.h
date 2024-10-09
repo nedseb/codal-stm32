@@ -12,7 +12,7 @@ class STM32SingleWireSerial : public SingleWireSerial {
   public:
     STM32SingleWireSerial(STM32Pin& pin, uint16_t bufferSize = 32, uint16_t id = DEVICE_ID_SINGLE_WIRE_SERIAL);
 
-    void init(uint32_t baudrate = 115200, LengthSerial databits = LengthSerial::SERIAL_8_BITS,
+    void init(uint32_t baudrate = 115'200, LengthSerial databits = LengthSerial::SERIAL_8_BITS,
               ParitySerial parity   = ParitySerial::SERIAL_NONE_PARITY,
               StopBitSerial stopBit = StopBitSerial::SERIAL_STOP_1);
 

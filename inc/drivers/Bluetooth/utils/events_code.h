@@ -2,8 +2,8 @@
 
 #include <cstdint>
 
-constexpr uint8_t EVT_COMMAND_COMPLETE = 0x0E;
-constexpr uint8_t LE_EVENT_CODE        = 0x3E;
+constexpr uint8_t EVT_COMMAND_COMPLETE                         = 0x0E;
+constexpr uint8_t LE_EVENT_CODE                                = 0x3E;
 
 constexpr uint8_t LE_EVENT_CONNECTION_COMPLETE                 = 0x01;
 constexpr uint8_t LE_EVENT_ADVERTISING_REPORT                  = 0x02;

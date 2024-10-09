@@ -19,57 +19,57 @@
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __USB_HID_COMPOSITE_H
-#define __USB_HID_COMPOSITE_H
+    #define __USB_HID_COMPOSITE_H
 
-#ifdef USBCON
-#ifdef USBD_USE_HID_COMPOSITE
+    #ifdef USBCON
+        #ifdef USBD_USE_HID_COMPOSITE
 
-#ifdef __cplusplus
+            #ifdef __cplusplus
 extern "C" {
-#endif
+            #endif
 
-/* Includes ------------------------------------------------------------------*/
-#include "usbd_ep_conf.h"
-#include "usbd_ioreq.h"
+            /* Includes ------------------------------------------------------------------*/
+            #include "usbd_ep_conf.h"
+            #include "usbd_ioreq.h"
 
-/** @addtogroup STM32_USB_DEVICE_LIBRARY
- * @{
- */
-/** @defgroup USBD_HID
- * @brief This file is the Header file for usbd_hid.c
- * @{
- */
+            /** @addtogroup STM32_USB_DEVICE_LIBRARY
+             * @{
+             */
+            /** @defgroup USBD_HID
+             * @brief This file is the Header file for usbd_hid.c
+             * @{
+             */
 
-/** @defgroup USBD_HID_Exported_Defines
- * @{
- */
-#define HID_MOUSE_INTERFACE    0x00U
-#define HID_KEYBOARD_INTERFACE 0x01U
+            /** @defgroup USBD_HID_Exported_Defines
+             * @{
+             */
+            #define HID_MOUSE_INTERFACE               0x00U
+            #define HID_KEYBOARD_INTERFACE            0x01U
 
-#define USB_COMPOSITE_HID_CONFIG_DESC_SIZ 59U
-#define USB_HID_DESC_SIZ                  9U
-#define HID_MOUSE_REPORT_DESC_SIZE        74U
-#define HID_KEYBOARD_REPORT_DESC_SIZE     45U
+            #define USB_COMPOSITE_HID_CONFIG_DESC_SIZ 59U
+            #define USB_HID_DESC_SIZ                  9U
+            #define HID_MOUSE_REPORT_DESC_SIZE        74U
+            #define HID_KEYBOARD_REPORT_DESC_SIZE     45U
 
-#define HID_DESCRIPTOR_TYPE 0x21
-#define HID_REPORT_DESC     0x22
+            #define HID_DESCRIPTOR_TYPE               0x21
+            #define HID_REPORT_DESC                   0x22
 
-#ifndef HID_HS_BINTERVAL
-#define HID_HS_BINTERVAL 0x07U
-#endif /* HID_HS_BINTERVAL */
+            #ifndef HID_HS_BINTERVAL
+                #define HID_HS_BINTERVAL 0x07U
+            #endif /* HID_HS_BINTERVAL */
 
-#ifndef HID_FS_BINTERVAL
-#define HID_FS_BINTERVAL 0x0AU
-#endif /* HID_FS_BINTERVAL */
+            #ifndef HID_FS_BINTERVAL
+                #define HID_FS_BINTERVAL 0x0AU
+            #endif /* HID_FS_BINTERVAL */
 
-#define HID_REQ_SET_PROTOCOL 0x0BU
-#define HID_REQ_GET_PROTOCOL 0x03U
+            #define HID_REQ_SET_PROTOCOL 0x0BU
+            #define HID_REQ_GET_PROTOCOL 0x03U
 
-#define HID_REQ_SET_IDLE 0x0AU
-#define HID_REQ_GET_IDLE 0x02U
+            #define HID_REQ_SET_IDLE     0x0AU
+            #define HID_REQ_GET_IDLE     0x02U
 
-#define HID_REQ_SET_REPORT 0x09U
-#define HID_REQ_GET_REPORT 0x01U
+            #define HID_REQ_SET_REPORT   0x09U
+            #define HID_REQ_GET_REPORT   0x01U
 /**
  * @}
  */
@@ -122,31 +122,31 @@ typedef struct {
  */
 
 extern USBD_ClassTypeDef USBD_COMPOSITE_HID;
-#define USBD_COMPOSITE_HID_CLASS &USBD_COMPOSITE_HID
-/**
- * @}
- */
+            #define USBD_COMPOSITE_HID_CLASS &USBD_COMPOSITE_HID
+            /**
+             * @}
+             */
 
-/** @defgroup USB_CORE_Exported_Functions
- * @{
- */
-#ifdef USE_USBD_COMPOSITE
+            /** @defgroup USB_CORE_Exported_Functions
+             * @{
+             */
+            #ifdef USE_USBD_COMPOSITE
 uint8_t USBD_HID_MOUSE_SendReport(USBD_HandleTypeDef* pdev, uint8_t* report, uint16_t len, uint8_t ClassId);
 uint8_t USBD_HID_KEYBOARD_SendReport(USBD_HandleTypeDef* pdev, uint8_t* report, uint16_t len, uint8_t ClassId);
-#else
+            #else
 uint8_t USBD_HID_MOUSE_SendReport(USBD_HandleTypeDef* pdev, uint8_t* report, uint16_t len);
 uint8_t USBD_HID_KEYBOARD_SendReport(USBD_HandleTypeDef* pdev, uint8_t* report, uint16_t len);
-#endif /* USE_USBD_COMPOSITE */
+            #endif /* USE_USBD_COMPOSITE */
 
 uint32_t USBD_HID_GetPollingInterval(USBD_HandleTypeDef* pdev);
 
-#ifdef __cplusplus
+            #ifdef __cplusplus
 }
-#endif
+            #endif
 
-#endif /* USBD_USE_HID_COMPOSITE */
-#endif /* USBCON */
-#endif /* __USB_HID_COMPOSITE_H */
+        #endif /* USBD_USE_HID_COMPOSITE */
+    #endif     /* USBCON */
+#endif         /* __USB_HID_COMPOSITE_H */
 /**
  * @}
  */

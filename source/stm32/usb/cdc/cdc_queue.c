@@ -36,9 +36,9 @@
  */
 
 #ifdef USBCON
-#ifdef USBD_USE_CDC
+    #ifdef USBD_USE_CDC
 
-#include "cdc_queue.h"
+        #include "cdc_queue.h"
 
 // Initialize read and write position of queue
 void CDC_TransmitQueue_Init(CDC_TransmitQueue_TypeDef* queue)
@@ -254,5 +254,5 @@ bool CDC_ReceiveQueue_ReadUntil(CDC_ReceiveQueue_TypeDef* queue, uint8_t termina
     }
     return false;
 }
-#endif /* USBD_USE_CDC */
-#endif /* USBCON */
+    #endif /* USBD_USE_CDC */
+#endif     /* USBCON */

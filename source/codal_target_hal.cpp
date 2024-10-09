@@ -119,12 +119,12 @@ __attribute__((constructor(101))) void premain_target_init()
 #endif
 #if (__CORTEX_M == 0x07U)
     // Defined in CMSIS core_cm7.h
-#ifndef I_CACHE_DISABLED
+    #ifndef I_CACHE_DISABLED
     SCB_EnableICache();
-#endif
-#ifndef D_CACHE_DISABLED
+    #endif
+    #ifndef D_CACHE_DISABLED
     SCB_EnableDCache();
-#endif
+    #endif
 #endif
     target_init();
 }

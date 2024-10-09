@@ -8,10 +8,10 @@ constexpr float SENSITIVITY_GYRO_500_DPS  = 0.01750f;
 constexpr float SENSITIVITY_GYRO_1000_DPS = 0.03500f;
 constexpr float SENSITIVITY_GYRO_2000_DPS = 0.07000f;
 
-constexpr float SENSITIVITY_ACCEL_2G  = 0.000061f;
-constexpr float SENSITIVITY_ACCEL_4G  = 0.000122f;
-constexpr float SENSITIVITY_ACCEL_8G  = 0.000244f;
-constexpr float SENSITIVITY_ACCEL_16G = 0.000488f;
+constexpr float SENSITIVITY_ACCEL_2G      = 0.000061f;
+constexpr float SENSITIVITY_ACCEL_4G      = 0.000122f;
+constexpr float SENSITIVITY_ACCEL_8G      = 0.000244f;
+constexpr float SENSITIVITY_ACCEL_16G     = 0.000488f;
 
 LSM6DSL::LSM6DSL(STM32I2C* i2c, uint8_t address)
     : i2c(i2c), address(address), isGyroscopeEnable(false), isAccelerometerEnable(false)
@@ -160,9 +160,9 @@ array<float, 3> LSM6DSL::getAccelerometerMeasure()
     auto dataRaw      = getAccelerometerRawMeasure();
     float sensitivity = getAccelerometerSensitivity();
 
-    result[0] = dataRaw[0] * sensitivity;
-    result[1] = dataRaw[1] * sensitivity;
-    result[2] = dataRaw[2] * sensitivity;
+    result[0]         = dataRaw[0] * sensitivity;
+    result[1]         = dataRaw[1] * sensitivity;
+    result[2]         = dataRaw[2] * sensitivity;
 
     return result;
 }
@@ -188,9 +188,9 @@ array<float, 3> LSM6DSL::getGyroscopeMeasure()
     auto rawValues    = getGyroscopeRawMeasure();
     float sensitivity = getGyroscopeSensitivity();
 
-    result[0] = rawValues[0] * sensitivity;
-    result[1] = rawValues[1] * sensitivity;
-    result[2] = rawValues[2] * sensitivity;
+    result[0]         = rawValues[0] * sensitivity;
+    result[1]         = rawValues[1] * sensitivity;
+    result[2]         = rawValues[2] * sensitivity;
 
     return result;
 }

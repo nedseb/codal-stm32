@@ -56,15 +56,15 @@ enum class OpCodeCommand : uint16_t {
     LE_SET_SCAN_PARAM  = makeOpCode(OGFValue::OGF_LE_ONLY, 0x000B),
     LE_SET_SCAN_ENABLE = makeOpCode(OGFValue::OGF_LE_ONLY, 0x000C),
 
-    LE_RAND = makeOpCode(OGFValue::OGF_LE_ONLY, 0x0018),
+    LE_RAND            = makeOpCode(OGFValue::OGF_LE_ONLY, 0x0018),
 
     // ===============================================
     // ========== ACI (VS) Vendor Specific ===========
     // ===============================================
 
-    ACI_GATT_INIT = makeVSOpCode(OGFValue::OGF_VENDOR_SPEC, 0x02, 0x01),
+    ACI_GATT_INIT             = makeVSOpCode(OGFValue::OGF_VENDOR_SPEC, 0x02, 0x01),
 
-    ACI_GAP_INIT = makeVSOpCode(OGFValue::OGF_VENDOR_SPEC, 0x01, 0x0A),
+    ACI_GAP_INIT              = makeVSOpCode(OGFValue::OGF_VENDOR_SPEC, 0x01, 0x0A),
 
     ACI_HAL_WRITE_CONFIG_DATA = makeVSOpCode(OGFValue::OGF_VENDOR_SPEC, 0x00, 0x0C),
 };

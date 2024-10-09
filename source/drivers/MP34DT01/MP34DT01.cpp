@@ -1,8 +1,8 @@
 #include "MP34DT01.h"
 
 #ifdef STM32L4xx
-#include <cmath>
-#include <list>
+    #include <cmath>
+    #include <list>
 
 using namespace codal;
 
@@ -29,26 +29,26 @@ MP34DT01::MP34DT01()
         handlerMapping = new std::list<MP34DT01HandlerMapping>();
     }
 
-    measuredSquaredRMS = 0;
-    hdfsdm_channel     = new DFSDM_Channel_HandleTypeDef();
-    hdfsdm_filter      = new DFSDM_Filter_HandleTypeDef();
-    hdma_dfsdm         = new DMA_HandleTypeDef();
+    measuredSquaredRMS                              = 0;
+    hdfsdm_channel                                  = new DFSDM_Channel_HandleTypeDef();
+    hdfsdm_filter                                   = new DFSDM_Filter_HandleTypeDef();
+    hdma_dfsdm                                      = new DMA_HandleTypeDef();
 
-    hdfsdm_channel->Instance                      = DFSDM1_Channel2;
-    hdfsdm_channel->Init.OutputClock.Activation   = ENABLE;
-    hdfsdm_channel->Init.OutputClock.Selection    = DFSDM_CHANNEL_OUTPUT_CLOCK_SYSTEM;
-    hdfsdm_channel->Init.OutputClock.Divider      = 75;
-    hdfsdm_channel->Init.Input.Multiplexer        = DFSDM_CHANNEL_EXTERNAL_INPUTS;
-    hdfsdm_channel->Init.Input.DataPacking        = DFSDM_CHANNEL_STANDARD_MODE;
-    hdfsdm_channel->Init.Input.Pins               = DFSDM_CHANNEL_SAME_CHANNEL_PINS;
-    hdfsdm_channel->Init.SerialInterface.Type     = DFSDM_CHANNEL_SPI_RISING;
-    hdfsdm_channel->Init.SerialInterface.SpiClock = DFSDM_CHANNEL_SPI_CLOCK_INTERNAL;
-    hdfsdm_channel->Init.Awd.FilterOrder          = DFSDM_CHANNEL_FASTSINC_ORDER;
-    hdfsdm_channel->Init.Awd.Oversampling         = 1;
-    hdfsdm_channel->Init.Offset                   = 0;
-    hdfsdm_channel->Init.RightBitShift            = rightShiftBit;
-    hdfsdm_channel->MspInitCallback               = MSP_ChannelInit_callback;
-    hdfsdm_channel->MspDeInitCallback             = MSP_ChannelDeinit_callback;
+    hdfsdm_channel->Instance                        = DFSDM1_Channel2;
+    hdfsdm_channel->Init.OutputClock.Activation     = ENABLE;
+    hdfsdm_channel->Init.OutputClock.Selection      = DFSDM_CHANNEL_OUTPUT_CLOCK_SYSTEM;
+    hdfsdm_channel->Init.OutputClock.Divider        = 75;
+    hdfsdm_channel->Init.Input.Multiplexer          = DFSDM_CHANNEL_EXTERNAL_INPUTS;
+    hdfsdm_channel->Init.Input.DataPacking          = DFSDM_CHANNEL_STANDARD_MODE;
+    hdfsdm_channel->Init.Input.Pins                 = DFSDM_CHANNEL_SAME_CHANNEL_PINS;
+    hdfsdm_channel->Init.SerialInterface.Type       = DFSDM_CHANNEL_SPI_RISING;
+    hdfsdm_channel->Init.SerialInterface.SpiClock   = DFSDM_CHANNEL_SPI_CLOCK_INTERNAL;
+    hdfsdm_channel->Init.Awd.FilterOrder            = DFSDM_CHANNEL_FASTSINC_ORDER;
+    hdfsdm_channel->Init.Awd.Oversampling           = 1;
+    hdfsdm_channel->Init.Offset                     = 0;
+    hdfsdm_channel->Init.RightBitShift              = rightShiftBit;
+    hdfsdm_channel->MspInitCallback                 = MSP_ChannelInit_callback;
+    hdfsdm_channel->MspDeInitCallback               = MSP_ChannelDeinit_callback;
 
     hdfsdm_filter->Instance                         = DFSDM1_Filter0;
     hdfsdm_filter->Init.RegularParam.Trigger        = DFSDM_FILTER_SW_TRIGGER;
@@ -245,9 +245,9 @@ void MSP_FilterRegConvCplt_callback(DFSDM_Filter_HandleTypeDef* hdfsdm_filter)
 // ===  DMA INTERRUPT HANDLER ==============================
 // ======================================================
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 extern "C" {
-#endif
+    #endif
 
 void DMA1_Channel4_IRQHandler(void)
 {
@@ -256,7 +256,7 @@ void DMA1_Channel4_IRQHandler(void)
     }
 }
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 #endif

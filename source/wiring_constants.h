@@ -23,22 +23,22 @@
 #include <stdint.h>
 
 #ifdef __cplusplus
-#include <algorithm>
+    #include <algorithm>
 using std::max;
 using std::min;
 #else  // C
-#include <stdlib.h>
-#ifndef abs
-#define abs(x) ((x) > 0 ? (x) : -(x))
-#endif  // abs
+    #include <stdlib.h>
+    #ifndef abs
+        #define abs(x) ((x) > 0 ? (x) : -(x))
+    #endif  // abs
 
-#ifndef min
-#define min(a, b) ((a) < (b) ? (a) : (b))
-#endif  // min
+    #ifndef min
+        #define min(a, b) ((a) < (b) ? (a) : (b))
+    #endif  // min
 
-#ifndef max
-#define max(a, b) ((a) > (b) ? (a) : (b))
-#endif  // max
+    #ifndef max
+        #define max(a, b) ((a) > (b) ? (a) : (b))
+    #endif  // max
 
 #endif  // __cplusplus
 
@@ -53,7 +53,7 @@ using std::min;
 #define OUTPUT_OPEN_DRAIN 0x5
 
 #ifndef PI
-#define PI 3.1415926535897932384626433832795
+    #define PI 3.1415926535897932384626433832795
 #endif
 #define HALF_PI    1.5707963267948966192313216916398
 #define TWO_PI     6.283185307179586476925286766559
@@ -61,47 +61,47 @@ using std::min;
 #define RAD_TO_DEG 57.295779513082320876798154814105
 #define EULER      2.718281828459045235360287471352
 
-#define SERIAL  0x0
-#define DISPLAY 0x1
+#define SERIAL     0x0
+#define DISPLAY    0x1
 
 enum BitOrder { LSBFIRST = 0, MSBFIRST = 1 };
 
-#define LOW     0x0
-#define HIGH    0x1
-#define CHANGE  0x2
-#define FALLING 0x3
-#define RISING  0x4
+#define LOW                            0x0
+#define HIGH                           0x1
+#define CHANGE                         0x2
+#define FALLING                        0x3
+#define RISING                         0x4
 
-#define DEFAULT  1
-#define EXTERNAL 0
+#define DEFAULT                        1
+#define EXTERNAL                       0
 
-#define constrain(amt, low, high) ((amt) < (low) ? (low) : ((amt) > (high) ? (high) : (amt)))
+#define constrain(amt, low, high)      ((amt) < (low) ? (low) : ((amt) > (high) ? (high) : (amt)))
 
-#define radians(deg) ((deg)*DEG_TO_RAD)
-#define degrees(rad) ((rad)*RAD_TO_DEG)
-#define sq(x)        ((x) * (x))
+#define radians(deg)                   ((deg) * DEG_TO_RAD)
+#define degrees(rad)                   ((rad) * RAD_TO_DEG)
+#define sq(x)                          ((x) * (x))
 
-#define interrupts()   __enable_irq()
-#define noInterrupts() __disable_irq()
+#define interrupts()                   __enable_irq()
+#define noInterrupts()                 __disable_irq()
 
-#define lowByte(w)  ((uint8_t)((w)&0xff))
-#define highByte(w) ((uint8_t)((w) >> 8))
+#define lowByte(w)                     ((uint8_t)((w) & 0xff))
+#define highByte(w)                    ((uint8_t)((w) >> 8))
 
 #define bitRead(value, bit)            (((value) >> (bit)) & 0x01)
 #define bitSet(value, bit)             ((value) |= (1UL << (bit)))
 #define bitClear(value, bit)           ((value) &= ~(1UL << (bit)))
 #define bitWrite(value, bit, bitvalue) (bitvalue ? bitSet(value, bit) : bitClear(value, bit))
 
-#define bit(b) (1UL << (b))
+#define bit(b)                         (1UL << (b))
 // macro added for compatibility
 #ifndef _BV
-#define _BV(bit) (1 << (bit))
+    #define _BV(bit) (1 << (bit))
 #endif
 #ifndef cbi
-#define cbi(reg, bitmask) *reg &= ~bitmask
+    #define cbi(reg, bitmask) *reg &= ~bitmask
 #endif
 #ifndef sbi
-#define sbi(reg, bitmask) *reg |= bitmask
+    #define sbi(reg, bitmask) *reg |= bitmask
 #endif
 
 typedef unsigned int word;

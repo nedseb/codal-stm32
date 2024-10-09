@@ -113,7 +113,7 @@ class HCI {
      * @return true if succes, false otherwise
      */
     bool leSetAdvertisingParameters(
-        float advertisingIntervalMin = 1280, float advertisingIntervalMax = 1280,
+        float advertisingIntervalMin = 1'280, float advertisingIntervalMax = 1'280,
         AdvertisingType advertisingType            = AdvertisingType::ADV_IND,
         OwnAddressType ownAddressType              = OwnAddressType::PUBLIC,
         AdvertisingPeerAddressType peerAddressType = AdvertisingPeerAddressType::PUBLIC,

@@ -11,28 +11,28 @@
 #define __USBD_IF_H
 
 #ifdef USBCON
-/* Includes ------------------------------------------------------------------*/
-#include "Arduino.h"
+    /* Includes ------------------------------------------------------------------*/
+    #include "Arduino.h"
 
-/* Re-enumeration handling*/
-#ifndef USBD_ENUM_DELAY
-#define USBD_ENUM_DELAY 10
-#endif
+    /* Re-enumeration handling*/
+    #ifndef USBD_ENUM_DELAY
+        #define USBD_ENUM_DELAY 10
+    #endif
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 extern "C" {
-#endif
+    #endif
 
 void USBD_reenumerate(void);
-#ifdef USBD_USE_CDC
+    #ifdef USBD_USE_CDC
 void USBD_CDC_init(void);
-#endif
+    #endif
 
 /* Weaked function */
 void USBD_SystemClockConfigFromResume(void);
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 #endif /* USBCON */
 #endif /* __USBD_IF_H */

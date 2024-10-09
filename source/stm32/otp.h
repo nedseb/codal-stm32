@@ -13,27 +13,27 @@
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __OTP_H
-#define __OTP_H
+    #define __OTP_H
 
-#include "stm32_def.h"
+    #include "stm32_def.h"
 
-#ifdef OTP_AREA_BASE
-#ifdef __cplusplus
+    #ifdef OTP_AREA_BASE
+        #ifdef __cplusplus
 extern "C" {
-#endif
+        #endif
 
-#ifdef STM32WBxx
+        #ifdef STM32WBxx
 /*
  * See AN5042: Precise HSE frequency and startup time tuning
  * for STM32 wireless MCUs. Each OTP structure type is indicated
  * by its index (one byte).The index used for the BT structure is 0.
  */
 typedef struct __packed {
-  uint8_t   bd_address[6];
-  uint8_t   hse_tuning;
-  uint8_t   id;
+    uint8_t bd_address[6];
+    uint8_t hse_tuning;
+    uint8_t id;
 } OTP_BT_t;
-#endif /* STM32WBxx */
+        #endif /* STM32WBxx */
 
 /* Exported functions --------------------------------------------------------*/
 
@@ -50,12 +50,12 @@ typedef struct __packed {
  * @param  id: ID of the parameter to read from OTP
  * @retval Address of the ID in the OTP - returns 0 when no ID found
  */
-uint8_t *OTP_Read(uint8_t id);
+uint8_t* OTP_Read(uint8_t id);
 
-#ifdef __cplusplus
+        #ifdef __cplusplus
 }
-#endif
-#endif /* OTP_AREA_BASE */
-#endif /*__OTP_H */
+        #endif
+    #endif /* OTP_AREA_BASE */
+#endif     /*__OTP_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

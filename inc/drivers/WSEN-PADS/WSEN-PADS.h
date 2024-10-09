@@ -25,7 +25,7 @@ class WSEN_PADS {
      * @param i2c
      * @param address
      */
-    WSEN_PADS(STM32I2C& i2c, uint16_t address = 0xB8) : i2c(i2c), address(address){};
+    WSEN_PADS(STM32I2C& i2c, uint16_t address = 0xB8) : i2c(i2c), address(address) {};
 
     ~WSEN_PADS() {}
 

@@ -29,11 +29,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <cstdint>
 
 #ifndef _VL53L0X_INTERRUPT_THRESHOLD_SETTINGS_H_
-#define _VL53L0X_INTERRUPT_THRESHOLD_SETTINGS_H_
+    #define _VL53L0X_INTERRUPT_THRESHOLD_SETTINGS_H_
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 extern "C" {
-#endif
+    #endif
 
 uint8_t InterruptThresholdSettings[] = {
 
@@ -63,8 +63,8 @@ uint8_t InterruptThresholdSettings[] = {
     0x9B, 0x44, 0x1,  0x73, 0x07, 0x1,  0x70, 0x01, 0x1,  0xff, 0x01, 0x1,  0x00, 0x01, 0x1,  0xff, 0x00, 0x00, 0x00,
     0x00};
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* _VL53L0X_INTERRUPT_THRESHOLD_SETTINGS_H_ */

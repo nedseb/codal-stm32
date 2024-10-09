@@ -36,10 +36,10 @@ uint32_t getCurrentMicros(void)
     const uint32_t tms = SysTick->LOAD + 1;
 
     if (m1 != m0) {
-        return (m1 * 1000 + ((tms - u1) * 1000) / tms);
+        return (m1 * 1'000 + ((tms - u1) * 1'000) / tms);
     }
     else {
-        return (m0 * 1000 + ((tms - u0) * 1000) / tms);
+        return (m0 * 1'000 + ((tms - u0) * 1'000) / tms);
     }
 }
 
@@ -62,11 +62,11 @@ void enableClock(sourceClock_t source)
 {
     RCC_OscInitTypeDef RCC_OscInitStruct = {0};
 #if defined(RCC_PLL_NONE)
-#if defined(STM32WBAxx)
+    #if defined(STM32WBAxx)
     RCC_OscInitStruct.PLL1.PLLState = RCC_PLL_NONE;
-#else
+    #else
     RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
-#endif
+    #endif
 #endif
 
 #if defined(STM32MP1xx)
@@ -85,16 +85,16 @@ void enableClock(sourceClock_t source)
 #ifdef RCC_FLAG_LSI1RDY
             __HAL_RCC_LSI1_ENABLE();
             if (__HAL_RCC_GET_FLAG(RCC_FLAG_LSI1RDY) == RESET) {
-#ifdef RCC_OSCILLATORTYPE_LSI1
+    #ifdef RCC_OSCILLATORTYPE_LSI1
                 RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI1;
-#else
+    #else
                 RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSI;
-#endif
-#ifdef RCC_LSI1_ON
+    #endif
+    #ifdef RCC_LSI1_ON
                 RCC_OscInitStruct.LSIState = RCC_LSI1_ON;
-#else
-                RCC_OscInitStruct.LSIState       = RCC_LSI_ON;
-#endif
+    #else
+                RCC_OscInitStruct.LSIState = RCC_LSI_ON;
+    #endif
             }
 #else
             __HAL_RCC_LSI_ENABLE();
@@ -120,11 +120,11 @@ void enableClock(sourceClock_t source)
             __HAL_RCC_LSE_CONFIG(RCC_LSE_ON);
             if (__HAL_RCC_GET_FLAG(RCC_FLAG_LSERDY) == RESET) {
 #ifdef __HAL_RCC_LSEDRIVE_CONFIG
-#ifdef RCC_LSEDRIVE_LOW
+    #ifdef RCC_LSEDRIVE_LOW
                 __HAL_RCC_LSEDRIVE_CONFIG(RCC_LSEDRIVE_LOW);
-#else
+    #else
                 __HAL_RCC_LSEDRIVE_CONFIG(RCC_LSEDRIVE_MEDIUMLOW);
-#endif
+    #endif
 #endif
                 RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_LSE;
                 RCC_OscInitStruct.LSEState       = RCC_LSE_ON;
@@ -190,11 +190,11 @@ void configIPClock(void)
 
 #if defined(HAL_CRC_MODULE_ENABLED)
     /* Enable CRC clock, needed for example: MotionFX Library ... */
-#if defined(__HAL_RCC_CRC2_CLK_ENABLE)
+    #if defined(__HAL_RCC_CRC2_CLK_ENABLE)
     __HAL_RCC_CRC2_CLK_ENABLE();
-#elif defined(__HAL_RCC_CRC_CLK_ENABLE)
+    #elif defined(__HAL_RCC_CRC_CLK_ENABLE)
     __HAL_RCC_CRC_CLK_ENABLE();
-#endif
+    #endif
 #endif
 }
 

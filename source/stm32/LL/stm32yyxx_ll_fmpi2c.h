@@ -5,11 +5,11 @@
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #ifdef __cplusplus
-  #pragma GCC diagnostic ignored "-Wregister"
+    #pragma GCC diagnostic ignored "-Wregister"
 #endif
 
 #ifdef STM32F4xx
-  #include "stm32f4xx_ll_fmpi2c.h"
+    #include "stm32f4xx_ll_fmpi2c.h"
 #endif
 #pragma GCC diagnostic pop
 #endif /* _STM32YYXX_LL_FMPI2C_H_ */

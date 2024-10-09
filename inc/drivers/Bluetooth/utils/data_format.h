@@ -31,7 +31,7 @@ class AsyncDataPacket {
     std::vector<uint8_t> data;
     uint32_t time;
 
-    AsyncDataPacket() : handle(0), flags(0), length(0), time(0){};
+    AsyncDataPacket() : handle(0), flags(0), length(0), time(0) {};
 };
 
 class ADStructureData {

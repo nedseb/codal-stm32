@@ -164,9 +164,9 @@ void swapPoint(int16_t& x1, int16_t& y1, int16_t& x2, int16_t& y2)
     x1            = x2;
     x2            = tempo;
 
-    tempo = y1;
-    y1    = y2;
-    y2    = tempo;
+    tempo         = y1;
+    y1            = y2;
+    y2            = tempo;
 }
 
 void drawSegmentOrLine() {}
@@ -256,8 +256,8 @@ void FrameBuffer::drawBezierCurve(uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2
         uint16_t xb = getPoint(x2, x3, i / nbrPixel);
         uint16_t yb = getPoint(y2, y3, i / nbrPixel);
 
-        uint16_t x = getPoint(xa, xb, i / nbrPixel);
-        uint16_t y = getPoint(ya, yb, i / nbrPixel);
+        uint16_t x  = getPoint(xa, xb, i / nbrPixel);
+        uint16_t y  = getPoint(ya, yb, i / nbrPixel);
 
         drawPixel(x, y, color);
     }
@@ -288,8 +288,8 @@ void FrameBuffer::drawSquare(uint16_t x, uint16_t y, uint16_t lenght, bool fill,
 void FrameBuffer::drawEllipse(int width, int height, int xCenter, int yCenter, bool fill, uint16_t color)
 {
     int dx, dy, d1, d2, x, y;
-    x = 0;
-    y = height;
+    x          = 0;
+    y          = height;
 
     d1         = (height * height) - (width * width * height) + (0.25 * width * width);
     dx         = 2 * height * height * x;

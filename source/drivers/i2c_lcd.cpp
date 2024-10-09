@@ -16,20 +16,20 @@ constexpr uint8_t COMMAND_DISPLAY        = 0x08;
 constexpr uint8_t COMMAND_FUNCTION       = 0x20;
 constexpr uint8_t COMMAND_SET_DDRAM_ADDR = 0x80;
 
-constexpr uint8_t DISPLAY_SCREEN_ON = 0x04;
-constexpr uint8_t DISPLAY_CURSOR_ON = 0x02;
-constexpr uint8_t DISPLAY_BLINK_ON  = 0x01;
+constexpr uint8_t DISPLAY_SCREEN_ON      = 0x04;
+constexpr uint8_t DISPLAY_CURSOR_ON      = 0x02;
+constexpr uint8_t DISPLAY_BLINK_ON       = 0x01;
 
-constexpr uint8_t FUNCTION_8_BITS    = 0x10;
-constexpr uint8_t FUNCTION_2_LINES   = 0x08;
-constexpr uint8_t FUNCTION_5X10_DOTS = 0x04;
+constexpr uint8_t FUNCTION_8_BITS        = 0x10;
+constexpr uint8_t FUNCTION_2_LINES       = 0x08;
+constexpr uint8_t FUNCTION_5X10_DOTS     = 0x04;
 
-constexpr uint8_t PIN_BACKLIGHT = 0x08;
-constexpr uint8_t PIN_E         = 0x04;
-constexpr uint8_t PIN_RW        = 0x02;
-constexpr uint8_t PIN_RS        = 0x01;
+constexpr uint8_t PIN_BACKLIGHT          = 0x08;
+constexpr uint8_t PIN_E                  = 0x04;
+constexpr uint8_t PIN_RW                 = 0x02;
+constexpr uint8_t PIN_RS                 = 0x01;
 
-constexpr uint8_t ROWS_OFFSET[4] = {0x00, 0x40, 0x14, 0x54};
+constexpr uint8_t ROWS_OFFSET[4]         = {0x00, 0x40, 0x14, 0x54};
 
 I2C_LCD::I2C_LCD(STM32I2C& i2c, uint16_t address, uint8_t cols, uint8_t rows)
     : i2c(i2c), address(address), cols(cols), rows(rows)
@@ -42,13 +42,13 @@ I2C_LCD::I2C_LCD(STM32I2C& i2c, uint16_t address, uint8_t cols, uint8_t rows)
 
 void I2C_LCD::init()
 {
-    target_wait(1000);
+    target_wait(1'000);
 
     write4bits(0x03, true);
-    target_wait_us(4500);
+    target_wait_us(4'500);
 
     write4bits(0x03, true);
-    target_wait_us(4500);
+    target_wait_us(4'500);
 
     write4bits(0x03, true);
     target_wait_us(150);

@@ -27,7 +27,7 @@ enum class MCP_INT_FLAG : uint8_t { NO_INTERRUPT = 0, INTERRUPT = 1 };
 class MCP23009Config {
   public:
     MCP23009Config() : reg(0x00) {}
-    MCP23009Config(uint8_t reg) : reg(reg & 0b00100111) {}
+    MCP23009Config(uint8_t reg) : reg(reg & 0b0010'0111) {}
 
     /**
      * @brief Set the SEQOP (SEQuential OPeration) configuration bit. Sequential operation disabled, address pointer

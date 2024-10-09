@@ -19,22 +19,22 @@
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __USBD_CDC_IF_H
-#define __USBD_CDC_IF_H
+    #define __USBD_CDC_IF_H
 
-#ifdef USBCON
-#ifdef USBD_USE_CDC
+    #ifdef USBCON
+        #ifdef USBD_USE_CDC
 
-#ifdef __cplusplus
+            #ifdef __cplusplus
 extern "C" {
-#endif
+            #endif
 
-/* Includes ------------------------------------------------------------------*/
-#include "cdc_queue.h"
-#include "usbd_cdc.h"
+            /* Includes ------------------------------------------------------------------*/
+            #include "cdc_queue.h"
+            #include "usbd_cdc.h"
 
-/* Periodically, the state of the buffer "UserTxBuffer" is checked.
-   The period depends on CDC_POLLING_INTERVAL */
-#define CDC_POLLING_INTERVAL 2 /* in ms. The max is 65 and the min is 1 */
+            /* Periodically, the state of the buffer "UserTxBuffer" is checked.
+               The period depends on CDC_POLLING_INTERVAL */
+            #define CDC_POLLING_INTERVAL 2 /* in ms. The max is 65 and the min is 1 */
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
@@ -55,11 +55,11 @@ void CDC_OnDataReceived(void (*callback)(void));
 
 void CDC_enableDTR(bool enable);
 
-#ifdef __cplusplus
+            #ifdef __cplusplus
 }
-#endif
-#endif /* USBD_USE_CDC */
-#endif /* USBCON */
-#endif /* __USBD_CDC_IF_H */
+            #endif
+        #endif /* USBD_USE_CDC */
+    #endif     /* USBCON */
+#endif         /* __USBD_CDC_IF_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

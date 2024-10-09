@@ -1,7 +1,7 @@
 #include "STM32SAI.h"
 
 #if defined(STM32WBxx)
-#include "PortNames.h"
+    #include "PortNames.h"
 
 using namespace std;
 using namespace codal;
@@ -29,13 +29,13 @@ STM32SAI::STM32SAI(STM32Pin* data, STM32Pin* clock, uint8_t alternate, uint16_t 
         buffer[i] = 0x00000000;
     }
 
-    hsai->Instance            = SAI1_Block_A;
-    hsai->Init.AudioMode      = SAI_MODEMASTER_RX;
-    hsai->Init.AudioFrequency = SAI_AUDIO_FREQUENCY_48K;
-    hsai->Init.Synchro        = SAI_ASYNCHRONOUS;
-    hsai->Init.SynchroExt     = SAI_SYNCEXT_DISABLE;
-    hsai->Init.MckOutput      = SAI_MCK_OUTPUT_ENABLE;
-    hsai->Init.MonoStereoMode = SAI_STEREOMODE;
+    hsai->Instance                 = SAI1_Block_A;
+    hsai->Init.AudioMode           = SAI_MODEMASTER_RX;
+    hsai->Init.AudioFrequency      = SAI_AUDIO_FREQUENCY_48K;
+    hsai->Init.Synchro             = SAI_ASYNCHRONOUS;
+    hsai->Init.SynchroExt          = SAI_SYNCEXT_DISABLE;
+    hsai->Init.MckOutput           = SAI_MCK_OUTPUT_ENABLE;
+    hsai->Init.MonoStereoMode      = SAI_STEREOMODE;
 
     hsai->Init.PdmInit.Activation  = FunctionalState::ENABLE;
     hsai->Init.PdmInit.MicPairsNbr = 1;
@@ -153,11 +153,11 @@ void STM32SAI::initGPIO()
     GPIO_InitTypeDef gpioData;
     GPIO_InitTypeDef gpioClock;
 
-    gpioData.Pin       = STM_GPIO_PIN(data->name);
-    gpioData.Mode      = GPIO_MODE_AF_PP;
-    gpioData.Pull      = GPIO_NOPULL;
-    gpioData.Speed     = GPIO_SPEED_FREQ_LOW;
-    gpioData.Alternate = alternate;
+    gpioData.Pin        = STM_GPIO_PIN(data->name);
+    gpioData.Mode       = GPIO_MODE_AF_PP;
+    gpioData.Pull       = GPIO_NOPULL;
+    gpioData.Speed      = GPIO_SPEED_FREQ_LOW;
+    gpioData.Alternate  = alternate;
 
     gpioClock.Pin       = STM_GPIO_PIN(clock->name);
     gpioClock.Mode      = GPIO_MODE_AF_PP;
@@ -173,8 +173,8 @@ void STM32SAI::enableClock()
 {
     RCC_PeriphCLKInitTypeDef saiClk;
 
-    saiClk.PeriphClockSelection = RCC_PERIPHCLK_SAI1;
-    saiClk.Sai1ClockSelection   = RCC_SAI1CLKSOURCE_PLLSAI1;
+    saiClk.PeriphClockSelection    = RCC_PERIPHCLK_SAI1;
+    saiClk.Sai1ClockSelection      = RCC_SAI1CLKSOURCE_PLLSAI1;
 
     saiClk.PLLSAI1.PLLN            = 6;
     saiClk.PLLSAI1.PLLP            = RCC_PLLP_DIV4;

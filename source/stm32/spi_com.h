@@ -37,15 +37,15 @@
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __SPI_COM_H
-#define __SPI_COM_H
+    #define __SPI_COM_H
 
-/* Includes ------------------------------------------------------------------*/
-#include "PeripheralPins.h"
-#include "stm32_def.h"
+    /* Includes ------------------------------------------------------------------*/
+    #include "PeripheralPins.h"
+    #include "stm32_def.h"
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 extern "C" {
-#endif
+    #endif
 
 /* Exported types ------------------------------------------------------------*/
 
@@ -60,17 +60,17 @@ struct spi_s {
 
 typedef struct spi_s spi_t;
 
-///@brief specifies the SPI speed bus in HZ.
-#define SPI_SPEED_CLOCK_DEFAULT 4000000
+    ///@brief specifies the SPI speed bus in HZ.
+    #define SPI_SPEED_CLOCK_DEFAULT    4'000'000
 
-#define SPI_SPEED_CLOCK_DIV2_MHZ   ((uint32_t)2)
-#define SPI_SPEED_CLOCK_DIV4_MHZ   ((uint32_t)4)
-#define SPI_SPEED_CLOCK_DIV8_MHZ   ((uint32_t)8)
-#define SPI_SPEED_CLOCK_DIV16_MHZ  ((uint32_t)16)
-#define SPI_SPEED_CLOCK_DIV32_MHZ  ((uint32_t)32)
-#define SPI_SPEED_CLOCK_DIV64_MHZ  ((uint32_t)64)
-#define SPI_SPEED_CLOCK_DIV128_MHZ ((uint32_t)128)
-#define SPI_SPEED_CLOCK_DIV256_MHZ ((uint32_t)256)
+    #define SPI_SPEED_CLOCK_DIV2_MHZ   ((uint32_t)2)
+    #define SPI_SPEED_CLOCK_DIV4_MHZ   ((uint32_t)4)
+    #define SPI_SPEED_CLOCK_DIV8_MHZ   ((uint32_t)8)
+    #define SPI_SPEED_CLOCK_DIV16_MHZ  ((uint32_t)16)
+    #define SPI_SPEED_CLOCK_DIV32_MHZ  ((uint32_t)32)
+    #define SPI_SPEED_CLOCK_DIV64_MHZ  ((uint32_t)64)
+    #define SPI_SPEED_CLOCK_DIV128_MHZ ((uint32_t)128)
+    #define SPI_SPEED_CLOCK_DIV256_MHZ ((uint32_t)256)
 
 ///@brief speficies the SPI mode to use
 // Mode          Clock Polarity (CPOL)       Clock Phase (CPHA)
@@ -93,9 +93,9 @@ spi_status_e spi_transfer(spi_t* obj, uint8_t* tx_buffer, uint8_t* rx_buffer, ui
 uint32_t spi_getClkFreq(spi_t* obj);
 uint32_t spi_getClkFreqInst(SPI_TypeDef* spi_inst);
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* __SPI_COM_H */
 

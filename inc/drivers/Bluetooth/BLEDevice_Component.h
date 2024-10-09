@@ -14,7 +14,7 @@ class BLEDevice_Component : public BLEDevice, CodalComponent {
      * @param hci The HCI object to communicate with the BLUENRG
      * @param swapPeriod Period for switching between Advertising and Scanning (if needed)
      */
-    BLEDevice_Component(uint16_t id, HCI* hci, uint16_t swapPeriod = 5000);
+    BLEDevice_Component(uint16_t id, HCI* hci, uint16_t swapPeriod = 5'000);
     virtual ~BLEDevice_Component() {}
 
     virtual int init() override final;

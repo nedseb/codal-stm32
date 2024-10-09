@@ -1,21 +1,21 @@
 #include "HCI_SharedMemory.h"
 
 #if defined(STM32WBxx)
-#include "app_conf.h"
-#include "clock.h"
-#include "hw.h"
-#include "otp.h"
-#include "shci.h"
-#include "shci_tl.h"
-#include "stm32_def.h"
-#include "tl.h"
+    #include "app_conf.h"
+    #include "clock.h"
+    #include "hw.h"
+    #include "otp.h"
+    #include "shci.h"
+    #include "shci_tl.h"
+    #include "stm32_def.h"
+    #include "tl.h"
 
 using namespace std;
 
-#define CFG_TLBLE_EVT_QUEUE_LENGTH        5
-#define CFG_TLBLE_MOST_EVENT_PAYLOAD_SIZE 255 /**< Set to 255 with the memory manager and the mailbox */
-#define TL_BLE_EVENT_FRAME_SIZE           (TL_EVT_HDR_SIZE + CFG_TLBLE_MOST_EVENT_PAYLOAD_SIZE)
-#define POOL_SIZE                         (CFG_TLBLE_EVT_QUEUE_LENGTH * 4 * DIVC((sizeof(TL_PacketHeader_t) + TL_BLE_EVENT_FRAME_SIZE), 4))
+    #define CFG_TLBLE_EVT_QUEUE_LENGTH        5
+    #define CFG_TLBLE_MOST_EVENT_PAYLOAD_SIZE 255 /**< Set to 255 with the memory manager and the mailbox */
+    #define TL_BLE_EVENT_FRAME_SIZE           (TL_EVT_HDR_SIZE + CFG_TLBLE_MOST_EVENT_PAYLOAD_SIZE)
+    #define POOL_SIZE                         (CFG_TLBLE_EVT_QUEUE_LENGTH * 4 * DIVC((sizeof(TL_PacketHeader_t) + TL_BLE_EVENT_FRAME_SIZE), 4))
 
 PLACE_IN_SECTION("MB_MEM1") ALIGN(4) static TL_CmdPacket_t BleCmdBuffer;
 PLACE_IN_SECTION("MB_MEM1") ALIGN(4) static uint8_t EvtPool[POOL_SIZE];
@@ -29,8 +29,8 @@ PLACE_IN_SECTION("MB_MEM2") ALIGN(4) static uint8_t HciAclDataBuffer[sizeof(TL_P
 /* global var used as semaphore to control incoming events */
 volatile bool sys_event; /* true : M0 core is already up and running */
 
-constexpr uint32_t BLE_IPCC_TIMEOUT          = 1000;
-constexpr uint32_t SEND_COMMAND_TIMEOUT      = 3000;
+constexpr uint32_t BLE_IPCC_TIMEOUT          = 1'000;
+constexpr uint32_t SEND_COMMAND_TIMEOUT      = 3'000;
 constexpr uint16_t RECEIVED_BLE_EVENT_LENGTH = 16;
 static TL_Evt_t received_ble_evt[RECEIVED_BLE_EVENT_LENGTH];
 static uint16_t received_ble_evt_pos = 0;

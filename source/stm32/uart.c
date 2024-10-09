@@ -26,62 +26,62 @@ extern "C" {
 #endif
 #if defined(HAL_UART_MODULE_ENABLED) && !defined(HAL_UART_MODULE_ONLY)
 
-/* If DEBUG_UART is not defined assume this is the one linked to PIN_SERIAL_TX */
-#if !defined(DEBUG_UART)
-#if defined(PIN_SERIAL_TX)
-#define DEBUG_UART       pinmap_peripheral(digitalPinToPinName(PIN_SERIAL_TX), PinMap_UART_TX)
-#define DEBUG_PINNAME_TX digitalPinToPinName(PIN_SERIAL_TX)
-#else
-/* No debug UART defined */
-#define DEBUG_UART       NP
-#define DEBUG_PINNAME_TX NC
-#endif
-#endif
-#if !defined(DEBUG_UART_BAUDRATE)
-#define DEBUG_UART_BAUDRATE 9600
-#endif
+    /* If DEBUG_UART is not defined assume this is the one linked to PIN_SERIAL_TX */
+    #if !defined(DEBUG_UART)
+        #if defined(PIN_SERIAL_TX)
+            #define DEBUG_UART       pinmap_peripheral(digitalPinToPinName(PIN_SERIAL_TX), PinMap_UART_TX)
+            #define DEBUG_PINNAME_TX digitalPinToPinName(PIN_SERIAL_TX)
+        #else
+            /* No debug UART defined */
+            #define DEBUG_UART       NP
+            #define DEBUG_PINNAME_TX NC
+        #endif
+    #endif
+    #if !defined(DEBUG_UART_BAUDRATE)
+        #define DEBUG_UART_BAUDRATE 9'600
+    #endif
 
 /* @brief uart characteristics */
 typedef enum {
-#if defined(USART1_BASE)
+    #if defined(USART1_BASE)
     UART1_INDEX,
-#endif
-#if defined(USART2_BASE)
+    #endif
+    #if defined(USART2_BASE)
     UART2_INDEX,
-#endif
-#if defined(USART3_BASE)
+    #endif
+    #if defined(USART3_BASE)
     UART3_INDEX,
-#endif
-#if defined(UART4_BASE) || defined(USART4_BASE)
+    #endif
+    #if defined(UART4_BASE) || defined(USART4_BASE)
     UART4_INDEX,
-#endif
-#if defined(UART5_BASE) || defined(USART5_BASE)
+    #endif
+    #if defined(UART5_BASE) || defined(USART5_BASE)
     UART5_INDEX,
-#endif
-#if defined(USART6_BASE)
+    #endif
+    #if defined(USART6_BASE)
     UART6_INDEX,
-#endif
-#if defined(UART7_BASE) || defined(USART7_BASE)
+    #endif
+    #if defined(UART7_BASE) || defined(USART7_BASE)
     UART7_INDEX,
-#endif
-#if defined(UART8_BASE) || defined(USART8_BASE)
+    #endif
+    #if defined(UART8_BASE) || defined(USART8_BASE)
     UART8_INDEX,
-#endif
-#if defined(UART9_BASE)
+    #endif
+    #if defined(UART9_BASE)
     UART9_INDEX,
-#endif
-#if defined(UART10_BASE) || defined(USART10_BASE)
+    #endif
+    #if defined(UART10_BASE) || defined(USART10_BASE)
     UART10_INDEX,
-#endif
-#if defined(LPUART1_BASE)
+    #endif
+    #if defined(LPUART1_BASE)
     LPUART1_INDEX,
-#endif
-#if defined(LPUART2_BASE)
+    #endif
+    #if defined(LPUART2_BASE)
     LPUART2_INDEX,
-#endif
-#if defined(LPUART3_BASE)
+    #endif
+    #if defined(LPUART3_BASE)
     LPUART3_INDEX,
-#endif
+    #endif
     UART_NUM
 } uart_index_t;
 
@@ -167,7 +167,7 @@ void uart_init(serial_t* obj, uint32_t baudrate, uint32_t databits, uint32_t par
     }
 
     /* Enable USART clock */
-#if defined(USART1_BASE)
+    #if defined(USART1_BASE)
     else if (obj->uart == USART1) {
         __HAL_RCC_USART1_FORCE_RESET();
         __HAL_RCC_USART1_RELEASE_RESET();
@@ -175,8 +175,8 @@ void uart_init(serial_t* obj, uint32_t baudrate, uint32_t databits, uint32_t par
         obj->index = UART1_INDEX;
         obj->irq   = USART1_IRQn;
     }
-#endif
-#if defined(USART2_BASE)
+    #endif
+    #if defined(USART2_BASE)
     else if (obj->uart == USART2) {
         __HAL_RCC_USART2_FORCE_RESET();
         __HAL_RCC_USART2_RELEASE_RESET();
@@ -184,8 +184,8 @@ void uart_init(serial_t* obj, uint32_t baudrate, uint32_t databits, uint32_t par
         obj->index = UART2_INDEX;
         obj->irq   = USART2_IRQn;
     }
-#endif
-#if defined(USART3_BASE)
+    #endif
+    #if defined(USART3_BASE)
     else if (obj->uart == USART3) {
         __HAL_RCC_USART3_FORCE_RESET();
         __HAL_RCC_USART3_RELEASE_RESET();
@@ -193,8 +193,8 @@ void uart_init(serial_t* obj, uint32_t baudrate, uint32_t databits, uint32_t par
         obj->index = UART3_INDEX;
         obj->irq   = USART3_IRQn;
     }
-#endif
-#if defined(UART4_BASE)
+    #endif
+    #if defined(UART4_BASE)
     else if (obj->uart == UART4) {
         __HAL_RCC_UART4_FORCE_RESET();
         __HAL_RCC_UART4_RELEASE_RESET();
@@ -202,7 +202,7 @@ void uart_init(serial_t* obj, uint32_t baudrate, uint32_t databits, uint32_t par
         obj->index = UART4_INDEX;
         obj->irq   = UART4_IRQn;
     }
-#elif defined(USART4_BASE)
+    #elif defined(USART4_BASE)
     else if (obj->uart == USART4) {
         __HAL_RCC_USART4_FORCE_RESET();
         __HAL_RCC_USART4_RELEASE_RESET();
@@ -210,8 +210,8 @@ void uart_init(serial_t* obj, uint32_t baudrate, uint32_t databits, uint32_t par
         obj->index = UART4_INDEX;
         obj->irq   = USART4_IRQn;
     }
-#endif
-#if defined(UART5_BASE)
+    #endif
+    #if defined(UART5_BASE)
     else if (obj->uart == UART5) {
         __HAL_RCC_UART5_FORCE_RESET();
         __HAL_RCC_UART5_RELEASE_RESET();
@@ -219,7 +219,7 @@ void uart_init(serial_t* obj, uint32_t baudrate, uint32_t databits, uint32_t par
         obj->index = UART5_INDEX;
         obj->irq   = UART5_IRQn;
     }
-#elif defined(USART5_BASE)
+    #elif defined(USART5_BASE)
     else if (obj->uart == USART5) {
         __HAL_RCC_USART5_FORCE_RESET();
         __HAL_RCC_USART5_RELEASE_RESET();
@@ -227,8 +227,8 @@ void uart_init(serial_t* obj, uint32_t baudrate, uint32_t databits, uint32_t par
         obj->index = UART5_INDEX;
         obj->irq   = USART5_IRQn;
     }
-#endif
-#if defined(USART6_BASE)
+    #endif
+    #if defined(USART6_BASE)
     else if (obj->uart == USART6) {
         __HAL_RCC_USART6_FORCE_RESET();
         __HAL_RCC_USART6_RELEASE_RESET();
@@ -236,8 +236,8 @@ void uart_init(serial_t* obj, uint32_t baudrate, uint32_t databits, uint32_t par
         obj->index = UART6_INDEX;
         obj->irq   = USART6_IRQn;
     }
-#endif
-#if defined(LPUART1_BASE)
+    #endif
+    #if defined(LPUART1_BASE)
     else if (obj->uart == LPUART1) {
         __HAL_RCC_LPUART1_FORCE_RESET();
         __HAL_RCC_LPUART1_RELEASE_RESET();
@@ -245,8 +245,8 @@ void uart_init(serial_t* obj, uint32_t baudrate, uint32_t databits, uint32_t par
         obj->index = LPUART1_INDEX;
         obj->irq   = LPUART1_IRQn;
     }
-#endif
-#if defined(LPUART2_BASE)
+    #endif
+    #if defined(LPUART2_BASE)
     else if (obj->uart == LPUART2) {
         __HAL_RCC_LPUART2_FORCE_RESET();
         __HAL_RCC_LPUART2_RELEASE_RESET();
@@ -254,8 +254,8 @@ void uart_init(serial_t* obj, uint32_t baudrate, uint32_t databits, uint32_t par
         obj->index = LPUART2_INDEX;
         obj->irq   = LPUART2_IRQn;
     }
-#endif
-#if defined(LPUART3_BASE)
+    #endif
+    #if defined(LPUART3_BASE)
     else if (obj->uart == LPUART3) {
         __HAL_RCC_LPUART3_FORCE_RESET();
         __HAL_RCC_LPUART3_RELEASE_RESET();
@@ -263,8 +263,8 @@ void uart_init(serial_t* obj, uint32_t baudrate, uint32_t databits, uint32_t par
         obj->index = LPUART3_INDEX;
         obj->irq   = LPUART3_IRQn;
     }
-#endif
-#if defined(UART7_BASE)
+    #endif
+    #if defined(UART7_BASE)
     else if (obj->uart == UART7) {
         __HAL_RCC_UART7_FORCE_RESET();
         __HAL_RCC_UART7_RELEASE_RESET();
@@ -272,7 +272,7 @@ void uart_init(serial_t* obj, uint32_t baudrate, uint32_t databits, uint32_t par
         obj->index = UART7_INDEX;
         obj->irq   = UART7_IRQn;
     }
-#elif defined(USART7_BASE)
+    #elif defined(USART7_BASE)
     else if (obj->uart == USART7) {
         __HAL_RCC_USART7_FORCE_RESET();
         __HAL_RCC_USART7_RELEASE_RESET();
@@ -280,8 +280,8 @@ void uart_init(serial_t* obj, uint32_t baudrate, uint32_t databits, uint32_t par
         obj->index = UART7_INDEX;
         obj->irq   = USART7_IRQn;
     }
-#endif
-#if defined(UART8_BASE)
+    #endif
+    #if defined(UART8_BASE)
     else if (obj->uart == UART8) {
         __HAL_RCC_UART8_FORCE_RESET();
         __HAL_RCC_UART8_RELEASE_RESET();
@@ -289,7 +289,7 @@ void uart_init(serial_t* obj, uint32_t baudrate, uint32_t databits, uint32_t par
         obj->index = UART8_INDEX;
         obj->irq   = UART8_IRQn;
     }
-#elif defined(USART8_BASE)
+    #elif defined(USART8_BASE)
     else if (obj->uart == USART8) {
         __HAL_RCC_USART8_FORCE_RESET();
         __HAL_RCC_USART8_RELEASE_RESET();
@@ -297,8 +297,8 @@ void uart_init(serial_t* obj, uint32_t baudrate, uint32_t databits, uint32_t par
         obj->index = UART8_INDEX;
         obj->irq   = USART8_IRQn;
     }
-#endif
-#if defined(UART9_BASE)
+    #endif
+    #if defined(UART9_BASE)
     else if (obj->uart == UART9) {
         __HAL_RCC_UART9_FORCE_RESET();
         __HAL_RCC_UART9_RELEASE_RESET();
@@ -306,8 +306,8 @@ void uart_init(serial_t* obj, uint32_t baudrate, uint32_t databits, uint32_t par
         obj->index = UART9_INDEX;
         obj->irq   = UART9_IRQn;
     }
-#endif
-#if defined(UART10_BASE)
+    #endif
+    #if defined(UART10_BASE)
     else if (obj->uart == UART10) {
         __HAL_RCC_UART10_FORCE_RESET();
         __HAL_RCC_UART10_RELEASE_RESET();
@@ -315,8 +315,8 @@ void uart_init(serial_t* obj, uint32_t baudrate, uint32_t databits, uint32_t par
         obj->index = UART10_INDEX;
         obj->irq   = UART10_IRQn;
     }
-#endif
-#if defined(USART10_BASE)
+    #endif
+    #if defined(USART10_BASE)
     else if (obj->uart == USART10) {
         __HAL_RCC_USART10_FORCE_RESET();
         __HAL_RCC_USART10_RELEASE_RESET();
@@ -324,7 +324,7 @@ void uart_init(serial_t* obj, uint32_t baudrate, uint32_t databits, uint32_t par
         obj->index = UART10_INDEX;
         obj->irq   = USART10_IRQn;
     }
-#endif
+    #endif
 
     /* Configure UART GPIO pins */
     pinmap_pinout(obj->pin_tx, PinMap_UART_TX);
@@ -353,40 +353,40 @@ void uart_init(serial_t* obj, uint32_t baudrate, uint32_t databits, uint32_t par
     huart->Init.Mode          = UART_MODE_TX_RX;
     huart->Init.HwFlowCtl     = flow_control;
     huart->Init.OverSampling  = UART_OVERSAMPLING_16;
-#if !defined(STM32F1xx) && !defined(STM32F2xx) && !defined(STM32F4xx) && !defined(STM32L1xx)
+    #if !defined(STM32F1xx) && !defined(STM32F2xx) && !defined(STM32F4xx) && !defined(STM32L1xx)
     huart->AdvancedInit.AdvFeatureInit = UART_ADVFEATURE_NO_INIT;
-#endif
-#ifdef UART_ONE_BIT_SAMPLE_DISABLE
+    #endif
+    #ifdef UART_ONE_BIT_SAMPLE_DISABLE
     huart->Init.OneBitSampling = UART_ONE_BIT_SAMPLE_DISABLE;
-#endif
+    #endif
 
     /* Set the NVIC priority for future interrupts */
     HAL_NVIC_SetPriority(obj->irq, UART_IRQ_PRIO, UART_IRQ_SUBPRIO);
 
-#if defined(LPUART1_BASE) || defined(LPUART2_BASE)
+    #if defined(LPUART1_BASE) || defined(LPUART2_BASE)
     /*
      * Note that LPUART clock source must be in the range
      * [3 x baud rate, 4096 x baud rate]
      * check Reference Manual
      */
     if ((obj->uart == LPUART1)
-#if defined(LPUART2_BASE)
+        #if defined(LPUART2_BASE)
         || (obj->uart == LPUART2)
-#endif
-#if defined(LPUART3_BASE)
+        #endif
+        #if defined(LPUART3_BASE)
         || (obj->uart == LPUART3)
-#endif
+        #endif
     ) {
-        if (baudrate <= 9600) {
-#if defined(USART_CR3_UCESM)
+        if (baudrate <= 9'600) {
+        #if defined(USART_CR3_UCESM)
             HAL_UARTEx_EnableClockStopMode(huart);
-#endif
+        #endif
             HAL_UARTEx_EnableStopMode(huart);
         }
         else {
-#if defined(USART_CR3_UCESM)
+        #if defined(USART_CR3_UCESM)
             HAL_UARTEx_DisableClockStopMode(huart);
-#endif
+        #endif
             HAL_UARTEx_DisableStopMode(huart);
         }
         /* Trying default LPUART clock source */
@@ -400,22 +400,22 @@ void uart_init(serial_t* obj, uint32_t baudrate, uint32_t databits, uint32_t par
         }
         /* Trying to change LPUART clock source */
         /* If baudrate is lower than or equal to 9600 try to change to LSE */
-        if (baudrate <= 9600) {
+        if (baudrate <= 9'600) {
             /* Enable the clock if not already set by user */
             enableClock(LSE_CLOCK);
             if (obj->uart == LPUART1) {
                 __HAL_RCC_LPUART1_CONFIG(RCC_LPUART1CLKSOURCE_LSE);
             }
-#if defined(LPUART2_BASE)
+        #if defined(LPUART2_BASE)
             if (obj->uart == LPUART2) {
                 __HAL_RCC_LPUART2_CONFIG(RCC_LPUART2CLKSOURCE_LSE);
             }
-#endif
-#if defined(LPUART3_BASE)
+        #endif
+        #if defined(LPUART3_BASE)
             if (obj->uart == LPUART3) {
                 __HAL_RCC_LPUART3_CONFIG(RCC_LPUART3CLKSOURCE_LSE);
             }
-#endif
+        #endif
             if (uart_rx == NP) {
                 if (HAL_HalfDuplex_Init(huart) == HAL_OK) {
                     return;
@@ -429,16 +429,16 @@ void uart_init(serial_t* obj, uint32_t baudrate, uint32_t databits, uint32_t par
             if (obj->uart == LPUART1) {
                 __HAL_RCC_LPUART1_CONFIG(RCC_LPUART1CLKSOURCE_HSI);
             }
-#if defined(LPUART2_BASE)
+        #if defined(LPUART2_BASE)
             if (obj->uart == LPUART2) {
                 __HAL_RCC_LPUART2_CONFIG(RCC_LPUART2CLKSOURCE_HSI);
             }
-#endif
-#if defined(LPUART3_BASE)
+        #endif
+        #if defined(LPUART3_BASE)
             if (obj->uart == LPUART3) {
                 __HAL_RCC_LPUART3_CONFIG(RCC_LPUART3CLKSOURCE_HSI);
             }
-#endif
+        #endif
             if (uart_rx == NP) {
                 if (HAL_HalfDuplex_Init(huart) == HAL_OK) {
                     return;
@@ -449,24 +449,24 @@ void uart_init(serial_t* obj, uint32_t baudrate, uint32_t databits, uint32_t par
             }
         }
         if (obj->uart == LPUART1) {
-#if defined(RCC_LPUART1CLKSOURCE_CSI)
+        #if defined(RCC_LPUART1CLKSOURCE_CSI)
             __HAL_RCC_LPUART1_CONFIG(RCC_LPUART1CLKSOURCE_CSI);
-#elif defined(RCC_LPUART1CLKSOURCE_PCLK1)
+        #elif defined(RCC_LPUART1CLKSOURCE_PCLK1)
             __HAL_RCC_LPUART1_CONFIG(RCC_LPUART1CLKSOURCE_PCLK1);
-#elif defined(RCC_LPUART1CLKSOURCE_PCLK3)
+        #elif defined(RCC_LPUART1CLKSOURCE_PCLK3)
             __HAL_RCC_LPUART1_CONFIG(RCC_LPUART1CLKSOURCE_PCLK3);
-#endif
+        #endif
         }
-#if defined(LPUART2_BASE)
+        #if defined(LPUART2_BASE)
         if (obj->uart == LPUART2) {
             __HAL_RCC_LPUART2_CONFIG(RCC_LPUART2CLKSOURCE_PCLK1);
         }
-#endif
-#if defined(LPUART3_BASE)
+        #endif
+        #if defined(LPUART3_BASE)
         if (obj->uart == LPUART3) {
             __HAL_RCC_LPUART3_CONFIG(RCC_LPUART3CLKSOURCE_PCLK1);
         }
-#endif
+        #endif
         if (uart_rx == NP) {
             if (HAL_HalfDuplex_Init(huart) == HAL_OK) {
                 return;
@@ -475,23 +475,23 @@ void uart_init(serial_t* obj, uint32_t baudrate, uint32_t databits, uint32_t par
         else if (HAL_UART_Init(huart) == HAL_OK) {
             return;
         }
-#if defined(RCC_LPUART1CLKSOURCE_SYSCLK)
+        #if defined(RCC_LPUART1CLKSOURCE_SYSCLK)
         if (obj->uart == LPUART1) {
             __HAL_RCC_LPUART1_CONFIG(RCC_LPUART1CLKSOURCE_SYSCLK);
         }
-#endif
-#if defined(LPUART2_BASE)
+        #endif
+        #if defined(LPUART2_BASE)
         if (obj->uart == LPUART2) {
             __HAL_RCC_LPUART2_CONFIG(RCC_LPUART2CLKSOURCE_SYSCLK);
         }
-#endif
-#if defined(LPUART3_BASE)
+        #endif
+        #if defined(LPUART3_BASE)
         if (obj->uart == LPUART3) {
             __HAL_RCC_LPUART3_CONFIG(RCC_LPUART3CLKSOURCE_SYSCLK);
         }
-#endif
+        #endif
     }
-#endif
+    #endif
 
     if (uart_rx == NP) {
         if (HAL_HalfDuplex_Init(huart) != HAL_OK) {
@@ -512,128 +512,128 @@ void uart_deinit(serial_t* obj)
 {
     /* Reset UART and disable clock */
     switch (obj->index) {
-#if defined(USART1_BASE)
+    #if defined(USART1_BASE)
         case UART1_INDEX:
             __HAL_RCC_USART1_FORCE_RESET();
             __HAL_RCC_USART1_RELEASE_RESET();
             __HAL_RCC_USART1_CLK_DISABLE();
             break;
-#endif
-#if defined(USART2_BASE)
+    #endif
+    #if defined(USART2_BASE)
         case UART2_INDEX:
             __HAL_RCC_USART2_FORCE_RESET();
             __HAL_RCC_USART2_RELEASE_RESET();
             __HAL_RCC_USART2_CLK_DISABLE();
             break;
-#endif
-#if defined(USART3_BASE)
+    #endif
+    #if defined(USART3_BASE)
         case UART3_INDEX:
             __HAL_RCC_USART3_FORCE_RESET();
             __HAL_RCC_USART3_RELEASE_RESET();
             __HAL_RCC_USART3_CLK_DISABLE();
             break;
-#endif
-#if defined(UART4_BASE)
+    #endif
+    #if defined(UART4_BASE)
         case UART4_INDEX:
             __HAL_RCC_UART4_FORCE_RESET();
             __HAL_RCC_UART4_RELEASE_RESET();
             __HAL_RCC_UART4_CLK_DISABLE();
             break;
-#elif defined(USART4_BASE)
+    #elif defined(USART4_BASE)
         case UART4_INDEX:
             __HAL_RCC_USART4_FORCE_RESET();
             __HAL_RCC_USART4_RELEASE_RESET();
             __HAL_RCC_USART4_CLK_DISABLE();
             break;
-#endif
-#if defined(UART5_BASE)
+    #endif
+    #if defined(UART5_BASE)
         case UART5_INDEX:
             __HAL_RCC_UART5_FORCE_RESET();
             __HAL_RCC_UART5_RELEASE_RESET();
             __HAL_RCC_UART5_CLK_DISABLE();
             break;
-#elif defined(USART5_BASE)
+    #elif defined(USART5_BASE)
         case UART5_INDEX:
             __HAL_RCC_USART5_FORCE_RESET();
             __HAL_RCC_USART5_RELEASE_RESET();
             __HAL_RCC_USART5_CLK_DISABLE();
             break;
-#endif
-#if defined(USART6_BASE)
+    #endif
+    #if defined(USART6_BASE)
         case UART6_INDEX:
             __HAL_RCC_USART6_FORCE_RESET();
             __HAL_RCC_USART6_RELEASE_RESET();
             __HAL_RCC_USART6_CLK_DISABLE();
             break;
-#endif
-#if defined(LPUART1_BASE)
+    #endif
+    #if defined(LPUART1_BASE)
         case LPUART1_INDEX:
             __HAL_RCC_LPUART1_FORCE_RESET();
             __HAL_RCC_LPUART1_RELEASE_RESET();
             __HAL_RCC_LPUART1_CLK_DISABLE();
             break;
-#endif
-#if defined(LPUART2_BASE)
+    #endif
+    #if defined(LPUART2_BASE)
         case LPUART2_INDEX:
             __HAL_RCC_LPUART2_FORCE_RESET();
             __HAL_RCC_LPUART2_RELEASE_RESET();
             __HAL_RCC_LPUART2_CLK_DISABLE();
             break;
-#endif
-#if defined(LPUART3_BASE)
+    #endif
+    #if defined(LPUART3_BASE)
         case LPUART3_INDEX:
             __HAL_RCC_LPUART3_FORCE_RESET();
             __HAL_RCC_LPUART3_RELEASE_RESET();
             __HAL_RCC_LPUART3_CLK_DISABLE();
             break;
-#endif
-#if defined(UART7_BASE)
+    #endif
+    #if defined(UART7_BASE)
         case UART7_INDEX:
             __HAL_RCC_UART7_FORCE_RESET();
             __HAL_RCC_UART7_RELEASE_RESET();
             __HAL_RCC_UART7_CLK_DISABLE();
             break;
-#elif defined(USART7_BASE)
+    #elif defined(USART7_BASE)
         case UART7_INDEX:
             __HAL_RCC_USART7_FORCE_RESET();
             __HAL_RCC_USART7_RELEASE_RESET();
             __HAL_RCC_USART7_CLK_DISABLE();
             break;
-#endif
-#if defined(UART8_BASE)
+    #endif
+    #if defined(UART8_BASE)
         case UART8_INDEX:
             __HAL_RCC_UART8_FORCE_RESET();
             __HAL_RCC_UART8_RELEASE_RESET();
             __HAL_RCC_UART8_CLK_DISABLE();
             break;
-#elif defined(USART8_BASE)
+    #elif defined(USART8_BASE)
         case UART8_INDEX:
             __HAL_RCC_USART8_FORCE_RESET();
             __HAL_RCC_USART8_RELEASE_RESET();
             __HAL_RCC_USART8_CLK_DISABLE();
             break;
-#endif
-#if defined(UART9_BASE)
+    #endif
+    #if defined(UART9_BASE)
         case UART9_INDEX:
             __HAL_RCC_UART9_FORCE_RESET();
             __HAL_RCC_UART9_RELEASE_RESET();
             __HAL_RCC_UART9_CLK_DISABLE();
             break;
-#endif
-#if defined(UART10_BASE)
+    #endif
+    #if defined(UART10_BASE)
         case UART10_INDEX:
             __HAL_RCC_UART10_FORCE_RESET();
             __HAL_RCC_UART10_RELEASE_RESET();
             __HAL_RCC_UART10_CLK_DISABLE();
             break;
-#endif
-#if defined(USART10_BASE)
+    #endif
+    #if defined(USART10_BASE)
         case UART10_INDEX:
             __HAL_RCC_USART10_FORCE_RESET();
             __HAL_RCC_USART10_RELEASE_RESET();
             __HAL_RCC_USART10_CLK_DISABLE();
             break;
-#endif
+    #endif
     }
 
     HAL_UART_DeInit(uart_handlers[obj->index]);
@@ -644,7 +644,7 @@ void uart_deinit(serial_t* obj)
     }
 }
 
-#if defined(HAL_PWR_MODULE_ENABLED) && (defined(UART_IT_WUF) || defined(LPUART1_BASE))
+    #if defined(HAL_PWR_MODULE_ENABLED) && (defined(UART_IT_WUF) || defined(LPUART1_BASE))
 /**
  * @brief  Function called to configure the uart interface for low power
  * @param  obj : pointer to serial_t structure
@@ -661,73 +661,73 @@ void uart_config_lowpower(serial_t* obj)
     hsem_lock(CFG_HW_RCC_CRRCR_CCIPR_SEMID, HSEM_LOCK_DEFAULT_RETRY);
     /* Configure HSI as source clock for low power wakeup clock */
     switch (obj->index) {
-#if defined(USART1_BASE)
+        #if defined(USART1_BASE)
         case UART1_INDEX:
             if (__HAL_RCC_GET_USART1_SOURCE() != RCC_USART1CLKSOURCE_HSI) {
                 __HAL_RCC_USART1_CONFIG(RCC_USART1CLKSOURCE_HSI);
             }
             break;
-#endif
-#if defined(USART2_BASE) && defined(__HAL_RCC_USART2_CONFIG)
+        #endif
+        #if defined(USART2_BASE) && defined(__HAL_RCC_USART2_CONFIG)
         case UART2_INDEX:
             if (__HAL_RCC_GET_USART2_SOURCE() != RCC_USART2CLKSOURCE_HSI) {
                 __HAL_RCC_USART2_CONFIG(RCC_USART2CLKSOURCE_HSI);
             }
             break;
-#endif
-#if defined(USART3_BASE) && defined(__HAL_RCC_USART3_CONFIG)
+        #endif
+        #if defined(USART3_BASE) && defined(__HAL_RCC_USART3_CONFIG)
         case UART3_INDEX:
             if (__HAL_RCC_GET_USART3_SOURCE() != RCC_USART3CLKSOURCE_HSI) {
                 __HAL_RCC_USART3_CONFIG(RCC_USART3CLKSOURCE_HSI);
             }
             break;
-#endif
-#if defined(UART4_BASE) && defined(__HAL_RCC_UART4_CONFIG)
+        #endif
+        #if defined(UART4_BASE) && defined(__HAL_RCC_UART4_CONFIG)
         case UART4_INDEX:
             if (__HAL_RCC_GET_UART4_SOURCE() != RCC_UART4CLKSOURCE_HSI) {
                 __HAL_RCC_UART4_CONFIG(RCC_UART4CLKSOURCE_HSI);
             }
             break;
-#endif
-#if defined(UART5_BASE) && defined(__HAL_RCC_UART5_CONFIG)
+        #endif
+        #if defined(UART5_BASE) && defined(__HAL_RCC_UART5_CONFIG)
         case UART5_INDEX:
             if (__HAL_RCC_GET_UART5_SOURCE() != RCC_UART5CLKSOURCE_HSI) {
                 __HAL_RCC_UART5_CONFIG(RCC_UART5CLKSOURCE_HSI);
             }
             break;
-#endif
-#if defined(LPUART1_BASE) && defined(__HAL_RCC_LPUART1_CONFIG)
+        #endif
+        #if defined(LPUART1_BASE) && defined(__HAL_RCC_LPUART1_CONFIG)
         case LPUART1_INDEX:
-#ifdef __HAL_RCC_LPUART1_CLKAM_ENABLE
+            #ifdef __HAL_RCC_LPUART1_CLKAM_ENABLE
             __HAL_RCC_LPUART1_CLKAM_ENABLE();
-#endif
+            #endif
             if (__HAL_RCC_GET_LPUART1_SOURCE() != RCC_LPUART1CLKSOURCE_HSI) {
                 __HAL_RCC_LPUART1_CONFIG(RCC_LPUART1CLKSOURCE_HSI);
             }
             break;
-#endif
-#if defined(LPUART2_BASE) && defined(__HAL_RCC_LPUART2_CONFIG)
+        #endif
+        #if defined(LPUART2_BASE) && defined(__HAL_RCC_LPUART2_CONFIG)
         case LPUART2_INDEX:
             if (__HAL_RCC_GET_LPUART2_SOURCE() != RCC_LPUART2CLKSOURCE_HSI) {
                 __HAL_RCC_LPUART2_CONFIG(RCC_LPUART2CLKSOURCE_HSI);
             }
             break;
-#endif
-#if defined(LPUART3_BASE) && defined(__HAL_RCC_LPUART3_CONFIG)
+        #endif
+        #if defined(LPUART3_BASE) && defined(__HAL_RCC_LPUART3_CONFIG)
         case LPUART3_INDEX:
             if (__HAL_RCC_GET_LPUART3_SOURCE() != RCC_LPUART3CLKSOURCE_HSI) {
                 __HAL_RCC_LPUART3_CONFIG(RCC_LPUART3CLKSOURCE_HSI);
             }
             break;
-#endif
+        #endif
     }
-#if defined(UART_WAKEUP_EXTI_LINE)
+        #if defined(UART_WAKEUP_EXTI_LINE)
     /* Enable EXTI wakeup interrupt if defined */
     LL_EXTI_EnableIT_0_31(UART_WAKEUP_EXTI_LINE);
-#endif
+        #endif
     hsem_unlock(CFG_HW_RCC_CRRCR_CCIPR_SEMID);
 }
-#endif
+    #endif
 
 /**
  * @brief  write the data on the uart
@@ -756,11 +756,11 @@ size_t uart_write(serial_t* obj, uint8_t data, uint16_t size)
 void uart_debug_init(void)
 {
     if (DEBUG_UART != NP) {
-#if defined(DEBUG_PINNAME_TX)
+    #if defined(DEBUG_PINNAME_TX)
         serial_debug.pin_tx = DEBUG_PINNAME_TX;
-#else
+    #else
         serial_debug.pin_tx = pinmap_pin(DEBUG_UART, PinMap_UART_TX);
-#endif
+    #endif
         /* serial_debug.pin_rx set by default to NC to configure in half duplex mode */
         uart_init(&serial_debug, DEBUG_UART_BAUDRATE, UART_WORDLENGTH_8B, UART_PARITY_NONE, UART_STOPBITS_1);
     }
@@ -995,7 +995,7 @@ void HAL_UART_TxCpltCallback(UART_HandleTypeDef* huart)
  */
 void HAL_UART_ErrorCallback(UART_HandleTypeDef* huart)
 {
-#if defined(STM32F1xx) || defined(STM32F2xx) || defined(STM32F4xx) || defined(STM32L1xx)
+    #if defined(STM32F1xx) || defined(STM32F2xx) || defined(STM32F4xx) || defined(STM32L1xx)
     if (__HAL_UART_GET_FLAG(huart, UART_FLAG_PE) != RESET) {
         __HAL_UART_CLEAR_PEFLAG(huart); /* Clear PE flag */
     }
@@ -1008,7 +1008,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef* huart)
     else if (__HAL_UART_GET_FLAG(huart, UART_FLAG_ORE) != RESET) {
         __HAL_UART_CLEAR_OREFLAG(huart); /* Clear ORE flag */
     }
-#else
+    #else
     if (__HAL_UART_GET_FLAG(huart, UART_FLAG_PE) != RESET) {
         __HAL_UART_CLEAR_FLAG(huart, UART_CLEAR_PEF); /* Clear PE flag */
     }
@@ -1021,7 +1021,7 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef* huart)
     else if (__HAL_UART_GET_FLAG(huart, UART_FLAG_ORE) != RESET) {
         __HAL_UART_CLEAR_FLAG(huart, UART_CLEAR_OREF); /* Clear ORE flag */
     }
-#endif
+    #endif
     /* Restart receive interrupt after any error */
     serial_t* obj = get_serial_obj(huart);
     if (obj && !serial_rx_active(obj)) {
@@ -1029,49 +1029,49 @@ void HAL_UART_ErrorCallback(UART_HandleTypeDef* huart)
     }
 }
 
-/**
- * @brief  USART 1 IRQ handler
- * @param  None
- * @retval None
- */
-#if defined(USART1_BASE)
+    /**
+     * @brief  USART 1 IRQ handler
+     * @param  None
+     * @retval None
+     */
+    #if defined(USART1_BASE)
 void USART1_IRQHandler(void)
 {
     HAL_NVIC_ClearPendingIRQ(USART1_IRQn);
     HAL_UART_IRQHandler(uart_handlers[UART1_INDEX]);
 }
-#endif
+    #endif
 
-/**
- * @brief  USART 2 IRQ handler
- * @param  None
- * @retval None
- */
-#if defined(USART2_BASE)
+    /**
+     * @brief  USART 2 IRQ handler
+     * @param  None
+     * @retval None
+     */
+    #if defined(USART2_BASE)
 void USART2_IRQHandler(void)
 {
     HAL_NVIC_ClearPendingIRQ(USART2_IRQn);
     if (uart_handlers[UART2_INDEX] != NULL) {
         HAL_UART_IRQHandler(uart_handlers[UART2_INDEX]);
     }
-#if (defined(STM32G0xx) || defined(STM32U0xx)) && defined(LPUART2_BASE)
+        #if (defined(STM32G0xx) || defined(STM32U0xx)) && defined(LPUART2_BASE)
     if (uart_handlers[LPUART2_INDEX] != NULL) {
         HAL_UART_IRQHandler(uart_handlers[LPUART2_INDEX]);
     }
-#endif
+        #endif
 }
-#endif
+    #endif
 
-/**
- * @brief  USART 3 IRQ handler
- * @param  None
- * @retval None
- */
-#if defined(USART3_BASE)
+    /**
+     * @brief  USART 3 IRQ handler
+     * @param  None
+     * @retval None
+     */
+    #if defined(USART3_BASE)
 void USART3_IRQHandler(void)
 {
     HAL_NVIC_ClearPendingIRQ(USART3_IRQn);
-#if defined(STM32F091xC) || defined(STM32F098xx)
+        #if defined(STM32F091xC) || defined(STM32F098xx)
     if (__HAL_GET_PENDING_IT(HAL_ITLINE_USART3) != RESET) {
         HAL_UART_IRQHandler(uart_handlers[UART3_INDEX]);
     }
@@ -1090,53 +1090,53 @@ void USART3_IRQHandler(void)
     if (__HAL_GET_PENDING_IT(HAL_ITLINE_USART8) != RESET) {
         HAL_UART_IRQHandler(uart_handlers[UART8_INDEX]);
     }
-#else
+        #else
     if (uart_handlers[UART3_INDEX] != NULL) {
         HAL_UART_IRQHandler(uart_handlers[UART3_INDEX]);
     }
-#if defined(STM32F0xx) || defined(STM32G0xx) || defined(STM32U0xx)
+            #if defined(STM32F0xx) || defined(STM32G0xx) || defined(STM32U0xx)
     /* USART3_4_IRQn */
     if (uart_handlers[UART4_INDEX] != NULL) {
         HAL_UART_IRQHandler(uart_handlers[UART4_INDEX]);
     }
-#if defined(STM32F030xC) || defined(STM32G0xx) && (defined(LPUART2_BASE) || defined(USART5_BASE))
+                #if defined(STM32F030xC) || defined(STM32G0xx) && (defined(LPUART2_BASE) || defined(USART5_BASE))
     if (uart_handlers[UART5_INDEX] != NULL) {
         HAL_UART_IRQHandler(uart_handlers[UART5_INDEX]);
     }
     if (uart_handlers[UART6_INDEX] != NULL) {
         HAL_UART_IRQHandler(uart_handlers[UART6_INDEX]);
     }
-#endif /* STM32F030xC */
-#if (defined(STM32G0xx) || STM32U0xx) && defined(LPUART1_BASE)
+                #endif /* STM32F030xC */
+                #if (defined(STM32G0xx) || STM32U0xx) && defined(LPUART1_BASE)
     if (uart_handlers[LPUART1_INDEX] != NULL) {
         HAL_UART_IRQHandler(uart_handlers[LPUART1_INDEX]);
     }
-#endif /* (STM32G0xx || STM32U0xx) && LPUART1_BASE */
-#endif /* STM32F0xx || STM32G0xx || STM32U0xx */
-#endif /* STM32F091xC || STM32F098xx */
+                #endif /* (STM32G0xx || STM32U0xx) && LPUART1_BASE */
+            #endif     /* STM32F0xx || STM32G0xx || STM32U0xx */
+        #endif         /* STM32F091xC || STM32F098xx */
 }
-#endif
+    #endif
 
-/**
- * @brief  UART 4 IRQ handler
- * @param  None
- * @retval None
- */
-#if defined(UART4_BASE)
+    /**
+     * @brief  UART 4 IRQ handler
+     * @param  None
+     * @retval None
+     */
+    #if defined(UART4_BASE)
 void UART4_IRQHandler(void)
 {
     HAL_NVIC_ClearPendingIRQ(UART4_IRQn);
     HAL_UART_IRQHandler(uart_handlers[UART4_INDEX]);
 }
-#endif
+    #endif
 
-/**
- * @brief  USART 4/5 IRQ handler
- * @param  None
- * @retval None
- */
-#if defined(STM32L0xx)
-#if defined(USART4_BASE) || defined(USART5_BASE)
+    /**
+     * @brief  USART 4/5 IRQ handler
+     * @param  None
+     * @retval None
+     */
+    #if defined(STM32L0xx)
+        #if defined(USART4_BASE) || defined(USART5_BASE)
 void USART4_5_IRQHandler(void)
 {
     HAL_NVIC_ClearPendingIRQ(USART4_IRQn);
@@ -1147,134 +1147,134 @@ void USART4_5_IRQHandler(void)
         HAL_UART_IRQHandler(uart_handlers[UART5_INDEX]);
     }
 }
-#endif
-#endif
+        #endif
+    #endif
 
-/**
- * @brief  USART 4 IRQ handler
- * @param  None
- * @retval None
- */
-#if defined(STM32U0xx)
-#if defined(USART4_BASE)
+    /**
+     * @brief  USART 4 IRQ handler
+     * @param  None
+     * @retval None
+     */
+    #if defined(STM32U0xx)
+        #if defined(USART4_BASE)
 void USART4_IRQHandler(void)
 {
     HAL_NVIC_ClearPendingIRQ(USART4_IRQn);
     if (uart_handlers[UART4_INDEX] != NULL) {
         HAL_UART_IRQHandler(uart_handlers[UART4_INDEX]);
     }
-#if defined(LPUART3_BASE)
+            #if defined(LPUART3_BASE)
     if (uart_handlers[LPUART3_INDEX] != NULL) {
         HAL_UART_IRQHandler(uart_handlers[LPUART3_INDEX]);
     }
-#endif
+            #endif
 }
-#endif
-#endif
+        #endif
+    #endif
 
-/**
- * @brief  USART 5 IRQ handler
- * @param  None
- * @retval None
- */
-#if defined(UART5_BASE)
+    /**
+     * @brief  USART 5 IRQ handler
+     * @param  None
+     * @retval None
+     */
+    #if defined(UART5_BASE)
 void UART5_IRQHandler(void)
 {
     HAL_NVIC_ClearPendingIRQ(UART5_IRQn);
     HAL_UART_IRQHandler(uart_handlers[UART5_INDEX]);
 }
-#endif
+    #endif
 
-/**
- * @brief  USART 6 IRQ handler
- * @param  None
- * @retval None
- */
-#if defined(USART6_BASE) && !defined(STM32F0xx) && !defined(STM32G0xx)
+    /**
+     * @brief  USART 6 IRQ handler
+     * @param  None
+     * @retval None
+     */
+    #if defined(USART6_BASE) && !defined(STM32F0xx) && !defined(STM32G0xx)
 void USART6_IRQHandler(void)
 {
     HAL_NVIC_ClearPendingIRQ(USART6_IRQn);
     HAL_UART_IRQHandler(uart_handlers[UART6_INDEX]);
 }
-#endif
+    #endif
 
-/**
- * @brief  LPUART 1 IRQ handler
- * @param  None
- * @retval None
- */
-#if defined(LPUART1_BASE)
+    /**
+     * @brief  LPUART 1 IRQ handler
+     * @param  None
+     * @retval None
+     */
+    #if defined(LPUART1_BASE)
 void LPUART1_IRQHandler(void)
 {
     HAL_NVIC_ClearPendingIRQ(LPUART1_IRQn);
     HAL_UART_IRQHandler(uart_handlers[LPUART1_INDEX]);
 }
-#endif
+    #endif
 
-/**
- * @brief  UART 7 IRQ handler
- * @param  None
- * @retval None
- */
-#if defined(UART7_BASE)
+    /**
+     * @brief  UART 7 IRQ handler
+     * @param  None
+     * @retval None
+     */
+    #if defined(UART7_BASE)
 void UART7_IRQHandler(void)
 {
     HAL_NVIC_ClearPendingIRQ(UART7_IRQn);
     HAL_UART_IRQHandler(uart_handlers[UART7_INDEX]);
 }
-#endif
+    #endif
 
-/**
- * @brief  UART 8 IRQ handler
- * @param  None
- * @retval None
- */
-#if defined(UART8_BASE)
+    /**
+     * @brief  UART 8 IRQ handler
+     * @param  None
+     * @retval None
+     */
+    #if defined(UART8_BASE)
 void UART8_IRQHandler(void)
 {
     HAL_NVIC_ClearPendingIRQ(UART8_IRQn);
     HAL_UART_IRQHandler(uart_handlers[UART8_INDEX]);
 }
-#endif
+    #endif
 
-/**
- * @brief  UART 9 IRQ handler
- * @param  None
- * @retval None
- */
-#if defined(UART9_BASE)
+    /**
+     * @brief  UART 9 IRQ handler
+     * @param  None
+     * @retval None
+     */
+    #if defined(UART9_BASE)
 void UART9_IRQHandler(void)
 {
     HAL_NVIC_ClearPendingIRQ(UART9_IRQn);
     HAL_UART_IRQHandler(uart_handlers[UART9_INDEX]);
 }
-#endif
+    #endif
 
-/**
- * @brief  UART 10 IRQ handler
- * @param  None
- * @retval None
- */
-#if defined(UART10_BASE)
+    /**
+     * @brief  UART 10 IRQ handler
+     * @param  None
+     * @retval None
+     */
+    #if defined(UART10_BASE)
 void UART10_IRQHandler(void)
 {
     HAL_NVIC_ClearPendingIRQ(UART10_IRQn);
     HAL_UART_IRQHandler(uart_handlers[UART10_INDEX]);
 }
-#endif
+    #endif
 
-/**
- * @brief  USART 10 IRQ handler
- * @param  None
- * @retval None
- */
-#if defined(USART10_BASE)
+    /**
+     * @brief  USART 10 IRQ handler
+     * @param  None
+     * @retval None
+     */
+    #if defined(USART10_BASE)
 void USART10_IRQHandler(void)
 {
     HAL_NVIC_ClearPendingIRQ(USART10_IRQn);
     HAL_UART_IRQHandler(uart_handlers[UART10_INDEX]);
 }
-#endif
+    #endif
 
 /**
  * @brief  HAL UART Call Back

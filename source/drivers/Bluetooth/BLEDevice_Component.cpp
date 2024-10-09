@@ -5,8 +5,8 @@
 
 using namespace codal;
 
-constexpr int BLE_DEVICE_UPDATE = 0x01;
-constexpr int BLE_DEVICE_SWAP   = 0x02;
+constexpr int BLE_DEVICE_UPDATE                = 0x01;
+constexpr int BLE_DEVICE_SWAP                  = 0x02;
 
 constexpr uint32_t BLE_DEVICE_UPDATE_PERIOD_MS = 100;
 

@@ -53,7 +53,7 @@ class STM32SPI : public codal::SPI {
      *
      * @param msbFirst Trus if should send data MSB First
      */
-    STM32SPI(STM32Pin& miso, STM32Pin& mosi, STM32Pin& sclk, uint32_t freq = 14000000, int mode = 0,
+    STM32SPI(STM32Pin& miso, STM32Pin& mosi, STM32Pin& sclk, uint32_t freq = 14'000'000, int mode = 0,
              bool msbFirst = true);
 
     ~STM32SPI();
@@ -133,7 +133,7 @@ class STM32SPI : public codal::SPI {
      * @param skipReceive
      * @return std::vector<uint8_t>
      */
-    std::vector<uint8_t> endTransaction(uint32_t timeout = 1000, bool skipReceive = false);
+    std::vector<uint8_t> endTransaction(uint32_t timeout = 1'000, bool skipReceive = false);
 
     /**
      * @brief

@@ -8,8 +8,8 @@
 #include "clock.h"
 
 constexpr uint16_t MAX_BUFFER_POLL_SIZE    = 64;
-constexpr uint32_t EXPIRATION_PACKETS_MS   = 10000;
-constexpr uint32_t TIMEOUT_COMMAND_MS      = 1000;
+constexpr uint32_t EXPIRATION_PACKETS_MS   = 10'000;
+constexpr uint32_t TIMEOUT_COMMAND_MS      = 1'000;
 constexpr size_t MAX_ADV_REPORT_DEQUE_SIZE = 32;
 constexpr size_t MAX_EVENT_LIST_SIZE       = 32;
 
@@ -179,7 +179,7 @@ LeReadBufferSizeResult HCI::leReadBufferSize()
         return values;
     }
 
-    values.success = true;
+    values.success                 = true;
 
     values.leAclDataPacketLength   = ((uint16_t)result[2] << 8) | result[1];
     values.totalNumLEAclDataPacket = result[3];

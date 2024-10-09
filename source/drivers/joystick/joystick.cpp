@@ -11,9 +11,9 @@ using namespace codal;
 Joystick::Joystick(STM32Pin& horizontalAxisPin, STM32Pin& verticalAxisPin, STM32Pin& buttonPin, uint8_t deadzone)
     : directionUserEvents{{nullptr}}, buttonUserEvents{{nullptr}}
 {
-    horizontalSensor = new AnalogSensor(horizontalAxisPin, 6666);
-    verticalSensor   = new AnalogSensor(verticalAxisPin, 9999);
-    button           = new Button(buttonPin, 7777);
+    horizontalSensor = new AnalogSensor(horizontalAxisPin, 6'666);
+    verticalSensor   = new AnalogSensor(verticalAxisPin, 9'999);
+    button           = new Button(buttonPin, 7'777);
     setDeadzone(deadzone);
 }
 
@@ -44,7 +44,7 @@ int8_t Joystick::getAxis(JoystickAxis axis)
 
     if (axisValue > 512 + deadzone) {
         // mapping of axis value between 0 and JoystickAxisRange
-        axisValue = mapAxis(axisValue, 512 + deadzone, 1023, 0, JoystickAxisRange) + 1;
+        axisValue = mapAxis(axisValue, 512 + deadzone, 1'023, 0, JoystickAxisRange) + 1;
         return axisValue;
     }
     else if (axisValue < 512 - deadzone) {

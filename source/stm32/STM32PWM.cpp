@@ -25,7 +25,7 @@ void STM32PWM::init()
     htim.Instance               = (TIM_TypeDef*)pinmap_peripheral(pinName, PinMap_TIM);
     htim.Init.Prescaler         = 0;
     htim.Init.CounterMode       = TIM_COUNTERMODE_UP;
-    htim.Init.Period            = 65535;
+    htim.Init.Period            = 65'535;
     htim.Init.ClockDivision     = TIM_CLOCKDIVISION_DIV1;
     htim.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
 
@@ -40,7 +40,7 @@ void STM32PWM::init()
     }
 
     sConfigOC.OCMode     = TIM_OCMODE_PWM1;
-    sConfigOC.Pulse      = 30000;
+    sConfigOC.Pulse      = 30'000;
     sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
     sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
     if (HAL_TIM_PWM_ConfigChannel(&htim, &sConfigOC, getTimChannel(STM_PIN_CHANNEL(timFunction))) != HAL_OK) {
@@ -66,13 +66,13 @@ void STM32PWM::setFrequency(uint32_t freq)
     if (freq == 0) freq = 1;
 
     frequency          = freq;
-    uint32_t prescaler = (HAL_RCC_GetHCLKFreq() / ((uint32_t)65536 * frequency)) + 1;
+    uint32_t prescaler = (HAL_RCC_GetHCLKFreq() / ((uint32_t)65'536 * frequency)) + 1;
     uint32_t period    = (HAL_RCC_GetHCLKFreq() / ((prescaler + 1) * frequency)) - 1;
 
     if (period < 255)
         period = 255;
-    else if (period > 65535)
-        period = 65535;
+    else if (period > 65'535)
+        period = 65'535;
 
     htim.Init.Prescaler = prescaler;
     htim.Init.Period    = period;
@@ -98,7 +98,7 @@ void STM32PWM::setDutyCycleFromResolution(uint32_t value, uint8_t resolution)
 
 void STM32PWM::setDutyCycleFromUs(uint32_t us)
 {
-    uint32_t usMax  = (uint32_t)1000000 / frequency;
+    uint32_t usMax  = (uint32_t)1'000'000 / frequency;
     sConfigOC.Pulse = map(us, 0, usMax, 0, htim.Init.Period);
 
     if (isStart) restart();

@@ -22,18 +22,17 @@ using namespace std;
 
 void APDS9960::init()
 {
-    setRegister(REG_ENABLE, 0b00000001);
+    setRegister(REG_ENABLE, 0b0000'0001);
     setRegister(REG_WTIME, 0xFF);
     setRegister(REG_ATIME, 0xFF);
-    setRegister(REG_CONFIG1, 0b01100000);
+    setRegister(REG_CONFIG1, 0b0110'0000);
     setGain(APDS9960Gain::GAIN_x4);
 }
 
 array<uint16_t, 4> APDS9960::getColors(bool wait)
 {
     setBit(REG_ENABLE, 1);
-    while (wait && getBit(REG_STATUS, 0) == 0)
-        ;
+    while (wait && getBit(REG_STATUS, 0) == 0);
 
     uint16_t c = read16BitRegister(REG_CDATA_L);
     uint16_t r = read16BitRegister(REG_RDATA_L);
@@ -49,7 +48,7 @@ void APDS9960::setGain(APDS9960Gain gain)
 {
     this->gain  = gain;
     uint8_t reg = readRegister(REG_CONTROL);
-    reg &= 0b11001100;
+    reg &= 0b1100'1100;
     reg |= (uint8_t)gain;
     setRegister(REG_CONTROL, reg);
 }

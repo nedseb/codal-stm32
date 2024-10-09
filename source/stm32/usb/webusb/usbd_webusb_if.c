@@ -18,16 +18,16 @@
  */
 
 #ifdef USBCON
-#ifdef USBD_USE_CDC
+    #ifdef USBD_USE_CDC
 
-/* Includes ------------------------------------------------------------------*/
-#include "usbd_webusb_if.h"
+        /* Includes ------------------------------------------------------------------*/
+        #include "usbd_webusb_if.h"
 
-#include <stdint.h>
+        #include <stdint.h>
 
-#include "bootloader.h"
-#include "usbd_ctlreq.h"
-#include "usbd_desc.h"
+        #include "bootloader.h"
+        #include "usbd_ctlreq.h"
+        #include "usbd_desc.h"
 
 // =====================================================================
 // === WEB USB =======================================================
@@ -35,15 +35,15 @@
 
 USBD_DescriptorsTypeDef USBD_Desc_webusb;
 
-#if defined(__ICCARM__) /*!< IAR Compiler */
-#pragma data_alignment = 4
-#endif
+        #if defined(__ICCARM__) /*!< IAR Compiler */
+            #pragma data_alignment = 4
+        #endif
 __ALIGN_BEGIN uint8_t USBD_StrDesc[USBD_MAX_STR_DESC_SIZ] __ALIGN_END;
 
-/* USB Device Billboard BOS descriptor Template */
-#if (USBD_CLASS_BOS_ENABLED == 1)
+        /* USB Device Billboard BOS descriptor Template */
+        #if (USBD_CLASS_BOS_ENABLED == 1)
 
-#define USB_WEBUSB_SIZ_BOS_DESC 0x1D
+            #define USB_WEBUSB_SIZ_BOS_DESC 0x1D
 
 __ALIGN_BEGIN uint8_t USBD_WebUSB_BOSDesc[USB_WEBUSB_SIZ_BOS_DESC] __ALIGN_END = {
     0x05,              /* bLength */
@@ -78,9 +78,9 @@ __ALIGN_BEGIN uint8_t USBD_WebUSB_BOSDesc[USB_WEBUSB_SIZ_BOS_DESC] __ALIGN_END =
     0x02,
     0x00,
 };
-#endif
+        #endif
 
-#if (USBD_CLASS_USER_STRING_DESC == 1)
+        #if (USBD_CLASS_USER_STRING_DESC == 1)
 /**
  * @brief  Returns the Class User string descriptor.
  * @param  speed: Current device speed
@@ -104,9 +104,9 @@ uint8_t* USBD_WebUSB_Class_UserStrDescriptor(USBD_SpeedTypeDef speed, uint8_t id
 
     return USBD_StrDesc;
 }
-#endif
+        #endif
 
-#if ((USBD_LPM_ENABLED == 1) || (USBD_CLASS_BOS_ENABLED == 1))
+        #if ((USBD_LPM_ENABLED == 1) || (USBD_CLASS_BOS_ENABLED == 1))
 /**
  * @brief  USBD_USR_BOSDescriptor
  *         return the BOS descriptor
@@ -120,28 +120,28 @@ uint8_t* USBD_WebUSB_USR_BOSDescriptor(USBD_SpeedTypeDef speed, uint16_t* length
     *length = sizeof(USBD_WebUSB_BOSDesc);
     return (uint8_t*)USBD_WebUSB_BOSDesc;
 }
-#endif
+        #endif
 
-// =====================================================================
-// === CDC ===========================================================
-// =================================================================
+    // =====================================================================
+    // === CDC ===========================================================
+    // =================================================================
 
-#ifdef USE_USB_HS
-#define WebUSB_MAX_PACKET_SIZE USB_OTG_HS_MAX_PACKET_SIZE
-#elif defined(USB_OTG_FS) || defined(USB_OTG_FS_MAX_PACKET_SIZE)
-#define WebUSB_MAX_PACKET_SIZE USB_OTG_FS_MAX_PACKET_SIZE
-#else /* USB */
-#define WebUSB_MAX_PACKET_SIZE USB_MAX_EP0_SIZE
-#endif
+        #ifdef USE_USB_HS
+            #define WebUSB_MAX_PACKET_SIZE USB_OTG_HS_MAX_PACKET_SIZE
+        #elif defined(USB_OTG_FS) || defined(USB_OTG_FS_MAX_PACKET_SIZE)
+            #define WebUSB_MAX_PACKET_SIZE USB_OTG_FS_MAX_PACKET_SIZE
+        #else /* USB */
+            #define WebUSB_MAX_PACKET_SIZE USB_MAX_EP0_SIZE
+        #endif
 
-/*
- * The value USB_WebUSB_TRANSMIT_TIMEOUT is defined in terms of HAL_GetTick() units.
- * Typically it is 1ms value. The timeout determines when we would consider the
- * host "too slow" and threat the USB CDC port as disconnected.
- */
-#ifndef USB_WebUSB_TRANSMIT_TIMEOUT
-#define USB_WebUSB_TRANSMIT_TIMEOUT 3
-#endif
+        /*
+         * The value USB_WebUSB_TRANSMIT_TIMEOUT is defined in terms of HAL_GetTick() units.
+         * Typically it is 1ms value. The timeout determines when we would consider the
+         * host "too slow" and threat the USB CDC port as disconnected.
+         */
+        #ifndef USB_WebUSB_TRANSMIT_TIMEOUT
+            #define USB_WebUSB_TRANSMIT_TIMEOUT 3
+        #endif
 
 /* USBD_CDC Private Variables */
 /* USB Device Core CDC handle declaration */
@@ -156,11 +156,11 @@ __IO uint32_t lineState_webusb = 0;
 __IO bool receivePended_webusb = true;
 static uint32_t transmitStart  = 0;
 
-#ifdef DTR_TOGGLING_SEQ
+        #ifdef DTR_TOGGLING_SEQ
 /* DTR toggling sequence management */
 extern void dtr_togglingHook(uint8_t* buf, uint32_t* len);
 uint8_t dtr_toggling = 0;
-#endif
+        #endif
 
 /** USBD_CDC Private Function Prototypes */
 
@@ -170,14 +170,14 @@ static int8_t USBD_WebUSB_Control(uint8_t cmd, uint8_t* pbuf, uint16_t length);
 static int8_t USBD_WebUSB_Receive(uint8_t* pbuf, uint32_t* Len);
 static int8_t USBD_WebUSB_TransmitCplt(uint8_t* pbuf, uint32_t* Len, uint8_t epnum);
 
-USBD_WebUSB_ItfTypeDef USBD_WebUSB_fops = {USBD_WebUSB_Init, USBD_WebUSB_DeInit, USBD_WebUSB_Control,
-                                           USBD_WebUSB_Receive, USBD_WebUSB_TransmitCplt};
+USBD_WebUSB_ItfTypeDef USBD_WebUSB_fops         = {USBD_WebUSB_Init, USBD_WebUSB_DeInit, USBD_WebUSB_Control,
+                                                   USBD_WebUSB_Receive, USBD_WebUSB_TransmitCplt};
 
 USBD_WebUSB_LineCodingTypeDef linecoding_webusb = {
-    115200, /* baud rate*/
-    0x00,   /* stop bits-1*/
-    0x00,   /* parity - none*/
-    0x08    /* nb. of bits 8*/
+    115'200, /* baud rate*/
+    0x00,    /* stop bits-1*/
+    0x00,    /* parity - none*/
+    0x08     /* nb. of bits 8*/
 };
 
 void (*webusb_rx_callback)(void) = NULL;
@@ -283,9 +283,9 @@ static int8_t USBD_WebUSB_Control(uint8_t cmd, uint8_t* pbuf, uint16_t length)
             if (lineState_webusb) {  // Reset the transmit timeout when the port is connected
                 transmitStart = 0;
             }
-#ifdef DTR_TOGGLING_SEQ
+        #ifdef DTR_TOGGLING_SEQ
             dtr_toggling++; /* Count DTR toggling */
-#endif
+        #endif
             break;
 
         case WebUSB_SEND_BREAK:
@@ -317,14 +317,14 @@ static int8_t USBD_WebUSB_Control(uint8_t cmd, uint8_t* pbuf, uint16_t length)
  */
 static int8_t USBD_WebUSB_Receive(uint8_t* Buf, uint32_t* Len)
 {
-#ifdef DTR_TOGGLING_SEQ
+        #ifdef DTR_TOGGLING_SEQ
     if (dtr_toggling > 3) {
         dtr_togglingHook(Buf, Len);
         dtr_toggling = 0;
     }
-#else
+        #else
     UNUSED(Buf);
-#endif
+        #endif
     /* It always contains required amount of free space for writing */
     CDC_ReceiveQueue_CommitBlock(&WebUSB_ReceiveQueue, (uint16_t)(*Len));
     receivePended_webusb = false;
@@ -373,13 +373,13 @@ void webUSB_init(void)
     USBD_Desc_webusb.GetConfigurationStrDescriptor = USBD_Desc.GetConfigurationStrDescriptor;
     USBD_Desc_webusb.GetInterfaceStrDescriptor     = USBD_Desc.GetInterfaceStrDescriptor;
 
-#if (USBD_CLASS_USER_STRING_DESC == 1)
+        #if (USBD_CLASS_USER_STRING_DESC == 1)
     USBD_Desc_webusb.GetUserStrDescriptor = USBD_WebUSB_Class_UserStrDescriptor;
-#endif
+        #endif
 
-#if ((USBD_LPM_ENABLED == 1) || (USBD_CLASS_BOS_ENABLED == 1))
+        #if ((USBD_LPM_ENABLED == 1) || (USBD_CLASS_BOS_ENABLED == 1))
     USBD_Desc_webusb.GetBOSDescriptor = USBD_WebUSB_USR_BOSDescriptor;
-#endif
+        #endif
 
     if (!WebUSB_initialized) {
         /* Init Device Library */
@@ -469,6 +469,6 @@ void webUSB_OnDataReceived(void (*callback)(void))
     webusb_rx_callback = callback;
 }
 
-#endif /* USBD_USE_CDC */
-#endif /* USBCON */
+    #endif /* USBD_USE_CDC */
+#endif     /* USBCON */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -26,7 +26,7 @@ BLEAdvertisingReport::BLEAdvertisingReport(vector<uint8_t>& eventData)
     rssi                = eventData[11 + dataLength];
     address             = BLEAddress(addressMSB, addressLSB);
 
-    uint8_t dataIdx = 11;
+    uint8_t dataIdx     = 11;
     while (dataIdx < dataLength + 11) {
         uint8_t adLength    = eventData[dataIdx++];
         GAP_DataType adType = static_cast<GAP_DataType>(eventData[dataIdx]);

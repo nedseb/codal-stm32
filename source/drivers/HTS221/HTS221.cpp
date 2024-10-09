@@ -229,8 +229,8 @@ void HTS221::readCalibrationValue()
     T0Deg = T0DegRaw >> 3;
     T1Deg = T1DegRaw >> 3;
 
-    H0Rh = readRegister(H0_RH_X2) >> 1;
-    H1Rh = readRegister(H1_RH_X2) >> 1;
+    H0Rh  = readRegister(H0_RH_X2) >> 1;
+    H1Rh  = readRegister(H1_RH_X2) >> 1;
 
     T0Out = (int16_t)(readRegister(T0_OUT_MSB) << 8) | readRegister(T0_OUT_LSB);
     T1Out = (int16_t)(readRegister(T1_OUT_MSB) << 8) | readRegister(T1_OUT_LSB);

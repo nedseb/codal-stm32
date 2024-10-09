@@ -16,59 +16,59 @@
  ******************************************************************************
  */
 #if defined(HAL_PCD_MODULE_ENABLED) && defined(USBCON)
-/* Includes ------------------------------------------------------------------*/
-#include "usbd_ep_conf.h"
+    /* Includes ------------------------------------------------------------------*/
+    #include "usbd_ep_conf.h"
 
-#ifdef USBD_USE_CDC
+    #ifdef USBD_USE_CDC
 const ep_desc_t ep_def[] = {
-#ifdef USE_USB_HS
+        #ifdef USE_USB_HS
     {0x00, CDC_DATA_HS_MAX_PACKET_SIZE},
     {0x80, CDC_DATA_HS_MAX_PACKET_SIZE},
     {CDC_OUT_EP, CDC_DATA_HS_MAX_PACKET_SIZE},
     {CDC_IN_EP, CDC_DATA_HS_MAX_PACKET_SIZE},
     {CDC_CMD_EP, CDC_CMD_PACKET_SIZE}
-#else /* USE_USB_FS */
-#ifdef USB_OTG_FS
+        #else /* USE_USB_FS */
+            #ifdef USB_OTG_FS
     {0x00, CDC_DATA_FS_MAX_PACKET_SIZE},
     {0x80, CDC_DATA_FS_MAX_PACKET_SIZE},
     {CDC_OUT_EP, CDC_DATA_FS_MAX_PACKET_SIZE},
     {CDC_IN_EP, CDC_DATA_FS_MAX_PACKET_SIZE},
     {CDC_CMD_EP, CDC_CMD_PACKET_SIZE}
-#else
+            #else
     {0x00, PMA_EP0_OUT_ADDR, PCD_SNG_BUF},
     {0x80, PMA_EP0_IN_ADDR, PCD_SNG_BUF},
-#ifndef USBD_CDC_USE_SINGLE_BUFFER
+                #ifndef USBD_CDC_USE_SINGLE_BUFFER
     {CDC_OUT_EP, PMA_CDC_OUT_ADDR, PCD_DBL_BUF},
-#else
+                #else
     {CDC_OUT_EP, PMA_CDC_OUT_ADDR, PCD_SNG_BUF},
-#endif
+                #endif
     {CDC_IN_EP, PMA_CDC_IN_ADDR, PCD_SNG_BUF},
     {CDC_CMD_EP, PMA_CDC_CMD_ADDR, PCD_SNG_BUF}
-#endif
-#endif
+            #endif
+        #endif
 };
-#endif /* USBD_USE_CDC */
+    #endif /* USBD_USE_CDC */
 
-#ifdef USBD_USE_HID_COMPOSITE
+    #ifdef USBD_USE_HID_COMPOSITE
 const ep_desc_t ep_def[] = {
-#if !defined(USB)
-#ifdef USE_USB_HS
+        #if !defined(USB)
+            #ifdef USE_USB_HS
     {0x00, USB_HS_MAX_PACKET_SIZE},
     {0x80, USB_HS_MAX_PACKET_SIZE},
-#else
+            #else
     {0x00, USB_FS_MAX_PACKET_SIZE},
     {0x80, USB_FS_MAX_PACKET_SIZE},
-#endif
+            #endif
     {HID_MOUSE_EPIN_ADDR, HID_MOUSE_EPIN_SIZE},
     {HID_KEYBOARD_EPIN_ADDR, HID_KEYBOARD_EPIN_SIZE},
-#else
+        #else
     {0x00, PMA_EP0_OUT_ADDR, PCD_SNG_BUF},
     {0x80, PMA_EP0_IN_ADDR, PCD_SNG_BUF},
     {HID_MOUSE_EPIN_ADDR, PMA_MOUSE_IN_ADDR, PCD_SNG_BUF},
     {HID_KEYBOARD_EPIN_ADDR, PMA_KEYBOARD_IN_ADDR, PCD_SNG_BUF},
-#endif
+        #endif
 };
-#endif /* USBD_USE_HID_COMPOSITE */
+    #endif /* USBD_USE_HID_COMPOSITE */
 
 #endif /* HAL_PCD_MODULE_ENABLED && USBCON */
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

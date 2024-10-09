@@ -17,52 +17,53 @@
  * limitations under the License.
  */
 #ifndef _PINMAP_H
-#define _PINMAP_H
+    #define _PINMAP_H
 
-#include "PinNames.h"
-#include <stdbool.h>
-#include <string.h>
+    #include <stdbool.h>
+    #include <string.h>
 
-#ifdef __cplusplus
+    #include "PinNames.h"
+
+    #ifdef __cplusplus
 extern "C" {
-#endif
+    #endif
 
 extern const uint32_t pin_map_ll[16];
 
-#ifndef GPIO_AF_NONE
-#define GPIO_AF_NONE 0
-#endif
-#define STM_LL_GPIO_PIN(X) (pin_map_ll[STM_PIN(X)])
+    #ifndef GPIO_AF_NONE
+        #define GPIO_AF_NONE 0
+    #endif
+    #define STM_LL_GPIO_PIN(X) (pin_map_ll[STM_PIN(X)])
 
-// No peripheral
-#define NP       0U
+    // No peripheral
+    #define NP 0U
 
 typedef struct {
-  PinName pin;
-  void *peripheral;
-  int function;
+    PinName pin;
+    void* peripheral;
+    int function;
 } PinMap;
 
-bool pin_in_pinmap(PinName pin, const PinMap *map);
+bool pin_in_pinmap(PinName pin, const PinMap* map);
 void pin_function(PinName pin, int function);
 
-static inline PinName pin_pinName(const PinMap *map)
+static inline PinName pin_pinName(const PinMap* map)
 {
-  return map->pin;
+    return map->pin;
 }
 
-void  pinmap_pinout(PinName pin, const PinMap *map);
-void *pinmap_find_peripheral(PinName pin, const PinMap *map);
-void *pinmap_peripheral(PinName pin, const PinMap *map);
-PinName pinmap_find_pin(void *peripheral, const PinMap *map);
-PinName pinmap_pin(void *peripheral, const PinMap *map);
-uint32_t pinmap_find_function(PinName pin, const PinMap *map);
-uint32_t pinmap_function(PinName pin, const PinMap *map);
-void *pinmap_merge_peripheral(void *a, void *b);
+void pinmap_pinout(PinName pin, const PinMap* map);
+void* pinmap_find_peripheral(PinName pin, const PinMap* map);
+void* pinmap_peripheral(PinName pin, const PinMap* map);
+PinName pinmap_find_pin(void* peripheral, const PinMap* map);
+PinName pinmap_pin(void* peripheral, const PinMap* map);
+uint32_t pinmap_find_function(PinName pin, const PinMap* map);
+uint32_t pinmap_function(PinName pin, const PinMap* map);
+void* pinmap_merge_peripheral(void* a, void* b);
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif
 

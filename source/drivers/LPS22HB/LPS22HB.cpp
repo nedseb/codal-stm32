@@ -2,7 +2,7 @@
 
 using namespace codal;
 
-LPS22HB::LPS22HB(STM32I2C* i2c, uint8_t address) : dev_i2c(i2c), address(address){};
+LPS22HB::LPS22HB(STM32I2C* i2c, uint8_t address) : dev_i2c(i2c), address(address) {};
 
 void LPS22HB::init()
 {

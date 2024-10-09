@@ -12,7 +12,7 @@ BLEDevice::BLEDevice(HCI* hci)
     for (uint8_t i = 0; i < 6; ++i) {
         random_address[i] = codal::random(256);
     }
-    random_address[5] &= 0b11000000;
+    random_address[5] &= 0b1100'0000;
 }
 
 BLEDevice::~BLEDevice() {}

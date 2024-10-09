@@ -9,11 +9,11 @@
 #ifndef APP_CONF_H
 #define APP_CONF_H
 
-#include "hw.h"
 #include "ble_bufsize.h"
+#include "hw.h"
 
 #if __has_include("app_conf_custom.h")
-  #include "app_conf_custom.h"
+    #include "app_conf_custom.h"
 #endif
 #include "app_conf_default.h"
 

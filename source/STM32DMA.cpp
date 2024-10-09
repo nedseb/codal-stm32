@@ -2,9 +2,9 @@
 
 #if defined(STM32WBxx)
 
-#include <cstdio>
-#include <unordered_map>
-#include <vector>
+    #include <cstdio>
+    #include <unordered_map>
+    #include <vector>
 
 using namespace std;
 using namespace codal;
@@ -42,16 +42,16 @@ bool STM32DMA::init(DMA_Channel_TypeDef* instance, DMA_Request request, DMA_Dire
         return false;
     }
 
-#if defined(DMA2)
+    #if defined(DMA2)
     if ((uint32_t)(instance) >= (uint32_t)(DMA2_Channel1)) {
         __HAL_RCC_DMA2_CLK_ENABLE();
     }
     else {
         __HAL_RCC_DMA1_CLK_ENABLE();
     }
-#else
+    #else
     __HAL_RCC_DMA1_CLK_ENABLE();
-#endif
+    #endif
 
     __HAL_RCC_DMAMUX1_CLK_ENABLE();
 
@@ -65,11 +65,11 @@ bool STM32DMA::init(DMA_Channel_TypeDef* instance, DMA_Request request, DMA_Dire
     hdma->Init.Mode                = uint32_t(mode);
     hdma->Init.Priority            = uint32_t(priority);
 
-    uint8_t result = HAL_DMA_Init(hdma);
+    uint8_t result                 = HAL_DMA_Init(hdma);
 
-    initialized = (result == HAL_OK);
+    initialized                    = (result == HAL_OK);
 
-    irqn = getIRQn(instance);
+    irqn                           = getIRQn(instance);
 
     printf("DMA Init: 0x%02X\r\n", result);
 
@@ -119,64 +119,64 @@ IRQn_Type STM32DMA::getIRQn(DMA_Channel_TypeDef* channel)
     else if (channel == DMA1_Channel2) {
         return DMA1_Channel2_IRQn;
     }
-#if defined(DMA1_Channel3)
+    #if defined(DMA1_Channel3)
     else if (channel == DMA1_Channel3) {
         return DMA1_Channel3_IRQn;
     }
-#endif
-#if defined(DMA1_Channel4)
+    #endif
+    #if defined(DMA1_Channel4)
     else if (channel == DMA1_Channel4) {
         return DMA1_Channel4_IRQn;
     }
-#endif
-#if defined(DMA1_Channel5)
+    #endif
+    #if defined(DMA1_Channel5)
     else if (channel == DMA1_Channel5) {
         return DMA1_Channel5_IRQn;
     }
-#endif
-#if defined(DMA1_Channel6)
+    #endif
+    #if defined(DMA1_Channel6)
     else if (channel == DMA1_Channel6) {
         return DMA1_Channel6_IRQn;
     }
-#endif
-#if defined(DMA1_Channel7)
+    #endif
+    #if defined(DMA1_Channel7)
     else if (channel == DMA1_Channel7) {
         return DMA1_Channel7_IRQn;
     }
-#endif
-#if defined(DMA2)
+    #endif
+    #if defined(DMA2)
     if (channel == DMA2_Channel1) {
         return DMA2_Channel1_IRQn;
     }
     else if (channel == DMA2_Channel2) {
         return DMA2_Channel2_IRQn;
     }
-#if defined(DMA2_Channel3)
+        #if defined(DMA2_Channel3)
     else if (channel == DMA2_Channel3) {
         return DMA2_Channel3_IRQn;
     }
-#endif
-#if defined(DMA2_Channel4)
+        #endif
+        #if defined(DMA2_Channel4)
     else if (channel == DMA2_Channel4) {
         return DMA2_Channel4_IRQn;
     }
-#endif
-#if defined(DMA2_Channel5)
+        #endif
+        #if defined(DMA2_Channel5)
     else if (channel == DMA2_Channel5) {
         return DMA2_Channel5_IRQn;
     }
-#endif
-#if defined(DMA2_Channel6)
+        #endif
+        #if defined(DMA2_Channel6)
     else if (channel == DMA2_Channel6) {
         return DMA2_Channel6_IRQn;
     }
-#endif
-#if defined(DMA2_Channel7)
+        #endif
+        #if defined(DMA2_Channel7)
     else if (channel == DMA2_Channel7) {
         return DMA2_Channel7_IRQn;
     }
-#endif
-#endif
+        #endif
+    #endif
 
     return HardFault_IRQn;
 }
@@ -190,9 +190,9 @@ void callIRQHandlerDMAInstances()
     }
 }
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 extern "C" {
-#endif
+    #endif
 
 void DMA1_Channel1_IRQHandler(void)
 {
@@ -229,7 +229,7 @@ void DMA1_Channel7_IRQHandler(void)
     callIRQHandlerDMAInstances();
 }
 
-#if defined(DMA2)
+    #if defined(DMA2)
 
 void DMA2_Channel1_IRQHandler(void)
 {
@@ -256,10 +256,10 @@ void DMA2_Channel5_IRQHandler(void)
     callIRQHandlerDMAInstances();
 }
 
-#endif
+    #endif
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif

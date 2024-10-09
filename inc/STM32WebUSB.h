@@ -3,14 +3,14 @@
 
 #ifdef USBCON
 
-#include <cstdint>
+    #include <cstdint>
 
-#include "STM32Pin.h"
-#include "Serial.h"
+    #include "STM32Pin.h"
+    #include "Serial.h"
 
-// required for gcc-6 (but not 7!)
-#undef putc
-#undef getc
+    // required for gcc-6 (but not 7!)
+    #undef putc
+    #undef getc
 
 namespace codal {
 class STM32WebUSB : public Serial {

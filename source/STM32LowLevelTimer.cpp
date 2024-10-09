@@ -14,7 +14,7 @@ void codal::timer_irq_handler(uint8_t index)
 {
     if (instances[index] == NULL) return;
 
-    uint16_t channel_bitmsk = 0;
+    uint16_t channel_bitmsk      = 0;
 
     TIM_HandleTypeDef* timHandle = &instances[index]->TimHandle;
 
@@ -87,7 +87,7 @@ STM32LowLevelTimer::STM32LowLevelTimer(TIM_TypeDef* timer, uint8_t irqn) : LowLe
     enableTimerClock(&TimHandle);
 
     /* Configure timer with some default values */
-    TimHandle.Init.Prescaler     = (uint32_t)((SystemCoreClock / 1000000) - 1);
+    TimHandle.Init.Prescaler     = (uint32_t)((SystemCoreClock / 1'000'000) - 1);
     TimHandle.Init.Period        = MAX_RELOAD;
     TimHandle.Init.CounterMode   = TIM_COUNTERMODE_UP;
     TimHandle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -101,7 +101,7 @@ STM32LowLevelTimer::STM32LowLevelTimer(TIM_TypeDef* timer, uint8_t irqn) : LowLe
     // all timers run in at least 16 bit mode, so lets use it as a default.
     setBitMode(BitMode16);
 
-    uint8_t instance_index = get_timer_index(timer);
+    uint8_t instance_index    = get_timer_index(timer);
 
     instances[instance_index] = this;
 }
@@ -231,7 +231,7 @@ uint32_t STM32LowLevelTimer::captureCounter()
 {
     uint32_t elapsed = 0;
 
-    elapsed = __HAL_TIM_GET_COUNTER(&TimHandle);
+    elapsed          = __HAL_TIM_GET_COUNTER(&TimHandle);
     return elapsed;
 }
 

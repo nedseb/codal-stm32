@@ -36,9 +36,9 @@ uint32_t g_anOutputPinConfigured[MAX_NB_PORT] = {0};
 #endif
 
 #if !defined(ADC_RESOLUTION_16B)
-#define MAX_ADC_RESOLUTION 12
+    #define MAX_ADC_RESOLUTION 12
 #else
-#define MAX_ADC_RESOLUTION 16
+    #define MAX_ADC_RESOLUTION 16
 #endif
 #define MAX_PWM_RESOLUTION 16
 
@@ -48,25 +48,25 @@ static int _internalReadResolution =
     MAX_ADC_RESOLUTION
 #else
 
-#ifdef ADC_RESOLUTION_12B
+    #ifdef ADC_RESOLUTION_12B
 
-#if ADC_RESOLUTION <= 6 && defined(ADC_RESOLUTION_6B)
+        #if ADC_RESOLUTION <= 6 && defined(ADC_RESOLUTION_6B)
     6
-#elif ADC_RESOLUTION <= 8
+        #elif ADC_RESOLUTION <= 8
     8
-#elif ADC_RESOLUTION <= 10
+        #elif ADC_RESOLUTION <= 10
     10
-#elif ADC_RESOLUTION <= 12
+        #elif ADC_RESOLUTION <= 12
     12
-#elif ADC_RESOLUTION <= 14 && defined(ADC_RESOLUTION_14B)
+        #elif ADC_RESOLUTION <= 14 && defined(ADC_RESOLUTION_14B)
     14
-#elif defined(ADC_RESOLUTION_16B)
+        #elif defined(ADC_RESOLUTION_16B)
     16
-#endif
-#else  /* ADC_RESOLUTION_12B */
+        #endif
+    #else  /* ADC_RESOLUTION_12B */
     12
-#endif /* ADC_RESOLUTION_12B */
-#endif /* ADC_RESOLUTION > MAX_ADC_RESOLUTION */
+    #endif /* ADC_RESOLUTION_12B */
+#endif     /* ADC_RESOLUTION > MAX_ADC_RESOLUTION */
     ;
 
 static int _writeResolution = PWM_RESOLUTION;
@@ -90,12 +90,12 @@ void analogReadResolution(int res)
         }
         else {
 #ifdef ADC_RESOLUTION_12B
-#ifdef ADC_RESOLUTION_6B
+    #ifdef ADC_RESOLUTION_6B
             if (_internalReadResolution <= 6) {
                 _internalReadResolution = 6;
             }
             else
-#endif
+    #endif
                 if (_internalReadResolution <= 8) {
                 _internalReadResolution = 8;
             }
@@ -105,16 +105,16 @@ void analogReadResolution(int res)
             else if (_internalReadResolution <= 12) {
                 _internalReadResolution = 12;
             }
-#ifdef ADC_RESOLUTION_14B
+    #ifdef ADC_RESOLUTION_14B
             else if (_internalReadResolution <= 14) {
                 _internalReadResolution = 14;
             }
-#endif
-#ifdef ADC_RESOLUTION_16B
+    #endif
+    #ifdef ADC_RESOLUTION_16B
             else if (_internalReadResolution <= 16) {
                 _internalReadResolution = 16;
             }
-#endif
+    #endif
 #else
             /* STM32F1xx have no ADC_RESOLUTION_xB */
             _internalReadResolution = 12;

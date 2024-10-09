@@ -37,15 +37,15 @@
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 #ifndef __ANALOG_H
-#define __ANALOG_H
+    #define __ANALOG_H
 
-/* Includes ------------------------------------------------------------------*/
-#include "PeripheralPins.h"
-#include "stm32_def.h"
+    /* Includes ------------------------------------------------------------------*/
+    #include "PeripheralPins.h"
+    #include "stm32_def.h"
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 extern "C" {
-#endif
+    #endif
 
 typedef enum {
     TIMER_DISABLED,  // == TIM_OCMODE_TIMING           no output, useful for only-interrupt
@@ -106,15 +106,15 @@ typedef enum {
 void dac_write_value(PinName pin, uint32_t value, uint8_t do_init);
 void dac_stop(PinName pin);
 uint16_t adc_read_value(PinName pin, uint32_t resolution);
-#if defined(HAL_TIM_MODULE_ENABLED) && !defined(HAL_TIM_MODULE_ONLY)
+    #if defined(HAL_TIM_MODULE_ENABLED) && !defined(HAL_TIM_MODULE_ONLY)
 void pwm_start(PinName pin, uint32_t clock_freq, uint32_t value, TimerCompareFormat_t resolution);
 void pwm_stop(PinName pin);
-#endif
+    #endif
 uint32_t get_pwm_channel(PinName pin);
 
-#ifdef __cplusplus
+    #ifdef __cplusplus
 }
-#endif
+    #endif
 
 #endif /* __ANALOG_H */
 
